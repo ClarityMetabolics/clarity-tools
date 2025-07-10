@@ -147,97 +147,184 @@
 
         .results {
             display: none;
-            text-align: center;
-            padding: 40px 30px;
+            padding: 60px 40px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
         }
 
         .results.show {
             display: block;
         }
 
-        .result-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        .result-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .result-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
             color: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin: 20px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
         }
 
         .result-score {
-            font-size: 3em;
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 15px;
         }
 
         .result-title {
-            font-size: 1.8em;
-            margin-bottom: 15px;
+            font-size: 2.5em;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 300;
+            line-height: 1.2;
         }
 
         .result-description {
-            font-size: 1.1em;
-            line-height: 1.6;
-            margin-bottom: 20px;
+            font-size: 1.2em;
+            line-height: 1.7;
+            color: #4a5568;
+            margin-bottom: 30px;
         }
 
         .recommendations {
-            background: #f8fafc;
-            padding: 30px;
-            border-radius: 15px;
-            margin-top: 20px;
-            text-align: left;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
         }
 
         .recommendations h4 {
-            color: #4a5568;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-
-        .recommendations ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .recommendations li {
-            padding: 10px 0;
-            border-bottom: 1px solid #e2e8f0;
             color: #2d3748;
-        }
-
-        .recommendations li:last-child {
-            border-bottom: none;
-        }
-
-        .cta {
-            background: #667eea;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            font-weight: 300;
             text-align: center;
         }
 
-        .cta h4 {
-            margin-bottom: 10px;
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
         }
 
-        .cta p {
+        .recommendation-item {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .recommendation-icon {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
             margin-bottom: 15px;
         }
 
-        .restart-btn {
-            background: #4a5568;
+        .recommendation-text {
+            color: #2d3748;
+            font-size: 1.1em;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .cta {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 10px 20px;
-            border: none;
+            padding: 40px;
             border-radius: 20px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+        }
+
+        .cta h4 {
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            font-weight: 300;
+        }
+
+        .cta p {
+            margin-bottom: 25px;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
             cursor: pointer;
-            margin-top: 20px;
+            font-weight: 500;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 30px auto;
+            display: block;
+            font-size: 1.1em;
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(74, 85, 104, 0.3);
+            transition: all 0.3s ease;
         }
 
         .restart-btn:hover {
-            background: #2d3748;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(74, 85, 104, 0.4);
         }
 
         @media (max-width: 600px) {
@@ -359,6 +446,10 @@
         </div>
 
         <div class="results" id="results">
+            <div class="result-header">
+                <div class="result-icon" id="resultIcon">🧭</div>
+            </div>
+            
             <div class="result-card" id="resultCard">
                 <div class="result-score" id="resultScore"></div>
                 <div class="result-title" id="resultTitle"></div>
@@ -366,15 +457,17 @@
             </div>
             
             <div class="recommendations" id="recommendations">
-                <h4>Recommended Path Forward:</h4>
-                <ul id="recommendationsList"></ul>
+                <h4>Your Path Forward</h4>
+                <div class="recommendation-grid" id="recommendationsList"></div>
             </div>
 
             <div class="cta">
                 <h4>Ready to Move Forward?</h4>
                 <p>Join thousands of others who are creating grounded, truth-centered lives using the Four Anchors approach.</p>
-                <p><strong><a href="https://claritymetabolics.com" target="_blank" style="color: white; text-decoration: underline;">Visit claritymetabolics.com</a> to explore courses, resources, and community support.</strong></p>
-                <p style="margin-top: 15px;"><a href="#" id="downloadPDF" style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 20px; color: white; text-decoration: none; display: inline-block; cursor: pointer;">📄 Download Your Results PDF</a></p>
+                <div class="cta-buttons">
+                    <a href="https://claritymetabolics.com" target="_blank" class="cta-button">🌐 Visit Our Website</a>
+                    <a href="#" id="downloadPDF" class="cta-button">📄 Download Your Results</a>
+                </div>
             </div>
 
             <button class="restart-btn" onclick="restartQuiz()">Take Assessment Again</button>
@@ -567,67 +660,67 @@
             resultsSection.classList.add('show');
             
             // Display results based on score
-            let resultTitle, resultDescription, recommendations, cardColor, pdfUrl;
+            let resultTitle, resultDescription, recommendations, resultIcon;
             
             if (score <= 12) {
                 resultTitle = "Grounded Awakening";
                 resultDescription = "You're managing your awakening journey with remarkable balance. You've found ways to stay informed while maintaining your peace and relationships. Your challenge now is helping others find this same groundedness.";
+                resultIcon = "🌟";
                 recommendations = [
-                    "Consider becoming a bridge for others who are struggling with truth fatigue",
-                    "Explore leadership opportunities in your community",
-                    "Focus on practical preparation and solution-building",
-                    "Share your balanced approach with those who are overwhelmed"
+                    { icon: "🌉", text: "Consider becoming a bridge for others who are struggling with truth fatigue" },
+                    { icon: "👥", text: "Explore leadership opportunities in your community" },
+                    { icon: "🛠️", text: "Focus on practical preparation and solution-building" },
+                    { icon: "💡", text: "Share your balanced approach with those who are overwhelmed" }
                 ];
-                cardColor = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)";
-                pdfUrl = "https://claritymetabolics.com/b/mRYr3";
             } else if (score <= 20) {
                 resultTitle = "Information Overload";
                 resultDescription = "You're deeply engaged in learning but struggling with the volume of information and its emotional impact. You need tools to process what you're learning without becoming overwhelmed.";
+                resultIcon = "📚";
                 recommendations = [
-                    "Set specific boundaries around information consumption",
-                    "Learn nervous system regulation techniques",
-                    "Practice discernment skills for evaluating sources",
-                    "Focus on actionable steps rather than just consuming information"
+                    { icon: "⏰", text: "Set specific boundaries around information consumption" },
+                    { icon: "🧘", text: "Learn nervous system regulation techniques" },
+                    { icon: "🔍", text: "Practice discernment skills for evaluating sources" },
+                    { icon: "🎯", text: "Focus on actionable steps rather than just consuming information" }
                 ];
-                cardColor = "linear-gradient(135deg, #fa709a 0%, #fee140 100%)";
-                pdfUrl = "https://claritymetabolics.com/b/ea2oT";
             } else if (score <= 26) {
                 resultTitle = "Truth Fatigue";
                 resultDescription = "The weight of what you've learned is taking a toll on your mental and physical health. You need support to process this information without it consuming your life and relationships.";
+                resultIcon = "🌱";
                 recommendations = [
-                    "Prioritize nervous system healing and stress management",
-                    "Reconnect with your spiritual practice or faith",
-                    "Find community with others who understand your experience",
-                    "Learn to share information in ways that don't isolate you"
+                    { icon: "💚", text: "Prioritize nervous system healing and stress management" },
+                    { icon: "🙏", text: "Reconnect with your spiritual practice or faith" },
+                    { icon: "🤝", text: "Find community with others who understand your experience" },
+                    { icon: "💬", text: "Learn to share information in ways that don't isolate you" }
                 ];
-                cardColor = "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)";
-                pdfUrl = "https://claritymetabolics.com/b/yLjTI";
             } else {
                 resultTitle = "Black Pill Despair";
                 resultDescription = "You've become overwhelmed by the enormity of what you've learned and are struggling with hopelessness. You need immediate support to regain your footing and remember your power to create positive change.";
+                resultIcon = "🌅";
                 recommendations = [
-                    "Seek immediate support for anxiety and depression symptoms",
-                    "Limit information consumption to small, manageable doses",
-                    "Focus on small, concrete actions you can take in your immediate environment",
-                    "Reconnect with sources of hope, beauty, and spiritual grounding"
+                    { icon: "🆘", text: "Seek immediate support for anxiety and depression symptoms" },
+                    { icon: "📵", text: "Limit information consumption to small, manageable doses" },
+                    { icon: "🏠", text: "Focus on small, concrete actions you can take in your immediate environment" },
+                    { icon: "🌸", text: "Reconnect with sources of hope, beauty, and spiritual grounding" }
                 ];
-                cardColor = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
-                pdfUrl = "https://claritymetabolics.com/b/dxgG9";
             }
             
             // Update result display
-            document.getElementById('resultScore').textContent = `${score}/32`;
+            document.getElementById('resultScore').textContent = `Assessment Score: ${score}/32`;
             document.getElementById('resultTitle').textContent = resultTitle;
             document.getElementById('resultDescription').textContent = resultDescription;
-            document.getElementById('resultCard').style.background = cardColor;
+            document.getElementById('resultIcon').textContent = resultIcon;
             
-            // Update recommendations
+            // Update recommendations with new format
             const recommendationsList = document.getElementById('recommendationsList');
             recommendationsList.innerHTML = '';
             recommendations.forEach(rec => {
-                const li = document.createElement('li');
-                li.textContent = rec;
-                recommendationsList.appendChild(li);
+                const div = document.createElement('div');
+                div.className = 'recommendation-item';
+                div.innerHTML = `
+                    <div class="recommendation-icon">${rec.icon}</div>
+                    <div class="recommendation-text">${rec.text}</div>
+                `;
+                recommendationsList.appendChild(div);
             });
         }
 
@@ -663,7 +756,6 @@
         // Add click handlers for navigation buttons
         document.getElementById('nextBtn').addEventListener('click', nextQuestion);
         document.getElementById('prevBtn').addEventListener('click', previousQuestion);
-        document.getElementById('downloadPDF').onclick = generatePDF;
 
         // Initialize the quiz
         updateProgress();
