@@ -29,7 +29,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a90a4 0%, #357a96 100%);
             color: white;
             padding: 40px 30px;
             text-align: center;
@@ -82,13 +82,13 @@
         }
 
         .answer:hover {
-            border-color: #667eea;
-            background: #eef2ff;
+            border-color: #4a90a4;
+            background: #e6f3f7;
         }
 
         .answer.selected {
-            border-color: #667eea;
-            background: #667eea;
+            border-color: #4a90a4;
+            background: #4a90a4;
             color: white;
         }
 
@@ -112,12 +112,12 @@
         }
 
         .btn-primary {
-            background: #667eea;
+            background: #4a90a4;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #5a67d8;
+            background: #357a96;
         }
 
         .btn-secondary {
@@ -140,7 +140,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #4a90a4, #357a96);
             width: 0%;
             transition: width 0.3s ease;
         }
@@ -169,23 +169,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
-            color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-size: 32px;
+            color: #4a90a4;
+            background: linear-gradient(135deg, #f8fbfc 0%, #e8f4f8 100%);
+            border: 3px solid #4a90a4;
         }
 
         .result-card {
-            background: white;
+            background: linear-gradient(135deg, #fefefe 0%, #f9f7f4 100%);
             border-radius: 20px;
             padding: 40px;
             margin: 30px 0;
             box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-            border: 1px solid #e2e8f0;
+            border: 1px solid #f0ede8;
         }
 
         .result-score {
             font-size: 1.2em;
-            color: #667eea;
+            color: #4a90a4;
             font-weight: 600;
             margin-bottom: 15px;
         }
@@ -206,12 +207,12 @@
         }
 
         .recommendations {
-            background: white;
+            background: linear-gradient(135deg, #fefefe 0%, #f9f7f4 100%);
             padding: 40px;
             border-radius: 20px;
             margin: 30px 0;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border: 1px solid #e2e8f0;
+            border: 1px solid #f0ede8;
         }
 
         .recommendations h4 {
@@ -261,13 +262,13 @@
         }
 
         .cta {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a90a4 0%, #357a96 100%);
             color: white;
             padding: 40px;
             border-radius: 20px;
             margin: 40px 0;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 15px 35px rgba(74, 144, 164, 0.3);
         }
 
         .cta h4 {
@@ -665,17 +666,17 @@
             if (score <= 12) {
                 resultTitle = "Grounded Awakening";
                 resultDescription = "You're managing your awakening journey with remarkable balance. You've found ways to stay informed while maintaining your peace and relationships. Your challenge now is helping others find this same groundedness.";
-                resultIcon = "🌟";
+                resultIcon = "⭐";
                 recommendations = [
-                    { icon: "🌉", text: "Consider becoming a bridge for others who are struggling with truth fatigue" },
+                    { icon: "🔗", text: "Consider becoming a bridge for others who are struggling with truth fatigue" },
                     { icon: "👥", text: "Explore leadership opportunities in your community" },
-                    { icon: "🛠️", text: "Focus on practical preparation and solution-building" },
+                    { icon: "🛠", text: "Focus on practical preparation and solution-building" },
                     { icon: "💡", text: "Share your balanced approach with those who are overwhelmed" }
                 ];
             } else if (score <= 20) {
                 resultTitle = "Information Overload";
                 resultDescription = "You're deeply engaged in learning but struggling with the volume of information and its emotional impact. You need tools to process what you're learning without becoming overwhelmed.";
-                resultIcon = "📚";
+                resultIcon = "📖";
                 recommendations = [
                     { icon: "⏰", text: "Set specific boundaries around information consumption" },
                     { icon: "🧘", text: "Learn nervous system regulation techniques" },
