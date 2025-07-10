@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truth Fatigue Assessment - Four Anchors</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .quiz-content {
+            padding: 40px 30px;
+        }
+
+        .question {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .question.active {
+            display: block;
+        }
+
+        .question h3 {
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        .answers {
+            display: grid;
+            gap: 15px;
+        }
+
+        .answer {
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .answer:hover {
+            border-color: #667eea;
+            background: #eef2ff;
+        }
+
+        .answer.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .result-score {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .result-title {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .result-description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .recommendations {
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .recommendations h4 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendations li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            color: #2d3748;
+        }
+
+        .recommendations li:last-child {
+            border-bottom: none;
+        }
+
+        .cta {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .cta h4 {
+            margin-bottom: 10px;
+        }
+
+        .cta p {
+            margin-bottom: 15px;
+        }
+
+        .restart-btn {
+            background: #4a5568;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .restart-btn:hover {
+            background: #2d3748;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+            
+            .quiz-content {
+                padding: 20px;
+            }
+            
+            .question h3 {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Truth Fatigue Assessment</h1>
+            <p>Discover where you are in your awakening journey and get personalized guidance for moving forward with peace and clarity.</p>
+        </div>
+
+        <div class="quiz-content" id="quiz-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="question active" data-question="1">
+                <h3>When you encounter new information about world events or "hidden truths," how do you typically respond?</h3>
+                <div class="answers">
+                    <div class="answer" data-value="1">I feel excited and immediately want to research more and share with others</div>
+                    <div class="answer" data-value="2">I feel overwhelmed but still consume the information compulsively</div>
+                    <div class="answer" data-value="3">I feel anxious and struggle to process what it means for my life</div>
+                    <div class="answer" data-value="4">I feel hopeless and like there's nothing I can do about any of it</div>
+                </div>
+            </div>
+
+            <div class="question" data-question="2">
+                <h3>How has your relationship with family and friends changed since becoming aware of these deeper truths?</h3>
+                <div class="answers">
+                    <div class="answer" data-value="1">I'm able to share information calmly and some people listen</div>
+                    <div class="answer" data-value="2">I find myself getting frustrated when others don't "get it"</div>
+                    <div class="answer" data-value="3">I've become more isolated because I don't know how to relate to "sleeping" people</div>
+                    <div class="answer" data-value="4">I feel completely alone and misunderstood by everyone around me</div>
+                </div>
+            </div>
+
+            <div class="question" data-question="3">
+                <h3>How do you currently manage your information consumption about current events?</h3>
+                <div class="answers">
+                    <div class="answer" data-value="1">I have set boundaries and choose my sources carefully</div>
+                    <div class="answer" data-value="2">I consume a lot but try to fact-check and verify information</div>
+                    <div class="answer" data-value="3">I find myself doom-scrolling and can't seem to stop</div>
+                    <div class="answer" data-value="4">I either avoid all news or become obsessed with worst-case scenarios</div>
+                </div>
+            </div>
+
+            <div class="question" data-question="4">
+                <h3>How is your physical and mental well-being right now?</h3>
+                <div class="answers">
+                    <div class="answer" data-value="1">I maintain healthy habits and feel generally balanced</div>
+                    <div class="answer" data-value="2">I have some stress symptoms but still function well day-to-day</div>
+                    <div class="answer" data-value="3">I experience anxiety, sleep issues, or other stress-related symptoms regularly</div>
+                    <div class="answer" data-value="4">I feel constantly on edge, exhausted, or struggling with depression</div>
+                </div>
+            </div>
+
+            <div class="question" data-question="5">
+                <h3>What's your current relationship with your spiritual or faith practice?</h3>
+                <div class="answers">
+                    <div class="answer" data-value="1">I feel connected and use my faith as an anchor during uncertain times</div>
+                    <div class="answer" data-value="2">I'm exploring spirituality more deeply since awakening to truth</div>
+                    <div class="answer" data-value="3">I feel disconnected from my spiritual practice or questioning my beliefs</div>
+                    <div class="answer" data-value="4">I feel abandoned by God or like my faith has been shattered</div>
+                </div>
+            </div>
+
+            <div class="question" data-question="6">
+                <h3>How do you view the future and your ability to create positive change?</h3>
+                <div class="answers">
+                    <div class="answer" data-value="1">I feel hopeful and empowered to make a difference in my sphere of influence</div>
+                    <div class="answer" data-value="2">I have hope but need more clarity on how to move forward effectively</div>
+                    <div class="answer" data-value="3">I feel uncertain about the future and my role in creating change</div>
+                    <div class="answer" data-value="4">I feel like everything is hopeless and nothing I do matters</div>
+                </div>
+            </div>
+
+            <div class="question" data-question="7">
+                <h3>How do you typically share information about what you've learned with others?</h3>
+                <div class="answers">
+                    <div class="answer" data-value="1">I share thoughtfully and meet people where they are</div>
+                    <div class="answer" data-value="2">I share information but sometimes come across as too intense</div>
+                    <div class="answer" data-value="3">I avoid sharing because I'm afraid of being judged or rejected</div>
+                    <div class="answer" data-value="4">I either say nothing or become argumentative and push people away</div>
+                </div>
+            </div>
+
+            <div class="question" data-question="8">
+                <h3>What's your biggest challenge right now in your awakening journey?</h3>
+                <div class="answers">
+                    <div class="answer" data-value="1">Finding practical ways to prepare and protect my family</div>
+                    <div class="answer" data-value="2">Managing information overload and staying focused</div>
+                    <div class="answer" data-value="3">Dealing with anxiety and fear about what's coming</div>
+                    <div class="answer" data-value="4">Feeling paralyzed by the enormity of what's happening</div>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button class="btn btn-secondary" id="prevBtn" style="display: none;">Previous</button>
+                <div id="questionCounter">Question 1 of 8</div>
+                <button class="btn btn-primary" id="nextBtn">Next</button>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <div class="result-card" id="resultCard">
+                <div class="result-score" id="resultScore"></div>
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-description" id="resultDescription"></div>
+            </div>
+            
+            <div class="recommendations" id="recommendations">
+                <h4>Recommended Path Forward:</h4>
+                <ul id="recommendationsList"></ul>
+            </div>
+
+            <div class="cta">
+                <h4>Ready to Move Forward?</h4>
+                <p>Join thousands of others who are creating grounded, truth-centered lives using the Four Anchors approach.</p>
+                <p><strong><a href="https://claritymetabolics.com" target="_blank" style="color: white; text-decoration: underline;">Visit claritymetabolics.com</a> to explore courses, resources, and community support.</strong></p>
+                <p style="margin-top: 15px;"><a href="#" id="downloadPDF" style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 20px; color: white; text-decoration: none; display: inline-block; cursor: pointer;">📄 Download Your Results PDF</a></p>
+            </div>
+
+            <button class="restart-btn" onclick="restartQuiz()">Take Assessment Again</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 8;
+        let answers = {};
+
+        function updateProgress() {
+            const progress = ((currentQuestion - 1) / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function updateQuestionCounter() {
+            document.getElementById('questionCounter').textContent = `Question ${currentQuestion} of ${totalQuestions}`;
+        }
+
+        function showQuestion(questionNum) {
+            // Hide all questions
+            const questions = document.querySelectorAll('.question');
+            questions.forEach(q => q.classList.remove('active'));
+            
+            // Show current question
+            const currentQ = document.querySelector(`[data-question="${questionNum}"]`);
+            if (currentQ) {
+                currentQ.classList.add('active');
+            }
+            
+            updateProgress();
+            updateQuestionCounter();
+            
+            // Update navigation
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.style.display = questionNum > 1 ? 'block' : 'none';
+            nextBtn.textContent = questionNum === totalQuestions ? 'Get Results' : 'Next';
+        }
+
+        function nextQuestion() {
+            const currentQuestionElement = document.querySelector(`[data-question="${currentQuestion}"]`);
+            const selectedAnswer = currentQuestionElement.querySelector('.answer.selected');
+            
+            if (!selectedAnswer) {
+                alert('Please select an answer before continuing.');
+                return;
+            }
+            
+            // Save the answer
+            answers[currentQuestion] = parseInt(selectedAnswer.dataset.value);
+            
+            if (currentQuestion < totalQuestions) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                // Calculate and show results
+                calculateResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Calculate total score
+            let score = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (answers[i]) {
+                    score += answers[i];
+                }
+            }
+            
+            // Determine result category
+            let resultTitle, resultDescription, recommendations;
+            
+            if (score <= 12) {
+                resultTitle = "Grounded Awakening";
+                resultDescription = "You're managing your awakening journey with remarkable balance. You've found ways to stay informed while maintaining your peace and relationships.";
+                recommendations = [
+                    "Consider becoming a bridge for others struggling with truth fatigue",
+                    "Explore leadership opportunities in your community",
+                    "Focus on practical preparation and solution-building",
+                    "Share your balanced approach with those who are overwhelmed"
+                ];
+            } else if (score <= 20) {
+                resultTitle = "Information Overload";
+                resultDescription = "You're deeply engaged in learning but struggling with the volume of information and its emotional impact.";
+                recommendations = [
+                    "Set specific boundaries around information consumption",
+                    "Learn nervous system regulation techniques",
+                    "Practice discernment skills for evaluating sources",
+                    "Focus on actionable steps rather than just consuming information"
+                ];
+            } else if (score <= 26) {
+                resultTitle = "Truth Fatigue";
+                resultDescription = "The weight of what you've learned is taking a toll on your mental and physical health.";
+                recommendations = [
+                    "Prioritize nervous system healing and stress management",
+                    "Reconnect with your spiritual practice or faith",
+                    "Find community with others who understand your experience",
+                    "Learn to share information in ways that don't isolate you"
+                ];
+            } else {
+                resultTitle = "Black Pill Despair";
+                resultDescription = "You've become overwhelmed by the enormity of what you've learned and are struggling with hopelessness.";
+                recommendations = [
+                    "Seek immediate support for anxiety and depression symptoms",
+                    "Limit information consumption to small, manageable doses",
+                    "Focus on small, concrete actions you can take in your immediate environment",
+                    "Reconnect with sources of hope, beauty, and spiritual grounding"
+                ];
+            }
+            
+            // Set up the PDF
+            doc.setFontSize(20);
+            doc.setTextColor(102, 126, 234);
+            doc.text("Truth Fatigue Assessment Results", 20, 30);
+            
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Assessment Date: ${new Date().toLocaleDateString()}`, 20, 45);
+            
+            // Results section
+            doc.setFontSize(16);
+            doc.setTextColor(102, 126, 234);
+            doc.text(`Your Result: ${resultTitle}`, 20, 65);
+            
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Score: ${score}/32`, 20, 80);
+            
+            // Description
+            doc.setFontSize(11);
+            const splitDescription = doc.splitTextToSize(resultDescription, 170);
+            doc.text(splitDescription, 20, 95);
+            
+            // Recommendations
+            doc.setFontSize(14);
+            doc.setTextColor(102, 126, 234);
+            doc.text("Your Recommended Path Forward:", 20, 120);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            let yPosition = 135;
+            recommendations.forEach((rec, index) => {
+                const splitRec = doc.splitTextToSize(`${index + 1}. ${rec}`, 170);
+                doc.text(splitRec, 20, yPosition);
+                yPosition += splitRec.length * 6 + 5;
+            });
+            
+            // Footer with website
+            doc.setFontSize(12);
+            doc.setTextColor(102, 126, 234);
+            doc.text("Ready to Move Forward?", 20, yPosition + 20);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text("Visit claritymetabolics.com for courses, resources, and community support", 20, yPosition + 35);
+            doc.text("to help you create a grounded, truth-centered life using the Four Anchors approach.", 20, yPosition + 45);
+            
+            // Save the PDF
+            doc.save(`Truth-Fatigue-Results-${resultTitle.replace(/\s+/g, '-')}.pdf`);
+        }
+
+        function calculateResults() {
+            // Calculate total score
+            let score = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (answers[i]) {
+                    score += answers[i];
+                }
+            }
+            
+            // Hide quiz section
+            document.getElementById('quiz-section').style.display = 'none';
+            
+            // Show results section
+            const resultsSection = document.getElementById('results');
+            resultsSection.classList.add('show');
+            
+            // Display results based on score
+            let resultTitle, resultDescription, recommendations, cardColor, pdfUrl;
+            
+            if (score <= 12) {
+                resultTitle = "Grounded Awakening";
+                resultDescription = "You're managing your awakening journey with remarkable balance. You've found ways to stay informed while maintaining your peace and relationships. Your challenge now is helping others find this same groundedness.";
+                recommendations = [
+                    "Consider becoming a bridge for others who are struggling with truth fatigue",
+                    "Explore leadership opportunities in your community",
+                    "Focus on practical preparation and solution-building",
+                    "Share your balanced approach with those who are overwhelmed"
+                ];
+                cardColor = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)";
+                pdfUrl = "https://claritymetabolics.com/b/mRYr3";
+            } else if (score <= 20) {
+                resultTitle = "Information Overload";
+                resultDescription = "You're deeply engaged in learning but struggling with the volume of information and its emotional impact. You need tools to process what you're learning without becoming overwhelmed.";
+                recommendations = [
+                    "Set specific boundaries around information consumption",
+                    "Learn nervous system regulation techniques",
+                    "Practice discernment skills for evaluating sources",
+                    "Focus on actionable steps rather than just consuming information"
+                ];
+                cardColor = "linear-gradient(135deg, #fa709a 0%, #fee140 100%)";
+                pdfUrl = "https://claritymetabolics.com/b/ea2oT";
+            } else if (score <= 26) {
+                resultTitle = "Truth Fatigue";
+                resultDescription = "The weight of what you've learned is taking a toll on your mental and physical health. You need support to process this information without it consuming your life and relationships.";
+                recommendations = [
+                    "Prioritize nervous system healing and stress management",
+                    "Reconnect with your spiritual practice or faith",
+                    "Find community with others who understand your experience",
+                    "Learn to share information in ways that don't isolate you"
+                ];
+                cardColor = "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)";
+                pdfUrl = "https://claritymetabolics.com/b/yLjTI";
+            } else {
+                resultTitle = "Black Pill Despair";
+                resultDescription = "You've become overwhelmed by the enormity of what you've learned and are struggling with hopelessness. You need immediate support to regain your footing and remember your power to create positive change.";
+                recommendations = [
+                    "Seek immediate support for anxiety and depression symptoms",
+                    "Limit information consumption to small, manageable doses",
+                    "Focus on small, concrete actions you can take in your immediate environment",
+                    "Reconnect with sources of hope, beauty, and spiritual grounding"
+                ];
+                cardColor = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+                pdfUrl = "https://claritymetabolics.com/b/dxgG9";
+            }
+            
+            // Update result display
+            document.getElementById('resultScore').textContent = `${score}/32`;
+            document.getElementById('resultTitle').textContent = resultTitle;
+            document.getElementById('resultDescription').textContent = resultDescription;
+            document.getElementById('resultCard').style.background = cardColor;
+            
+            // Update recommendations
+            const recommendationsList = document.getElementById('recommendationsList');
+            recommendationsList.innerHTML = '';
+            recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recommendationsList.appendChild(li);
+            });
+        }
+
+        function restartQuiz() {
+            // Reset quiz state
+            currentQuestion = 1;
+            answers = {};
+            
+            // Clear all selected answers
+            document.querySelectorAll('.answer').forEach(answer => {
+                answer.classList.remove('selected');
+            });
+            
+            // Show quiz section, hide results
+            document.getElementById('quiz-section').style.display = 'block';
+            document.getElementById('results').classList.remove('show');
+            
+            // Reset to first question
+            showQuestion(1);
+        }
+
+        // Add click handlers for answers
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('answer')) {
+                const question = e.target.closest('.question');
+                question.querySelectorAll('.answer').forEach(answer => {
+                    answer.classList.remove('selected');
+                });
+                e.target.classList.add('selected');
+            }
+        });
+
+        // Add click handlers for navigation buttons
+        document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+        document.getElementById('prevBtn').addEventListener('click', previousQuestion);
+
+        // Initialize the quiz
+        updateProgress();
+        updateQuestionCounter();
+    </script>
+</body>
+</html>
