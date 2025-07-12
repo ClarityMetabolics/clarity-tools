@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Five Anchors Practice Sheets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Georgia, serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f9f9f9;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #4a90a4;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #4a90a4;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-style: italic;
+            font-size: 1.1rem;
+            margin: 5px 0;
+        }
+        
+        .print-btn {
+            background: #4a90a4;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+            font-family: inherit;
+        }
+        
+        .print-btn:hover {
+            background: #357a96;
+        }
+        
+        .anchor-sheet {
+            margin: 40px 0;
+            padding: 25px;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            background: #fff;
+            page-break-after: always;
+        }
+        
+        .anchor-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .anchor-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .anchor-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .anchor-description {
+            font-style: italic;
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        /* Anchor-specific colors */
+        .body-anchor {
+            border-color: #e53e3e;
+        }
+        .body-anchor .anchor-title {
+            color: #e53e3e;
+        }
+        
+        .mind-anchor {
+            border-color: #2196f3;
+        }
+        .mind-anchor .anchor-title {
+            color: #2196f3;
+        }
+        
+        .emotion-anchor {
+            border-color: #ff9800;
+        }
+        .emotion-anchor .anchor-title {
+            color: #ff9800;
+        }
+        
+        .spirit-anchor {
+            border-color: #9c27b0;
+        }
+        .spirit-anchor .anchor-title {
+            color: #9c27b0;
+        }
+        
+        .community-anchor {
+            border-color: #4caf50;
+        }
+        .community-anchor .anchor-title {
+            color: #4caf50;
+        }
+        
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 8px;
+        }
+        
+        .practice-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .practice-list li {
+            padding: 8px 0;
+            border-bottom: 1px dotted #ccc;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .practice-list li:before {
+            content: "○";
+            position: absolute;
+            left: 0;
+            font-size: 16px;
+            color: #4a90a4;
+        }
+        
+        .practice-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .reflection-box {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            background: white;
+            min-height: 100px;
+        }
+        
+        .reflection-prompt {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .scale-numbers {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .scale-number {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .goal-box {
+            background: #f0f8ff;
+            border: 2px solid #4a90a4;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .goal-title {
+            font-weight: bold;
+            color: #4a90a4;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .checklist li:before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+            color: #4a90a4;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #4a90a4;
+            color: #666;
+        }
+        
+        .website {
+            color: #4a90a4;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+        
+        @media print {
+            .print-btn { 
+                display: none; 
+            }
+            body { 
+                margin: 0; 
+                padding: 0; 
+                background: white;
+            }
+            .container {
+                max-width: none;
+                padding: 0.5in;
+            }
+            .anchor-sheet {
+                page-break-after: always;
+                margin: 0 0 40px 0;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .anchor-sheet {
+                padding: 15px;
+            }
+            
+            .scale-numbers {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+            
+            .scale-number {
+                width: 25px;
+                height: 25px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="print-btn" onclick="window.print()">🖨️ Print All Practice Sheets</button>
+        
+        <div class="header">
+            <h1>Five Anchors Practice Sheets</h1>
+            <div class="subtitle">Targeted Exercises for Each Anchor</div>
+            <div class="subtitle">ClarityMetabolics.com</div>
+        </div>
+        
+        <!-- BODY ANCHOR SHEET -->
+        <div class="anchor-sheet body-anchor">
+            <div class="anchor-header">
+                <span class="anchor-icon">📊</span>
+                <h2 class="anchor-title">BODY ANCHOR</h2>
+                <div class="anchor-description">Physical regulation, energy, and nervous system balance</div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Current Body Assessment</div>
+                <div class="rating-scale">
+                    <strong>Overall Body Anchor Strength:</strong>
+                    <div class="scale-numbers">
+                        <div class="scale-number">1</div>
+                        <div class="scale-number">2</div>
+                        <div class="scale-number">3</div>
+                        <div class="scale-number">4</div>
+                        <div class="scale-number">5</div>
+                        <div class="scale-number">6</div>
+                        <div class="scale-number">7</div>
+                        <div class="scale-number">8</div>
+                        <div class="scale-number">9</div>
+                        <div class="scale-number">10</div>
+                    </div>
+                </div>
+                
+                <div class="reflection-box">
+                    <div class="reflection-prompt">What is your body telling you right now?</div>
+                    <div style="height: 60px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 60px;"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Daily Body Practices</div>
+                <ul class="practice-list">
+                    <li><strong>Morning:</strong> 5 minutes of gentle stretching or movement</li>
+                    <li><strong>Midday:</strong> Check in with physical tension, release shoulders/jaw</li>
+                    <li><strong>Evening:</strong> Deep breathing for nervous system regulation</li>
+                    <li><strong>Throughout day:</strong> Drink water mindfully, notice hunger/fullness</li>
+                </ul>
+                
+                <div class="goal-box">
+                    <div class="goal-title">This Week's Body Goals:</div>
+                    <ul class="checklist">
+                        <li>Improve sleep quality by _______________</li>
+                        <li>Move my body daily through _______________</li>
+                        <li>Reduce physical tension by _______________</li>
+                        <li>Support my energy with _______________</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Emergency Body Regulation</div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">When I feel physically activated or disconnected, I will:</div>
+                    <div style="height: 40px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 40px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 40px;"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Body Wisdom Reflection</div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">What is my body's relationship with stress and overwhelm?</div>
+                    <div style="height: 80px;"></div>
+                </div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">How can I honor my body's needs while staying informed about truth?</div>
+                    <div style="height: 80px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MIND ANCHOR SHEET -->
+        <div class="anchor-sheet mind-anchor">
+            <div class="anchor-header">
+                <span class="anchor-icon">🧠</span>
+                <h2 class="anchor-title">MIND ANCHOR</h2>
+                <div class="anchor-description">Mental clarity, discernment, and information processing</div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Current Mind Assessment</div>
+                <div class="rating-scale">
+                    <strong>Overall Mind Anchor Strength:</strong>
+                    <div class="scale-numbers">
+                        <div class="scale-number">1</div>
+                        <div class="scale-number">2</div>
+                        <div class="scale-number">3</div>
+                        <div class="scale-number">4</div>
+                        <div class="scale-number">5</div>
+                        <div class="scale-number">6</div>
+                        <div class="scale-number">7</div>
+                        <div class="scale-number">8</div>
+                        <div class="scale-number">9</div>
+                        <div class="scale-number">10</div>
+                    </div>
+                </div>
+                
+                <div class="reflection-box">
+                    <div class="reflection-prompt">What is the current state of my mental clarity and focus?</div>
+                    <div style="height: 60px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 60px;"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Daily Mind Practices</div>
+                <ul class="practice-list">
+                    <li><strong>Morning:</strong> Set intention for information consumption</li>
+                    <li><strong>Before news:</strong> Ask "What do I actually need to know?"</li>
+                    <li><strong>Information breaks:</strong> Process and reflect before consuming more</li>
+                    <li><strong>Evening:</strong> Brain dump worries, distinguish facts from fears</li>
+                </ul>
+                
+                <div class="goal-box">
+                    <div class="goal-title">This Week's Mind Goals:</div>
+                    <ul class="checklist">
+                        <li>Limit information consumption to _______________</li>
+                        <li>Practice discernment by _______________</li>
+                        <li>Clear mental clutter through _______________</li>
+                        <li>Focus my attention on _______________</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Discernment Practice</div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">Before consuming information, I will ask myself:</div>
+                    <div style="height: 40px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 40px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 40px;"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Mind Wisdom Reflection</div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">How do I distinguish between useful information and mental noise?</div>
+                    <div style="height: 80px;"></div>
+                </div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">What thoughts am I believing that may not be serving me?</div>
+                    <div style="height: 80px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- EMOTION ANCHOR SHEET -->
+        <div class="anchor-sheet emotion-anchor">
+            <div class="anchor-header">
+                <span class="anchor-icon">❤️</span>
+                <h2 class="anchor-title">EMOTION ANCHOR</h2>
+                <div class="anchor-description">Emotional regulation, awareness, and stability</div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Current Emotion Assessment</div>
+                <div class="rating-scale">
+                    <strong>Overall Emotion Anchor Strength:</strong>
+                    <div class="scale-numbers">
+                        <div class="scale-number">1</div>
+                        <div class="scale-number">2</div>
+                        <div class="scale-number">3</div>
+                        <div class="scale-number">4</div>
+                        <div class="scale-number">5</div>
+                        <div class="scale-number">6</div>
+                        <div class="scale-number">7</div>
+                        <div class="scale-number">8</div>
+                        <div class="scale-number">9</div>
+                        <div class="scale-number">10</div>
+                    </div>
+                </div>
+                
+                <div class="reflection-box">
+                    <div class="reflection-prompt">What emotions am I experiencing most frequently right now?</div>
+                    <div style="height: 60px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 60px;"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Daily Emotion Practices</div>
+                <ul class="practice-list">
+                    <li><strong>Morning:</strong> Check in with emotional state, set regulation intention</li>
+                    <li><strong>Triggered moments:</strong> Name the emotion, breathe before reacting</li>
+                    <li><strong>Midday:</strong> Heart coherence breathing for emotional balance</li>
+                    <li><strong>Evening:</strong> Process emotions through journaling or movement</li>
+                </ul>
+                
+                <div class="goal-box">
+                    <div class="goal-title">This Week's Emotion Goals:</div>
+                    <ul class="checklist">
+                        <li>Recognize my emotional triggers: _______________</li>
+                        <li>Practice emotional regulation through _______________</li>
+                        <li>Respond rather than react by _______________</li>
+                        <li>Cultivate more _____________ emotion</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Emotional Regulation Toolkit</div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">When I feel overwhelmed by fear or anger, I will:</div>
+                    <div style="height: 40px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 40px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 40px;"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Emotion Wisdom Reflection</div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">What are my emotions trying to tell me about my needs?</div>
+                    <div style="height: 80px;"></div>
+                </div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">How can I honor my emotions while staying grounded in truth?</div>
+                    <div style="height: 80px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SPIRIT ANCHOR SHEET -->
+        <div class="anchor-sheet spirit-anchor">
+            <div class="anchor-header">
+                <span class="anchor-icon">✨</span>
+                <h2 class="anchor-title">SPIRIT ANCHOR</h2>
+                <div class="anchor-description">Divine connection, faith, and spiritual grounding</div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Current Spirit Assessment</div>
+                <div class="rating-scale">
+                    <strong>Overall Spirit Anchor Strength:</strong>
+                    <div class="scale-numbers">
+                        <div class="scale-number">1</div>
+                        <div class="scale-number">2</div>
+                        <div class="scale-number">3</div>
+                        <div class="scale-number">4</div>
+                        <div class="scale-number">5</div>
+                        <div class="scale-number">6</div>
+                        <div class="scale-number">7</div>
+                        <div class="scale-number">8</div>
+                        <div class="scale-number">9</div>
+                        <div class="scale-number">10</div>
+                    </div>
+                </div>
+                
+                <div class="reflection-box">
+                    <div class="reflection-prompt">How connected do I feel to my spiritual source right now?</div>
+                    <div style="height: 60px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 60px;"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Daily Spirit Practices</div>
+                <ul class="practice-list">
+                    <li><strong>Morning:</strong> Prayer, meditation, or spiritual reading</li>
+                    <li><strong>Difficult moments:</strong> Ask "What would Love do?"</li>
+                    <li><strong>Throughout day:</strong> Notice divine presence in small moments</li>
+                    <li><strong>Evening:</strong> Gratitude practice, surrender worries</li>
+                </ul>
+                
+                <div class="goal-box">
+                    <div class="goal-title">This Week's Spirit Goals:</div>
+                    <ul class="checklist">
+                        <li>Deepen my connection through _______________</li>
+                        <li>Trust divine guidance by _______________</li>
+                        <li>Find peace in uncertainty through _______________</li>
+                        <li>Serve others by _______________</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Faith in Dark Times</div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">How do I maintain hope when the world feels overwhelming?</div>
+                    <div style="height: 40px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 40px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 40px;"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Spirit Wisdom Reflection</div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">What is my higher purpose in this time of awakening?</div>
+                    <div style="height: 80px;"></div>
+                </div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">How can I be a light for others while protecting my own energy?</div>
+                    <div style="height: 80px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- COMMUNITY ANCHOR SHEET -->
+        <div class="anchor-sheet community-anchor">
+            <div class="anchor-header">
+                <span class="anchor-icon">👥</span>
+                <h2 class="anchor-title">COMMUNITY ANCHOR</h2>
+                <div class="anchor-description">Healthy relationships, boundaries, and conscious connection</div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Current Community Assessment</div>
+                <div class="rating-scale">
+                    <strong>Overall Community Anchor Strength:</strong>
+                    <div class="scale-numbers">
+                        <div class="scale-number">1</div>
+                        <div class="scale-number">2</div>
+                        <div class="scale-number">3</div>
+                        <div class="scale-number">4</div>
+                        <div class="scale-number">5</div>
+                        <div class="scale-number">6</div>
+                        <div class="scale-number">7</div>
+                        <div class="scale-number">8</div>
+                        <div class="scale-number">9</div>
+                        <div class="scale-number">10</div>
+                    </div>
+                </div>
+                
+                <div class="reflection-box">
+                    <div class="reflection-prompt">How supported and understood do I feel in my relationships?</div>
+                    <div style="height: 60px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 60px;"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Daily Community Practices</div>
+                <ul class="practice-list">
+                    <li><strong>Morning:</strong> Set intention for loving interactions</li>
+                    <li><strong>Conversations:</strong> Listen with compassion, speak with truth</li>
+                    <li><strong>Boundaries:</strong> Honor your energy, say no when needed</li>
+                    <li><strong>Evening:</strong> Reflect on connections, send love to difficult people</li>
+                </ul>
+                
+                <div class="goal-box">
+                    <div class="goal-title">This Week's Community Goals:</div>
+                    <ul class="checklist">
+                        <li>Strengthen boundaries by _______________</li>
+                        <li>Find my tribe through _______________</li>
+                        <li>Practice compassion by _______________</li>
+                        <li>Share truth wisely by _______________</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Navigating Relationships</div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">How do I share truth without pushing people away?</div>
+                    <div style="height: 40px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 40px; border-bottom: 1px solid #ddd; margin: 5px 0;"></div>
+                    <div style="height: 40px;"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Community Wisdom Reflection</div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">What kind of community do I want to create and attract?</div>
+                    <div style="height: 80px;"></div>
+                </div>
+                <div class="reflection-box">
+                    <div class="reflection-prompt">How can I be a bridge between awakened and unawakened people?</div>
+                    <div style="height: 80px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div>Created with ♥ for the awakened community</div>
+            <div class="website">ClarityMetabolics.com</div>
+            <div>Part of the Five Anchors System • More tools available online</div>
+        </div>
+    </div>
+</body>
+</html>
