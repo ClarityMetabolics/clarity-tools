@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Events Discernment Worksheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-4xl mx-auto p-6 bg-white">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Current Events Discernment Worksheet</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Navigate information overload with clarity and wisdom. Evaluate current events without falling into fear or manipulation.
+            </p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-700">Progress</span>
+                <span id="progressText" class="text-sm font-medium text-gray-700">1 of 6</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 16.67%"></div>
+            </div>
+        </div>
+
+        <!-- Steps Navigation -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8">
+            <button onclick="goToStep(0)" id="step0" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white">
+                <span class="text-lg">👁️</span>
+                <span class="hidden sm:inline">Initial Assessment</span>
+            </button>
+            <button onclick="goToStep(1)" id="step1" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">
+                <span class="text-lg">❤️</span>
+                <span class="hidden sm:inline">Emotion Check</span>
+            </button>
+            <button onclick="goToStep(2)" id="step2" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">
+                <span class="text-lg">🛡️</span>
+                <span class="hidden sm:inline">Source Evaluation</span>
+            </button>
+            <button onclick="goToStep(3)" id="step3" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">
+                <span class="text-lg">🧠</span>
+                <span class="hidden sm:inline">Fact Analysis</span>
+            </button>
+            <button onclick="goToStep(4)" id="step4" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">
+                <span class="text-lg">🎯</span>
+                <span class="hidden sm:inline">Personal Impact</span>
+            </button>
+            <button onclick="goToStep(5)" id="step5" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">
+                <span class="text-lg">✅</span>
+                <span class="hidden sm:inline">Action Plan</span>
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+            <!-- Step 0: Initial Assessment -->
+            <div id="stepContent0" class="step-content">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Initial Assessment</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Headline/Topic you're evaluating:
+                        </label>
+                        <input type="text" id="headline" oninput="saveData()" 
+                               placeholder="Enter the news headline or topic..."
+                               class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Source (website, person, platform):
+                        </label>
+                        <input type="text" id="source" oninput="saveData()" 
+                               placeholder="Where did you encounter this information?"
+                               class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Your immediate reaction (before analysis):
+                        </label>
+                        <textarea id="initial_reaction" oninput="saveData()" 
+                                  placeholder="What was your gut reaction? What thoughts came up?"
+                                  class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-20 resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 1: Emotion Check -->
+            <div id="stepContent1" class="step-content hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Emotion Check</h3>
+                <p class="text-gray-600 mb-4">
+                    What emotions are you experiencing? Select all that apply. Remember, awareness is the first step to regulation.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <label class="emotion-option flex items-center space-x-3 p-3 border-2 rounded-lg cursor-pointer transition-all bg-white border-gray-200 hover:bg-gray-50">
+                        <input type="checkbox" value="fear" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span class="font-medium">Fear/Anxiety</span>
+                    </label>
+
+                    <label class="emotion-option flex items-center space-x-3 p-3 border-2 rounded-lg cursor-pointer transition-all bg-white border-gray-200 hover:bg-gray-50">
+                        <input type="checkbox" value="anger" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span class="font-medium">Anger/Outrage</span>
+                    </label>
+
+                    <label class="emotion-option flex items-center space-x-3 p-3 border-2 rounded-lg cursor-pointer transition-all bg-white border-gray-200 hover:bg-gray-50">
+                        <input type="checkbox" value="sadness" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span class="font-medium">Sadness/Despair</span>
+                    </label>
+
+                    <label class="emotion-option flex items-center space-x-3 p-3 border-2 rounded-lg cursor-pointer transition-all bg-white border-gray-200 hover:bg-gray-50">
+                        <input type="checkbox" value="confusion" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span class="font-medium">Confusion/Overwhelm</span>
+                    </label>
+
+                    <label class="emotion-option flex items-center space-x-3 p-3 border-2 rounded-lg cursor-pointer transition-all bg-white border-gray-200 hover:bg-gray-50">
+                        <input type="checkbox" value="curiosity" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span class="font-medium">Curiosity/Interest</span>
+                    </label>
+
+                    <label class="emotion-option flex items-center space-x-3 p-3 border-2 rounded-lg cursor-pointer transition-all bg-white border-gray-200 hover:bg-gray-50">
+                        <input type="checkbox" value="peace" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span class="font-medium">Peace/Neutral</span>
+                    </label>
+                </div>
+
+                <div id="emotionFeedback" class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg hidden">
+                    <p class="text-sm text-blue-800">
+                        <strong>Awareness Note:</strong> <span id="emotionMessage"></span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 2: Source Evaluation -->
+            <div id="stepContent2" class="step-content hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Source Evaluation</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Source Credibility (1 = Known disinfo, 10 = Highly trusted)
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-500">1</span>
+                            <input type="range" min="1" max="10" value="5" id="credibility" onchange="saveData()" class="flex-1">
+                            <span class="text-sm text-gray-500">10</span>
+                            <span id="credibilityValue" class="text-sm font-medium w-8 text-center">5</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Bias Level (1 = Heavily biased, 10 = Neutral/Balanced)
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-500">1</span>
+                            <input type="range" min="1" max="10" value="5" id="bias_level" onchange="saveData()" class="flex-1">
+                            <span class="text-sm text-gray-500">10</span>
+                            <span id="biasValue" class="text-sm font-medium w-8 text-center">5</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" id="primary_source" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                            <span>This is a primary source (not reporting on someone else's reporting)</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" id="obvious_agenda" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                            <span>The source has an obvious agenda or bias</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Fact Analysis -->
+            <div id="stepContent3" class="step-content hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Fact Analysis</h3>
+                
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" id="verifiable" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span>Claims are verifiable with evidence/data</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" id="multiple_sources" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span>Multiple independent sources confirm this information</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" id="context_provided" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span>Full context and background information is provided</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" id="timing_suspicious" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span>Timing seems suspicious or coordinated</span>
+                    </label>
+                </div>
+
+                <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div class="flex items-start space-x-2">
+                        <span class="text-yellow-600 text-lg">⚠️</span>
+                        <div class="text-sm text-yellow-800">
+                            <strong>Red Flags:</strong> Be extra cautious if timing seems suspicious, sources are unnamed, 
+                            or the story triggers intense emotional reactions without providing solutions.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Personal Impact -->
+            <div id="stepContent4" class="step-content hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Personal Impact Assessment</h3>
+                
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" id="affects_directly" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span>This directly affects my life or decisions</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" id="actionable_info" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span>There are clear, actionable steps I can take</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" id="fear_based" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span>This information primarily triggers fear or anxiety</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" id="solution_oriented" onchange="saveData()" class="text-blue-600 focus:ring-blue-500">
+                        <span>Solutions or positive actions are suggested</span>
+                    </label>
+                </div>
+
+                <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div class="flex items-start space-x-2">
+                        <span class="text-green-600 text-lg">💡</span>
+                        <div class="text-sm text-green-800">
+                            <strong>Wisdom Check:</strong> Information that empowers you with actionable steps 
+                            while maintaining hope is generally more valuable than fear-based content without solutions.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Action Plan -->
+            <div id="stepContent5" class="step-content hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Discernment Results & Action Plan</h3>
+                
+                <!-- Discernment Score -->
+                <div class="bg-white border-2 border-gray-200 rounded-lg p-6 mb-6">
+                    <div class="text-center mb-4">
+                        <div id="scoreDisplay" class="text-3xl font-bold text-gray-900 mb-2">0/10</div>
+                        <div id="levelDisplay" class="text-lg font-semibold text-gray-600">Calculating...</div>
+                        <div id="descriptionDisplay" class="text-sm text-gray-600">Complete assessment for results</div>
+                    </div>
+                    
+                    <div class="w-full bg-gray-200 rounded-full h-3">
+                        <div id="scoreBar" class="h-3 rounded-full transition-all duration-500 bg-gray-400" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Action Plan -->
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Your response plan:
+                        </label>
+                        <textarea id="response_plan" oninput="saveData()" 
+                                  placeholder="Based on your analysis, what will you do with this information? Share it? Research more? Take action? Ignore it?"
+                                  class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 resize-none"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Final decision:
+                        </label>
+                        <select id="final_decision" onchange="saveData()" 
+                                class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select your decision...</option>
+                            <option value="trust_and_share">Trust and share responsibly</option>
+                            <option value="trust_and_act">Trust and take personal action</option>
+                            <option value="research_more">Need more research/verification</option>
+                            <option value="monitor">Monitor but don't act yet</option>
+                            <option value="dismiss">Dismiss as unreliable</option>
+                            <option value="disengage">Disengage for mental health</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div id="recommendations" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-blue-800 mb-2">Recommendations based on your score:</h4>
+                    <div id="recommendationText" class="text-sm text-blue-700">
+                        Complete your assessment to see personalized recommendations.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center">
+            <button id="prevBtn" onclick="previousStep()" 
+                    class="px-4 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                ← Previous
+            </button>
+
+            <button onclick="resetWorksheet()" 
+                    class="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50">
+                <span>🔄</span>
+                <span>Reset</span>
+            </button>
+
+            <button id="nextBtn" onclick="nextStep()" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                Next →
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center text-sm text-gray-500 border-t pt-6">
+            <p>Remember: Discernment is a skill that improves with practice. Trust your intuition alongside critical thinking.</p>
+            <p class="mt-2">🔗 Want more tools for navigating truth? Explore our complete discernment resources.</p>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 6;
+        let worksheetData = {};
+
+        // Initialize
+        document.getElementById('credibility').addEventListener('input', function() {
+            document.getElementById('credibilityValue').textContent = this.value;
+        });
+
+        document.getElementById('bias_level').addEventListener('input', function() {
+            document.getElementById('biasValue').textContent = this.value;
+        });
+
+        function saveData() {
+            // Save basic inputs
+            worksheetData.headline = document.getElementById('headline').value;
+            worksheetData.source = document.getElementById('source').value;
+            worksheetData.initial_reaction = document.getElementById('initial_reaction').value;
+
+            // Save emotions
+            const emotionCheckboxes = document.querySelectorAll('#stepContent1 input[type="checkbox"]:checked');
+            worksheetData.emotions = Array.from(emotionCheckboxes).map(cb => cb.value);
+
+            // Save source evaluation
+            worksheetData.credibility = parseInt(document.getElementById('credibility').value);
+            worksheetData.bias_level = parseInt(document.getElementById('bias_level').value);
+            worksheetData.primary_source = document.getElementById('primary_source').checked;
+            worksheetData.obvious_agenda = document.getElementById('obvious_agenda').checked;
+
+            // Save fact analysis
+            worksheetData.verifiable = document.getElementById('verifiable').checked;
+            worksheetData.multiple_sources = document.getElementById('multiple_sources').checked;
+            worksheetData.context_provided = document.getElementById('context_provided').checked;
+            worksheetData.timing_suspicious = document.getElementById('timing_suspicious').checked;
+
+            // Save personal impact
+            worksheetData.affects_directly = document.getElementById('affects_directly').checked;
+            worksheetData.actionable_info = document.getElementById('actionable_info').checked;
+            worksheetData.fear_based = document.getElementById('fear_based').checked;
+            worksheetData.solution_oriented = document.getElementById('solution_oriented').checked;
+
+            // Save action plan
+            worksheetData.response_plan = document.getElementById('response_plan').value;
+            worksheetData.final_decision = document.getElementById('final_decision').value;
+
+            updateEmotionFeedback();
+            if (currentStep === 5) {
+                calculateScore();
+            }
+        }
+
+        function updateEmotionFeedback() {
+            const emotions = worksheetData.emotions || [];
+            const feedback = document.getElementById('emotionFeedback');
+            const message = document.getElementById('emotionMessage');
+
+            if (emotions.length > 0) {
+                feedback.classList.remove('hidden');
+                const hasIntense = emotions.some(e => ['fear', 'anger'].includes(e));
+                const hasCalm = emotions.some(e => ['curiosity', 'peace'].includes(e));
+
+                if (hasIntense && !hasCalm) {
+                    message.textContent = "You're experiencing activating emotions. Take three deep breaths before continuing.";
+                } else if (hasCalm) {
+                    message.textContent = "You're experiencing balanced emotions. Good foundation for clear discernment.";
+                } else {
+                    message.textContent = "Notice your emotional state. This awareness helps with clearer thinking.";
+                }
+            } else {
+                feedback.classList.add('hidden');
+            }
+        }
+
+        function calculateScore() {
+            let score = 0;
+
+            // Source credibility (0-4 points)
+            score += Math.max(0, worksheetData.credibility - 5);
+
+            // Fact verification (0-3 points)
+            if (worksheetData.verifiable) score += 1;
+            if (worksheetData.multiple_sources) score += 1;
+            if (worksheetData.context_provided) score += 1;
+
+            // Emotional regulation (0-3 points)
+            const emotions = worksheetData.emotions || [];
+            const hasCalm = emotions.some(e => ['curiosity', 'peace'].includes(e));
+            const hasIntense = emotions.some(e => ['fear', 'anger'].includes(e));
+            if (hasCalm && !hasIntense) score += 3;
+            else if (hasCalm) score += 1;
+
+            score = Math.min(10, score);
+
+            // Update display
+            document.getElementById('scoreDisplay').textContent = score + '/10';
+            document.getElementById('scoreBar').style.width = (score * 10) + '%';
+
+            let level, color, description, recommendation;
+            if (score >= 8) {
+                level = 'High Discernment';
+                color = 'text-green-600';
+                description = 'Well-discerned information';
+                recommendation = '✅ This information appears well-sourced and trustworthy. Proceed with confidence.';
+                document.getElementById('scoreBar').className = 'h-3 rounded-full transition-all duration-500 bg-green-500';
+            } else if (score >= 6) {
+                level = 'Moderate Discernment';
+                color = 'text-yellow-600';
+                description = 'Proceed with caution';
+                recommendation = '⚠️ Moderately reliable. Consider seeking additional verification before acting.';
+                document.getElementById('scoreBar').className = 'h-3 rounded-full transition-all duration-500 bg-yellow-500';
+            } else if (score >= 4) {
+                level = 'Low Discernment';
+                color = 'text-orange-600';
+                description = 'Requires more verification';
+                recommendation = '🔍 Low reliability. Research from multiple independent sources before trusting.';
+                document.getElementById('scoreBar').className = 'h-3 rounded-full transition-all duration-500 bg-orange-500';
+            } else {
+                level = 'Very Low Discernment';
+                color = 'text-red-600';
+                description = 'Likely unreliable or manipulative';
+                recommendation = '❌ Very low reliability. Consider this likely disinformation or manipulation.';
+                document.getElementById('scoreBar').className = 'h-3 rounded-full transition-all duration-500 bg-red-500';
+            }
+
+            document.getElementById('levelDisplay').textContent = level;
+            document.getElementById('levelDisplay').className = 'text-lg font-semibold ' + color;
+            document.getElementById('descriptionDisplay').textContent = description;
+            document.getElementById('recommendationText').textContent = recommendation;
+        }
+
+        function updateProgress() {
+            const progress = ((currentStep + 1) / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = (currentStep + 1) + ' of ' + totalSteps;
+        }
+
+        function updateStepButtons() {
+            // Update step navigation buttons
+            for (let i = 0; i < totalSteps; i++) {
+                const btn = document.getElementById('step' + i);
+                if (i === currentStep) {
+                    btn.className = 'flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white';
+                } else if (i < currentStep) {
+                    btn.
