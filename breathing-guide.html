@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing & Grounding Exercise Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .breathing-circle {
+            transition: transform 2s ease-in-out;
+        }
+        .breathing-circle.inhale {
+            transform: scale(1.2);
+        }
+        .breathing-circle.exhale {
+            transform: scale(0.8);
+        }
+        .breathing-circle.hold {
+            transform: scale(1.0);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div id="app" class="max-w-4xl mx-auto p-6">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Breathing & Grounding Exercise Guide</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Regulate your nervous system and stay centered in truth. Choose the practice that matches your current need.
+            </p>
+        </div>
+
+        <!-- Quick Access Buttons -->
+        <div class="flex flex-wrap justify-center gap-3 mb-8">
+            <button onclick="startExercise('emergency')" 
+                    class="flex items-center space-x-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors">
+                <span>❤️ Emergency Reset</span>
+            </button>
+            <button onclick="startExercise('grounding')" 
+                    class="flex items-center space-x-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+                <span>⚓ Quick Grounding</span>
+            </button>
+        </div>
+
+        <!-- Speed Control -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">Customize Your Practice Speed</h3>
+            <div class="flex items-center justify-center space-x-4 mb-4">
+                <button onclick="adjustSpeed(-0.25)" 
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    Slower
+                </button>
+                <div class="flex items-center space-x-3">
+                    <span class="text-sm text-gray-500">0.5x</span>
+                    <input type="range" id="speedSlider" min="0.5" max="2.0" step="0.25" value="1.0" 
+                           onchange="setSpeed(this.value)" class="w-32">
+                    <span class="text-sm text-gray-500">2x</span>
+                </div>
+                <button onclick="adjustSpeed(0.25)" 
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    Faster
+                </button>
+            </div>
+            <div class="text-center">
+                <span id="speedDisplay" class="text-lg font-medium text-gray-800">1.0x speed</span>
+                <p id="speedDescription" class="text-sm text-gray-600 mt-1">Standard comfortable pace</p>
+            </div>
+        </div>
+
+        <!-- Exercise Selection -->
+        <div id="exerciseSelection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Emergency Reset -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-red-50 mb-4">
+                    <span class="text-2xl">❤️</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Emergency Reset</h3>
+                <p class="text-gray-600 text-sm mb-3">Quick regulation for overwhelming moments</p>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span>⏱️ 2 minutes</span>
+                    <span>8 cycles</span>
+                </div>
+                <p class="text-xs text-gray-500 mb-4">Use this when feeling overwhelmed by news, conflict, or intense emotions.</p>
+                <button onclick="startExercise('emergency')" 
+                        class="w-full py-2 px-4 rounded-lg text-white font-medium bg-red-500 hover:bg-red-600 transition-colors">
+                    Start Practice
+                </button>
+            </div>
+
+            <!-- 5-4-3-2-1 Grounding -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-blue-50 mb-4">
+                    <span class="text-2xl">⚓</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">5-4-3-2-1 Grounding</h3>
+                <p class="text-gray-600 text-sm mb-3">Anchor yourself in the present moment</p>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span>⏱️ 5 minutes</span>
+                    <span>1 cycle</span>
+                </div>
+                <p class="text-xs text-gray-500 mb-4">Perfect when feeling disconnected, anxious, or caught in mental loops.</p>
+                <button onclick="startExercise('grounding')" 
+                        class="w-full py-2 px-4 rounded-lg text-white font-medium bg-blue-500 hover:bg-blue-600 transition-colors">
+                    Start Practice
+                </button>
+            </div>
+
+            <!-- Heart Coherence -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-pink-50 mb-4">
+                    <span class="text-2xl">💗</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Heart Coherence</h3>
+                <p class="text-gray-600 text-sm mb-3">Balance your nervous system and emotions</p>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span>⏱️ 5 minutes</span>
+                    <span>15 cycles</span>
+                </div>
+                <p class="text-xs text-gray-500 mb-4">Use before making important decisions or when needing emotional balance.</p>
+                <button onclick="startExercise('coherence')" 
+                        class="w-full py-2 px-4 rounded-lg text-white font-medium bg-pink-500 hover:bg-pink-600 transition-colors">
+                    Start Practice
+                </button>
+            </div>
+
+            <!-- Divine Connection -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-purple-50 mb-4">
+                    <span class="text-2xl">✨</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Divine Connection</h3>
+                <p class="text-gray-600 text-sm mb-3">Connect with Creator and inner wisdom</p>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span>⏱️ 10 minutes</span>
+                    <span>8 cycles</span>
+                </div>
+                <p class="text-xs text-gray-500 mb-4">When you need spiritual guidance, peace, or connection to higher wisdom.</p>
+                <button onclick="startExercise('spiritual')" 
+                        class="w-full py-2 px-4 rounded-lg text-white font-medium bg-purple-500 hover:bg-purple-600 transition-colors">
+                    Start Practice
+                </button>
+            </div>
+
+            <!-- Box Breathing -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-green-50 mb-4">
+                    <span class="text-2xl">💨</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Box Breathing</h3>
+                <p class="text-gray-600 text-sm mb-3">Military-grade focus and calm</p>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span>⏱️ 4 minutes</span>
+                    <span>15 cycles</span>
+                </div>
+                <p class="text-xs text-gray-500 mb-4">For focus, clarity, and when you need to make important decisions.</p>
+                <button onclick="startExercise('box')" 
+                        class="w-full py-2 px-4 rounded-lg text-white font-medium bg-green-500 hover:bg-green-600 transition-colors">
+                    Start Practice
+                </button>
+            </div>
+        </div>
+
+        <!-- Exercise Interface (Hidden initially) -->
+        <div id="exerciseInterface" class="hidden">
+            <div class="max-w-2xl mx-auto">
+                <!-- Exercise Header -->
+                <div class="text-center mb-8">
+                    <div id="exerciseIcon" class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4">
+                        <span class="text-3xl">❤️</span>
+                    </div>
+                    <h2 id="exerciseName" class="text-2xl font-bold text-gray-800 mb-2">Emergency Reset</h2>
+                    <p id="cycleInfo" class="text-gray-600">Cycle 1 of 8</p>
+                </div>
+
+                <!-- Breathing Visual -->
+                <div class="flex justify-center mb-8">
+                    <div id="breathingCircle" class="breathing-circle w-32 h-32 rounded-full border-4 bg-gray-100 border-gray-400 flex items-center justify-center">
+                        <span class="text-4xl">💨</span>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="text-center mb-8">
+                    <div id="currentPhase" class="text-3xl font-bold text-gray-800 mb-2">Breathe In</div>
+                    <div id="phaseInstruction" class="text-lg text-gray-600 mb-4">Inhale slowly through your nose</div>
+                    <div id="timeDisplay" class="text-2xl font-mono text-blue-600">4.0s</div>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex justify-center space-x-4 mb-6">
+                    <button id="pauseBtn" onclick="togglePause()" 
+                            class="flex items-center space-x-2 px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors">
+                        <span>⏸️ Pause</span>
+                    </button>
+                    <button onclick="stopExercise()" 
+                            class="flex items-center space-x-2 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                        <span>🔄 Stop</span>
+                    </button>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="bg-gray-50 rounded-lg p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">When to Use Each Practice</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                    <h4 class="font-medium text-gray-700 mb-2">For Overwhelming Moments:</h4>
+                    <ul class="space-y-1 text-gray-600">
+                        <li>• Emergency Reset - immediate overwhelm</li>
+                        <li>• 5-4-3-2-1 Grounding - anxiety/panic</li>
+                        <li>• Heart Coherence - emotional turbulence</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium text-gray-700 mb-2">For Daily Practice:</h4>
+                    <ul class="space-y-1 text-gray-600">
+                        <li>• Box Breathing - before important tasks</li>
+                        <li>• Divine Connection - morning or evening</li>
+                        <li>• Heart Coherence - decision making</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Tips -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-blue-800 mb-3">Pro Tips for Better Regulation</h3>
+            <div class="space-y-2 text-blue-700 text-sm">
+                <p>• <strong>Consistency over perfection:</strong> 2 minutes daily beats 20 minutes once a week</p>
+                <p>• <strong>Before consuming news:</strong> Do a quick grounding practice first</p>
+                <p>• <strong>After difficult conversations:</strong> Use Emergency Reset to clear your energy</p>
+                <p>• <strong>Trust your intuition:</strong> Your body knows which practice it needs</p>
+                <p>• <strong>Make it sacred:</strong> These moments with Creator are powerful</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center text-sm text-gray-500 border-t pt-6">
+            <p>Remember: Your nervous system is your foundation. When you're regulated, you make better decisions.</p>
+            <p class="mt-2">🔗 Want deeper practices? Explore our complete nervous system mastery program.</p>
+        </div>
+    </div>
+
+    <script>
+        // Exercise data
+        const exercises = {
+            emergency: {
+                name: 'Emergency Reset',
+                icon: '❤️',
+                bgColor: 'bg-red-50',
+                pattern: [
+                    { phase: 'Breathe In', duration: 4000, instruction: 'Inhale slowly through your nose' },
+                    { phase: 'Hold', duration: 4000, instruction: 'Hold gently, stay present' },
+                    { phase: 'Breathe Out', duration: 6000, instruction: 'Exhale completely through your mouth' },
+                    { phase: 'Rest', duration: 2000, instruction: 'Natural pause, just be' }
+                ],
+                cycles: 8
+            },
+            grounding: {
+                name: '5-4-3-2-1 Grounding',
+                icon: '⚓',
+                bgColor: 'bg-blue-50',
+                pattern: [
+                    { phase: 'Notice 5 Things', duration: 60000, instruction: 'Look around - name 5 things you can see' },
+                    { phase: 'Feel 4 Things', duration: 45000, instruction: 'Touch and feel 4 different textures' },
+                    { phase: 'Hear 3 Things', duration: 30000, instruction: 'Listen carefully - identify 3 sounds' },
+                    { phase: 'Smell 2 Things', duration: 30000, instruction: 'Notice 2 different scents around you' },
+                    { phase: 'Taste 1 Thing', duration: 15000, instruction: 'Focus on one taste in your mouth' }
+                ],
+                cycles: 1
+            },
+            coherence: {
+                name: 'Heart Coherence',
+                icon: '💗',
+                bgColor: 'bg-pink-50',
+                pattern: [
+                    { phase: 'Heart Focus', duration: 5000, instruction: 'Place hand on heart, feel it beating' },
+                    { phase: 'Breathe In', duration: 5000, instruction: 'Breathe into your heart space' },
+                    { phase: 'Breathe Out', duration: 5000, instruction: 'Breathe out through your heart' },
+                    { phase: 'Gratitude', duration: 5000, instruction: 'Feel appreciation for something good' }
+                ],
+                cycles: 15
+            },
+            spiritual: {
+                name: 'Divine Connection',
+                icon: '✨',
+                bgColor: 'bg-purple-50',
+                pattern: [
+                    { phase: 'Center', duration: 10000, instruction: 'Sit quietly, spine straight, eyes soft' },
+                    { phase: 'Invite', duration: 15000, instruction: 'Invite Divine presence into this moment' },
+                    { phase: 'Listen', duration: 20000, instruction: 'Listen with your heart for guidance' },
+                    { phase: 'Receive', duration: 15000, instruction: 'Receive whatever wisdom comes' },
+                    { phase: 'Gratitude', duration: 10000, instruction: 'Thank Creator for this connection' }
+                ],
+                cycles: 8
+            },
+            box: {
+                name: 'Box Breathing',
+                icon: '💨',
+                bgColor: 'bg-green-50',
+                pattern: [
+                    { phase: 'Breathe In', duration: 4000, instruction: 'Inhale for 4 counts' },
+                    { phase: 'Hold', duration: 4000, instruction: 'Hold for 4 counts' },
+                    { phase: 'Breathe Out', duration: 4000, instruction: 'Exhale for 4 counts' },
+                    { phase: 'Hold', duration: 4000, instruction: 'Hold empty for 4 counts' }
+                ],
+                cycles: 15
+            }
+        };
+
+        // State
+        let currentExercise = null;
+        let isActive = false;
+        let isPaused = false;
+        let currentCycle = 0;
+        let phaseIndex = 0;
+        let timeRemaining = 0;
+        let speedMultiplier = 1.0;
+        let timer = null;
+
+        // Speed control functions
+        function setSpeed(value) {
+            speedMultiplier = parseFloat(value);
+            updateSpeedDisplay();
+        }
+
+        function adjustSpeed(change) {
+            const newSpeed = Math.max(0.5, Math.min(2.0, speedMultiplier + change));
+            speedMultiplier = newSpeed;
+            document.getElementById('speedSlider').value = newSpeed;
+            updateSpeedDisplay();
+        }
+
+        function updateSpeedDisplay() {
+            document.getElementById('speedDisplay').textContent = speedMultiplier + 'x speed';
+            const description = speedMultiplier <= 0.75 ? 'Slow & gentle pace' :
+                              speedMultiplier <= 1.25 ? 'Standard comfortable pace' :
+                              'Energizing faster pace';
+            document.getElementById('speedDescription').textContent = description;
+        }
+
+        // Exercise functions
+        function startExercise(exerciseKey) {
+            currentExercise = exercises[exerciseKey];
+            isActive = true;
+            isPaused = false;
+            currentCycle = 0;
+            phaseIndex = 0;
+
+            // Hide selection, show interface
+            document.getElementById('exerciseSelection').classList.add('hidden');
+            document.getElementById('exerciseInterface').classList.remove('hidden');
+
+            // Update interface
+            document.getElementById('exerciseIcon').innerHTML = `<span class="text-3xl">${currentExercise.icon}</span>`;
+            document.getElementById('exerciseName').textContent = currentExercise.name;
+
+            runCycle();
+        }
+
+        function runCycle() {
+            if (currentCycle >= currentExercise.cycles) {
+                completeExercise();
+                return;
+            }
+
+            currentCycle++;
+            phaseIndex = 0;
+            document.getElementById('cycleInfo').textContent = `Cycle ${currentCycle} of ${currentExercise.cycles}`;
+            updateProgressBar();
+            runPhase();
+        }
+
+        function runPhase() {
+            if (phaseIndex >= currentExercise.pattern.length) {
+                setTimeout(() => {
+                    if (isActive && !isPaused) runCycle();
+                }, 1000);
+                return;
+            }
+
+            const phase = currentExercise.pattern[phaseIndex];
+            const adjustedDuration = phase.duration * speedMultiplier;
+            
+            // Update display
+            document.getElementById('currentPhase').textContent = phase.phase;
+            document.getElementById('phaseInstruction').textContent = phase.instruction;
+            
+            // Update breathing visual
+            updateBreathingVisual(phase.phase);
+            
+            // Start countdown
+            timeRemaining = adjustedDuration / 1000;
+            updateTimeDisplay();
+            
+            timer = setInterval(() => {
+                if (!isPaused) {
+                    timeRemaining -= 0.1;
+                    updateTimeDisplay();
+                    
+                    if (timeRemaining <= 0) {
+                        clearInterval(timer);
+                        phaseIndex++;
+                        if (isActive) runPhase();
+                    }
+                }
+            }, 100);
+        }
+
+        function updateBreathingVisual(phase) {
+            const circle = document.getElementById('breathingCircle');
+            circle.className = 'breathing-circle w-32 h-32 rounded-full border-4 flex items-center justify-center';
+            
+            if (phase.toLowerCase().includes('in')) {
+                circle.classList.add('inhale', 'bg-blue-100', 'border-blue-400');
+            } else if (phase.toLowerCase().includes('out')) {
+                circle.classList.add('exhale', 'bg-red-100', 'border-red-400');
+            } else if (phase.toLowerCase().includes('hold')) {
+                circle.classList.add('hold', 'bg-yellow-100', 'border-yellow-400');
+            } else {
+                circle.classList.add('bg-gray-100', 'border-gray-400');
+            }
+        }
+
+        function updateTimeDisplay() {
+            document.getElementById('timeDisplay').textContent = timeRemaining.toFixed(1) + 's';
+        }
+
+        function updateProgressBar() {
+            const progress = (currentCycle / currentExercise.cycles) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            const btn = document.getElementById('pauseBtn');
+            btn.innerHTML = isPaused ? '<span>▶️ Resume</span>' : '<span>⏸️ Pause</span>';
+        }
+
+        function stopExercise() {
+            isActive = false;
+            isPaused = false;
+            if (timer) clearInterval(timer);
+            
+            // Show selection, hide interface
+            document.getElementById('exerciseSelection').classList.remove('hidden');
+            document.getElementById('exerciseInterface').classList.add('hidden');
+        }
+
+        function completeExercise() {
+            isActive = false;
+            document.getElementById('currentPhase').textContent = 'Complete! Well done.';
+            document.getElementById('phaseInstruction').textContent = 'Take a moment to notice how you feel.';
+            document.getElementById('timeDisplay').textContent = '✨';
+            
+            setTimeout(() => {
+                stopExercise();
+            }, 5000);
+        }
+
+        // Initialize
+        updateSpeedDisplay();
+    </script>
+</body>
+</html>
