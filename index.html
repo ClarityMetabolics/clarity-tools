@@ -3,765 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Truth Fatigue Assessment - Four Anchors</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #4a90a4 0%, #357a96 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 300;
-        }
-
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-            line-height: 1.6;
-        }
-
-        .quiz-content {
-            padding: 40px 30px;
-        }
-
-        .question {
-            display: none;
-            margin-bottom: 30px;
-        }
-
-        .question.active {
-            display: block;
-        }
-
-        .question h3 {
-            font-size: 1.4em;
-            margin-bottom: 20px;
-            color: #4a5568;
-            line-height: 1.5;
-        }
-
-        .answers {
-            display: grid;
-            gap: 15px;
-        }
-
-        .answer {
-            padding: 15px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: #f8fafc;
-        }
-
-        .answer:hover {
-            border-color: #4a90a4;
-            background: #e6f3f7;
-        }
-
-        .answer.selected {
-            border-color: #4a90a4;
-            background: #4a90a4;
-            color: white;
-        }
-
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            background: #4a90a4;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #357a96;
-        }
-
-        .btn-secondary {
-            background: #e2e8f0;
-            color: #4a5568;
-        }
-
-        .btn-secondary:hover {
-            background: #cbd5e0;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4a90a4, #357a96);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .results {
-            display: none;
-            padding: 60px 40px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            min-height: 100vh;
-        }
-
-        .results.show {
-            display: block;
-        }
-
-        .result-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .result-icon {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin: 0 auto 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: #4a90a4;
-            background: linear-gradient(135deg, #f8fbfc 0%, #e8f4f8 100%);
-            border: 3px solid #4a90a4;
-        }
-
-        .result-card {
-            background: linear-gradient(135deg, #fefefe 0%, #f9f7f4 100%);
-            border-radius: 20px;
-            padding: 40px;
-            margin: 30px 0;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-            border: 1px solid #f0ede8;
-        }
-
-        .result-score {
-            font-size: 1.2em;
-            color: #4a90a4;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .result-title {
-            font-size: 2.5em;
-            color: #2d3748;
-            margin-bottom: 20px;
-            font-weight: 300;
-            line-height: 1.2;
-        }
-
-        .result-description {
-            font-size: 1.2em;
-            line-height: 1.7;
-            color: #4a5568;
-            margin-bottom: 30px;
-        }
-
-        .recommendations {
-            background: linear-gradient(135deg, #fefefe 0%, #f9f7f4 100%);
-            padding: 40px;
-            border-radius: 20px;
-            margin: 30px 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border: 1px solid #f0ede8;
-        }
-
-        .recommendations h4 {
-            color: #2d3748;
-            margin-bottom: 30px;
-            font-size: 1.8em;
-            font-weight: 300;
-            text-align: center;
-        }
-
-        .recommendation-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .recommendation-item {
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-            padding: 25px;
-            border-radius: 15px;
-            border-left: 4px solid #667eea;
-            transition: transform 0.3s ease;
-        }
-
-        .recommendation-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .recommendation-icon {
-            width: 40px;
-            height: 40px;
-            background: #667eea;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-
-        .recommendation-text {
-            color: #2d3748;
-            font-size: 1.1em;
-            line-height: 1.6;
-            font-weight: 500;
-        }
-
-        .cta {
-            background: linear-gradient(135deg, #4a90a4 0%, #357a96 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 20px;
-            margin: 40px 0;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(74, 144, 164, 0.3);
-        }
-
-        .cta h4 {
-            margin-bottom: 15px;
-            font-size: 1.8em;
-            font-weight: 300;
-        }
-
-        .cta p {
-            margin-bottom: 25px;
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .cta-button {
-            background: rgba(255,255,255,0.2);
-            padding: 15px 30px;
-            border-radius: 25px;
-            color: white;
-            text-decoration: none;
-            display: inline-block;
-            cursor: pointer;
-            font-weight: 500;
-            border: 2px solid rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-        }
-
-        .cta-button:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-
-        .restart-btn {
-            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            margin: 30px auto;
-            display: block;
-            font-size: 1.1em;
-            font-weight: 500;
-            box-shadow: 0 10px 25px rgba(74, 85, 104, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .restart-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(74, 85, 104, 0.4);
-        }
-
-        @media (max-width: 600px) {
-            .header h1 {
-                font-size: 2em;
-            }
-            
-            .header p {
-                font-size: 1em;
-            }
-            
-            .quiz-content {
-                padding: 20px;
-            }
-            
-            .question h3 {
-                font-size: 1.2em;
-            }
-        }
-    </style>
+    <title>Free Tools for Grounded Truth-Seekers | Clarity Metabolics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description" content="Free tools to help you navigate information overload, regulate your nervous system, and stay grounded in truth. Perfect for awakened individuals seeking balance.">
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Truth Fatigue Assessment</h1>
-            <p>Discover where you are in your awakening journey and get personalized guidance for moving forward with peace and clarity.</p>
-        </div>
-
-        <div class="quiz-content" id="quiz-section">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-
-            <div class="question active" data-question="1">
-                <h3>When you encounter new information about world events or "hidden truths," how do you typically respond?</h3>
-                <div class="answers">
-                    <div class="answer" data-value="1">I feel excited and immediately want to research more and share with others</div>
-                    <div class="answer" data-value="2">I feel overwhelmed but still consume the information compulsively</div>
-                    <div class="answer" data-value="3">I feel anxious and struggle to process what it means for my life</div>
-                    <div class="answer" data-value="4">I feel hopeless and like there's nothing I can do about any of it</div>
-                </div>
-            </div>
-
-            <div class="question" data-question="2">
-                <h3>How has your relationship with family and friends changed since becoming aware of these deeper truths?</h3>
-                <div class="answers">
-                    <div class="answer" data-value="1">I'm able to share information calmly and some people listen</div>
-                    <div class="answer" data-value="2">I find myself getting frustrated when others don't "get it"</div>
-                    <div class="answer" data-value="3">I've become more isolated because I don't know how to relate to "sleeping" people</div>
-                    <div class="answer" data-value="4">I feel completely alone and misunderstood by everyone around me</div>
-                </div>
-            </div>
-
-            <div class="question" data-question="3">
-                <h3>How do you currently manage your information consumption about current events?</h3>
-                <div class="answers">
-                    <div class="answer" data-value="1">I have set boundaries and choose my sources carefully</div>
-                    <div class="answer" data-value="2">I consume a lot but try to fact-check and verify information</div>
-                    <div class="answer" data-value="3">I find myself doom-scrolling and can't seem to stop</div>
-                    <div class="answer" data-value="4">I either avoid all news or become obsessed with worst-case scenarios</div>
-                </div>
-            </div>
-
-            <div class="question" data-question="4">
-                <h3>How is your physical and mental well-being right now?</h3>
-                <div class="answers">
-                    <div class="answer" data-value="1">I maintain healthy habits and feel generally balanced</div>
-                    <div class="answer" data-value="2">I have some stress symptoms but still function well day-to-day</div>
-                    <div class="answer" data-value="3">I experience anxiety, sleep issues, or other stress-related symptoms regularly</div>
-                    <div class="answer" data-value="4">I feel constantly on edge, exhausted, or struggling with depression</div>
-                </div>
-            </div>
-
-            <div class="question" data-question="5">
-                <h3>What's your current relationship with your spiritual or faith practice?</h3>
-                <div class="answers">
-                    <div class="answer" data-value="1">I feel connected and use my faith as an anchor during uncertain times</div>
-                    <div class="answer" data-value="2">I'm exploring spirituality more deeply since awakening to truth</div>
-                    <div class="answer" data-value="3">I feel disconnected from my spiritual practice or questioning my beliefs</div>
-                    <div class="answer" data-value="4">I feel abandoned by God or like my faith has been shattered</div>
-                </div>
-            </div>
-
-            <div class="question" data-question="6">
-                <h3>How do you view the future and your ability to create positive change?</h3>
-                <div class="answers">
-                    <div class="answer" data-value="1">I feel hopeful and empowered to make a difference in my sphere of influence</div>
-                    <div class="answer" data-value="2">I have hope but need more clarity on how to move forward effectively</div>
-                    <div class="answer" data-value="3">I feel uncertain about the future and my role in creating change</div>
-                    <div class="answer" data-value="4">I feel like everything is hopeless and nothing I do matters</div>
-                </div>
-            </div>
-
-            <div class="question" data-question="7">
-                <h3>How do you typically share information about what you've learned with others?</h3>
-                <div class="answers">
-                    <div class="answer" data-value="1">I share thoughtfully and meet people where they are</div>
-                    <div class="answer" data-value="2">I share information but sometimes come across as too intense</div>
-                    <div class="answer" data-value="3">I avoid sharing because I'm afraid of being judged or rejected</div>
-                    <div class="answer" data-value="4">I either say nothing or become argumentative and push people away</div>
-                </div>
-            </div>
-
-            <div class="question" data-question="8">
-                <h3>What's your biggest challenge right now in your awakening journey?</h3>
-                <div class="answers">
-                    <div class="answer" data-value="1">Finding practical ways to prepare and protect my family</div>
-                    <div class="answer" data-value="2">Managing information overload and staying focused</div>
-                    <div class="answer" data-value="3">Dealing with anxiety and fear about what's coming</div>
-                    <div class="answer" data-value="4">Feeling paralyzed by the enormity of what's happening</div>
-                </div>
-            </div>
-
-            <div class="navigation">
-                <button class="btn btn-secondary" id="prevBtn" style="display: none;">Previous</button>
-                <div id="questionCounter">Question 1 of 8</div>
-                <button class="btn btn-primary" id="nextBtn">Next</button>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <div class="max-w-6xl mx-auto p-6">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+                Free Tools for Truth-Seekers
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+                Navigate information overload with wisdom. Regulate your nervous system. 
+                Stay grounded in truth while maintaining your inner peace.
+            </p>
+            <div class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                <span class="mr-2">✨</span>
+                Designed for awakened individuals seeking balance
             </div>
         </div>
 
-        <div class="results" id="results">
-            <div class="result-header">
-                <div class="result-icon" id="resultIcon">🧭</div>
-            </div>
-            
-            <div class="result-card" id="resultCard">
-                <div class="result-score" id="resultScore"></div>
-                <div class="result-title" id="resultTitle"></div>
-                <div class="result-description" id="resultDescription"></div>
-            </div>
-            
-            <div class="recommendations" id="recommendations">
-                <h4>Your Path Forward</h4>
-                <div class="recommendation-grid" id="recommendationsList"></div>
+        <!-- Tools Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <!-- Truth Fatigue Quiz -->
+            <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+                        <span class="text-3xl">🔥</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Truth Fatigue Assessment</h3>
+                    <p class="text-gray-600">Discover if you're experiencing truth fatigue and get personalized guidance.</p>
+                </div>
+                
+                <div class="space-y-3 text-sm text-gray-600 mb-6">
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        Identify your current overwhelm level
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        Get personalized recovery strategies
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        Understand your awakening journey
+                    </div>
+                </div>
+                
+                <a href="truth-fatigue-quiz.html" 
+                   class="block w-full text-center py-3 px-6 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors">
+                    Take Assessment
+                </a>
             </div>
 
-            <div class="cta">
-                <h4>Ready to Move Forward?</h4>
-                <p>Join thousands of others who are creating grounded, truth-centered lives using the Four Anchors approach.</p>
-                <div class="cta-buttons">
-                    <a href="https://claritymetabolics.com" target="_blank" class="cta-button">🌐 Visit Our Website</a>
-                    <a href="#" id="downloadPDF" class="cta-button">📄 Download Your Results</a>
+            <!-- Nervous System Tracker -->
+            <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                        <span class="text-3xl">⚖️</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Five Anchors Tracker</h3>
+                    <p class="text-gray-600">Track your nervous system regulation across Body, Mind, Emotion, Spirit & Community.</p>
+                </div>
+                
+                <div class="space-y-3 text-sm text-gray-600 mb-6">
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        Daily regulation state tracking
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        Five anchors assessment
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        Weekly insights and patterns
+                    </div>
+                </div>
+                
+                <a href="nervous-system-tracker.html" 
+                   class="block w-full text-center py-3 px-6 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors">
+                    Start Tracking
+                </a>
+            </div>
+
+            <!-- Discernment Worksheet -->
+            <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
+                        <span class="text-3xl">🧠</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Discernment Worksheet</h3>
+                    <p class="text-gray-600">Evaluate current events with wisdom and avoid falling into fear or manipulation.</p>
+                </div>
+                
+                <div class="space-y-3 text-sm text-gray-600 mb-6">
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        6-step evaluation process
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        Emotion regulation guidance
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        Discernment scoring system
+                    </div>
+                </div>
+                
+                <a href="discernment-worksheet.html" 
+                   class="block w-full text-center py-3 px-6 bg-purple-500 text-white font-medium rounded-lg hover:bg-purple-600 transition-colors">
+                    Start Worksheet
+                </a>
+            </div>
+
+            <!-- Breathing Guide -->
+            <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                        <span class="text-3xl">🫁</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Breathing & Grounding</h3>
+                    <p class="text-gray-600">Regulate your nervous system with 5 guided breathing practices and grounding exercises.</p>
+                </div>
+                
+                <div class="space-y-3 text-sm text-gray-600 mb-6">
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        5 breathing practices
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        Customizable speed controls
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-green-600 mr-2">✓</span>
+                        Visual breathing guidance
+                    </div>
+                </div>
+                
+                <a href="breathing-guide.html" 
+                   class="block w-full text-center py-3 px-6 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition-colors">
+                    Start Practice
+                </a>
+            </div>
+        </div>
+
+        <!-- Call to Action Section -->
+        <div class="bg-white rounded-xl shadow-lg p-8 text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Ready for Deeper Support?</h2>
+            <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+                These tools are just the beginning. Our complete programs help you master nervous system regulation, 
+                develop unshakeable discernment, and create a life of grounded truth and inner peace.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#" class="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                    Explore Full Programs
+                </a>
+                <a href="#" class="px-8 py-3 border-2 border-blue-600 text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition-colors">
+                    Join Our Community
+                </a>
+            </div>
+        </div>
+
+        <!-- How These Tools Help -->
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl text-white p-8 mb-12">
+            <h2 class="text-3xl font-bold mb-6 text-center">Why These Tools Matter</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="text-4xl mb-4">🛡️</div>
+                    <h3 class="text-xl font-semibold mb-2">Protect Your Peace</h3>
+                    <p class="text-blue-100">
+                        Navigate information overload without losing your center or falling into fear-based reactions.
+                    </p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="text-4xl mb-4">🧭</div>
+                    <h3 class="text-xl font-semibold mb-2">Develop Discernment</h3>
+                    <p class="text-blue-100">
+                        Build the skills to distinguish truth from manipulation while staying emotionally regulated.
+                    </p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="text-4xl mb-4">💝</div>
+                    <h3 class="text-xl font-semibold mb-2">Stay Connected</h3>
+                    <p class="text-blue-100">
+                        Maintain your spiritual connection and hope while processing difficult truths about the world.
+                    </p>
                 </div>
             </div>
+        </div>
 
-            <button class="restart-btn" onclick="restartQuiz()">Take Assessment Again</button>
+        <!-- Quick Start Guide -->
+        <div class="bg-gray-50 rounded-xl p-8 mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Quick Start Guide</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="text-3xl mb-3">1️⃣</div>
+                    <h3 class="font-semibold text-gray-800 mb-2">Assess Yourself</h3>
+                    <p class="text-sm text-gray-600">Start with the Truth Fatigue Assessment to understand where you are.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="text-3xl mb-3">2️⃣</div>
+                    <h3 class="font-semibold text-gray-800 mb-2">Regulate Daily</h3>
+                    <p class="text-sm text-gray-600">Use the breathing guide when overwhelmed and track with Five Anchors.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="text-3xl mb-3">3️⃣</div>
+                    <h3 class="font-semibold text-gray-800 mb-2">Practice Discernment</h3>
+                    <p class="text-sm text-gray-600">Use the worksheet before consuming or sharing current events information.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="text-3xl mb-3">4️⃣</div>
+                    <h3 class="font-semibold text-gray-800 mb-2">Stay Consistent</h3>
+                    <p class="text-sm text-gray-600">Small daily practices create lasting transformation and inner stability.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testimonial Style Section -->
+        <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+            <div class="text-6xl mb-4">🌟</div>
+            <blockquote class="text-xl italic text-gray-700 mb-4 max-w-3xl mx-auto">
+                "These tools helped me navigate my awakening without losing my peace. I finally feel grounded in truth instead of overwhelmed by it."
+            </blockquote>
+            <p class="text-gray-600 font-medium">— Truth-Seeker Community Member</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-12 text-center text-gray-600">
+            <p class="mb-2">Created with ♥ for the awakened community</p>
+            <p class="text-sm">Remember: You are not alone in this journey. Stay grounded. Stay hopeful. Stay connected.</p>
         </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script>
-        let currentQuestion = 1;
-        const totalQuestions = 8;
-        let answers = {};
-
-        function updateProgress() {
-            const progress = ((currentQuestion - 1) / totalQuestions) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-        }
-
-        function updateQuestionCounter() {
-            document.getElementById('questionCounter').textContent = `Question ${currentQuestion} of ${totalQuestions}`;
-        }
-
-        function showQuestion(questionNum) {
-            // Hide all questions
-            const questions = document.querySelectorAll('.question');
-            questions.forEach(q => q.classList.remove('active'));
-            
-            // Show current question
-            const currentQ = document.querySelector(`[data-question="${questionNum}"]`);
-            if (currentQ) {
-                currentQ.classList.add('active');
-            }
-            
-            updateProgress();
-            updateQuestionCounter();
-            
-            // Update navigation
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            
-            prevBtn.style.display = questionNum > 1 ? 'block' : 'none';
-            nextBtn.textContent = questionNum === totalQuestions ? 'Get Results' : 'Next';
-        }
-
-        function nextQuestion() {
-            const currentQuestionElement = document.querySelector(`[data-question="${currentQuestion}"]`);
-            const selectedAnswer = currentQuestionElement.querySelector('.answer.selected');
-            
-            if (!selectedAnswer) {
-                alert('Please select an answer before continuing.');
-                return;
-            }
-            
-            // Save the answer
-            answers[currentQuestion] = parseInt(selectedAnswer.dataset.value);
-            
-            if (currentQuestion < totalQuestions) {
-                currentQuestion++;
-                showQuestion(currentQuestion);
-            } else {
-                // Calculate and show results
-                calculateResults();
-            }
-        }
-
-        function previousQuestion() {
-            if (currentQuestion > 1) {
-                currentQuestion--;
-                showQuestion(currentQuestion);
-            }
-        }
-
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // Calculate total score
-            let score = 0;
-            for (let i = 1; i <= totalQuestions; i++) {
-                if (answers[i]) {
-                    score += answers[i];
-                }
-            }
-            
-            // Determine result category
-            let resultTitle, resultDescription, recommendations;
-            
-            if (score <= 12) {
-                resultTitle = "Grounded Awakening";
-                resultDescription = "You're managing your awakening journey with remarkable balance. You've found ways to stay informed while maintaining your peace and relationships.";
-                recommendations = [
-                    "Consider becoming a bridge for others struggling with truth fatigue",
-                    "Explore leadership opportunities in your community",
-                    "Focus on practical preparation and solution-building",
-                    "Share your balanced approach with those who are overwhelmed"
-                ];
-            } else if (score <= 20) {
-                resultTitle = "Information Overload";
-                resultDescription = "You're deeply engaged in learning but struggling with the volume of information and its emotional impact.";
-                recommendations = [
-                    "Set specific boundaries around information consumption",
-                    "Learn nervous system regulation techniques",
-                    "Practice discernment skills for evaluating sources",
-                    "Focus on actionable steps rather than just consuming information"
-                ];
-            } else if (score <= 26) {
-                resultTitle = "Truth Fatigue";
-                resultDescription = "The weight of what you've learned is taking a toll on your mental and physical health.";
-                recommendations = [
-                    "Prioritize nervous system healing and stress management",
-                    "Reconnect with your spiritual practice or faith",
-                    "Find community with others who understand your experience",
-                    "Learn to share information in ways that don't isolate you"
-                ];
-            } else {
-                resultTitle = "Black Pill Despair";
-                resultDescription = "You've become overwhelmed by the enormity of what you've learned and are struggling with hopelessness.";
-                recommendations = [
-                    "Seek immediate support for anxiety and depression symptoms",
-                    "Limit information consumption to small, manageable doses",
-                    "Focus on small, concrete actions you can take in your immediate environment",
-                    "Reconnect with sources of hope, beauty, and spiritual grounding"
-                ];
-            }
-            
-            // Set up the PDF
-            doc.setFontSize(20);
-            doc.setTextColor(102, 126, 234);
-            doc.text("Truth Fatigue Assessment Results", 20, 30);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`Assessment Date: ${new Date().toLocaleDateString()}`, 20, 45);
-            
-            // Results section
-            doc.setFontSize(16);
-            doc.setTextColor(102, 126, 234);
-            doc.text(`Your Result: ${resultTitle}`, 20, 65);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`Score: ${score}/32`, 20, 80);
-            
-            // Description
-            doc.setFontSize(11);
-            const splitDescription = doc.splitTextToSize(resultDescription, 170);
-            doc.text(splitDescription, 20, 95);
-            
-            // Recommendations
-            doc.setFontSize(14);
-            doc.setTextColor(102, 126, 234);
-            doc.text("Your Recommended Path Forward:", 20, 120);
-            
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            let yPosition = 135;
-            recommendations.forEach((rec, index) => {
-                const splitRec = doc.splitTextToSize(`${index + 1}. ${rec}`, 170);
-                doc.text(splitRec, 20, yPosition);
-                yPosition += splitRec.length * 6 + 5;
-            });
-            
-            // Footer with website
-            doc.setFontSize(12);
-            doc.setTextColor(102, 126, 234);
-            doc.text("Ready to Move Forward?", 20, yPosition + 20);
-            
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            doc.text("Visit claritymetabolics.com for courses, resources, and community support", 20, yPosition + 35);
-            doc.text("to help you create a grounded, truth-centered life using the Four Anchors approach.", 20, yPosition + 45);
-            
-            // Save the PDF
-            doc.save(`Truth-Fatigue-Results-${resultTitle.replace(/\s+/g, '-')}.pdf`);
-        }
-
-        function calculateResults() {
-            // Calculate total score
-            let score = 0;
-            for (let i = 1; i <= totalQuestions; i++) {
-                if (answers[i]) {
-                    score += answers[i];
-                }
-            }
-            
-            // Hide quiz section
-            document.getElementById('quiz-section').style.display = 'none';
-            
-            // Show results section
-            const resultsSection = document.getElementById('results');
-            resultsSection.classList.add('show');
-            
-            // Display results based on score
-            let resultTitle, resultDescription, recommendations, resultIcon;
-            
-            if (score <= 12) {
-                resultTitle = "Grounded Awakening";
-                resultDescription = "You're managing your awakening journey with remarkable balance. You've found ways to stay informed while maintaining your peace and relationships. Your challenge now is helping others find this same groundedness.";
-                resultIcon = "⭐";
-                recommendations = [
-                    { icon: "🔗", text: "Consider becoming a bridge for others who are struggling with truth fatigue" },
-                    { icon: "👥", text: "Explore leadership opportunities in your community" },
-                    { icon: "🛠", text: "Focus on practical preparation and solution-building" },
-                    { icon: "💡", text: "Share your balanced approach with those who are overwhelmed" }
-                ];
-            } else if (score <= 20) {
-                resultTitle = "Information Overload";
-                resultDescription = "You're deeply engaged in learning but struggling with the volume of information and its emotional impact. You need tools to process what you're learning without becoming overwhelmed.";
-                resultIcon = "📖";
-                recommendations = [
-                    { icon: "⏰", text: "Set specific boundaries around information consumption" },
-                    { icon: "🧘", text: "Learn nervous system regulation techniques" },
-                    { icon: "🔍", text: "Practice discernment skills for evaluating sources" },
-                    { icon: "🎯", text: "Focus on actionable steps rather than just consuming information" }
-                ];
-            } else if (score <= 26) {
-                resultTitle = "Truth Fatigue";
-                resultDescription = "The weight of what you've learned is taking a toll on your mental and physical health. You need support to process this information without it consuming your life and relationships.";
-                resultIcon = "🌱";
-                recommendations = [
-                    { icon: "💚", text: "Prioritize nervous system healing and stress management" },
-                    { icon: "🙏", text: "Reconnect with your spiritual practice or faith" },
-                    { icon: "🤝", text: "Find community with others who understand your experience" },
-                    { icon: "💬", text: "Learn to share information in ways that don't isolate you" }
-                ];
-            } else {
-                resultTitle = "Black Pill Despair";
-                resultDescription = "You've become overwhelmed by the enormity of what you've learned and are struggling with hopelessness. You need immediate support to regain your footing and remember your power to create positive change.";
-                resultIcon = "🌅";
-                recommendations = [
-                    { icon: "🆘", text: "Seek immediate support for anxiety and depression symptoms" },
-                    { icon: "📵", text: "Limit information consumption to small, manageable doses" },
-                    { icon: "🏠", text: "Focus on small, concrete actions you can take in your immediate environment" },
-                    { icon: "🌸", text: "Reconnect with sources of hope, beauty, and spiritual grounding" }
-                ];
-            }
-            
-            // Update result display
-            document.getElementById('resultScore').textContent = `Assessment Score: ${score}/32`;
-            document.getElementById('resultTitle').textContent = resultTitle;
-            document.getElementById('resultDescription').textContent = resultDescription;
-            document.getElementById('resultIcon').textContent = resultIcon;
-            
-            // Update recommendations with new format
-            const recommendationsList = document.getElementById('recommendationsList');
-            recommendationsList.innerHTML = '';
-            recommendations.forEach(rec => {
-                const div = document.createElement('div');
-                div.className = 'recommendation-item';
-                div.innerHTML = `
-                    <div class="recommendation-icon">${rec.icon}</div>
-                    <div class="recommendation-text">${rec.text}</div>
-                `;
-                recommendationsList.appendChild(div);
-            });
-        }
-
-        function restartQuiz() {
-            // Reset quiz state
-            currentQuestion = 1;
-            answers = {};
-            
-            // Clear all selected answers
-            document.querySelectorAll('.answer').forEach(answer => {
-                answer.classList.remove('selected');
-            });
-            
-            // Show quiz section, hide results
-            document.getElementById('quiz-section').style.display = 'block';
-            document.getElementById('results').classList.remove('show');
-            
-            // Reset to first question
-            showQuestion(1);
-        }
-
-        // Add click handlers for answers
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('answer')) {
-                const question = e.target.closest('.question');
-                question.querySelectorAll('.answer').forEach(answer => {
-                    answer.classList.remove('selected');
-                });
-                e.target.classList.add('selected');
-            }
-        });
-
-        // Add click handlers for navigation buttons
-        document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-        document.getElementById('prevBtn').addEventListener('click', previousQuestion);
-        document.getElementById('downloadPDF').onclick = generatePDF;
-
-        // Initialize the quiz
-        updateProgress();
-        updateQuestionCounter();
-    </script>
 </body>
 </html>
