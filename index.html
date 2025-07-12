@@ -149,7 +149,385 @@
                     Start Practice
                 </a>
             </div>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Regulation Toolkit</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.5;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #4a90a4;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #4a90a4;
+            font-size: 28px;
+            margin: 0;
+        }
+        .subtitle {
+            color: #666;
+            font-style: italic;
+            margin: 10px 0;
+        }
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        .section-title {
+            background: #4a90a4;
+            color: white;
+            padding: 10px 15px;
+            margin: -20px -20px 15px -20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px 8px 0 0;
+        }
+        .emergency {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+        .emergency .section-title {
+            background: #f44336;
+        }
+        .protocol {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+        .protocol .section-title {
+            background: #2196f3;
+        }
+        .breathing {
+            background: #e8f5e8;
+            border-color: #4caf50;
+        }
+        .breathing .section-title {
+            background: #4caf50;
+        }
+        .grounding {
+            background: #fce4ec;
+            border-color: #e91e63;
+        }
+        .grounding .section-title {
+            background: #e91e63;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+            border-bottom: 1px dotted #ccc;
+        }
+        .checklist li:before {
+            content: "☐ ";
+            font-size: 16px;
+            color: #4a90a4;
+        }
+        .steps {
+            counter-reset: step;
+            list-style: none;
+            padding: 0;
+        }
+        .steps li {
+            counter-increment: step;
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        .steps li:before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 8px;
+            background: #4a90a4;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 12px;
+            line-height: 20px;
+            font-weight: bold;
+        }
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        .box {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .quick-card {
+            border: 3px solid #4a90a4;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 10px;
+            background: #f0f8ff;
+        }
+        .card-title {
+            text-align: center;
+            color: #4a90a4;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #4a90a4;
+            padding-bottom: 10px;
+        }
+        .print-btn {
+            background: #4a90a4;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+        .print-btn:hover {
+            background: #357a96;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #4a90a4;
+            color: #666;
+        }
+        .website {
+            color: #4a90a4;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        @media print {
+            .print-btn { display: none; }
+            body { margin: 0; padding: 0.5in; }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">🖨️ Print This Toolkit</button>
+    
+    <div class="header">
+        <h1>Emergency Regulation Toolkit</h1>
+        <div class="subtitle">Quick Reference for Overwhelming Moments</div>
+        <div class="subtitle">ClarityMetabolics.com</div>
+    </div>
+    
+    <div class="section emergency">
+        <div class="section-title">🚨 AM I HAVING AN EMERGENCY RESPONSE?</div>
+        <div class="highlight">Check any that apply RIGHT NOW:</div>
+        <ul class="checklist">
+            <li>Heart racing or pounding</li>
+            <li>Feeling like I can't catch my breath</li>
+            <li>Thoughts spinning or racing</li>
+            <li>Feeling disconnected from my body</li>
+            <li>Overwhelming urge to argue or fight</li>
+            <li>Want to consume more alarming information</li>
+            <li>Feeling hopeless or completely overwhelmed</li>
+            <li>Physical tension in jaw, shoulders, or stomach</li>
+        </ul>
+        <div class="highlight">If you checked 3+ boxes, use the Emergency Protocol below</div>
+    </div>
+    
+    <div class="section protocol">
+        <div class="section-title">⚡ EMERGENCY PROTOCOL (Use Immediately)</div>
+        <ol class="steps">
+            <li><strong>STOP</strong> - Put down your phone/device. Step away from the trigger.</li>
+            <li><strong>BREATHE</strong> - 4 counts in, 6 counts out. Repeat 5 times minimum.</li>
+            <li><strong>GROUND</strong> - Name 5 things you can see, 4 you can touch, 3 you can hear.</li>
+            <li><strong>CONNECT</strong> - Place hand on heart. Say: "I am safe right now."</li>
+            <li><strong>CHOOSE</strong> - What would a regulated version of me do next?</li>
+        </ol>
+        <div class="box">
+            <strong>Remember:</strong> Your nervous system thinks there's a tiger in the room. 
+            There isn't. You are safe to slow down and regulate.
         </div>
+    </div>
+    
+    <div class="section breathing">
+        <div class="section-title">🫁 EMERGENCY BREATHING TECHNIQUES</div>
+        
+        <div class="box">
+            <strong>Box Breathing (for panic/overwhelm):</strong>
+            <ol>
+                <li>Breathe in for 4 counts</li>
+                <li>Hold for 4 counts</li>
+                <li>Breathe out for 4 counts</li>
+                <li>Hold empty for 4 counts</li>
+                <li>Repeat 8-10 times</li>
+            </ol>
+        </div>
+        
+        <div class="box">
+            <strong>Calming Breath (for anger/activation):</strong>
+            <ol>
+                <li>Breathe in through nose for 4 counts</li>
+                <li>Hold gently for 4 counts</li>
+                <li>Breathe out through mouth for 6 counts</li>
+                <li>Natural pause for 2 counts</li>
+                <li>Repeat until calm</li>
+            </ol>
+        </div>
+        
+        <div class="box">
+            <strong>Heart Coherence (for emotional stability):</strong>
+            <ol>
+                <li>Place hand on heart</li>
+                <li>Breathe into your heart space (5 counts in)</li>
+                <li>Breathe out through your heart (5 counts out)</li>
+                <li>Think of something you're grateful for</li>
+                <li>Continue for 2-3 minutes</li>
+            </ol>
+        </div>
+    </div>
+    
+    <div class="section grounding">
+        <div class="section-title">⚓ GROUNDING TECHNIQUES</div>
+        
+        <div class="box">
+            <strong>5-4-3-2-1 Technique:</strong>
+            <ul class="checklist">
+                <li>5 things you can SEE around you</li>
+                <li>4 things you can TOUCH (and touch them)</li>
+                <li>3 things you can HEAR right now</li>
+                <li>2 things you can SMELL</li>
+                <li>1 thing you can TASTE</li>
+            </ul>
+        </div>
+        
+        <div class="box">
+            <strong>Physical Grounding:</strong>
+            <ul class="checklist">
+                <li>Feel your feet on the ground</li>
+                <li>Press palms together firmly</li>
+                <li>Hold a cold object (ice cube, cold water)</li>
+                <li>Do 10 jumping jacks or push-ups</li>
+                <li>Splash cold water on your face</li>
+            </ul>
+        </div>
+        
+        <div class="box">
+            <strong>Spiritual Grounding:</strong>
+            <ul class="checklist">
+                <li>Say a quick prayer or affirmation</li>
+                <li>Remember: "God is in control, not the chaos"</li>
+                <li>Picture yourself surrounded by divine light</li>
+                <li>Ask: "What would Love do right now?"</li>
+                <li>Connect with your deeper purpose</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">⚖️ QUICK ANCHOR CHECK</div>
+        <div class="highlight">Rate each anchor 1-10 (1=struggling, 10=strong) RIGHT NOW:</div>
+        
+        <div class="box">
+            <strong>📊 BODY:</strong> ____/10 (Physical energy, tension, breathing)
+        </div>
+        <div class="box">
+            <strong>🧠 MIND:</strong> ____/10 (Mental clarity, focus, overwhelm level)
+        </div>
+        <div class="box">
+            <strong>❤️ EMOTION:</strong> ____/10 (Emotional stability, regulation)
+        </div>
+        <div class="box">
+            <strong>✨ SPIRIT:</strong> ____/10 (Connection to Creator, hope, peace)
+        </div>
+        <div class="box">
+            <strong>👥 COMMUNITY:</strong> ____/10 (Support, boundaries, connection)
+        </div>
+        
+        <div class="highlight">If any anchor is below 5: Focus on that anchor first</div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">🎯 QUICK FIXES BY ANCHOR</div>
+        
+        <div class="box">
+            <strong>📊 BODY (Physical regulation):</strong><br>
+            • Do 10 deep belly breaths • Drink water • Stretch • Hot/cold shower • Get outside
+        </div>
+        
+        <div class="box">
+            <strong>🧠 MIND (Mental clarity):</strong><br>
+            • Write thoughts on paper • Ask "Is this true?" • List facts vs fears • Digital break • Brain dump
+        </div>
+        
+        <div class="box">
+            <strong>❤️ EMOTION (Emotional stability):</strong><br>
+            • Name the emotion • Ask "What does this need?" • Heart breathing • Call support • Self-compassion
+        </div>
+        
+        <div class="box">
+            <strong>✨ SPIRIT (Divine connection):</strong><br>
+            • Pray/meditate • Read inspiration • Ask "How would Love respond?" • Remember purpose • Nature
+        </div>
+        
+        <div class="box">
+            <strong>👥 COMMUNITY (Healthy connection):</strong><br>
+            • Text someone who gets it • Set a boundary • Ask for help • Practice saying no • Find your people
+        </div>
+    </div>
+    
+    <div class="quick-card">
+        <div class="card-title">✂️ CUT OUT & KEEP HANDY</div>
+        <div style="font-size: 14px;">
+            <strong>EMERGENCY REGULATION - 3 MINUTES:</strong>
+            <ol style="margin: 10px 0; padding-left: 20px;">
+                <li>STOP what you're doing</li>
+                <li>BREATHE: 4 in, 6 out (5 times)</li>
+                <li>GROUND: 5-4-3-2-1 technique</li>
+                <li>CONNECT: Hand on heart, "I am safe"</li>
+                <li>CHOOSE: "What would a regulated me do?"</li>
+            </ol>
+            <strong>Remember:</strong> You are not your emergency response. You can choose differently.
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">🌱 AFTER THE EMERGENCY</div>
+        <ul class="checklist">
+            <li>Acknowledge yourself for using these tools</li>
+            <li>Notice what triggered the response</li>
+            <li>Ask: "What information do I actually need vs. want?"</li>
+            <li>Set a boundary around triggering content for today</li>
+            <li>Do something nurturing for yourself</li>
+            <li>Connect with someone who understands your journey</li>
+            <li>Remember: Regulation is a practice, not perfection</li>
+        </ul>
+    </div>
+    
+    <div class="footer">
+        <div>Created with ♥ for the awakened community</div>
+        <div class="website">ClarityMetabolics.com/tools</div>
+        <div>More tools: Five Anchors Tracker • Discernment Worksheet • Breathing Guide</div>
+    </div>
+</body>
+</html></div>
 
         <!-- Call to Action Section -->
         <div class="bg-white rounded-xl shadow-lg p-8 text-center mb-12">
