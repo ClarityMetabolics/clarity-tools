@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Five Anchors Nervous System Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-4xl mx-auto p-6 bg-white">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Five Anchors Nervous System Tracker</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Track your nervous system regulation across the five anchors: Body, Mind, Emotion, Spirit, and Community. 
+                Stay grounded in truth while maintaining your inner peace.
+            </p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-gray-100 rounded-lg p-1 flex">
+                <button id="dailyTab" onclick="showView('daily')" 
+                        class="px-4 py-2 rounded-md transition-colors bg-white shadow text-gray-900">
+                    Daily Entry
+                </button>
+                <button id="insightsTab" onclick="showView('insights')" 
+                        class="px-4 py-2 rounded-md transition-colors text-gray-600 hover:text-gray-900">
+                    Insights
+                </button>
+            </div>
+        </div>
+
+        <!-- Daily Entry View -->
+        <div id="dailyView">
+            <!-- Date Selection -->
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-2xl">📅</span>
+                        <span class="font-medium text-gray-700">Date:</span>
+                    </div>
+                    <input type="date" id="dateInput" onchange="loadEntry()" 
+                           class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+
+            <!-- Regulation State -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                <h3 class="text-lg font-semibold mb-4 flex items-center">
+                    <span class="text-2xl mr-2">🛡️</span>
+                    Current Regulation State
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <label class="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                        <input type="radio" name="regulation_state" value="regulated" onchange="saveEntry()" 
+                               class="text-blue-600">
+                        <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                        <div>
+                            <div class="font-medium">Regulated & Grounded</div>
+                            <div class="text-sm text-gray-500">Calm, clear, connected</div>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                        <input type="radio" name="regulation_state" value="activated" onchange="saveEntry()" 
+                               class="text-blue-600">
+                        <div class="w-4 h-4 rounded-full bg-yellow-500"></div>
+                        <div>
+                            <div class="font-medium">Activated/Hypervigilant</div>
+                            <div class="text-sm text-gray-500">Alert, anxious, reactive</div>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                        <input type="radio" name="regulation_state" value="shutdown" onchange="saveEntry()" 
+                               class="text-blue-600">
+                        <div class="w-4 h-4 rounded-full bg-red-500"></div>
+                        <div>
+                            <div class="font-medium">Shutdown/Disconnected</div>
+                            <div class="text-sm text-gray-500">Numb, withdrawn, hopeless</div>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                        <input type="radio" name="regulation_state" value="mixed" onchange="saveEntry()" 
+                               class="text-blue-600">
+                        <div class="w-4 h-4 rounded-full bg-orange-500"></div>
+                        <div>
+                            <div class="font-medium">Mixed State</div>
+                            <div class="text-sm text-gray-500">Wired but tired, conflicted</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Five Anchors Assessment -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-gray-800">Five Anchors Assessment</h3>
+                
+                <!-- Body Anchor -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="p-2 rounded-lg bg-red-50 mr-3">
+                            <span class="text-2xl">📊</span>
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-800">Body</h4>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Sleep Quality</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="sleep_quality" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="sleep_quality_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Physical Energy</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="physical_energy" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="physical_energy_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Muscle Tension <span class="text-xs text-gray-500">(lower is better)</span>
+                            </label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="tension_level" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="tension_level_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" id="movement_practice" onchange="saveEntry()" 
+                                   class="text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-gray-600">Movement Practice - Completed today</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Mind Anchor -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="p-2 rounded-lg bg-blue-50 mr-3">
+                            <span class="text-2xl">🧠</span>
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-800">Mind</h4>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Mental Clarity</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="mental_clarity" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="mental_clarity_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Information Overwhelm <span class="text-xs text-gray-500">(lower is better)</span>
+                            </label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="overwhelm_level" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="overwhelm_level_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Focus Ability</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="focus_ability" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="focus_ability_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" id="discernment_practice" onchange="saveEntry()" 
+                                   class="text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-gray-600">Discernment Practice - Completed today</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Emotion Anchor -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="p-2 rounded-lg bg-orange-50 mr-3">
+                            <span class="text-2xl">❤️</span>
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-800">Emotion</h4>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Emotional Stability</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="emotional_stability" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="emotional_stability_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Anxiety Level <span class="text-xs text-gray-500">(lower is better)</span>
+                            </label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="anxiety_level" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="anxiety_level_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Fear Response <span class="text-xs text-gray-500">(lower is better)</span>
+                            </label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="fear_response" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="fear_response_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" id="regulation_practice" onchange="saveEntry()" 
+                                   class="text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-gray-600">Regulation Practice - Completed today</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Spirit Anchor -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="p-2 rounded-lg bg-purple-50 mr-3">
+                            <span class="text-2xl">✨</span>
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-800">Spirit</h4>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Connection to Creator</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="spiritual_connection" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="spiritual_connection_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Inner Peace</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="inner_peace" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="inner_peace_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Hope & Optimism</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="hope_level" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="hope_level_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" id="spiritual_practice" onchange="saveEntry()" 
+                                   class="text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-gray-600">Spiritual Practice - Completed today</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Community Anchor -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="p-2 rounded-lg bg-green-50 mr-3">
+                            <span class="text-2xl">👥</span>
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-800">Community</h4>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Healthy Connection</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="social_connection" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="social_connection_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Boundary Strength</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="boundary_strength" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="boundary_strength_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Feeling Supported</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">1</span>
+                                <input type="range" min="1" max="10" value="5" id="support_feeling" 
+                                       onchange="saveEntry()" class="flex-1">
+                                <span class="text-sm text-gray-500">10</span>
+                                <span id="support_feeling_value" class="text-sm font-medium w-8 text-center">5</span>
+                            </div>
+                        </div>
+
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" id="meaningful_conversation" onchange="saveEntry()" 
+                                   class="text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-gray-600">Meaningful Conversation - Had today</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Notes -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6 mt-6">
+                <h3 class="text-lg font-semibold mb-4 flex items-center">
+                    <span class="text-2xl mr-2">📝</span>
+                    Daily Notes
+                </h3>
+                <textarea id="dailyNotes" onchange="saveEntry()" 
+                          placeholder="What did you notice today? Any triggers, wins, or insights?"
+                          class="w-full h-24 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+            </div>
+        </div>
+
+        <!-- Insights View -->
+        <div id="insightsView" class="hidden">
+            <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                <h3 class="text-lg font-semibold mb-4 flex items-center">
+                    <span class="text-2xl mr-2">📈</span>
+                    Weekly Five Anchors Overview
+                </h3>
+                
+                <div id="insightsContent" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <!-- Insights will be populated here -->
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4 flex items-center text-blue-800">
+                    <span class="text-2xl mr-2">💡</span>
+                    Personalized Insights
+                </h3>
+                
+                <div id="personalizedInsights" class="space-y-3 text-blue-700">
+                    <!-- Insights will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center text-sm text-gray-500 border-t pt-6">
+            <p>Remember: Regulation is a practice, not perfection. Every small step toward balance matters.</p>
+            <p class="mt-2">🔗 Want deeper support? Check out our full Five Anchors program.</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize with today's date
+        document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
+
+        // Set up slider value displays
+        const sliders = [
+            'sleep_quality', 'physical_energy', 'tension_level', 'mental_clarity', 
+            'overwhelm_level', 'focus_ability', 'emotional_stability', 'anxiety_level', 
+            'fear_response', 'spiritual_connection', 'inner_peace', 'hope_level',
+            'social_connection', 'boundary_strength', 'support_feeling'
+        ];
+
+        sliders.forEach(slider => {
+            const element = document.getElementById(slider);
+            const valueDisplay = document.getElementById(slider + '_value');
+            
+            element.addEventListener('input', function() {
+                valueDisplay.textContent = this.value;
+            });
+        });
+
+        // Data storage
+        let entries = JSON.parse(localStorage.getItem('nervousSystemEntries') || '{}');
+
+        function saveEntry() {
+            const date = document.getElementById('dateInput').value;
+            const entry = {
+                date: date,
+                regulation_state: document.querySelector('input[name="regulation_state"]:checked')?.value || '',
+                notes: document.getElementById('dailyNotes').value,
+                anchors: {}
+            };
+
+            // Save all slider values
+            sliders.forEach(slider => {
+                entry.anchors[slider] = parseInt(document.getElementById(slider).value);
+            });
+
+            // Save checkboxes
+            const checkboxes = ['movement_practice', 'discernment_practice', 'regulation_practice', 'spiritual_practice', 'meaningful_conversation'];
+            checkboxes.forEach(checkbox => {
+                entry.anchors[checkbox] = document.getElementById(checkbox).checked;
+            });
+
+            entries[date] = entry;
+            localStorage.setItem('nervousSystemEntries', JSON.stringify(entries));
+        }
+
+        function loadEntry() {
+            const date = document.getElementById('dateInput').value;
+            const entry = entries[date];
+
+            if (entry) {
+                // Load regulation state
+                if (entry.regulation_state) {
+                    document.querySelector(`input[name="regulation_state"][value="${entry.regulation_state}"]`).checked = true;
+                }
+
+                // Load notes
+                document.getElementById('dailyNotes').value = entry.notes || '';
+
+                // Load sliders
+                sliders.forEach(slider => {
+                    if (entry.anchors && entry.anchors[slider] !== undefined) {
+                        const element = document.getElementById(slider);
+                        const valueDisplay = document.getElementById(slider + '_value');
+                        element.value = entry.anchors[slider];
+                        valueDisplay.textContent = entry.anchors[slider];
+                    }
+                });
+
+                // Load checkboxes
+                const checkboxes = ['movement_practice', 'discernment_practice', 'regulation_practice', 'spiritual_practice', 'meaningful_conversation'];
+                checkboxes.forEach(checkbox => {
+                    if (entry.anchors && entry.anchors[checkbox] !== undefined) {
+                        document.getElementById(checkbox).checked = entry.anchors[checkbox];
+                    }
+                });
+            } else {
+                // Reset form for new entry
+                document.querySelectorAll('input[name="regulation_state"]').forEach(input => input.checked = false);
+                document.getElementById('dailyNotes').value = '';
+                sliders.forEach(slider => {
+                    document.getElementById(slider).value = 5;
+                    document.getElementById(slider + '_value').textContent = 5;
+                });
+                const checkboxes = ['movement_practice', 'discernment_practice', 'regulation_practice', 'spiritual_practice', 'meaningful_conversation'];
+                checkboxes.forEach(checkbox => {
+                    document.getElementById(checkbox).checked = false;
+                });
+            }
+        }
+
+        function showView(view) {
+            if (view === 'daily') {
+                document.getElementById('dailyView').classList.remove('hidden');
+                document.getElementById('insightsView').classList.add('hidden');
+                document.getElementById('dailyTab').className = 'px-4 py-2 rounded-md transition-colors bg-white shadow text-gray-900';
+                document.getElementById('insightsTab').className = 'px-4 py-2 rounded-md transition-colors text-gray-600 hover:text-gray-900';
+            } else {
+                document.getElementById('dailyView').classList.add('hidden');
+                document.getElementById('insightsView').classList.remove('hidden');
+                document.getElementById('insightsTab').className = 'px-4 py-2 rounded-md transition-colors bg-white shadow text-gray-900';
+                document.getElementById('dailyTab').className = 'px-4 py-2 rounded-md transition-colors text-gray-600 hover:text-gray-900';
+                generateInsights();
+            }
+        }
+
+        function generateInsights() {
+            const recentEntries = Object.values(entries)
+                .filter(entry => entry.date)
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 7);
+
+            const insightsContent = document.getElementById('insightsContent');
+            const personalizedInsights = document.getElementById('personalizedInsights');
+
+            if (recentEntries.length === 0) {
+                insightsContent.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <span class="text-6xl mb-4 block">📅</span>
+                        <h3 class="text-lg font-medium text-gray-600 mb-2">No Data Yet</h3>
+                        <p class="text-gray-500">Start tracking your daily regulation to see insights here.</p>
+                    </div>
+                `;
+                personalizedInsights.innerHTML = '<p>Start tracking to see personalized insights.</p>';
+                return;
+            }
+
+            // Calculate averages for each anchor
+            const anchors = {
+                body: { name: 'Body', icon: '📊', metrics: ['sleep_quality', 'physical_energy', 'tension_level'] },
+                mind: { name: 'Mind', icon: '🧠', metrics: ['mental_clarity', 'overwhelm_level', 'focus_ability'] },
+                emotion: { name: 'Emotion', icon: '❤️', metrics: ['emotional_stability', 'anxiety_level', 'fear_response'] },
+                spirit: { name: 'Spirit', icon: '✨', metrics: ['spiritual_connection', 'inner_peace', 'hope_level'] },
+                community: { name: 'Community', icon: '👥', metrics: ['social_connection', 'boundary_strength', 'support_feeling'] }
+            };
+
+            let insightsHTML = '';
+            let personalInsightsHTML = '';
+
+            Object.entries(anchors).forEach(([key, anchor]) => {
+                let total = 0;
+                let count = 0;
+
+                recentEntries.forEach(entry => {
+                    if (entry.anchors) {
+                        anchor.metrics.forEach(metric => {
+                            if (entry.anchors[metric] !== undefined) {
+                                let value = entry.anchors[metric];
+                                // Reverse scoring for negative metrics
+                                if (['tension_level', 'overwhelm_level', 'anxiety_level', 'fear_response'].includes(metric)) {
+                                    value = 11 - value;
+                                }
+                                total += value;
+                                count++;
+                            }
+                        });
+                    }
+                });
+
+                const average = count > 0 ? (total / count).toFixed(1) : 0;
+                const percentage = (average / 10) * 100;
+
+                insightsHTML += `
+                    <div class="p-4 rounded-lg bg-gray-50 border">
+                        <div class="flex items-center mb-2">
+                            <span class="text-2xl mr-2">${anchor.icon}</span>
+                            <h4 class="font-medium text-gray-800">${anchor.name}</h4>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-900">${average}</div>
+                        <div class="text-sm text-gray-600">Average Score</div>
+                        <div class="mt-2 w-full bg-gray-200 rounded-full h-2">
+                            <div class="h-2 rounded-full ${
+                                average >= 7 ? 'bg-green-500' : 
+                                average >= 5 ? 'bg-yellow-500' : 'bg-red-500'
+                            }" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+
+                // Generate personalized insights
+                if (average < 5) {
+                    personalInsightsHTML += `
+                        <div class="flex items-start space-x-2">
+                            <span class="text-blue-600">→</span>
+                            <p>Your <strong>${anchor.name}</strong> anchor needs attention. 
+                            Consider focusing on ${anchor.name.toLowerCase()}-based practices this week.</p>
+                        </div>
+                    `;
+                } else if (average > 7) {
+                    personalInsightsHTML += `
+                        <div class="flex items-start space-x-2">
+                            <span class="text-blue-600">→</span>
+                            <p>Your <strong>${anchor.name}</strong> anchor is strong! 
+                            This is supporting your overall regulation.</p>
+                        </div>
+                    `;
+                }
+            });
+
+            insightsContent.innerHTML = insightsHTML;
+            personalizedInsights.innerHTML = personalInsightsHTML || '<p>Your anchors are generally balanced. Keep up the good work!</p>';
+        }
+
+        // Initialize
+        loadEntry();
+    </script>
+</body>
+</html>
