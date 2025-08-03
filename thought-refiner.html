@@ -293,7 +293,721 @@
         Take a moment to breathe and let this new perspective settle in. You've done important inner work.
       </p>
       <p style="text-align: center; font-size: 0.85rem; color: var(--contrast); margin-top: 2rem;">
-        Want to go deeper? <a href="#" onclick="toggleModal(); return false;" style="color: var(--main); font-weight: 600;">Explore how the Trinity might reframe this thought</a>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thought Refiner | Discernment Toolkit by Clarity Metabolics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --main: #7A94A8;
+      --accent: #E7EEF1;
+      --contrast: #4A5A6A;
+      --bg-primary: #fff;
+      --bg-secondary: #E7EEF1;
+      --text-primary: #4A5A6A;
+      --text-secondary: #888;
+    }
+    [data-theme="dark"] {
+      --main: #9BB4C8;
+      --accent: #2A3441;
+      --contrast: #E8EDF2;
+      --bg-primary: #1A2028;
+      --bg-secondary: #2A3441;
+      --text-primary: #E8EDF2;
+      --text-secondary: #B0B8C0;
+    }
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      transition: all 0.3s ease;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: var(--bg-primary);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: 2px solid var(--main);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .theme-toggle:hover {
+      background-color: var(--main);
+      color: var(--bg-primary);
+      transform: scale(1.1);
+    }
+    h1, h2 {
+      font-family: 'Libre Baskerville', serif;
+      color: var(--main);
+    }
+    h1 {
+      text-align: center;
+      margin-top: 0;
+    }
+    .icon-header {
+      font-size: 2.2rem;
+      text-align: center;
+      color: var(--text-primary);
+      margin-bottom: 0.5em;
+    }
+    .progress-indicator {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--main);
+      font-weight: 600;
+    }
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #ddd;
+      transition: background-color 0.3s ease;
+    }
+    .dot.active {
+      background-color: var(--main);
+    }
+    .dot.completed {
+      background-color: var(--contrast);
+    }
+    button {
+      background-color: var(--main);
+      color: white;
+      font-weight: bold;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    button:hover:not(:disabled) {
+      background-color: var(--contrast);
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    button:active {
+      transform: translateY(1px);
+    }
+    .question {
+      margin-bottom: 1.5rem;
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .hidden {
+      display: none;
+    }
+    .fade-out {
+      opacity: 0;
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 0.4s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+      box-sizing: border-box;
+      min-height: 120px;
+      line-height: 1.5;
+    }
+    .char-count {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+    .encouragement {
+      font-size: 0.85rem;
+      color: var(--main);
+      font-style: italic;
+      margin-top: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .encouragement.show {
+      opacity: 1;
+    }
+    .typing-prompt {
+      font-size: 0.8rem;
+      color: var(--main);
+      font-style: italic;
+      margin-top: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .typing-prompt.show {
+      opacity: 1;
+    }
+    .progress-note {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+      font-style: italic;
+    }
+    .summary {
+      background-color: var(--bg-secondary);
+      padding: 1.5rem;
+      margin-top: 2rem;
+      border-left: 6px solid var(--main);
+    }
+    @media (max-width: 768px) {
+      .icon-header {
+        font-size: 1.6rem;
+        margin-bottom: 0.4em;
+      }
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+      textarea {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 0.8rem;
+        resize: none; /* Disable resize on mobile */
+      }
+      button {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+      }
+    }
+    .container p {
+      line-height: 1.75;
+    }
+    /* Modal Styling */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(20, 20, 20, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal.hidden {
+      display: none;
+    }
+    .modal-content {
+      background-color: var(--bg-primary);
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 90%;
+      color: var(--text-primary);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      position: relative;
+      text-align: center;
+      animation: fadeInModal 0.3s ease-out forwards;
+    }
+    .modal-content blockquote {
+      font-style: italic;
+      margin: 1rem 0;
+      color: var(--main);
+    }
+    .close-btn {
+      position: absolute;
+      top: 0.7rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+    .modal-content button {
+      margin-top: 1rem;
+      background-color: var(--main);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .modal-content button:hover {
+      background-color: var(--contrast);
+    }
+    @keyframes fadeInModal {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">🌙</button>
+    <div class="icon-header">🧠</div>
+    <h1>Thought Refiner</h1>
+    <p>This tool helps you pause and examine recurring or disruptive thoughts — especially the ones that seem to loop, hijack your peace, or distort how you see yourself, others, or God. Use it when you notice a thought that doesn't sit right but keeps coming back.</p>
+    <p style="font-style: italic; color: var(--main); font-weight: 500;">Is this thought really mine? Was it planted there — is it even true?</p>
+    <div class="progress-indicator">Step 1 of 4</div>
+    <div class="progress-dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="progress-note">Your progress is automatically saved as you type</div>
+    <div class="question" id="step1">
+      <h2>1. What thought keeps looping?</h2>
+      <textarea id="thoughtInput" placeholder="Write a thought that won't let go — or one that feels suspiciously heavy..." aria-label="Enter the looping thought you want to examine" oninput="updateCharCount(this, 'count1'); showEncouragement(this, 'enc1')" onkeydown="handleKeyPress(event, 1)"></textarea>
+      <div class="char-count" id="count1">0 characters</div>
+      <div class="encouragement" id="enc1">Take your time... let it all out.</div>
+      <div class="typing-prompt" id="prompt1">Take your time... breathe and reflect.</div>
+      <button onclick="nextStep(1)" aria-label="Proceed to step 2" id="next1" disabled>Next</button>
+    </div>
+    <div class="question hidden" id="step2">
+      <h2>2. Where did this thought come from?</h2>
+      <textarea id="originInput" placeholder="Can you trace where or when this thought first began?" aria-label="Describe where or when this thought originated" oninput="updateCharCount(this, 'count2'); showEncouragement(this, 'enc2')" onkeydown="handleKeyPress(event, 2)"></textarea>
+      <div class="char-count" id="count2">0 characters</div>
+      <div class="encouragement" id="enc2">Good... keep exploring the roots.</div>
+      <div class="typing-prompt" id="prompt2">No rush... let the memories surface gently.</div>
+      <button onclick="nextStep(2)" aria-label="Proceed to step 3" id="next2" disabled>Next</button>
+    </div>
+    <div class="question hidden" id="step3">
+      <h2>3. What does it try to protect you from?</h2>
+      <textarea id="protectionInput" placeholder="What fear or pain might this thought be guarding?" aria-label="Identify what this thought might be protecting you from" oninput="updateCharCount(this, 'count3'); showEncouragement(this, 'enc3')" onkeydown="handleKeyPress(event, 3)"></textarea>
+      <div class="char-count" id="count3">0 characters</div>
+      <div class="encouragement" id="enc3">You're doing important work here.</div>
+      <div class="typing-prompt" id="prompt3">Breathe... what is this thought trying to shield?</div>
+      <button onclick="nextStep(3)" aria-label="Proceed to step 4" id="next3" disabled>Next</button>
+    </div>
+    <div class="question hidden" id="step4">
+      <h2>4. What truth can replace it?</h2>
+      <textarea id="truthInput" placeholder="What do you sense is more true, even if it's hard to accept?" aria-label="Enter a more truthful perspective to replace the original thought" oninput="updateCharCount(this, 'count4'); showEncouragement(this, 'enc4')" onkeydown="handleKeyPress(event, 4)"></textarea>
+      <div class="char-count" id="count4">0 characters</div>
+      <div class="encouragement" id="enc4">Trust what you're discovering.</div>
+      <div class="typing-prompt" id="prompt4">Listen deeply... what does your heart know?</div>
+      <button onclick="showSummary()" aria-label="Complete reflection and show summary" id="next4" disabled>Show Reflection</button>
+    </div>
+    <div id="summary" class="summary hidden">
+      <h2>Your Thought Reflection</h2>
+      <p style="text-align: center; font-size: 1.1rem; font-weight: 600; color: var(--main); margin-bottom: 1.5rem;">
+        ✅ Thought successfully refined.
+      </p>
+      <p><strong>Thought:</strong> <span id="out1"></span></p>
+      <p><strong>Origin:</strong> <span id="out2"></span></p>
+      <p><strong>Protective Layer:</strong> <span id="out3"></span></p>
+      <p><strong>Reframed Truth:</strong> <span id="out4"></span></p>
+      
+      <h2>Optional: Seal it in truth</h2>
+      <textarea id="sealInput" placeholder="Write a brief prayer, affirmation, or commitment to walk in this new truth..." style="min-height: 100px; width: 100%; padding: 1rem; font-size: 1rem; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 6px; resize: vertical; box-sizing: border-box;" aria-label="Optional reflection or prayer"></textarea>
+      
+      <div style="margin-top: 1.5rem;">
+        <button onclick="resetTool()" style="margin-right: 1rem;" aria-label="Clear all responses and start over">Start Over</button>
+        <button onclick="printResults()" aria-label="Print or save your thought reflection" type="button">Save/Print</button>
+        <button onclick="downloadResults()" style="margin-left: 1rem;" aria-label="Download your reflection as a text file" type="button">Download .txt</button>
+      </div>
+      <p style="margin-top: 1rem; font-style: italic; color: var(--main);">
+        Take a moment to breathe and let this new perspective settle in. You've done important inner work.
+      </p>
+      <p style="text-align: center; font-size: 0.85rem; color: var(--contrast); margin-top: 2rem;">
+        Want to go deeper? <a href="javascript:void(0)" onclick="toggleModal()" style="color: var(--main); font-weight: 600; text-decoration: underline; cursor: pointer;">Explore how the Trinity might reframe this thought</a>
+      </p>
+    </div>
+  </div>
+  
+  <!-- Trinity Modal -->
+  <div id="trinityModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <span class="close-btn" onclick="toggleModal()" aria-label="Close modal">&times;</span>
+      <h2 id="modalTitle">🕊 The Trinity and Truth</h2>
+      <p>Real truth isn't just a better thought — it's a Person.</p>
+      <p>The Father restores identity. The Son exposes deception. The Spirit whispers clarity and strength.</p>
+      <blockquote>"When the Spirit of truth comes, he will guide you into all the truth." — John 16:13</blockquote>
+      <p style="margin-top: 1rem;">Want to sit with that a moment? Close your eyes and ask: <em>Which voice am I really listening to?</em></p>
+      <button onclick="toggleModal()" aria-label="Close Trinity modal">Got it</button>
+    </div>
+  </div>
+  <script>
+    let typingTimers = {};
+    
+    function handleKeyPress(event, step) {
+      // Allow Enter key to advance to next step if button is enabled
+      if (event.key === 'Enter' && event.ctrlKey) {
+        const nextButton = document.getElementById(`next${step}`);
+        if (nextButton && !nextButton.disabled) {
+          event.preventDefault();
+          if (step < 4) {
+            nextStep(step);
+          } else {
+            showSummary();
+          }
+        }
+      }
+      
+      // Track typing activity for gentle prompts
+      const promptId = `prompt${step}`;
+      const promptElement = document.getElementById(promptId);
+      
+      if (promptElement) {
+        // Clear existing timer
+        clearTimeout(typingTimers[promptId]);
+        
+        // Hide prompt while typing
+        promptElement.classList.remove('show');
+        
+        // Set new timer to show prompt after 10 seconds of no typing
+        typingTimers[promptId] = setTimeout(() => {
+          if (document.activeElement.id === event.target.id) {
+            promptElement.classList.add('show');
+          }
+        }, 10000);
+      }
+    }
+    
+    function updateProgress(step) {
+      // Update step indicator
+      document.querySelector('.progress-indicator').textContent = `Step ${step} of 4`;
+      
+      // Update dots
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach((dot, index) => {
+        dot.classList.remove('active', 'completed');
+        if (index < step - 1) {
+          dot.classList.add('completed');
+        } else if (index === step - 1) {
+          dot.classList.add('active');
+        }
+      });
+      
+      // Analytics tracking (you can replace with your preferred analytics)
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'step_completed', {
+          'step_number': step,
+          'tool_name': 'thought_refiner'
+        });
+      }
+    }
+    
+    function updateCharCount(textarea, countId) {
+      const count = textarea.value.length;
+      const countElement = document.getElementById(countId);
+      if (countElement) {
+        countElement.textContent = `${count} characters`;
+      }
+      
+      // Enable/disable next button based on content
+      const stepNum = countId.replace('count', '');
+      const nextButton = document.getElementById(`next${stepNum}`);
+      if (nextButton) {
+        nextButton.disabled = count < 5; // Reduced from 10 to 5 characters
+      }
+      
+      // Clear typing prompt when they start typing meaningfully
+      const promptId = `prompt${stepNum}`;
+      const promptElement = document.getElementById(promptId);
+      if (promptElement && count > 10) {
+        promptElement.classList.remove('show');
+      }
+    }
+    
+    function showEncouragement(textarea, encId) {
+      const encouragement = document.getElementById(encId);
+      if (encouragement) {
+        if (textarea.value.length > 20) {
+          encouragement.classList.add('show');
+        } else {
+          encouragement.classList.remove('show');
+        }
+      }
+    }
+    
+    function nextStep(step) {
+      const currentStep = document.getElementById(`step${step}`);
+      const nextStep = document.getElementById(`step${step + 1}`);
+      
+      // Update progress
+      updateProgress(step + 1);
+      
+      // Fade out current step
+      currentStep.classList.add('fade-out');
+      
+      setTimeout(() => {
+        currentStep.classList.add('hidden');
+        currentStep.classList.remove('fade-out');
+        nextStep.classList.remove('hidden');
+        nextStep.classList.add('fade-in');
+        
+        // Auto-focus on the next textarea after fade-in completes
+        setTimeout(() => {
+          nextStep.querySelector('textarea')?.focus();
+        }, 200);
+        
+        // Remove fade-in class after animation
+        setTimeout(() => {
+          nextStep.classList.remove('fade-in');
+        }, 400);
+      }, 300);
+    }
+    
+    function showSummary() {
+      const currentStep = document.getElementById('step4');
+      const summary = document.getElementById('summary');
+      
+      // Hide progress indicators
+      const progressIndicator = document.querySelector('.progress-indicator');
+      const progressDots = document.querySelector('.progress-dots');
+      if (progressIndicator) progressIndicator.style.display = 'none';
+      if (progressDots) progressDots.style.display = 'none';
+      
+      // Fade out current step
+      currentStep.classList.add('fade-out');
+      
+      setTimeout(() => {
+        currentStep.classList.add('hidden');
+        currentStep.classList.remove('fade-out');
+        summary.classList.remove('hidden');
+        summary.classList.add('fade-in');
+        
+        // Populate summary with null checks
+        const out1 = document.getElementById('out1');
+        const out2 = document.getElementById('out2');
+        const out3 = document.getElementById('out3');
+        const out4 = document.getElementById('out4');
+        const thoughtInput = document.getElementById('thoughtInput');
+        const originInput = document.getElementById('originInput');
+        const protectionInput = document.getElementById('protectionInput');
+        const truthInput = document.getElementById('truthInput');
+        
+        if (out1 && thoughtInput) out1.textContent = thoughtInput.value;
+        if (out2 && originInput) out2.textContent = originInput.value;
+        if (out3 && protectionInput) out3.textContent = protectionInput.value;
+        if (out4 && truthInput) out4.textContent = truthInput.value;
+        
+        // Remove fade-in class after animation
+        setTimeout(() => {
+          summary.classList.remove('fade-in');
+        }, 400);
+      }, 300);
+    }
+    
+    function resetTool() {
+      // Clear all inputs with null checks
+      const thoughtInput = document.getElementById('thoughtInput');
+      const originInput = document.getElementById('originInput');
+      const protectionInput = document.getElementById('protectionInput');
+      const truthInput = document.getElementById('truthInput');
+      const sealInput = document.getElementById('sealInput');
+      
+      if (thoughtInput) thoughtInput.value = '';
+      if (originInput) originInput.value = '';
+      if (protectionInput) protectionInput.value = '';
+      if (truthInput) truthInput.value = '';
+      if (sealInput) sealInput.value = '';
+      
+      // Reset character counts
+      const count1 = document.getElementById('count1');
+      const count2 = document.getElementById('count2');
+      const count3 = document.getElementById('count3');
+      const count4 = document.getElementById('count4');
+      
+      if (count1) count1.textContent = '0 characters';
+      if (count2) count2.textContent = '0 characters';
+      if (count3) count3.textContent = '0 characters';
+      if (count4) count4.textContent = '0 characters';
+      
+      // Hide encouragements
+      document.querySelectorAll('.encouragement').forEach(enc => enc.classList.remove('show'));
+      
+      // Disable all next buttons
+      const next1 = document.getElementById('next1');
+      const next2 = document.getElementById('next2');
+      const next3 = document.getElementById('next3');
+      const next4 = document.getElementById('next4');
+      
+      if (next1) next1.disabled = true;
+      if (next2) next2.disabled = true;
+      if (next3) next3.disabled = true;
+      if (next4) next4.disabled = true;
+      
+      // Show progress indicators
+      const progressIndicator = document.querySelector('.progress-indicator');
+      const progressDots = document.querySelector('.progress-dots');
+      if (progressIndicator) progressIndicator.style.display = 'block';
+      if (progressDots) progressDots.style.display = 'flex';
+      updateProgress(1);
+      
+      // Hide all steps except first
+      const step2 = document.getElementById('step2');
+      const step3 = document.getElementById('step3');
+      const step4 = document.getElementById('step4');
+      const summary = document.getElementById('summary');
+      
+      if (step2) step2.classList.add('hidden');
+      if (step3) step3.classList.add('hidden');
+      if (step4) step4.classList.add('hidden');
+      if (summary) summary.classList.add('hidden');
+      
+      // Show first step with fade
+      const firstStep = document.getElementById('step1');
+      if (firstStep) {
+        firstStep.classList.remove('hidden');
+        firstStep.classList.add('fade-in');
+        
+        // Auto-focus on first textarea after fade-in
+        setTimeout(() => {
+          const firstTextarea = firstStep.querySelector('textarea');
+          if (firstTextarea) firstTextarea.focus();
+        }, 200);
+        
+        setTimeout(() => {
+          firstStep.classList.remove('fade-in');
+        }, 400);
+      }
+    }
+    
+    function printResults() {
+      try {
+        console.log('Print function called');
+        
+        // Show immediate feedback
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = 'Opening print...';
+        button.disabled = true;
+        
+        setTimeout(() => {
+          window.print();
+          
+          // Reset button after a moment
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.disabled = false;
+          }, 1000);
+        }, 100);
+        
+      } catch (error) {
+        console.error('Print error:', error);
+        alert('Print function encountered an error. Please use the Download .txt option instead.');
+      }
+    }
+    
+    function downloadResults() {
+      const thoughtEl = document.getElementById('thoughtInput');
+      const originEl = document.getElementById('originInput');
+      const protectionEl = document.getElementById('protectionInput');
+      const truthEl = document.getElementById('truthInput');
+      const sealEl = document.getElementById('sealInput');
+      
+      const thought = thoughtEl ? thoughtEl.value : '';
+      const origin = originEl ? originEl.value : '';
+      const protection = protectionEl ? protectionEl.value : '';
+      const truth = truthEl ? truthEl.value : '';
+      const seal = sealEl ? sealEl.value : '';
+      
+      let content = `THOUGHT REFINER REFLECTION
+==========================
+
+Thought: ${thought}
+
+Origin: ${origin}
+
+Protective Layer: ${protection}
+
+Reframed Truth: ${truth}`;
+
+      if (seal.trim()) {
+        content += `
+
+Sealed in Truth: ${seal}`;
+      }
+
+      content += `
+
+---
+Truth is quiet. Still. Gentle.
+And it is yours.
+
+Keep returning to it.
+
+You're not broken. You're becoming clear.
+
+– Clarity Metabolics
+Date: ${new Date().toLocaleDateString()}`;
+      
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'thought-refiner-reflection.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }
+    
+    function toggleModal() {
+      const modal = document.getElementById('trinityModal');
+      modal.classList.toggle('hidden');
+      document.body.style.overflow = modal.classList.contains('hidden') ? 'auto' : 'hidden';
+    }
+    
+    function toggleTheme() {
+      const html = document.documentElement;
+      const themeToggle = document.querySelector('.theme-toggle');
+      
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙';
+        themeToggle.setAttribute('aria-label', 'Toggle dark mode');
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+        themeToggle.setAttribute('aria-label', 'Toggle light mode');
+      }
+    }
+  </script>
+</body>
+</html></a>
       </p>
     </div>
   </div>
