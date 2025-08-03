@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧼 Residue Recovery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #F1EFE9;
+            min-height: 100vh;
+            color: #5C5649;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 35px;
+            box-shadow: 0 10px 30px rgba(92, 86, 73, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(189, 170, 153, 0.2);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #F1EFE9;
+            border-radius: 3px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #BDAA99, #A69885);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        h1 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2.2rem;
+            color: #5C5649;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #8B7E6F;
+            margin-bottom: 25px;
+            font-family: 'Libre Baskerville', serif;
+        }
+
+        h2 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.8rem;
+            color: #5C5649;
+            margin-bottom: 20px;
+        }
+
+        .body-text {
+            font-size: 1.05rem;
+            color: #5C5649;
+            margin-bottom: 30px;
+            text-align: left;
+            line-height: 1.7;
+        }
+
+        .prompt {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #5C5649;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin: 25px 0;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #BDAA99;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Open Sans', sans-serif;
+            background: #F9F7F4;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #8B7E6F;
+            box-shadow: 0 0 0 3px rgba(189, 170, 153, 0.2);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .button {
+            background: #BDAA99;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 140px;
+        }
+
+        .button:hover {
+            background: #A69885;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(189, 170, 153, 0.3);
+        }
+
+        .button.secondary {
+            background: transparent;
+            color: #BDAA99;
+            border: 2px solid #BDAA99;
+        }
+
+        .button.secondary:hover {
+            background: #BDAA99;
+            color: white;
+        }
+
+        .checkbox-group {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .checkbox-item:hover {
+            background: #F9F7F4;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+            margin-top: 2px;
+            accent-color: #BDAA99;
+            flex-shrink: 0;
+        }
+
+        .checkbox-item label {
+            font-size: 1rem;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .custom-input {
+            margin-top: 10px;
+            margin-left: 30px;
+        }
+
+        .custom-input input {
+            padding: 10px 12px;
+            font-size: 0.9rem;
+        }
+
+        .truth-option {
+            background: #F9F7F4;
+            border: 2px solid #BDAA99;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .truth-option:hover {
+            background: #F1EFE9;
+            transform: translateX(3px);
+        }
+
+        .truth-option.selected {
+            background: #BDAA99;
+            color: white;
+        }
+
+        .truth-text {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .scripture-ref {
+            font-size: 0.85rem;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        .interlude-box {
+            background: linear-gradient(135deg, #F9F7F4 0%, #F1EFE9 100%);
+            border-left: 4px solid #BDAA99;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .prayer-box {
+            background: rgba(189, 170, 153, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            border: 1px solid #BDAA99;
+        }
+
+        .grounding-box {
+            background: linear-gradient(135deg, #E8F0F2 0%, #D4E6EA 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #5F7C8A;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .action-item {
+            background: #F9F7F4;
+            border: 2px solid #BDAA99;
+            border-radius: 10px;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .action-item:hover {
+            background: #F1EFE9;
+        }
+
+        .action-item.selected {
+            background: #BDAA99;
+            color: white;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #E8F5E8 0%, #D4EDD4 100%);
+            border-left: 4px solid #90C695;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .highlight {
+            font-weight: 600;
+            color: #5C5649;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-link {
+            background: rgba(189, 170, 153, 0.1);
+            color: #5C5649;
+            padding: 12px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border: 1px solid #BDAA99;
+            transition: all 0.3s ease;
+        }
+
+        .action-link:hover {
+            background: #BDAA99;
+            color: white;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 25px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-link {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Intro Screen -->
+        <div id="intro-screen" class="card">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="icon">🧼</div>
+            <h1>Residue Recovery</h1>
+            <p class="subtitle">Some lies don't fully leave when we let go of them. Let's finish what Truth started.</p>
+            <div class="body-text">
+                Even after a breakthrough, something can still cling to us — a leftover sting, label, or fear. That's not a flaw. That's residue. And you're not stuck with it. Let's walk through 4 steps to help you recognize and release what's still lingering.
+            </div>
+            <button class="button" onclick="nextStep('step1')">Start Recovery</button>
+        </div>
+
+        <!-- Step 1: What's still clinging? -->
+        <div id="step1" class="card hidden">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 25%"></div>
+            </div>
+            <h2>🧷 What's still clinging?</h2>
+            <p class="prompt">What's the residue that keeps showing up?</p>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="shame" value="shame">
+                    <label for="shame">Shame</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="fear" value="fear">
+                    <label for="fear">Fear</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="confusion" value="confusion">
+                    <label for="confusion">Confusion</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="bitterness" value="bitterness">
+                    <label for="bitterness">Bitterness</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="feeling-small" value="feeling-small">
+                    <label for="feeling-small">Feeling small</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="prove-myself" value="prove-myself">
+                    <label for="prove-myself">Wanting to prove myself</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="unseen" value="unseen">
+                    <label for="unseen">Feeling unseen</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="resentment" value="resentment">
+                    <label for="resentment">Resentment</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="not-enough" value="not-enough">
+                    <label for="not-enough">"Not enough"</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="something-else" value="something-else">
+                    <label for="something-else">Something else</label>
+                    <div class="custom-input hidden" id="custom-residue-input">
+                        <input type="text" placeholder="Describe what's clinging...">
+                    </div>
+                </div>
+            </div>
+            <button class="button" onclick="nextStep('step2')">Next</button>
+        </div>
+
+        <!-- Step 2: What caused it? -->
+        <div id="step2" class="card hidden">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 50%"></div>
+            </div>
+            <h2>🧻 What caused it?</h2>
+            <p class="prompt">What situation or wound left that behind?</p>
+            <div class="input-group">
+                <textarea id="cause-input" placeholder="Ex: 'My boss humiliated me in front of my team' or 'My family cut me off when I spoke up'"></textarea>
+            </div>
+            <button class="button" onclick="nextStep('interlude')">Next</button>
+        </div>
+
+        <!-- Interlude Screen -->
+        <div id="interlude" class="card hidden">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 62%"></div>
+            </div>
+            <h2>🏷️ The Label Metaphor</h2>
+            <div class="interlude-box">
+                <p>Some lies stick like price tags that never fully peel off. Even when we know they aren't true, the sticky residue remains.</p>
+                <br>
+                <p>But now you've noticed it. And when you name it, you can start to unstick it — for good.</p>
+            </div>
+            <button class="button" onclick="nextStep('step3')">Continue</button>
+        </div>
+
+        <!-- Step 3: What does God actually say? -->
+        <div id="step3" class="card hidden">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 75%"></div>
+            </div>
+            <h2>📖 What does God actually say?</h2>
+            <p class="prompt">Choose a truth that directly refutes the residue.</p>
+            <div id="truth-options">
+                <!-- Truth options will be populated based on selected residue -->
+            </div>
+            <button class="button" onclick="nextStep('step4')" id="truth-button" disabled>That's My Truth</button>
+        </div>
+
+        <!-- Step 4: Release & Restore -->
+        <div id="step4" class="card hidden">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 87%"></div>
+            </div>
+            <h2>🙏 Release & Restore</h2>
+            <div class="body-text">Now it's time to let go of what was never yours — and receive what always was.</div>
+            <div class="prayer-box" id="personalized-prayer">
+                <!-- Personalized prayer will be populated -->
+            </div>
+            <button class="button secondary" onclick="showGrounding()">Want a grounding pause first?</button>
+            <button class="button" onclick="nextStep('step5')">Continue</button>
+        </div>
+
+        <!-- Optional Grounding -->
+        <div id="grounding" class="card hidden">
+            <h2>🧘 Grounding Pause</h2>
+            <div class="grounding-box">
+                <p>Place your feet flat on the floor. Take 3 deep, slow breaths. Remind yourself:</p>
+                <br>
+                <p style="text-align: center; font-weight: 600;">"I am here. I am safe. I belong to God, not the past."</p>
+            </div>
+            <button class="button" onclick="nextStep('step5')">Continue</button>
+        </div>
+
+        <!-- Step 5: Truth Transfer -->
+        <div id="step5" class="card hidden">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 95%"></div>
+            </div>
+            <h2>📎 Truth Transfer</h2>
+            <div class="body-text">Let's move this from insight to action. Choose one:</div>
+            <div class="action-grid">
+                <div class="action-item" onclick="selectAction(this, 'post-it')">
+                    Write this truth on a post-it for your mirror
+                </div>
+                <div class="action-item" onclick="selectAction(this, 'lock-screen')">
+                    Make it your phone lock screen
+                </div>
+                <div class="action-item" onclick="selectAction(this, 'morning-ritual')">
+                    Say it aloud each morning this week
+                </div>
+                <div class="action-item" onclick="selectAction(this, 'share')">
+                    Share it with someone who needs it too
+                </div>
+            </div>
+            <button class="button" onclick="nextStep('final')" id="action-button" disabled>I'm Ready</button>
+        </div>
+
+        <!-- Final Summary -->
+        <div id="final" class="card hidden">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%"></div>
+            </div>
+            <div class="icon">✅</div>
+            <h2>Truth Over Lies</h2>
+            <div class="summary-box" id="personalized-summary">
+                <!-- Personalized summary will be populated -->
+            </div>
+            <div class="action-buttons">
+                <a href="#" class="action-link">→ Go to Thought Refiner</a>
+                <a href="#" class="action-link">→ Start Again</a>
+                <a href="#" class="action-link">→ Return to Homepage</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userResponses = {
+            residue: [],
+            customResidue: '',
+            cause: '',
+            selectedTruth: '',
+            selectedAction: ''
+        };
+
+        const truthMappings = {
+            'shame': [
+                { text: 'There is no condemnation for those in Christ Jesus.', ref: 'Romans 8:1' },
+                { text: 'You are fearfully and wonderfully made.', ref: 'Psalm 139:14' },
+                { text: 'I have called you by name. You are Mine.', ref: 'Isaiah 43:1' }
+            ],
+            'fear': [
+                { text: 'God has not given you a spirit of fear, but of power, love, and sound mind.', ref: '2 Timothy 1:7' },
+                { text: 'Do not fear, for I am with you; do not be dismayed, for I am your God.', ref: 'Isaiah 41:10' },
+                { text: 'Perfect love casts out fear.', ref: '1 John 4:18' }
+            ],
+            'not-enough': [
+                { text: 'You are enough because I say you are enough.', ref: 'Ephesians 2:10' },
+                { text: 'My grace is sufficient for you, for My power is made perfect in weakness.', ref: '2 Corinthians 12:9' },
+                { text: 'You are chosen, beloved, set apart.', ref: '1 Peter 2:9' }
+            ],
+            'feeling-small': [
+                { text: 'You are the apple of My eye.', ref: 'Psalm 17:8' },
+                { text: 'I have engraved you on the palms of My hands.', ref: 'Isaiah 49:16' },
+                { text: 'You are more precious than rubies.', ref: 'Proverbs 31:10' }
+            ],
+            'default': [
+                { text: 'You are loved with an everlasting love.', ref: 'Jeremiah 31:3' },
+                { text: 'I will never leave you nor forsake you.', ref: 'Hebrews 13:5' },
+                { text: 'Nothing can separate you from My love.', ref: 'Romans 8:38-39' }
+            ]
+        };
+
+        function nextStep(stepId) {
+            saveCurrentStep();
+            
+            if (stepId === 'step3') {
+                populateTruthOptions();
+            } else if (stepId === 'step4') {
+                populatePersonalizedPrayer();
+            } else if (stepId === 'final') {
+                populatePersonalizedSummary();
+            }
+            
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.add('hidden');
+            });
+            
+            document.getElementById(stepId).classList.remove('hidden');
+        }
+
+        function saveCurrentStep() {
+            // Save residue selections
+            const residueCheckboxes = document.querySelectorAll('#step1 input[type="checkbox"]:checked');
+            userResponses.residue = Array.from(residueCheckboxes).map(cb => cb.value);
+            
+            const customResidueInput = document.querySelector('#custom-residue-input input');
+            if (customResidueInput) {
+                userResponses.customResidue = customResidueInput.value;
+            }
+            
+            // Save cause
+            const causeInput = document.getElementById('cause-input');
+            if (causeInput) {
+                userResponses.cause = causeInput.value;
+            }
+        }
+
+        function populateTruthOptions() {
+            const truthOptionsContainer = document.getElementById('truth-options');
+            truthOptionsContainer.innerHTML = '';
+            
+            let relevantTruths = [];
+            
+            // Get truths based on primary residue
+            const primaryResidue = userResponses.residue[0];
+            if (truthMappings[primaryResidue]) {
+                relevantTruths = truthMappings[primaryResidue];
+            } else {
+                relevantTruths = truthMappings.default;
+            }
+            
+            relevantTruths.forEach((truth, index) => {
+                const truthOption = document.createElement('div');
+                truthOption.className = 'truth-option';
+                truthOption.onclick = () => selectTruth(truthOption, truth.text + ' — ' + truth.ref);
+                truthOption.innerHTML = `
+                    <div class="truth-text">${truth.text}</div>
+                    <div class="scripture-ref">${truth.ref}</div>
+                `;
+                truthOptionsContainer.appendChild(truthOption);
+            });
+        }
+
+        function selectTruth(element, truthText) {
+            document.querySelectorAll('.truth-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            userResponses.selectedTruth = truthText;
+            document.getElementById('truth-button').disabled = false;
+        }
+
+        function populatePersonalizedPrayer() {
+            const prayerBox = document.getElementById('personalized-prayer');
+            const residueText = userResponses.residue.join(' and ') + (userResponses.customResidue ? ` and ${userResponses.customResidue}` : '');
+            const causeText = userResponses.cause || 'what happened';
+            
+            prayerBox.innerHTML = `
+                <p><em>"God, I release this <strong>${residueText}</strong> that's still clinging from <strong>${causeText}</strong>. Help me receive what You say: <strong>${userResponses.selectedTruth}</strong>. Remind me that Your words are more true than theirs — always."</em></p>
+            `;
+        }
+
+        function selectAction(element, actionType) {
+            document.querySelectorAll('.action-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            userResponses.selectedAction = actionType;
+            document.getElementById('action-button').disabled = false;
+        }
+
+        function populatePersonalizedSummary() {
+            const summaryBox = document.getElementById('personalized-summary');
+            const residueText = userResponses.residue.join(' and ') + (userResponses.customResidue ? ` and ${userResponses.customResidue}` : '');
+            const causeText = userResponses.cause || 'what happened';
+            
+            summaryBox.innerHTML = `
+                <p>You recognized that <span class="highlight">${residueText}</span> is still clinging from <span class="highlight">${causeText}</span>. But you chose to believe what God says instead: <span class="highlight">"${userResponses.selectedTruth}"</span></p>
+                <br>
+                <p>That's real movement. Let's keep untangling from the counterfeit — and return to what's real.</p>
+            `;
+        }
+
+        function showGrounding() {
+            document.getElementById('step4').classList.add('hidden');
+            document.getElementById('grounding').classList.remove('hidden');
+        }
+
+        // Handle custom residue input visibility
+        document.getElementById('something-else').addEventListener('change', function() {
+            const customInput = document.getElementById('custom-residue-input');
+            if (this.checked) {
+                customInput.classList.remove('hidden');
+            } else {
+                customInput.classList.add('hidden');
+                customInput.querySelector('input').value = '';
+            }
+        });
+
+        // Placeholder functionality for action buttons
+        document.querySelectorAll('.action-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const text = this.textContent.trim();
+                if (text.includes('Thought Refiner')) {
+                    alert('This would link to the Thought Refiner tool');
+                } else if (text.includes('Start Again')) {
+                    location.reload();
+                } else if (text.includes('Homepage')) {
+                    alert('This would return to your main tools page');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
