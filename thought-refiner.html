@@ -1,732 +1,657 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Thought Refiner - Interactive Discernment Tool</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Open Sans', sans-serif;
-            font-weight: 300;
-            line-height: 1.6;
-            background: linear-gradient(135deg, #F1EFE9 0%, #A89E90 100%);
-            min-height: 100vh;
-            color: #5C5649;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .screen {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            padding: 40px 30px;
-            box-shadow: 0 10px 30px rgba(92, 86, 73, 0.1);
-            text-align: center;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(168, 158, 144, 0.2);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
-        }
-
-        .screen.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .icon {
-            font-size: 3em;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        h1 {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            color: #5C5649;
-            font-weight: 400;
-        }
-
-        .prompt {
-            font-size: 1.1em;
-            margin-bottom: 20px;
-            color: #5C5649;
-            line-height: 1.7;
-        }
-
-        .save-notice {
-            background: rgba(168, 158, 144, 0.1);
-            border: 1px solid #A89E90;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 15px 0;
-            font-size: 0.9em;
-            color: #5C5649;
-            text-align: center;
-            font-style: italic;
-        }
-
-        .thought-input {
-            width: 100%;
-            min-height: 80px;
-            padding: 20px;
-            border: 2px solid #F1EFE9;
-            border-radius: 12px;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 1.1em;
-            color: #5C5649;
-            background: rgba(241, 239, 233, 0.3);
-            resize: vertical;
-            margin-bottom: 20px;
-        }
-
-        .thought-input:focus {
-            outline: none;
-            border-color: #A89E90;
-            background: rgba(241, 239, 233, 0.5);
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 30px;
-        }
-
-        .option {
-            background: #F1EFE9;
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1em;
-            color: #5C5649;
-            text-align: left;
-        }
-
-        .option:hover {
-            border-color: #A89E90;
-            background: rgba(168, 158, 144, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .option.selected {
-            border-color: #A89E90;
-            background: rgba(168, 158, 144, 0.2);
-        }
-
-        .checkbox-option {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .checkbox-option input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #A89E90;
-        }
-
-        .journal-box {
-            width: 100%;
-            min-height: 120px;
-            padding: 20px;
-            border: 2px solid #F1EFE9;
-            border-radius: 12px;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 1em;
-            color: #5C5649;
-            background: rgba(241, 239, 233, 0.3);
-            resize: vertical;
-            margin-bottom: 20px;
-        }
-
-        .journal-box:focus {
-            outline: none;
-            border-color: #A89E90;
-            background: rgba(241, 239, 233, 0.5);
-        }
-
-        .prompt-list {
-            background: rgba(241, 239, 233, 0.3);
-            border-radius: 12px;
-            padding: 25px;
-            margin: 20px 0;
-            text-align: left;
-        }
-
-        .prompt-list ul {
-            margin-left: 20px;
-        }
-
-        .prompt-list li {
-            margin-bottom: 8px;
-            line-height: 1.6;
-        }
-
-        .anchor-question {
-            background: rgba(168, 158, 144, 0.1);
-            border: 2px solid #A89E90;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            font-style: italic;
-            font-weight: 500;
-            color: #5C5649;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            background: #5C5649;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 15px 30px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Open Sans', sans-serif;
-            font-weight: 400;
-        }
-
-        .btn:hover {
-            background: #A89E90;
-            transform: translateY(-2px);
-        }
-
-        .btn:disabled {
-            background: #F1EFE9;
-            color: #A89E90;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-accent {
-            background: #F1EFE9;
-            color: #5C5649;
-            border: 2px solid #A89E90;
-        }
-
-        .btn-accent:hover {
-            background: #A89E90;
-            color: white;
-        }
-
-        .icon-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .icon-option {
-            background: rgba(241, 239, 233, 0.5);
-            border: 1px solid #F1EFE9;
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            user-select: none;
-        }
-
-        .icon-option:hover {
-            background: rgba(168, 158, 144, 0.2);
-            border-color: #A89E90;
-            transform: translateY(-2px);
-        }
-
-        .icon-option.selected {
-            background: rgba(168, 158, 144, 0.3);
-            border-color: #A89E90;
-        }
-
-        .icon-option .emoji {
-            font-size: 1.5em;
-            flex-shrink: 0;
-        }
-
-        .footer-text {
-            font-style: italic;
-            font-size: 0.9em;
-            color: #A89E90;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .export-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(168, 158, 144, 0.2);
-        }
-
-        .btn-export {
-            background: #A89E90;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Open Sans', sans-serif;
-            margin-right: 10px;
-        }
-
-        .btn-export:hover {
-            background: #5C5649;
-            transform: translateY(-1px);
-        }
-
-        .learn-more {
-            background: rgba(241, 239, 233, 0.3);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-            text-align: center;
-            font-size: 0.9em;
-            color: #A89E90;
-        }
-
-        .learn-more a {
-            color: #5C5649;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .learn-more a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .screen {
-                padding: 30px 20px;
-            }
-            
-            .btn {
-                padding: 12px 20px;
-                font-size: 0.9em;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thought Refiner | Discernment Toolkit by Clarity Metabolics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --main: #7A94A8;
+      --accent: #E7EEF1;
+      --contrast: #4A5A6A;
+      --bg-primary: #fff;
+      --bg-secondary: #E7EEF1;
+      --text-primary: #4A5A6A;
+      --text-secondary: #888;
+    }
+    [data-theme="dark"] {
+      --main: #9BB4C8;
+      --accent: #2A3441;
+      --contrast: #E8EDF2;
+      --bg-primary: #1A2028;
+      --bg-secondary: #2A3441;
+      --text-primary: #E8EDF2;
+      --text-secondary: #B0B8C0;
+    }
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      transition: all 0.3s ease;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: var(--bg-primary);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: 2px solid var(--main);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .theme-toggle:hover {
+      background-color: var(--main);
+      color: var(--bg-primary);
+      transform: scale(1.1);
+    }
+    .progress-indicator {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--main);
+      font-weight: 600;
+    }
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #ddd;
+      transition: background-color 0.3s ease;
+    }
+    .dot.active {
+      background-color: var(--main);
+    }
+    .dot.completed {
+      background-color: var(--contrast);
+    }
+    h1, h2 {
+      font-family: 'Libre Baskerville', serif;
+      color: var(--main);
+    }
+    h1 {
+      text-align: center;
+      margin-top: 0;
+    }
+    .icon-header {
+      font-size: 2.2rem;
+      text-align: center;
+      color: var(--text-primary);
+      margin-bottom: 0.5em;
+    }
+    button {
+      background-color: var(--main);
+      color: white;
+      font-weight: bold;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    button:hover:not(:disabled) {
+      background-color: var(--contrast);
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    button:active {
+      transform: translateY(1px);
+    }
+    .question {
+      margin-bottom: 1.5rem;
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .hidden {
+      display: none;
+    }
+    .fade-out {
+      opacity: 0;
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 0.4s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+      box-sizing: border-box;
+      min-height: 120px;
+      line-height: 1.5;
+    }
+    .char-count {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+    .encouragement {
+      font-size: 0.85rem;
+      color: var(--main);
+      font-style: italic;
+      margin-top: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .encouragement.show {
+      opacity: 1;
+    }
+    .typing-prompt {
+      font-size: 0.8rem;
+      color: var(--main);
+      font-style: italic;
+      margin-top: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .typing-prompt.show {
+      opacity: 1;
+    }
+    .progress-note {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+      font-style: italic;
+    }
+    .summary {
+      background-color: var(--bg-secondary);
+      padding: 1.5rem;
+      margin-top: 2rem;
+      border-left: 6px solid var(--main);
+    }
+    @media (max-width: 768px) {
+      .icon-header {
+        font-size: 1.6rem;
+        margin-bottom: 0.4em;
+      }
+    }
+    @media (max-width: 768px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+      textarea {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 0.8rem;
+        resize: none; /* Disable resize on mobile */
+      }
+      button {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+      }
+    }
+    .summary {
+      background-color: var(--accent);
+      padding: 1.5rem;
+      margin-top: 2rem;
+      border-left: 6px solid var(--main);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Screen 1: What thought keeps looping? -->
-        <div id="screen1" class="screen active" role="main">
-            <span class="icon">🧠</span>
-            <h1>What thought keeps returning?</h1>
-            <p class="prompt">Is there a sentence that's been running in the background?<br><br>Something that stirs up frustration, sadness, fear — or keeps you distracted?</p>
-            <div class="save-notice">
-                Your progress is saved in this browser. You can return later and pick up where you left off.
-            </div>
-            <textarea class="thought-input" id="thoughtInput" placeholder="No one listens to me." aria-label="Enter your recurring thought"></textarea>
-            <button class="btn" id="continueBtn1" aria-label="Put this thought to the test">Put it to the test →</button>
-        </div>
-
-        <!-- Screen 2: Where did this thought come from? -->
-        <div id="screen2" class="screen" style="display: none;" role="main">
-            <span class="icon">🌱</span>
-            <h1>What's this thought rooted in?</h1>
-            <p class="prompt">Choose all that feel true.</p>
-            <div class="options" role="group" aria-label="Select the roots of this thought (multiple selections allowed)">
-                <div class="checkbox-option">
-                    <input type="checkbox" id="recent" value="recent" aria-describedby="recent-label">
-                    <label for="recent" id="recent-label">Something I saw or heard recently</label>
-                </div>
-                <div class="checkbox-option">
-                    <input type="checkbox" id="past" value="past" aria-describedby="past-label">
-                    <label for="past" id="past-label">Something from my past</label>
-                </div>
-                <div class="checkbox-option">
-                    <input type="checkbox" id="story" value="story" aria-describedby="story-label">
-                    <label for="story" id="story-label">A story someone told me</label>
-                </div>
-                <div class="checkbox-option">
-                    <input type="checkbox" id="fear" value="fear" aria-describedby="fear-label">
-                    <label for="fear" id="fear-label">A fear I haven't spoken aloud</label>
-                </div>
-                <div class="checkbox-option">
-                    <input type="checkbox" id="emotion" value="emotion" aria-describedby="emotion-label">
-                    <label for="emotion" id="emotion-label">An emotion that hasn't passed</label>
-                </div>
-                <div class="checkbox-option">
-                    <input type="checkbox" id="belief" value="belief" aria-describedby="belief-label">
-                    <label for="belief" id="belief-label">A belief I was taught (but never questioned)</label>
-                </div>
-            </div>
-            <button class="btn" id="continueBtn2" aria-label="Continue to next step">Keep going →</button>
-        </div>
-
-        <!-- Screen 3: What happens when you believe this thought? -->
-        <div id="screen3" class="screen" style="display: none;" role="main">
-            <span class="icon">⚡</span>
-            <h1>What happens when this thought takes over?</h1>
-            <div class="prompt-list">
-                <ul>
-                    <li>How does it affect your body?</li>
-                    <li>What emotions show up with it?</li>
-                    <li>How do you treat others when you believe it?</li>
-                    <li>How do you treat yourself?</li>
-                    <li>What do you lose sight of?</li>
-                </ul>
-            </div>
-            <textarea class="journal-box" id="effects" placeholder="When I believe this thought..." aria-label="Reflect on the effects of believing this thought"></textarea>
-            <div class="anchor-question">
-                "Does this thought bring you closer to peace — or further away?"
-            </div>
-            <button class="btn" id="continueBtn3" aria-label="Find what's more true">Let's find what's more true →</button>
-        </div>
-
-        <!-- Screen 4: Is there something deeper — or more true? -->
-        <div id="screen4" class="screen" style="display: none;" role="main">
-            <span class="icon">💎</span>
-            <h1>If this thought isn't the whole truth… what might be?</h1>
-            <p class="prompt">Use these nudges to go deeper.</p>
-            <div class="options" role="group" aria-label="Explore deeper truths (multiple selections allowed)">
-                <div class="checkbox-option">
-                    <input type="checkbox" id="god" value="god" aria-describedby="god-label">
-                    <label for="god" id="god-label">What might God say about this?</label>
-                </div>
-                <div class="checkbox-option">
-                    <input type="checkbox" id="softer" value="softer" aria-describedby="softer-label">
-                    <label for="softer" id="softer-label">Could there be a softer or more grounded version of this thought?</label>
-                </div>
-                <div class="checkbox-option">
-                    <input type="checkbox" id="protect" value="protect" aria-describedby="protect-label">
-                    <label for="protect" id="protect-label">What does this thought protect you from — or keep you tied to?</label>
-                </div>
-                <div class="checkbox-option">
-                    <input type="checkbox" id="both" value="both" aria-describedby="both-label">
-                    <label for="both" id="both-label">Can two things be true at once?</label>
-                </div>
-            </div>
-            <p class="prompt">Rewrite the thought with more clarity or compassion:</p>
-            <textarea class="journal-box" id="rewrite" placeholder='"No one listens to me" → "Some don't, but God hears me. And I can listen to myself, too."' aria-label="Rewrite your thought with more truth and compassion"></textarea>
-            <button class="btn" id="continueBtn4" aria-label="Bring it to the light">Bring it to the Light →</button>
-        </div>
-
-        <!-- Screen 5: Truth lives in stillness -->
-        <div id="screen5" class="screen" style="display: none;" role="main">
-            <span class="icon">🕊️</span>
-            <h1>Truth isn't loud. It's steady. It's safe.</h1>
-            <p class="prompt">Let's bring this thought into the quiet — where clarity lives.<br><br>You don't have to believe everything perfectly.<br>Just be willing to ask for what's real.</p>
-            
-            <div class="icon-options" role="group" aria-label="Choose how to bring this to the light">
-                <div class="icon-option" data-value="pray" tabindex="0" role="radio" aria-checked="false">
-                    <span class="emoji">🙏</span>
-                    <span>Ask God to show you what's true beneath the noise</span>
-                </div>
-                <div class="icon-option" data-value="imagine" tabindex="0" role="radio" aria-checked="false">
-                    <span class="emoji">🕊️</span>
-                    <span>Imagine placing this thought before the One who knows you fully — what do you sense in return?</span>
-                </div>
-                <div class="icon-option" data-value="write" tabindex="0" role="radio" aria-checked="false">
-                    <span class="emoji">✍️</span>
-                    <span>Write a prayer, or a sentence of truth you're willing to stand on</span>
-                </div>
-            </div>
-
-            <div id="prayerSection" style="display: none;">
-                <textarea class="journal-box" id="prayer" placeholder="God, if this isn't true, help me see what is. I want to walk in light — not illusion." aria-label="Write your prayer or truth statement"></textarea>
-            </div>
-
-            <div class="footer-text">
-                You don't have to fix everything right now.<br>
-                But you can walk forward with truth. One thought at a time.
-            </div>
-
-            <div class="export-section">
-                <button class="btn-export" id="exportBtn" aria-label="Download your insights">Save these reflections</button>
-                <button class="btn btn-accent" id="beginAgainBtn" aria-label="Begin again with a new thought">Begin Again</button>
-            </div>
-
-            <div class="learn-more">
-                Want deeper truth? <a href="#" onclick="return false;">Explore how the Trinity reframes this thought</a>
-            </div>
-        </div>
+  <div class="container">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">🌙</button>
+    <div class="icon-header">🧠</div>
+    <h1>Thought Refiner</h1>
+    <p>This tool helps you pause and examine recurring or disruptive thoughts — especially the ones that seem to loop, hijack your peace, or distort how you see yourself, others, or God. Use it when you notice a thought that doesn't sit right but keeps coming back.</p>
+    <p style="font-style: italic; color: var(--main); font-weight: 500;">Is this thought really mine? Was it planted there — is it even true?</p>
+    <div class="progress-indicator">Step 1 of 4</div>
+    <div class="progress-dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
     </div>
-
-    <script>
-        let selectedData = {
-            thought: '',
-            roots: [],
-            effects: '',
-            deeper: [],
-            rewrite: '',
-            lightChoice: '',
-            prayer: ''
-        };
-
-        // Load saved progress from localStorage
-        function loadProgress() {
-            try {
-                const saved = localStorage.getItem('thoughtRefinerProgress');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    selectedData = { ...selectedData, ...data };
-                    restoreUIState();
-                }
-            } catch (e) {
-                console.log('No saved progress found');
-            }
+    <div class="progress-note">Your progress is automatically saved as you type</div>
+    <div class="question" id="step1">
+      <h2>1. What thought keeps looping?</h2>
+      <textarea id="thoughtInput" placeholder="Write a thought that won't let go — or one that feels suspiciously heavy..." aria-label="Enter the looping thought you want to examine" oninput="updateCharCount(this, 'count1'); showEncouragement(this, 'enc1')" onkeydown="handleKeyPress(event, 1)"></textarea>
+      <div class="char-count" id="count1">0 characters</div>
+      <div class="encouragement" id="enc1">Take your time... let it all out.</div>
+      <div class="typing-prompt" id="prompt1">Take your time... breathe and reflect.</div>
+      <button onclick="nextStep(1)" aria-label="Proceed to step 2" id="next1" disabled>Next</button>
+    </div>
+    <div class="question hidden" id="step2">
+      <h2>2. Where did this thought come from?</h2>
+      <textarea id="originInput" placeholder="Can you trace where or when this thought first began?" aria-label="Describe where or when this thought originated" oninput="updateCharCount(this, 'count2'); showEncouragement(this, 'enc2')" onkeydown="handleKeyPress(event, 2)"></textarea>
+      <div class="char-count" id="count2">0 characters</div>
+      <div class="encouragement" id="enc2">Good... keep exploring the roots.</div>
+      <div class="typing-prompt" id="prompt2">No rush... let the memories surface gently.</div>
+      <button onclick="nextStep(2)" aria-label="Proceed to step 3" id="next2" disabled>Next</button>
+    </div>
+    <div class="question hidden" id="step3">
+      <h2>3. What does it try to protect you from?</h2>
+      <textarea id="protectionInput" placeholder="What fear or pain might this thought be guarding?" aria-label="Identify what this thought might be protecting you from" oninput="updateCharCount(this, 'count3'); showEncouragement(this, 'enc3')" onkeydown="handleKeyPress(event, 3)"></textarea>
+      <div class="char-count" id="count3">0 characters</div>
+      <div class="encouragement" id="enc3">You're doing important work here.</div>
+      <div class="typing-prompt" id="prompt3">Breathe... what is this thought trying to shield?</div>
+      <button onclick="nextStep(3)" aria-label="Proceed to step 4" id="next3" disabled>Next</button>
+    </div>
+    <div class="question hidden" id="step4">
+      <h2>4. What truth can replace it?</h2>
+      <textarea id="truthInput" placeholder="What do you sense is more true, even if it's hard to accept?" aria-label="Enter a more truthful perspective to replace the original thought" oninput="updateCharCount(this, 'count4'); showEncouragement(this, 'enc4')" onkeydown="handleKeyPress(event, 4)"></textarea>
+      <div class="char-count" id="count4">0 characters</div>
+      <div class="encouragement" id="enc4">Trust what you're discovering.</div>
+      <div class="typing-prompt" id="prompt4">Listen deeply... what does your heart know?</div>
+      <button onclick="showSummary()" aria-label="Complete reflection and show summary" id="next4" disabled>Show Reflection</button>
+    </div>
+    <div id="summary" class="summary hidden">
+      <h2>Your Thought Reflection</h2>
+      <p style="text-align: center; font-size: 1.1rem; font-weight: 600; color: var(--main); margin-bottom: 1.5rem;">
+        ✅ Thought successfully refined.
+      </p>
+      <p><strong>Thought:</strong> <span id="out1"></span></p>
+      <p><strong>Origin:</strong> <span id="out2"></span></p>
+      <p><strong>Protective Layer:</strong> <span id="out3"></span></p>
+      <p><strong>Reframed Truth:</strong> <span id="out4"></span></p>
+      <div style="margin-top: 1.5rem;">
+        <button onclick="resetTool()" style="margin-right: 1rem;" aria-label="Clear all responses and start over">Start Over</button>
+        <button onclick="printResults()" aria-label="Print or save your thought reflection" type="button">Save/Print</button>
+        <button onclick="downloadResults()" style="margin-left: 1rem;" aria-label="Download your reflection as a text file" type="button">Download .txt</button>
+      </div>
+      <p style="margin-top: 1rem; font-style: italic; color: var(--main);">
+        Take a moment to breathe and let this new perspective settle in. You've done important inner work.
+      </p>
+      <p style="text-align: center; font-size: 0.85rem; color: var(--contrast); margin-top: 2rem;">
+        Want to go deeper? <a href="#" onclick="toggleModal(); return false;" style="color: var(--main); font-weight: 600;">Explore how the Trinity might reframe this thought</a>
+      </p>
+    </div>
+  </div>
+  
+  <!-- Trinity Modal -->
+  <div id="trinityModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <span class="close-btn" onclick="toggleModal()" aria-label="Close modal">&times;</span>
+      <h2 id="modalTitle">🕊 The Trinity and Truth</h2>
+      <p>Real truth isn't just a better thought — it's a Person.</p>
+      <p>The Father restores identity. The Son exposes deception. The Spirit whispers clarity and strength.</p>
+      <blockquote>"When the Spirit of truth comes, he will guide you into all the truth." — John 16:13</blockquote>
+      <p style="margin-top: 1rem;">Want to sit with that a moment? Close your eyes and ask: <em>Which voice am I really listening to?</em></p>
+      <button onclick="toggleModal()" aria-label="Close Trinity modal">Got it</button>
+    </div>
+  </div>
+  <script>
+    function nextStep(step) {
+      document.getElementById(`step${step}`).classList.add('hidden');
+      document.getElementById(`step${step + 1}`).classList.remove('hidden');
+    }
+    let typingTimers = {};
+    
+    function handleKeyPress(event, step) {
+      // Allow Enter key to advance to next step if button is enabled
+      if (event.key === 'Enter' && event.ctrlKey) {
+        const nextButton = document.getElementById(`next${step}`);
+        if (nextButton && !nextButton.disabled) {
+          event.preventDefault();
+          if (step < 4) {
+            nextStep(step);
+          } else {
+            showSummary();
+          }
         }
-
-        // Save progress to localStorage
-        function saveProgress() {
-            try {
-                localStorage.setItem('thoughtRefinerProgress', JSON.stringify(selectedData));
-            } catch (e) {
-                console.log('Unable to save progress');
-            }
+      }
+      
+      // Track typing activity for gentle prompts
+      const promptId = `prompt${step}`;
+      const promptElement = document.getElementById(promptId);
+      
+      if (promptElement) {
+        // Clear existing timer
+        clearTimeout(typingTimers[promptId]);
+        
+        // Hide prompt while typing
+        promptElement.classList.remove('show');
+        
+        // Set new timer to show prompt after 10 seconds of no typing
+        typingTimers[promptId] = setTimeout(() => {
+          if (document.activeElement.id === event.target.id) {
+            promptElement.classList.add('show');
+          }
+        }, 10000);
+      }
+    }
+    
+    function updateProgress(step) {
+      // Update step indicator
+      document.querySelector('.progress-indicator').textContent = `Step ${step} of 4`;
+      
+      // Update dots
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach((dot, index) => {
+        dot.classList.remove('active', 'completed');
+        if (index < step - 1) {
+          dot.classList.add('completed');
+        } else if (index === step - 1) {
+          dot.classList.add('active');
         }
-
-        // Restore UI state from saved data
-        function restoreUIState() {
-            if (selectedData.thought) {
-                document.getElementById('thoughtInput').value = selectedData.thought;
-            }
+      });
+      
+      // Analytics tracking (you can replace with your preferred analytics)
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'step_completed', {
+          'step_number': step,
+          'tool_name': 'thought_refiner'
+        });
+      }
+    }
+    
+    function updateCharCount(textarea, countId) {
+      const count = textarea.value.length;
+      const countElement = document.getElementById(countId);
+      if (countElement) {
+        countElement.textContent = `${count} characters`;
+      }
+      
+      // Enable/disable next button based on content
+      const stepNum = countId.replace('count', '');
+      const nextButton = document.getElementById(`next${stepNum}`);
+      if (nextButton) {
+        nextButton.disabled = count < 5; // Reduced from 10 to 5 characters
+      }
+      
+      // Clear typing prompt when they start typing meaningfully
+      const promptId = `prompt${stepNum}`;
+      const promptElement = document.getElementById(promptId);
+      if (promptElement && count > 10) {
+        promptElement.classList.remove('show');
+      }
+    }
+    
+    function showEncouragement(textarea, encId) {
+      const encouragement = document.getElementById(encId);
+      if (encouragement) {
+        if (textarea.value.length > 20) {
+          encouragement.classList.add('show');
+        } else {
+          encouragement.classList.remove('show');
         }
+      }
+    }
+    
+    function nextStep(step) {
+      const currentStep = document.getElementById(`step${step}`);
+      const nextStep = document.getElementById(`step${step + 1}`);
+      
+      // Update progress
+      updateProgress(step + 1);
+      
+      // Fade out current step
+      currentStep.classList.add('fade-out');
+      
+      setTimeout(() => {
+        currentStep.classList.add('hidden');
+        currentStep.classList.remove('fade-out');
+        nextStep.classList.remove('hidden');
+        nextStep.classList.add('fade-in');
+        
+        // Auto-focus on the next textarea after fade-in completes
+        setTimeout(() => {
+          nextStep.querySelector('textarea')?.focus();
+        }, 200);
+        
+        // Remove fade-in class after animation
+        setTimeout(() => {
+          nextStep.classList.remove('fade-in');
+        }, 400);
+      }, 300);
+    }
+    
+    function showSummary() {
+      const currentStep = document.getElementById('step4');
+      const summary = document.getElementById('summary');
+      
+      // Hide progress indicators
+      const progressIndicator = document.querySelector('.progress-indicator');
+      const progressDots = document.querySelector('.progress-dots');
+      if (progressIndicator) progressIndicator.style.display = 'none';
+      if (progressDots) progressDots.style.display = 'none';
+      
+      // Fade out current step
+      currentStep.classList.add('fade-out');
+      
+      setTimeout(() => {
+        currentStep.classList.add('hidden');
+        currentStep.classList.remove('fade-out');
+        summary.classList.remove('hidden');
+        summary.classList.add('fade-in');
+        
+        // Populate summary with null checks
+        const out1 = document.getElementById('out1');
+        const out2 = document.getElementById('out2');
+        const out3 = document.getElementById('out3');
+        const out4 = document.getElementById('out4');
+        const thoughtInput = document.getElementById('thoughtInput');
+        const originInput = document.getElementById('originInput');
+        const protectionInput = document.getElementById('protectionInput');
+        const truthInput = document.getElementById('truthInput');
+        
+        if (out1 && thoughtInput) out1.textContent = thoughtInput.value;
+        if (out2 && originInput) out2.textContent = originInput.value;
+        if (out3 && protectionInput) out3.textContent = protectionInput.value;
+        if (out4 && truthInput) out4.textContent = truthInput.value;
+        
+        // Remove fade-in class after animation
+        setTimeout(() => {
+          summary.classList.remove('fade-in');
+        }, 400);
+      }, 300);
+    }
+    
+    function resetTool() {
+      // Clear all inputs with null checks
+      const thoughtInput = document.getElementById('thoughtInput');
+      const originInput = document.getElementById('originInput');
+      const protectionInput = document.getElementById('protectionInput');
+      const truthInput = document.getElementById('truthInput');
+      const sealInput = document.getElementById('sealInput');
+      
+      if (thoughtInput) thoughtInput.value = '';
+      if (originInput) originInput.value = '';
+      if (protectionInput) protectionInput.value = '';
+      if (truthInput) truthInput.value = '';
+      if (sealInput) sealInput.value = '';
+      
+      // Reset character counts
+      const count1 = document.getElementById('count1');
+      const count2 = document.getElementById('count2');
+      const count3 = document.getElementById('count3');
+      const count4 = document.getElementById('count4');
+      
+      if (count1) count1.textContent = '0 characters';
+      if (count2) count2.textContent = '0 characters';
+      if (count3) count3.textContent = '0 characters';
+      if (count4) count4.textContent = '0 characters';
+      
+      // Hide encouragements
+      document.querySelectorAll('.encouragement').forEach(enc => enc.classList.remove('show'));
+      
+      // Disable all next buttons
+      const next1 = document.getElementById('next1');
+      const next2 = document.getElementById('next2');
+      const next3 = document.getElementById('next3');
+      const next4 = document.getElementById('next4');
+      
+      if (next1) next1.disabled = true;
+      if (next2) next2.disabled = true;
+      if (next3) next3.disabled = true;
+      if (next4) next4.disabled = true;
+      
+      // Show progress indicators
+      const progressIndicator = document.querySelector('.progress-indicator');
+      const progressDots = document.querySelector('.progress-dots');
+      if (progressIndicator) progressIndicator.style.display = 'block';
+      if (progressDots) progressDots.style.display = 'flex';
+      updateProgress(1);
+      
+      // Hide all steps except first
+      const step2 = document.getElementById('step2');
+      const step3 = document.getElementById('step3');
+      const step4 = document.getElementById('step4');
+      const summary = document.getElementById('summary');
+      
+      if (step2) step2.classList.add('hidden');
+      if (step3) step3.classList.add('hidden');
+      if (step4) step4.classList.add('hidden');
+      if (summary) summary.classList.add('hidden');
+      
+      // Show first step with fade
+      const firstStep = document.getElementById('step1');
+      if (firstStep) {
+        firstStep.classList.remove('hidden');
+        firstStep.classList.add('fade-in');
+        
+        // Auto-focus on first textarea after fade-in
+        setTimeout(() => {
+          const firstTextarea = firstStep.querySelector('textarea');
+          if (firstTextarea) firstTextarea.focus();
+        }, 200);
+        
+        setTimeout(() => {
+          firstStep.classList.remove('fade-in');
+        }, 400);
+      }
+    }
+    
+    function printResults() {
+      try {
+        console.log('Print function called');
+        
+        // Show immediate feedback
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = 'Opening print...';
+        button.disabled = true;
+        
+        setTimeout(() => {
+          window.print();
+          
+          // Reset button after a moment
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.disabled = false;
+          }, 1000);
+        }, 100);
+        
+      } catch (error) {
+        console.error('Print error:', error);
+        alert('Print function encountered an error. Please use the Download .txt option instead.');
+      }
+    }
+    
+    function downloadResults() {
+      const thoughtEl = document.getElementById('thoughtInput');
+      const originEl = document.getElementById('originInput');
+      const protectionEl = document.getElementById('protectionInput');
+      const truthEl = document.getElementById('truthInput');
+      const sealEl = document.getElementById('sealInput');
+      
+      const thought = thoughtEl ? thoughtEl.value : '';
+      const origin = originEl ? originEl.value : '';
+      const protection = protectionEl ? protectionEl.value : '';
+      const truth = truthEl ? truthEl.value : '';
+      const seal = sealEl ? sealEl.value : '';
+      
+      let content = `THOUGHT REFINER REFLECTION
+==========================
 
-        // Clear saved progress
-        function clearProgress() {
-            try {
-                localStorage.removeItem('thoughtRefinerProgress');
-            } catch (e) {
-                console.log('Unable to clear progress');
-            }
-        }
+Thought: ${thought}
 
-        // Screen 1 Logic
-        document.getElementById('thoughtInput').addEventListener('input', function() {
-            selectedData.thought = this.value.trim();
-            saveProgress();
-        });
+Origin: ${origin}
 
-        document.getElementById('continueBtn1').addEventListener('click', function() {
-            const thought = document.getElementById('thoughtInput').value.trim();
-            if (thought) {
-                selectedData.thought = thought;
-                saveProgress();
-                showScreen('screen2');
-            } else {
-                // Gentle reminder to enter a thought
-                document.getElementById('thoughtInput').focus();
-                document.getElementById('thoughtInput').placeholder = 'Please enter a thought that keeps returning to you...';
-            }
-        });
+Protective Layer: ${protection}
 
-        // Screen 2 Logic
-        document.querySelectorAll('#screen2 input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                selectedData.roots = Array.from(document.querySelectorAll('#screen2 input[type="checkbox"]:checked'))
-                    .map(cb => cb.value);
-                saveProgress();
-            });
-        });
+Reframed Truth: ${truth}`;
 
-        document.getElementById('continueBtn2').addEventListener('click', function() {
-            showScreen('screen3');
-        });
+      if (seal.trim()) {
+        content += `
 
-        // Screen 3 Logic
-        document.getElementById('effects').addEventListener('input', function() {
-            selectedData.effects = this.value.trim();
-            saveProgress();
-        });
+Sealed in Truth: ${seal}`;
+      }
 
-        document.getElementById('continueBtn3').addEventListener('click', function() {
-            showScreen('screen4');
-        });
+      content += `
 
-        // Screen 4 Logic
-        document.querySelectorAll('#screen4 input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                selectedData.deeper = Array.from(document.querySelectorAll('#screen4 input[type="checkbox"]:checked'))
-                    .map(cb => cb.value);
-                saveProgress();
-            });
-        });
+---
+Truth is quiet. Still. Gentle.
+And it is yours.
 
-        document.getElementById('rewrite').addEventListener('input', function() {
-            selectedData.rewrite = this.value.trim();
-            saveProgress();
-        });
+Keep returning to it.
 
-        document.getElementById('continueBtn4').addEventListener('click', function() {
-            showScreen('screen5');
-        });
+You're not broken. You're becoming clear.
 
-        // Screen 5 Logic
-        document.querySelectorAll('.icon-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.icon-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                    opt.setAttribute('aria-checked', 'false');
-                });
-                this.classList.add('selected');
-                this.setAttribute('aria-checked', 'true');
-                selectedData.lightChoice = this.dataset.value;
-                
-                // Show prayer section and update placeholder based on choice
-                const prayerSection = document.getElementById('prayerSection');
-                const prayerBox = document.getElementById('prayer');
-                
-                prayerSection.style.display = 'block';
-                
-                // Update placeholder based on selection
-                if (this.dataset.value === 'pray') {
-                    prayerBox.placeholder = 'God, if this isn\'t true, help me see what is. I want to walk in light — not illusion.';
-                } else if (this.dataset.value === 'imagine') {
-                    prayerBox.placeholder = 'When I place this thought before God, I sense...';
-                } else if (this.dataset.value === 'write') {
-                    prayerBox.placeholder = 'The truth I\'m willing to stand on is...';
-                }
-                
-                // Focus on the prayer box
-                setTimeout(() => prayerBox.focus(), 300);
-                
-                saveProgress();
-            });
-
-            option.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.click();
-                }
-            });
-        });
-
-        document.getElementById('prayer').addEventListener('input', function() {
-            selectedData.prayer = this.value.trim();
-            saveProgress();
-        });
-
-        // Export functionality
-        document.getElementById('exportBtn').addEventListener('click', function() {
-            const reflections = [];
-            
-            if (selectedData.thought) {
-                reflections.push(`RECURRING THOUGHT:\n"${selectedData.thought}"\n`);
-            }
-            
-            if (selectedData.roots && selectedData.roots.length > 0) {
-                reflections.push(`ROOTS:\n${selectedData.roots.map(root => `• ${root}`).join('\n')}\n`);
-            }
-            
-            if (selectedData.effects) {
-                reflections.push(`EFFECTS:\n${selectedData.effects}\n`);
-            }
-            
-            if (selectedData.rewrite) {
-                reflections.push(`REWRITTEN WITH TRUTH:\n${selectedData.rewrite}\n`);
-            }
-            
-            if (selectedData.prayer) {
-                reflections.push(`PRAYER/TRUTH STATEMENT:\n${selectedData.prayer}\n`);
-            }
-            
-            const content = reflections.join('\n') + '\n---\nGenerated by The Thought Refiner\nClarityMetabolics.com';
-            
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `thought-refiner-reflections-${new Date().toISOString().split('T')[0]}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
-
-        // Begin Again functionality
-        document.getElementById('beginAgainBtn').addEventListener('click', function() {
-            selectedData = {
-                thought: '',
-                roots: [],
-                effects: '',
-                deeper: [],
-                rewrite: '',
-                lightChoice: '',
-                prayer: ''
-            };
-            
-            // Clear saved progress
-            clearProgress();
-            
-            // Reset all forms
-            document.getElementById('thoughtInput').value = '';
-            document.getElementById('thoughtInput').placeholder = 'No one listens to me.';
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            document.querySelectorAll('textarea').forEach(ta => ta.value = '');
-            document.querySelectorAll('.icon-option').forEach(opt => {
-                opt.classList.remove('selected');
-                opt.setAttribute('aria-checked', 'false');
-            });
-            document.getElementById('prayerSection').style.display = 'none';
-            
-            showScreen('screen1');
-        });
-
-        function showScreen(screenId) {
-            // Hide all screens
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.style.display = 'none';
-                screen.classList.remove('active');
-            });
-            
-            // Show target screen with animation
-            const targetScreen = document.getElementById(screenId);
-            targetScreen.style.display = 'block';
-            
-            // Force reflow before adding active class for animation
-            targetScreen.offsetHeight;
-            targetScreen.classList.add('active');
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-            
-            // Focus management for accessibility
-            const firstFocusable = targetScreen.querySelector('button, [tabindex="0"], input, textarea');
-            if (firstFocusable) {
-                setTimeout(() => firstFocusable.focus(), 100);
-            }
-        }
-
-        // Load progress when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            loadProgress();
-        });
-    </script>
+– Clarity Metabolics
+Date: ${new Date().toLocaleDateString()}`;
+      
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'thought-refiner-reflection.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }
+    
+    function toggleModal() {
+      const modal = document.getElementById('trinityModal');
+      modal.classList.toggle('hidden');
+      document.body.style.overflow = modal.classList.contains('hidden') ? 'auto' : 'hidden';
+    }
+    
+    function toggleTheme() {
+      const html = document.documentElement;
+      const themeToggle = document.querySelector('.theme-toggle');
+      
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙';
+        themeToggle.setAttribute('aria-label', 'Toggle dark mode');
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+        themeToggle.setAttribute('aria-label', 'Toggle light mode');
+      }
+    }
+  </script>
 </body>
 </html>
