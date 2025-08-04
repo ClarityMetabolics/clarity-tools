@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belief Threader | Discernment Toolkit by Clarity Metabolics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main: #7A94A8;
+            --accent: #E7EEF1;
+            --contrast: #4A5A6A;
+            --bg-primary: #fff;
+            --bg-secondary: #E7EEF1;
+            --text-primary: #4A5A6A;
+            --text-secondary: #888;
+        }
+
+        [data-theme="dark"] {
+            --main: #9BB4C8;
+            --accent: #2A3441;
+            --contrast: #E8EDF2;
+            --bg-primary: #1A2028;
+            --bg-secondary: #2A3441;
+            --text-primary: #E8EDF2;
+            --text-secondary: #B0B8C0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--accent);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--bg-primary);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background-color: var(--bg-secondary);
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--accent);
+        }
+
+        .icon-header {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        h1, h2 {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--main);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .container p {
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+
+        .question, .reflection, .final-screen, .pause-screen, .summary-screen {
+            margin-bottom: 2rem;
+        }
+
+        .question {
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .fade-out { 
+            opacity: 0; 
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .progress-indicator {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            transition: background-color 0.3s ease;
+        }
+
+        .dot.active {
+            background-color: var(--main);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--accent);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Open Sans', sans-serif;
+            min-height: 120px;
+            resize: vertical;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--main);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .encouragement {
+            color: var(--main);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .encouragement.show {
+            opacity: 1;
+        }
+
+        .typing-prompt {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-top: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .typing-prompt.show {
+            opacity: 1;
+        }
+
+        button {
+            background-color: var(--main);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: var(--contrast);
+        }
+
+        button:disabled {
+            background-color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        blockquote {
+            font-style: italic;
+            color: var(--main);
+            text-align: center;
+            margin: 2rem 0;
+            font-size: 1.1rem;
+        }
+
+        .summary-card {
+            background-color: var(--accent);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .summary-card p {
+            margin: 0.8rem 0;
+            line-height: 1.6;
+        }
+
+        .light-italic {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .button-group button {
+            margin: 0.5rem 0.25rem;
+        }
+
+        /* Modal System */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(20, 20, 20, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background-color: var(--bg-primary);
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: var(--text-primary);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            position: relative;
+            text-align: left;
+            animation: fadeInModal 0.3s ease-out forwards;
+        }
+
+        .modal-content h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content p {
+            margin-bottom: 1rem;
+        }
+
+        .modal-content em {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 0.7rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        @keyframes fadeInModal {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            textarea {
+                font-size: 16px;
+                padding: 0.8rem;
+                resize: none;
+            }
+
+            .icon-header {
+                font-size: 1.6rem;
+                margin-bottom: 0.4em;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .button-group button {
+                margin: 0.25rem;
+                font-size: 0.9rem;
+                padding: 0.6rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">🌙</button>
+    
+    <div class="container">
+        <div class="icon-header">🧵</div>
+        <h1>Belief Threader</h1>
+
+        <div class="progress-indicator">Step <span id="currentStep">1</span> of 8</div>
+        <div class="progress-dots">
+            <div class="dot active" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
+            <div class="dot" id="dot4"></div>
+            <div class="dot" id="dot5"></div>
+            <div class="dot" id="dot6"></div>
+            <div class="dot" id="dot7"></div>
+            <div class="dot" id="dot8"></div>
+        </div>
+
+        <!-- Step 1: What belief feels off? -->
+        <div class="question" id="step1">
+            <h2>Step 1: What belief feels off?</h2>
+            <p>Describe the belief that keeps circling your mind. It might sound right... but something about it doesn't sit well.</p>
+            
+            <textarea id="belief1" placeholder="Write about the belief that doesn't feel quite right..."
+                aria-label="Describe the belief that feels off"
+                oninput="updateCharCount(this, 'count1'); showEncouragement(this, 'enc1')"
+                onkeydown="handleKeyPress(event, 1)"></textarea>
+            
+            <div class="char-count" id="count1">0 characters</div>
+            <div class="encouragement" id="enc1">Trust that inner knowing...</div>
+            <div class="typing-prompt" id="prompt1">What's been bothering you about this belief?</div>
+            
+            <button onclick="nextStep(1)" aria-label="Proceed to step 2" id="next1" disabled>Next</button>
+        </div>
+
+        <!-- Step 2: Where did it come from? -->
+        <div class="question hidden" id="step2">
+            <h2>Step 2: Where did it come from?</h2>
+            <p>Trace it back — was it taught to you, absorbed through culture, or tied to an experience?</p>
+            
+            <textarea id="belief2" placeholder="Explore the origins of this belief..."
+                aria-label="Describe where this belief came from"
+                oninput="updateCharCount(this, 'count2'); showEncouragement(this, 'enc2')"
+                onkeydown="handleKeyPress(event, 2)"></textarea>
+            
+            <div class="char-count" id="count2">0 characters</div>
+            <div class="encouragement" id="enc2">You're tracing important roots...</div>
+            <div class="typing-prompt" id="prompt2">Who or what first planted this idea?</div>
+            
+            <button onclick="prevStep(2)" aria-label="Go back to previous step" id="back2">Back</button>
+            <button onclick="nextStep(2)" aria-label="Proceed to step 3" id="next2" disabled>Next</button>
+        </div>
+
+        <!-- Step 3: What does it protect? -->
+        <div class="question hidden" id="step3">
+            <h2>Step 3: What does it protect?</h2>
+            <p>Sometimes even false beliefs shield us. What does holding this belief keep you from facing, losing, or risking?</p>
+            
+            <textarea id="belief3" placeholder="Consider what this belief protects or shields..."
+                aria-label="Describe what this belief protects"
+                oninput="updateCharCount(this, 'count3'); showEncouragement(this, 'enc3')"
+                onkeydown="handleKeyPress(event, 3)"></textarea>
+            
+            <div class="char-count" id="count3">0 characters</div>
+            <div class="encouragement" id="enc3">This takes courage to explore...</div>
+            <div class="typing-prompt" id="prompt3">What might you lose if you let this belief go?</div>
+            
+            <button onclick="prevStep(3)" aria-label="Go back to previous step" id="back3">Back</button>
+            <button onclick="nextStep(3)" aria-label="Proceed to step 4" id="next3" disabled>Next</button>
+        </div>
+
+        <!-- Step 4: How does it distort truth? -->
+        <div class="question hidden" id="step4">
+            <h2>Step 4: How does it distort truth?</h2>
+            <p>Even if it feels helpful, how might this belief be warping your view of reality, God, or self?</p>
+            
+            <textarea id="belief4" placeholder="Reflect on how this belief might distort your perspective..."
+                aria-label="Describe how this belief distorts truth"
+                oninput="updateCharCount(this, 'count4'); showEncouragement(this, 'enc4')"
+                onkeydown="handleKeyPress(event, 4)"></textarea>
+            
+            <div class="char-count" id="count4">0 characters</div>
+            <div class="encouragement" id="enc4">You're seeing with clearer eyes...</div>
+            <div class="typing-prompt" id="prompt4">Where might this belief be creating blind spots?</div>
+            
+            <button onclick="prevStep(4)" aria-label="Go back to previous step" id="back4">Back</button>
+            <button onclick="nextStep(4)" aria-label="Proceed to step 5" id="next4" disabled>Next</button>
+        </div>
+
+        <!-- Step 5: What's the truer truth? -->
+        <div class="question hidden" id="step5">
+            <h2>Step 5: What's the truer truth?</h2>
+            <p>Is there a deeper truth your spirit is pointing toward — even if it's hard to live out?</p>
+            
+            <textarea id="belief5" placeholder="Listen for the deeper truth your spirit recognizes..."
+                aria-label="Describe the truer truth"
+                oninput="updateCharCount(this, 'count5'); showEncouragement(this, 'enc5')"
+                onkeydown="handleKeyPress(event, 5)"></textarea>
+            
+            <div class="char-count" id="count5">0 characters</div>
+            <div class="encouragement" id="enc5">Your spirit knows truth when it encounters it...</div>
+            <div class="typing-prompt" id="prompt5">What truth is trying to emerge?</div>
+            
+            <button onclick="prevStep(5)" aria-label="Go back to previous step" id="back5">Back</button>
+            <button onclick="nextStep(5)" aria-label="Proceed to step 6" id="next5" disabled>Next</button>
+        </div>
+
+        <!-- Step 6: What happens if you let go? -->
+        <div class="question hidden" id="step6">
+            <h2>Step 6: What happens if you let go?</h2>
+            <p>Without the old belief... what becomes possible? What new courage, clarity, or peace might emerge?</p>
+            
+            <textarea id="belief6" placeholder="Imagine the freedom that comes from letting this go..."
+                aria-label="Describe what becomes possible"
+                oninput="updateCharCount(this, 'count6'); showEncouragement(this, 'enc6')"
+                onkeydown="handleKeyPress(event, 6)"></textarea>
+            
+            <div class="char-count" id="count6">0 characters</div>
+            <div class="encouragement" id="enc6">You're glimpsing the freedom ahead...</div>
+            <div class="typing-prompt" id="prompt6">What new life wants to emerge?</div>
+            
+            <button onclick="prevStep(6)" aria-label="Go back to previous step" id="back6">Back</button>
+            <button onclick="showPauseScreen()" aria-label="Continue to pause" id="next6" disabled>Continue</button>
+        </div>
+
+        <!-- Pause Screen -->
+        <div class="pause-screen hidden" id="pauseScreen">
+            <div class="icon-header">
+                <img src="needle-icon.png" alt="Needle and thread" width="60" height="60" style="opacity: 0.8;">
+            </div>
+            <h2>Take a Breath</h2>
+            <p>You've done beautiful, courageous work. Before we thread it all together, take a moment. Let what you've discovered settle.</p>
+            <blockquote><em>"Be still and know that I am God." — Psalm 46:10</em></blockquote>
+            
+            <button onclick="prevStep(7)" aria-label="Go back to previous step" id="back7">Back</button>
+            <button onclick="showSummaryScreen()">Continue to Reflection</button>
+        </div>
+
+        <!-- Summary Screen -->
+        <div class="summary-screen hidden" id="summaryScreen">
+            <h2>You've Done Holy Work</h2>
+            <p>More than a thought exercise — this is a journey through your mind, memory, and spirit. You faced distortion. You honored truth. You let go.</p>
+            
+            <div class="summary-card" id="summaryCard">
+                <!-- Summary will be populated here -->
+            </div>
+
+            <textarea id="finalReflection" placeholder="I see now…"
+                aria-label="Write your final reflection"
+                oninput="updateCharCount(this, 'count8')"
+                style="margin-top: 1rem;"></textarea>
+            
+            <div class="char-count" id="count8">0 characters</div>
+
+            <p class="light-italic">You've done the work of noticing, tracing, and releasing. That's sacred movement toward clarity.</p>
+
+            <div class="button-group">
+                <button onclick="prevStep(8)" aria-label="Go back to pause screen">Back</button>
+                <button onclick="downloadResults()">Download .txt</button>
+                <button onclick="printResults()">Save/Print</button>
+                <button onclick="toggleTrinityModal()">✨ Trinity Speaks</button>
+                <button id="start-over-btn">Start Over</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trinity Modal -->
+    <div id="trinityModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <span class="close-btn" onclick="toggleTrinityModal()" aria-label="Close modal">&times;</span>
+            <h2 id="modalTitle">✨ Let the Trinity Speak Into This</h2>
+            <p>
+                <strong>The Father restores what was lost.</strong> <em>"I will restore to you the years that the swarming locust has eaten..."</em> — Joel 2:25
+            </p>
+            <p>
+                <strong>The Son breaks the illusion, carries the weight, and welcomes you back into truth.</strong> <em>"Come to me, all you who are weary and burdened, and I will give you rest... For my yoke is easy and my burden is light."</em> — Matthew 11:28–30
+            </p>
+            <p>
+                <strong>The Spirit fills the cleared space with clarity, courage, and holy remembering.</strong> <em>"May the God of hope fill you with all joy and peace as you trust in him... by the power of the Holy Spirit."</em> — Romans 15:13
+            </p>
+            <p style="margin-top: 1.5rem;">
+                You were never meant to walk in distortion.<br>
+                You were meant to walk in truth.
+            </p>
+            <p style="margin-top: 1rem;">
+                <em>Three voices, one God. One truth that's now yours.</em>
+            </p>
+            <button onclick="toggleTrinityModal()" aria-label="Close modal">Amen</button>
+        </div>
+    </div>
+
+    <script>
+        let typingTimers = {};
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                themeToggle.setAttribute('aria-label', 'Toggle dark mode');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+                themeToggle.setAttribute('aria-label', 'Toggle light mode');
+            }
+        }
+
+        function handleKeyPress(event, step) {
+            // Ctrl+Enter to advance
+            if (event.key === 'Enter' && event.ctrlKey) {
+                const nextButton = document.getElementById(`next${step}`);
+                if (nextButton && !nextButton.disabled) {
+                    event.preventDefault();
+                    if (step < 6) {
+                        nextStep(step);
+                    } else {
+                        showPauseScreen();
+                    }
+                }
+            }
+
+            // Typing prompt logic
+            const promptId = `prompt${step}`;
+            const promptElement = document.getElementById(promptId);
+            if (promptElement) {
+                clearTimeout(typingTimers[promptId]);
+                promptElement.classList.remove('show');
+                
+                typingTimers[promptId] = setTimeout(() => {
+                    if (document.activeElement.id === event.target.id) {
+                        promptElement.classList.add('show');
+                    }
+                }, 10000);
+            }
+        }
+
+        function updateCharCount(textarea, countId) {
+            const count = textarea.value.length;
+            const countElement = document.getElementById(countId);
+            if (countElement) {
+                countElement.textContent = `${count} characters`;
+            }
+
+            // Enable/disable next button
+            const stepNum = countId.replace('count', '');
+            const nextButton = document.getElementById(`next${stepNum}`);
+            if (nextButton) {
+                nextButton.disabled = count < 1;
+            }
+        }
+
+        function showEncouragement(textarea, encId) {
+            const encouragement = document.getElementById(encId);
+            if (encouragement) {
+                if (textarea.value.length > 20) {
+                    encouragement.classList.add('show');
+                } else {
+                    encouragement.classList.remove('show');
+                }
+            }
+        }
+
+        function nextStep(currentStep) {
+            const current = document.getElementById(`step${currentStep}`);
+            const next = document.getElementById(`step${currentStep + 1}`);
+            const currentDot = document.getElementById(`dot${currentStep}`);
+            const nextDot = document.getElementById(`dot${currentStep + 1}`);
+            const stepIndicator = document.getElementById('currentStep');
+
+            // Fade out current step
+            current.classList.add('fade-out');
+            
+            setTimeout(() => {
+                current.classList.add('hidden');
+                current.classList.remove('fade-out');
+                
+                // Show next step
+                if (next) {
+                    next.classList.remove('hidden');
+                    next.classList.add('fade-in');
+                    
+                    // Update progress
+                    currentDot.classList.remove('active');
+                    nextDot.classList.add('active');
+                    stepIndicator.textContent = currentStep + 1;
+                    
+                    // Focus on next textarea
+                    setTimeout(() => {
+                        next.querySelector('textarea')?.focus();
+                    }, 200);
+                }
+            }, 300);
+        }
+
+        function prevStep(currentStep) {
+            let current, prev;
+            
+            if (currentStep === 7) {
+                current = document.getElementById('pauseScreen');
+                prev = document.getElementById('step6');
+            } else if (currentStep === 8) {
+                current = document.getElementById('summaryScreen');
+                prev = document.getElementById('pauseScreen');
+            } else {
+                current = document.getElementById(`step${currentStep}`);
+                prev = document.getElementById(`step${currentStep - 1}`);
+            }
+
+            const currentDot = document.getElementById(`dot${currentStep}`);
+            const prevDot = document.getElementById(`dot${currentStep - 1}`);
+            const stepIndicator = document.getElementById('currentStep');
+
+            if (!prev) return; // Don't go back from step 1
+
+            // Fade out current step
+            current.classList.add('fade-out');
+            
+            setTimeout(() => {
+                current.classList.add('hidden');
+                current.classList.remove('fade-out');
+                
+                // Show previous step
+                prev.classList.remove('hidden');
+                prev.classList.add('fade-in');
+                
+                // Update progress
+                currentDot.classList.remove('active');
+                prevDot.classList.add('active');
+                stepIndicator.textContent = currentStep - 1;
+                
+                // Focus on previous textarea
+                setTimeout(() => {
+                    prev.querySelector('textarea')?.focus();
+                }, 200);
+            }, 300);
+        }
+
+        function showPauseScreen() {
+            const step6 = document.getElementById('step6');
+            const pauseScreen = document.getElementById('pauseScreen');
+            const currentDot = document.getElementById('dot6');
+            const nextDot = document.getElementById('dot7');
+            const stepIndicator = document.getElementById('currentStep');
+
+            // Fade out current step
+            step6.classList.add('fade-out');
+            
+            setTimeout(() => {
+                step6.classList.add('hidden');
+                step6.classList.remove('fade-out');
+                
+                // Show pause screen
+                pauseScreen.classList.remove('hidden');
+                pauseScreen.classList.add('fade-in');
+                
+                // Update progress
+                currentDot.classList.remove('active');
+                nextDot.classList.add('active');
+                stepIndicator.textContent = '7';
+            }, 300);
+        }
+
+        function showSummaryScreen() {
+            const pauseScreen = document.getElementById('pauseScreen');
+            const summaryScreen = document.getElementById('summaryScreen');
+            const summaryCard = document.getElementById('summaryCard');
+            const currentDot = document.getElementById('dot7');
+            const nextDot = document.getElementById('dot8');
+            const stepIndicator = document.getElementById('currentStep');
+
+            // Collect all responses
+            const belief1 = document.getElementById('belief1').value || 'Not provided';
+            const belief2 = document.getElementById('belief2').value || 'Not provided';
+            const belief3 = document.getElementById('belief3').value || 'Not provided';
+            const belief4 = document.getElementById('belief4').value || 'Not provided';
+            const belief5 = document.getElementById('belief5').value || 'Not provided';
+            const belief6 = document.getElementById('belief6').value || 'Not provided';
+
+            // Populate summary card
+            summaryCard.innerHTML = `
+                <p><strong>The belief that felt off:</strong> ${belief1}</p>
+                <p><strong>Where it came from:</strong> ${belief2}</p>
+                <p><strong>What it protected:</strong> ${belief3}</p>
+                <p><strong>How it distorted truth:</strong> ${belief4}</p>
+                <p><strong>The truer truth:</strong> ${belief5}</p>
+                <p><strong>What becomes possible:</strong> ${belief6}</p>
+            `;
+
+            // Fade out pause screen
+            pauseScreen.classList.add('fade-out');
+            
+            setTimeout(() => {
+                pauseScreen.classList.add('hidden');
+                pauseScreen.classList.remove('fade-out');
+                
+                // Show summary screen
+                summaryScreen.classList.remove('hidden');
+                summaryScreen.classList.add('fade-in');
+                
+                // Update progress
+                currentDot.classList.remove('active');
+                nextDot.classList.add('active');
+                stepIndicator.textContent = '8';
+                
+                // Focus on final reflection textarea
+                setTimeout(() => {
+                    document.getElementById('finalReflection')?.focus();
+                }, 200);
+            }, 300);
+        }
+
+        function resetTool() {
+            // Clear all inputs
+            ['belief1', 'belief2', 'belief3', 'belief4', 'belief5', 'belief6', 'finalReflection'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.value = '';
+            });
+
+            // Reset character counts
+            ['count1', 'count2', 'count3', 'count4', 'count5', 'count6', 'count8'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = '0 characters';
+            });
+
+            // Disable all next buttons
+            ['next1', 'next2', 'next3', 'next4', 'next5', 'next6'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.disabled = true;
+            });
+
+            // Hide all steps except first
+            ['step2', 'step3', 'step4', 'step5', 'step6', 'pauseScreen', 'summaryScreen'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.classList.add('hidden');
+                    element.classList.remove('fade-in', 'fade-out');
+                }
+            });
+
+            // Show first step
+            document.getElementById('step1').classList.remove('hidden', 'fade-out');
+
+            // Reset progress indicators
+            ['dot1', 'dot2', 'dot3', 'dot4', 'dot5', 'dot6', 'dot7', 'dot8'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.classList.remove('active');
+            });
+            document.getElementById('dot1').classList.add('active');
+            document.getElementById('currentStep').textContent = '1';
+
+            // Focus on first textarea
+            document.getElementById('belief1').focus();
+        }
+
+        function printResults() {
+            try {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'Opening print...';
+                button.disabled = true;
+
+                setTimeout(() => {
+                    window.print();
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }, 1000);
+                }, 100);
+            } catch (error) {
+                console.error('Print error:', error);
+                alert('Print function encountered an error. Please use the Download .txt option instead.');
+            }
+        }
+
+        function downloadResults() {
+            const belief1 = document.getElementById('belief1').value || 'Not provided';
+            const belief2 = document.getElementById('belief2').value || 'Not provided';
+            const belief3 = document.getElementById('belief3').value || 'Not provided';
+            const belief4 = document.getElementById('belief4').value || 'Not provided';
+            const belief5 = document.getElementById('belief5').value || 'Not provided';
+            const belief6 = document.getElementById('belief6').value || 'Not provided';
+            const finalReflection = document.getElementById('finalReflection').value || 'Not provided';
+
+            const content = `BELIEF THREADER REFLECTION
+==========================
+
+🎯 THE BELIEF THAT FELT OFF
+${belief1}
+
+🌱 WHERE IT CAME FROM  
+${belief2}
+
+🛡️ WHAT IT PROTECTED
+${belief3}
+
+🌫️ HOW IT DISTORTED TRUTH
+${belief4}
+
+✨ THE TRUER TRUTH
+${belief5}
+
+🕊️ WHAT BECOMES POSSIBLE
+${belief6}
+
+💭 FINAL REFLECTION - "I SEE NOW..."
+${finalReflection}
+
+---
+
+Truth is quiet. Still. Gentle.
+And it is yours.
+Keep returning to it.
+You're not broken. You're becoming clear.
+
+-- Clarity Metabolics
+
+Date: ${new Date().toLocaleDateString()}`;
+
+            // Create and download file
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'belief-threader-reflection.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function toggleTrinityModal() {
+            const modal = document.getElementById('trinityModal');
+            modal.classList.toggle('hidden');
+            document.body.style.overflow = modal.classList.contains('hidden') ? 'auto' : 'hidden';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('belief1').focus();
+        });
+    </script>
+
+    <script>
+        let confirmReset = false;
+        const startOverBtn = document.getElementById('start-over-btn');
+        startOverBtn.addEventListener('click', function () {
+            if (!confirmReset) {
+                startOverBtn.textContent = 'Click again to confirm';
+                startOverBtn.style.backgroundColor = '#cc3b3b'; // red tone
+                confirmReset = true;
+            } else {
+                // Clear all form data before reload to prevent browser restoration
+                document.querySelectorAll('textarea, input').forEach(element => {
+                    element.value = '';
+                    if (element.type === 'checkbox') {
+                        element.checked = false;
+                    }
+                });
+                
+                // Force a hard reload
+                window.location.reload(true);
+            }
+        });
+    </script>
+</body>
+</html>
