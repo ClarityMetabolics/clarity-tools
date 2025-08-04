@@ -911,7 +911,7 @@ You've done beautiful, difficult work. Before we continue to your reflection, ta
 <button onclick="downloadResults()" aria-label="Download your reflection as a text file">Download .txt</button>
 <button onclick="printResults()" aria-label="Print or save your reflection">Save/Print</button>
 <button onclick="showTrinityModal()" aria-label="Let the Trinity speak into this">✨ Trinity Speaks</button>
-<button onclick="resetTool()" aria-label="Clear all responses and start over">Start Over</button>
+<button id="start-over-btn">Start Over</button>
 </div>
 </div>
 
@@ -1260,69 +1260,6 @@ alert('Print function encountered an error. Please use the Download .txt option 
 }
 }
 
-function resetTool() {
-if (!resetTool.firstClick) {
-resetTool.firstClick = true;
-const button = event.target;
-const originalText = button.textContent;
-button.textContent = 'Click Again to Confirm';
-button.style.background = '#d73027';
-
-setTimeout(() => {
-resetTool.firstClick = false;
-button.textContent = originalText;
-button.style.background = '';
-}, 3000);
-return;
-}
-
-resetTool.firstClick = false;
-const button = event.target;
-button.textContent = 'Start Over';
-button.style.background = '';
-
-userResponses = {
-residue: [],
-customResidue: '',
-cause: '',
-attachment: '',
-cost: '',
-truth: '',
-release: ''
-};
-
-completedSteps = [];
-
-document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-document.querySelectorAll('input[type="text"], textarea').forEach(input => input.value = '');
-document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
-document.querySelectorAll('.show').forEach(el => el.classList.remove('show'));
-const customInput = document.getElementById('custom-residue-input');
-if (customInput) customInput.classList.add('hidden');
-
-document.querySelectorAll('.char-count').forEach(el => el.textContent = '0 characters');
-document.querySelectorAll('button[id^="next"]').forEach(btn => btn.disabled = true);
-
-// Reset progress dots
-document.querySelectorAll('.dot').forEach(dot => {
-dot.classList.remove('completed', 'active');
-});
-document.querySelector('.dot').classList.add('active');
-
-const personalizedSummary = document.getElementById('personalized-summary');
-if (personalizedSummary) personalizedSummary.innerHTML = '';
-
-document.querySelectorAll('.card').forEach(card => {
-card.classList.add('hidden');
-card.classList.remove('fade-in', 'fade-out');
-});
-
-const introScreen = document.getElementById('intro-screen');
-if (introScreen) {
-introScreen.classList.remove('hidden');
-}
-}
-
 document.getElementById('something-else').addEventListener('change', function() {
 const customInput = document.getElementById('custom-residue-input');
 if (this.checked) {
@@ -1366,6 +1303,20 @@ toggleTrinityModal();
 if (!prayerModal.classList.contains('hidden')) {
 togglePrayerModal();
 }
+}
+});
+</script>
+
+<script>
+let confirmReset = false;
+const startOverBtn = document.getElementById('start-over-btn');
+startOverBtn.addEventListener('click', function () {
+if (!confirmReset) {
+startOverBtn.textContent = 'Click again to confirm';
+startOverBtn.style.backgroundColor = '#cc3b3b'; // red tone
+confirmReset = true;
+} else {
+location.reload();
 }
 });
 </script>
