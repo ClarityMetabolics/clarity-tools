@@ -1,4 +1,5 @@
-<!DOCTYPE html><!--
+<!DOCTYPE html>
+<!--
 Thought Refiner v1.0.0
 Release Date: August 5, 2025
 Author: Clarity Metabolics
@@ -9,7 +10,7 @@ Features: Multi-step thought processing, emotional regulation integration, truth
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thought Tracker | Discernment Toolkit by Clarity Metabolics</title>
+<title>Thought Refiner | Discernment Toolkit by Clarity Metabolics</title>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -321,6 +322,14 @@ display: flex;
 gap: 10px;
 justify-content: center;
 flex-wrap: wrap;
+margin-top: 20px;
+}
+
+.button-group .button {
+padding: 10px 18px;
+font-size: 0.9rem;
+min-width: 100px;
+margin: 5px;
 }
 
 .button.secondary {
@@ -404,9 +413,7 @@ to { opacity: 1; }
 }
 
 .hidden {
-display: none !important;
-visibility: hidden !important;
-opacity: 0 !important;
+display: none;
 }
 
 .modal {
@@ -416,16 +423,15 @@ left: 0;
 width: 100%;
 height: 100%;
 background-color: rgba(20, 20, 20, 0.6);
-display: none;
+display: flex;
 align-items: center;
 justify-content: center;
 z-index: 1000;
 overflow-y: auto;
-padding: 20px;
 }
 
-.modal:not(.hidden) {
-display: flex;
+.modal.hidden {
+display: none;
 }
 
 .modal-content {
@@ -434,7 +440,7 @@ padding: 2rem;
 border-radius: 15px;
 max-width: 500px;
 width: 90%;
-max-height: 80vh;
+max-height: 90vh;
 overflow-y: auto;
 color: var(--text-primary);
 box-shadow: 0 8px 20px rgba(0,0,0,0.2);
@@ -442,7 +448,7 @@ position: relative;
 text-align: center;
 animation: fadeInModal 0.3s ease-out forwards;
 border: 2px solid var(--accent);
-margin: auto;
+margin: 20px;
 }
 
 .modal-content .body-text {
@@ -531,13 +537,13 @@ max-width: 300px;
 }
 
 .button-group {
-flex-direction: column;
-align-items: center;
+gap: 8px;
 }
 
 .button-group .button {
-width: 100%;
-max-width: 300px;
+min-width: 90px;
+padding: 8px 15px;
+font-size: 0.85rem;
 }
 }
 </style>
@@ -565,7 +571,7 @@ max-width: 300px;
 <div class="progress-note">Your progress is automatically saved as you type</div>
 
 <div class="icon-header">🧠</div>
-<h1>Thought Tracker</h1>
+<h1>Thought Refiner</h1>
 <p class="subtitle">Not every thought deserves your attention. Let's sort the signal from the noise.</p>
 
 <div class="body-text">
@@ -574,7 +580,7 @@ Your mind processes thousands of thoughts daily. Some are helpful invitations to
 
 <p style="font-style: italic; color: var(--main); font-weight: 500;">What thought has been demanding your attention lately?</p>
 
-<button class="button" onclick="nextStep('step1')">Start Tracking</button>
+<button class="button" onclick="nextStep('step1')">Start Refining</button>
 </div>
 
 <!-- Step 1: Capture the Thought -->
@@ -584,7 +590,7 @@ Your mind processes thousands of thoughts daily. Some are helpful invitations to
 <div class="progress-fill" style="width: 14%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 <div class="dot"></div>
 <div class="dot"></div>
@@ -619,8 +625,8 @@ onkeydown="handleKeyPress(event, 1)"></textarea>
 <div class="progress-fill" style="width: 29%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
-<div class="dot"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 <div class="dot"></div>
 <div class="dot"></div>
@@ -654,9 +660,9 @@ onkeydown="handleKeyPress(event, 2)"></textarea>
 <div class="progress-fill" style="width: 43%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 <div class="dot"></div>
 <div class="dot"></div>
@@ -689,10 +695,10 @@ onkeydown="handleKeyPress(event, 3)"></textarea>
 <div class="progress-fill" style="width: 57%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 <div class="dot"></div>
 <div class="dot"></div>
@@ -724,11 +730,11 @@ onkeydown="handleKeyPress(event, 4)"></textarea>
 <div class="progress-fill" style="width: 71%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 <div class="dot"></div>
 </div>
@@ -759,12 +765,12 @@ onkeydown="handleKeyPress(event, 5)"></textarea>
 <div class="progress-fill" style="width: 85%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 </div>
 
@@ -820,418 +826,370 @@ You've done important work examining your thought patterns. Before we continue t
 </div>
 
 <div class="icon-header">🌿</div>
-<h2>Thought Pattern Mapped</h2>
+<h2>Thought Pattern Refined</h2>
 
 <div class="body-text">Below is a map of the thought pattern you've examined. Save or print if you wish — but more importantly, notice what feels clearer now.</div>
 
 <div class="summary-box" id="personalized-summary">
-<!-- Personalized summary will be populated -->
+<h3 style="color: var(--main); margin-bottom: 15px;">Your Thought Pattern Analysis</h3>
+<div id="summary-content">
+<!-- Summary will be populated by JavaScript -->
+</div>
 </div>
 
 <div class="action-buttons">
 <button onclick="downloadResults()" aria-label="Download your reflection as a text file">Download .txt</button>
 <button onclick="printResults()" aria-label="Print or save your reflection">Save/Print</button>
 <button onclick="showTrinityModal()" aria-label="Let the Trinity speak into this">✨ Trinity Speaks</button>
-<button onclick="resetTool()" aria-label="Clear all responses and start over">Start Over</button>
+<button onclick="startOver()" id="start-over-btn">Start Over</button>
 </div>
-</div>
-
 </div>
 
 <!-- Trinity Modal -->
-<div id="trinityModal" class="modal hidden">
+<div id="trinityModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
 <div class="modal-content">
-<span class="close-btn" onclick="closeTrinityModal()">&times;</span>
-<h2>✨ Let the Trinity Speak Into This</h2>
+<span class="close-btn" onclick="toggleTrinityModal()" aria-label="Close modal">&times;</span>
+<h2 id="modalTitle">✨ Let the Trinity Speak Into This</h2>
 <div class="body-text">
-<p>The <strong>Father</strong> knows every thought before you think it and loves you regardless. The <strong>Son</strong> takes captive every thought to make it obedient to Christ. The <strong>Spirit</strong> guides you into all truth and renews your mind.</p>
-<br>
-<p>You are not at the mercy of every thought that crosses your mind. You have divine help in choosing which thoughts deserve your attention.</p>
-<br>
-<blockquote style="font-style: italic; color: var(--main); border-left: 3px solid var(--main); padding-left: 15px; margin: 20px 0;">
-"We demolish arguments and every pretension that sets itself up against the knowledge of God, and we take captive every thought to make it obedient to Christ." <br>
-<span style="font-size: 0.9rem; opacity: 0.8;">- 2 Corinthians 10:5</span>
-</blockquote>
-<blockquote style="font-style: italic; color: var(--main); border-left: 3px solid var(--main); padding-left: 15px; margin: 20px 0;">
-"Do not conform to the pattern of this world, but be transformed by the renewing of your mind." <br>
-<span style="font-size: 0.9rem; opacity: 0.8;">- Romans 12:2</span>
-</blockquote>
-<br>
-<p style="font-style: italic; text-align: center;">Take a moment to pray: "Father, You know every thought before it forms. Help me distinguish between thoughts that come from You and those that don't. Give me wisdom to choose what deserves my attention. Amen."</p>
+<p><strong>Father:</strong> "I know every thought before you think it and love you regardless. Your worth isn't determined by the thoughts that pass through your mind, but by My unchanging love for you."</p>
+
+<p><strong>Jesus:</strong> "I've given you My mind - the mind of Christ. When thoughts come that don't align with truth, remember: you have divine help in taking every thought captive. You're not fighting this battle alone."</p>
+
+<p><strong>Holy Spirit:</strong> "I am your Counselor and the Spirit of truth. When you're unsure which thoughts to follow, I will guide you. Ask Me to illuminate what's from Me and what's not. I will help you discern."</p>
+
+<div style="margin: 20px 0; padding: 15px; background: rgba(122, 148, 168, 0.1); border-radius: 8px;">
+<p style="font-style: italic; text-align: center; color: var(--main);">
+"We demolish arguments and every pretension that sets itself up against the knowledge of God, and we take captive every thought to make it obedient to Christ."<br>
+<span style="font-size: 0.9rem;">- 2 Corinthians 10:5</span>
+</p>
 </div>
-<button onclick="closeTrinityModal()">Amen</button>
+
+<p style="text-align: center; margin-top: 15px; font-style: italic;">You are not at the mercy of every thought that crosses your mind. You have divine help in choosing which thoughts deserve your attention.</p>
 </div>
+<button onclick="toggleTrinityModal()">Amen</button>
+</div>
+</div>
+
 </div>
 
 <script>
-let userResponses = {
-thought: '',
-trigger: '',
-promise: '',
-reality: '',
-truth: '',
-redirect: ''
-};
+let currentStep = 'intro-screen';
+let userResponses = {};
 
-let typingTimers = {};
-let completedSteps = [];
-
-function showAutoSaveNotification() {
-const notification = document.getElementById('autoSaveNotification');
-notification.classList.add('show');
-setTimeout(() => {
-notification.classList.remove('show');
-}, 2000);
+// Auto-save functionality
+function autoSave() {
+    const notification = document.getElementById('autoSaveNotification');
+    notification.classList.add('show');
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 2000);
 }
 
+// Theme toggle
 function toggleTheme() {
-const html = document.documentElement;
-const themeToggle = document.querySelector('.theme-toggle');
-
-if (html.getAttribute('data-theme') === 'dark') {
-html.removeAttribute('data-theme');
-themeToggle.textContent = '🌙';
-themeToggle.setAttribute('aria-label', 'Toggle dark mode');
-} else {
-html.setAttribute('data-theme', 'dark');
-themeToggle.textContent = '☀️';
-themeToggle.setAttribute('aria-label', 'Toggle light mode');
-}
+    const body = document.body;
+    const themeToggle = document.querySelector('.theme-toggle');
+    
+    if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        themeToggle.textContent = '🌙';
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+    }
 }
 
-function handleKeyPress(event, step) {
-if (event.key === 'Enter' && event.ctrlKey) {
-const nextButton = document.getElementById(`next${step}`);
-if (nextButton && !nextButton.disabled) {
-event.preventDefault();
-nextButton.click();
-}
-}
-
-const promptId = `prompt${step}`;
-const promptElement = document.getElementById(promptId);
-if (promptElement) {
-clearTimeout(typingTimers[promptId]);
-promptElement.classList.remove('show');
-
-typingTimers[promptId] = setTimeout(() => {
-if (document.activeElement.id === event.target.id) {
-promptElement.classList.add('show');
-}
-}, 10000);
-}
-}
-
+// Character count and encouragement
 function updateCharCount(textarea, countId) {
-const count = textarea.value.length;
-const countElement = document.getElementById(countId);
-if (countElement) {
-countElement.textContent = `${count} characters`;
-}
-
-const stepNum = countId.replace('count', '');
-const nextButton = document.getElementById(`next${stepNum}`);
-if (nextButton) {
-nextButton.disabled = count < 1;
-}
-
-if (count > 0) {
-showAutoSaveNotification();
-}
+    const count = textarea.value.length;
+    document.getElementById(countId).textContent = `${count} characters`;
+    
+    // Enable/disable next button based on content (only need 1 character)
+    const stepNum = countId.replace('count', '');
+    const nextBtn = document.getElementById('next' + stepNum);
+    if (nextBtn) {
+        nextBtn.disabled = count < 1;
+    }
+    
+    // Auto-save simulation
+    if (count > 0) {
+        clearTimeout(window.autoSaveTimeout);
+        window.autoSaveTimeout = setTimeout(autoSave, 1000);
+    }
 }
 
 function showEncouragement(textarea, encId) {
-const encouragement = document.getElementById(encId);
-if (encouragement) {
-if (textarea.value.length > 20) {
-encouragement.classList.add('show');
-} else {
-encouragement.classList.remove('show');
-}
-}
-}
-
-function saveCurrentStep() {
-const thoughtInput = document.getElementById('thought-input');
-if (thoughtInput) userResponses.thought = thoughtInput.value;
-
-const triggerInput = document.getElementById('trigger-input');
-if (triggerInput) userResponses.trigger = triggerInput.value;
-
-const promiseInput = document.getElementById('promise-input');
-if (promiseInput) userResponses.promise = promiseInput.value;
-
-const realityInput = document.getElementById('reality-input');
-if (realityInput) userResponses.reality = realityInput.value;
-
-const truthInput = document.getElementById('truth-input');
-if (truthInput) userResponses.truth = truthInput.value;
-
-const redirectInput = document.getElementById('redirect-input');
-if (redirectInput) userResponses.redirect = redirectInput.value;
+    const encouragement = document.getElementById(encId);
+    const prompt = document.getElementById(encId.replace('enc', 'prompt'));
+    
+    if (textarea.value.length > 20) {
+        encouragement.classList.add('show');
+        prompt.classList.add('show');
+    }
 }
 
-function nextStep(stepId) {
-saveCurrentStep();
-markStepCompleted();
-
-if (stepId === 'final') {
-populatePersonalizedSummary();
+// Handle Enter key to move to next step
+function handleKeyPress(event, stepNum) {
+    if (event.key === 'Enter' && event.ctrlKey) {
+        const nextBtn = document.getElementById('next' + stepNum);
+        if (nextBtn && !nextBtn.disabled) {
+            nextBtn.click();
+        }
+    }
 }
 
-const currentStep = document.querySelector('.card:not(.hidden)');
-if (currentStep) {
-currentStep.classList.add('fade-out');
-setTimeout(() => {
-currentStep.classList.add('hidden');
-currentStep.classList.remove('fade-out');
-}, 300);
+// Navigation functions
+function nextStep(nextStepId) {
+    // Save current responses
+    saveCurrentResponse();
+    
+    // Hide current step
+    document.getElementById(currentStep).classList.add('hidden');
+    
+    // Show next step
+    document.getElementById(nextStepId).classList.remove('hidden');
+    currentStep = nextStepId;
+    
+    // Update progress dots
+    updateProgressDots();
+    
+    // Focus on first input if it exists
+    const nextInput = document.querySelector(`#${nextStepId} textarea, #${nextStepId} input[type="text"]`);
+    if (nextInput) {
+        setTimeout(() => nextInput.focus(), 100);
+    }
 }
 
-setTimeout(() => {
-const nextStepElement = document.getElementById(stepId);
-nextStepElement.classList.remove('hidden');
-nextStepElement.classList.add('fade-in');
-
-const textarea = nextStepElement.querySelector('textarea');
-if (textarea) {
-textarea.focus();
-}
-}, 400);
-}
-
-function previousStep(stepId) {
-saveCurrentStep();
-
-const currentStep = document.querySelector('.card:not(.hidden)');
-if (currentStep) {
-currentStep.classList.add('fade-out');
-setTimeout(() => {
-currentStep.classList.add('hidden');
-currentStep.classList.remove('fade-out');
-}, 300);
-}
-
-setTimeout(() => {
-const prevStepElement = document.getElementById(stepId);
-prevStepElement.classList.remove('hidden');
-prevStepElement.classList.add('fade-in');
-}, 400);
-}
-
-function markStepCompleted() {
-const currentStep = document.querySelector('.card:not(.hidden)');
-if (currentStep) {
-const stepId = currentStep.id;
-const stepNumber = getStepNumber(stepId);
-if (stepNumber && !completedSteps.includes(stepNumber)) {
-completedSteps.push(stepNumber);
-updateProgressDots();
-}
-}
-}
-
-function getStepNumber(stepId) {
-const stepMap = {
-'intro-screen': 1,
-'step1': 2,
-'step2': 3,
-'step3': 4,
-'step4': 5,
-'step5': 6,
-'step6': 7
-};
-return stepMap[stepId];
+function previousStep(prevStepId) {
+    // Save current responses
+    saveCurrentResponse();
+    
+    // Hide current step
+    document.getElementById(currentStep).classList.add('hidden');
+    
+    // Show previous step
+    document.getElementById(prevStepId).classList.remove('hidden');
+    currentStep = prevStepId;
+    
+    // Update progress dots
+    updateProgressDots();
 }
 
 function updateProgressDots() {
-document.querySelectorAll('.dot').forEach((dot, index) => {
-const stepNumber = index + 1;
-if (completedSteps.includes(stepNumber)) {
-dot.classList.add('completed');
-dot.classList.remove('active');
-}
-});
-}
-
-function populatePersonalizedSummary() {
-const summaryBox = document.getElementById('personalized-summary');
-
-summaryBox.innerHTML = `
-<h3 style="color: var(--contrast); margin-bottom: 15px;">Your Thought Pattern Analysis</h3>
-<p><strong>The thought:</strong> ${userResponses.thought || 'Not specified'}</p>
-<br>
-<p><strong>When it shows up:</strong> ${userResponses.trigger || 'Not specified'}</p>
-<br>
-<p><strong>What it promises:</strong> ${userResponses.promise || 'Not specified'}</p>
-<br>
-<p><strong>What it actually delivers:</strong> ${userResponses.reality || 'Not specified'}</p>
-<br>
-<p><strong>What's truer:</strong> ${userResponses.truth || 'Not specified'}</p>
-<br>
-<p><strong>Your redirect plan:</strong> ${userResponses.redirect || 'Not specified'}</p>
-<br>
-<p style="font-style: italic; color: var(--main);">You now have a map of this thought pattern and a plan for redirecting it. That's real progress toward mental freedom.</p>
-`;
+    const dots = document.querySelectorAll('.dot');
+    const steps = ['intro-screen', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'breathing-pause', 'final'];
+    const currentIndex = steps.indexOf(currentStep);
+    
+    dots.forEach((dot, index) => {
+        dot.classList.remove('active', 'completed');
+        if (index < currentIndex) {
+            dot.classList.add('completed');
+        } else if (index === currentIndex) {
+            dot.classList.add('active');
+        }
+    });
 }
 
+function saveCurrentResponse() {
+    // Save textarea responses
+    const textarea = document.querySelector(`#${currentStep} textarea`);
+    if (textarea && textarea.value) {
+        const stepMapping = {
+            'step1': 'thought',
+            'step2': 'trigger',
+            'step3': 'promise', 
+            'step4': 'reality',
+            'step5': 'truth',
+            'step6': 'redirect'
+        };
+        
+        const responseKey = stepMapping[currentStep];
+        if (responseKey) {
+            userResponses[responseKey] = textarea.value;
+        }
+    }
+}
+
+// Final summary generation
+function generateSummary() {
+    let summary = '<h4 style="color: var(--main);">Your thought pattern analysis:</h4><br>';
+    
+    if (userResponses.thought) {
+        summary += `<strong>The thought:</strong> ${userResponses.thought}<br><br>`;
+    }
+    
+    if (userResponses.trigger) {
+        summary += `<strong>When it shows up:</strong> ${userResponses.trigger}<br><br>`;
+    }
+    
+    if (userResponses.promise) {
+        summary += `<strong>What it promises:</strong> ${userResponses.promise}<br><br>`;
+    }
+    
+    if (userResponses.reality) {
+        summary += `<strong>What it actually delivers:</strong> ${userResponses.reality}<br><br>`;
+    }
+    
+    if (userResponses.truth) {
+        summary += `<strong>What's truer:</strong> ${userResponses.truth}<br><br>`;
+    }
+    
+    if (userResponses.redirect) {
+        summary += `<strong>Your redirect plan:</strong> ${userResponses.redirect}<br><br>`;
+    }
+    
+    summary += '<p style="font-style: italic; color: var(--main); margin-top: 20px;">You now have a map of this thought pattern and a plan for redirecting it. That\'s real progress toward mental freedom.</p>';
+    
+    document.getElementById('summary-content').innerHTML = summary;
+}
+
+// Trinity modal functions
 function showTrinityModal() {
-const modal = document.getElementById('trinityModal');
-modal.classList.remove('hidden');
-document.body.style.overflow = 'hidden';
-document.body.style.position = 'fixed';
-document.body.style.width = '100%';
+    document.getElementById('trinityModal').classList.remove('hidden');
 }
 
-function closeTrinityModal() {
-const modal = document.getElementById('trinityModal');
-modal.classList.add('hidden');
-document.body.style.overflow = 'auto';
-document.body.style.position = 'static';
-document.body.style.width = 'auto';
+function toggleTrinityModal() {
+    document.getElementById('trinityModal').classList.toggle('hidden');
 }
 
+// Download and print functions
 function downloadResults() {
-const content = `THOUGHT PATTERN ANALYSIS
-========================
-
-The thought:
-${userResponses.thought || 'Not specified'}
-
-When it shows up:
-${userResponses.trigger || 'Not specified'}
-
-What it promises:
-${userResponses.promise || 'Not specified'}
-
-What it actually delivers:
-${userResponses.reality || 'Not specified'}
-
-What's truer:
-${userResponses.truth || 'Not specified'}
-
-Your redirect plan:
-${userResponses.redirect || 'Not specified'}
-
----
-
-The Father knows every thought before you think it and loves you regardless.
-The Son takes captive every thought to make it obedient to Christ.
-The Spirit guides you into all truth and renews your mind.
-
-You are not at the mercy of every thought that crosses your mind.
-You have divine help in choosing which thoughts deserve your attention.
-
--- Clarity Metabolics
-
-Date: ${new Date().toLocaleDateString()}`;
-
-const blob = new Blob([content], { type: 'text/plain' });
-const url = window.URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = url;
-a.download = 'thought-pattern-analysis.txt';
-document.body.appendChild(a);
-a.click();
-document.body.removeChild(a);
-window.URL.revokeObjectURL(url);
+    saveCurrentResponse();
+    const timestamp = new Date().toLocaleDateString();
+    let content = `Thought Pattern Analysis - ${timestamp}\n`;
+    content += `Generated by Clarity Metabolics Discernment Toolkit\n\n`;
+    content += `========================================\n\n`;
+    
+    if (userResponses.thought) {
+        content += `THE THOUGHT:\n${userResponses.thought}\n\n`;
+    }
+    
+    if (userResponses.trigger) {
+        content += `WHEN IT SHOWS UP:\n${userResponses.trigger}\n\n`;
+    }
+    
+    if (userResponses.promise) {
+        content += `WHAT IT PROMISES:\n${userResponses.promise}\n\n`;
+    }
+    
+    if (userResponses.reality) {
+        content += `WHAT IT ACTUALLY DELIVERS:\n${userResponses.reality}\n\n`;
+    }
+    
+    if (userResponses.truth) {
+        content += `WHAT'S TRUER:\n${userResponses.truth}\n\n`;
+    }
+    
+    if (userResponses.redirect) {
+        content += `YOUR REDIRECT PLAN:\n${userResponses.redirect}\n\n`;
+    }
+    
+    content += `========================================\n\n`;
+    content += `TRINITY REFLECTION:\n\n`;
+    content += `Father: "I know every thought before you think it and love you regardless. Your worth isn't determined by the thoughts that pass through your mind, but by My unchanging love for you."\n\n`;
+    content += `Jesus: "I've given you My mind - the mind of Christ. When thoughts come that don't align with truth, remember: you have divine help in taking every thought captive. You're not fighting this battle alone."\n\n`;
+    content += `Holy Spirit: "I am your Counselor and the Spirit of truth. When you're unsure which thoughts to follow, I will guide you. Ask Me to illuminate what's from Me and what's not. I will help you discern."\n\n`;
+    content += `"We demolish arguments and every pretension that sets itself up against the knowledge of God, and we take captive every thought to make it obedient to Christ." - 2 Corinthians 10:5\n\n`;
+    content += `You are not at the mercy of every thought that crosses your mind. You have divine help in choosing which thoughts deserve your attention.\n\n`;
+    content += `For more tools and support: claritymetabolics.github.io/clarity-tools`;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `thought-pattern-analysis-${timestamp.replace(/\//g, '-')}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
 }
 
 function printResults() {
-try {
-const button = event.target;
-const originalText = button.textContent;
-button.textContent = 'Opening print...';
-button.disabled = true;
-
-setTimeout(() => {
-window.print();
-setTimeout(() => {
-button.textContent = originalText;
-button.disabled = false;
-}, 500);
-}, 200);
-} catch (error) {
-console.error('Print error:', error);
-const button = event.target;
-button.textContent = 'Save/Print';
-button.disabled = false;
-alert('Print function encountered an error. Please use the Download .txt option instead.');
-}
+    window.print();
 }
 
-function resetTool() {
-if (!resetTool.firstClick) {
-resetTool.firstClick = true;
-const button = event.target;
-const originalText = button.textContent;
-button.textContent = 'Click Again to Confirm';
-button.style.background = '#d73027';
-
-setTimeout(() => {
-resetTool.firstClick = false;
-button.textContent = originalText;
-button.style.background = '';
-}, 3000);
-return;
+function startOver() {
+    const startOverBtn = document.getElementById('start-over-btn');
+    
+    // Change button to red confirmation state
+    if (!startOverBtn.classList.contains('confirm-state')) {
+        startOverBtn.style.background = '#e74c3c';
+        startOverBtn.textContent = 'Click Again to Confirm';
+        startOverBtn.classList.add('confirm-state');
+        
+        // Reset after 3 seconds if not clicked
+        setTimeout(() => {
+            if (startOverBtn.classList.contains('confirm-state')) {
+                startOverBtn.style.background = '';
+                startOverBtn.textContent = 'Start Over';
+                startOverBtn.classList.remove('confirm-state');
+            }
+        }, 3000);
+        
+        return;
+    }
+    
+    // Actually start over
+    userResponses = {};
+    
+    // Reset all form inputs
+    document.querySelectorAll('textarea').forEach(ta => ta.value = '');
+    document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+    
+    // Reset character counts
+    document.querySelectorAll('.char-count').forEach(count => count.textContent = '0 characters');
+    
+    // Hide encouragements
+    document.querySelectorAll('.encouragement').forEach(enc => enc.classList.remove('show'));
+    document.querySelectorAll('.typing-prompt').forEach(prompt => prompt.classList.remove('show'));
+    
+    // Disable all next buttons
+    document.querySelectorAll('[id^="next"]').forEach(btn => btn.disabled = true);
+    
+    // Reset button state
+    startOverBtn.style.background = '';
+    startOverBtn.textContent = 'Start Over';
+    startOverBtn.classList.remove('confirm-state');
+    
+    // Go back to intro
+    document.getElementById(currentStep).classList.add('hidden');
+    document.getElementById('intro-screen').classList.remove('hidden');
+    currentStep = 'intro-screen';
+    
+    updateProgressDots();
 }
 
-resetTool.firstClick = false;
-const button = event.target;
-button.textContent = 'Start Over';
-button.style.background = '';
-
-userResponses = {
-thought: '',
-trigger: '',
-promise: '',
-reality: '',
-truth: '',
-redirect: ''
-};
-
-completedSteps = [];
-
-document.querySelectorAll('input[type="text"], textarea').forEach(input => input.value = '');
-document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
-document.querySelectorAll('.show').forEach(el => el.classList.remove('show'));
-
-document.querySelectorAll('.char-count').forEach(el => el.textContent = '0 characters');
-document.querySelectorAll('button[id^="next"]').forEach(btn => btn.disabled = true);
-
-document.querySelectorAll('.dot').forEach(dot => {
-dot.classList.remove('completed', 'active');
-});
-document.querySelector('.dot').classList.add('active');
-
-const personalizedSummary = document.getElementById('personalized-summary');
-if (personalizedSummary) personalizedSummary.innerHTML = '';
-
-document.querySelectorAll('.card').forEach(card => {
-card.classList.add('hidden');
-card.classList.remove('fade-in', 'fade-out');
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateProgressDots();
+    
+    // Update breathing pause to go to final
+    const breathingContinue = document.querySelector('#breathing-pause .button:not(.secondary)');
+    if (breathingContinue) {
+        breathingContinue.onclick = function() { 
+            saveCurrentResponse();
+            generateSummary();
+            nextStep('final');
+        };
+    }
 });
 
-const introScreen = document.getElementById('intro-screen');
-if (introScreen) {
-introScreen.classList.remove('hidden');
-}
-}
-
+// Close modal when clicking outside
 document.addEventListener('click', function(event) {
-const trinityModal = document.getElementById('trinityModal');
-if (event.target === trinityModal) {
-closeTrinityModal();
-}
+    const modal = document.getElementById('trinityModal');
+    if (event.target === modal) {
+        toggleTrinityModal();
+    }
 });
 
+// Escape key to close modal
 document.addEventListener('keydown', function(event) {
-if (event.key === 'Escape') {
-const trinityModal = document.getElementById('trinityModal');
-if (!trinityModal.classList.contains('hidden')) {
-closeTrinityModal();
-}
-}
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('trinityModal');
+        if (!modal.classList.contains('hidden')) {
+            toggleTrinityModal();
+        }
+    }
 });
 </script>
 </body>
