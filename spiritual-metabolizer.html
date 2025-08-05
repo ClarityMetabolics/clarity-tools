@@ -1,0 +1,1004 @@
+<!DOCTYPE html><!--
+Spiritual Metabolizer v1.0.0
+Release Date: August 5, 2025
+Author: Clarity Metabolics
+Part of: Discernment Toolkit Series
+Features: 8-step Trinity journey, breath integration, reflection mirror, dark/light modes
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spiritual Metabolizer | Discernment Toolkit by Clarity Metabolics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --main: #7A94A8;
+      --accent: #E7EEF1;
+      --contrast: #4A5A6A;
+      --bg-primary: #fff;
+      --bg-secondary: #E7EEF1;
+      --text-primary: #4A5A6A;
+      --text-secondary: #888;
+    }
+    [data-theme="dark"] {
+      --main: #9BB4C8;
+      --accent: #2A3441;
+      --contrast: #E8EDF2;
+      --bg-primary: #1A2028;
+      --bg-secondary: #2A3441;
+      --text-primary: #E8EDF2;
+      --text-secondary: #B0B8C0;
+    }
+    
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: var(--accent);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+      transition: all 0.3s ease;
+    }
+    
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: var(--bg-primary);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .theme-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+    
+    .theme-toggle:hover {
+      background-color: var(--accent);
+    }
+    
+    .icon-header {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    h1, h2 {
+      font-family: 'Libre Baskerville', serif;
+      color: var(--main);
+      text-align: center;
+    }
+    
+    h1 {
+      margin-bottom: 1rem;
+    }
+    
+    .tool-purpose {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .thought-provoking {
+      font-style: italic;
+      color: var(--main);
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .progress-indicator {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+    
+    .dot.active {
+      background-color: var(--main);
+      transform: scale(1.2);
+    }
+    
+    .progress-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    
+    .question {
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    .fade-out { 
+      opacity: 0; 
+    }
+    
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 0.4s ease-in-out forwards;
+    }
+    
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Open Sans', sans-serif;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      resize: vertical;
+      min-height: 120px;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: var(--main);
+    }
+    
+    .char-count {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .encouragement {
+      font-size: 0.9rem;
+      color: var(--main);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      margin-bottom: 0.5rem;
+      font-style: italic;
+    }
+    
+    .encouragement.show {
+      opacity: 1;
+    }
+    
+    .typing-prompt {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      background-color: var(--accent);
+      border-radius: 6px;
+    }
+    
+    .typing-prompt.show {
+      opacity: 1;
+    }
+    
+    .trinity-callout {
+      background-color: var(--accent);
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin: 1rem 0 0.5rem 0;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      text-align: center;
+      font-style: italic;
+    }
+    
+    .reflection-summary {
+      background-color: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin: 1rem 0;
+    }
+    
+    .reflection-summary h3 {
+      color: var(--main);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-family: 'Libre Baskerville', serif;
+    }
+    
+    .summary-item {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background-color: var(--bg-primary);
+      border-radius: 8px;
+      border-left: 4px solid var(--main);
+    }
+    
+    .summary-item strong {
+      display: block;
+      color: var(--main);
+      font-family: 'Libre Baskerville', serif;
+      margin-bottom: 0.3rem;
+    }
+    
+    .summary-item em {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.8rem;
+    }
+    
+    .summary-item .response {
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 0.5rem;
+      background-color: var(--accent);
+      border-radius: 6px;
+      min-height: 20px;
+    }
+    
+    .summary-compact {
+      background-color: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin: 1rem 0;
+    }
+    
+    .summary-line {
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      background-color: var(--bg-primary);
+      border-radius: 6px;
+      border-left: 3px solid var(--main);
+    }
+    
+    .summary-line strong {
+      color: var(--main);
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+    }
+    
+    .summary-line span {
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    
+    .breath-step {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--bg-primary) 100%);
+      border-radius: 12px;
+      margin: 2rem 0;
+    }
+    
+    .breath-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+    
+    .breath-step h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: var(--main);
+    }
+    
+    .breath-content p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .scripture-quote {
+      font-style: italic;
+      color: var(--main);
+      font-size: 1.1rem;
+      margin: 2rem 0;
+      padding: 1rem;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 8px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .breath-affirmation {
+      font-style: italic;
+      color: var(--text-primary);
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .step {
+      display: none;
+    }
+    
+    .step.active {
+      display: block;
+    }
+    
+    .step-guidance {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+    
+    button {
+      background: var(--main);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 1rem;
+      margin-bottom: 0.5rem;
+      transition: all 0.3s ease;
+      font-family: 'Open Sans', sans-serif;
+    }
+    
+    button:hover:not(:disabled) {
+      background: var(--contrast);
+      transform: translateY(-1px);
+    }
+    
+    button.warning {
+      background: #dc3545;
+      color: white;
+    }
+    
+    button:disabled {
+      background: var(--text-secondary);
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .action-buttons {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(20, 20, 20, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .modal.hidden {
+      display: none;
+    }
+    
+    .modal-content {
+      background-color: var(--bg-primary);
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 90%;
+      color: var(--text-primary);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      position: relative;
+      text-align: center;
+      animation: fadeInModal 0.3s ease-out forwards;
+    }
+    
+    .modal-content blockquote {
+      font-style: italic;
+      margin: 1rem 0;
+      color: var(--main);
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 0.7rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+    
+    @keyframes fadeInModal {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .container p {
+      line-height: 1.75;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .container {
+        margin: 0;
+        padding: 1.5rem;
+      }
+      
+      textarea {
+        font-size: 16px;
+        padding: 0.8rem;
+        resize: none;
+      }
+      
+      .icon-header {
+        font-size: 1.6rem;
+        margin-bottom: 0.4em;
+      }
+      
+      button {
+        padding: 0.7rem 1.2rem;
+        margin-right: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">🌙</button>
+    
+    <div class="icon-header">✨</div>
+    <h1>Spiritual Metabolizer</h1>
+    
+    <div class="tool-purpose" id="toolPurpose">
+      <p>This tool helps you metabolize spiritual heaviness, distortion, and entanglement through truth. Use it when you feel disconnected from God, spiritually numb, or weighed down by what doesn't belong in your spirit.</p>
+      <p class="thought-provoking">What if the weight you're carrying didn't start with you — and doesn't need to stay with you?</p>
+    </div>
+    
+    <div class="progress-indicator">Step <span id="stepNum">1</span> of 8</div>
+    
+    <div class="progress-dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    
+    <div class="progress-note">Your progress is automatically saved as you type</div>
+
+    <div id="steps">
+      <div class="step active question">
+        <h2>Step 1: Notice the Distortion</h2>
+        <div class="step-guidance">What feels spiritually heavy, hollow, or dark right now?</div>
+        <div class="trinity-callout">Spiritual distortion often shows up as confusion, apathy, resentment, or heaviness — but it may be masked as busyness, fatigue, or even over-functioning. Be honest about what doesn't feel aligned, even if it's hard to name.</div>
+        <textarea id="input1" placeholder="Name the heaviness or numbness that's pressing on your spirit..."
+                  aria-label="Notice the spiritual distortion"
+                  oninput="updateCharCount(this, 'count1'); showEncouragement(this, 'enc1')"
+                  onkeydown="handleKeyPress(event, 1)"></textarea>
+        <div class="char-count" id="count1">0 characters</div>
+        <div class="encouragement" id="enc1">You're not imagining this. It's real — and you're brave for naming it.</div>
+        <div class="typing-prompt" id="prompt1">Take your time. God sees even what you can't yet put into words.</div>
+      </div>
+      
+      <div class="step question">
+        <h2>Step 2: Identify the Source</h2>
+        <div class="step-guidance">What influenced this heaviness — a belief, event, person, or something else?</div>
+        <textarea id="input2" placeholder="Trace the entry point without judgment... just honesty."
+                  aria-label="Identify the source of distortion"
+                  oninput="updateCharCount(this, 'count2'); showEncouragement(this, 'enc2')"
+                  onkeydown="handleKeyPress(event, 2)"></textarea>
+        <div class="char-count" id="count2">0 characters</div>
+        <div class="encouragement" id="enc2">Truth doesn't accuse. It simply reveals.</div>
+        <div class="typing-prompt" id="prompt2">Sometimes it's older than you think. Let it rise without resistance.</div>
+      </div>
+      
+      <div class="step question">
+        <h2>Step 3: Acknowledge the Agreement</h2>
+        <div class="step-guidance">Was there a moment where you agreed — even subtly — to let this heaviness stay? To allow it to happen?</div>
+        <textarea id="input3" placeholder="What inner belief or moment of compromise let it in?"
+                  aria-label="Acknowledge the agreement that allowed distortion"
+                  oninput="updateCharCount(this, 'count3'); showEncouragement(this, 'enc3')"
+                  onkeydown="handleKeyPress(event, 3)"></textarea>
+        <div class="char-count" id="count3">0 characters</div>
+        <div class="encouragement" id="enc3">No shame here — awareness breaks the chain.</div>
+        <div class="typing-prompt" id="prompt3">Even subtle agreements can shape spiritual strongholds. Name it now.</div>
+      </div>
+      
+      <div class="step question">
+        <h2>Step 4: Locate the Residue</h2>
+        <div class="step-guidance">Where does this still feel present — in your body, thoughts, emotions, or spirit?</div>
+        <textarea id="input4" placeholder="Where is this distortion still echoing or influencing?"
+                  aria-label="Locate where the residue remains"
+                  oninput="updateCharCount(this, 'count4'); showEncouragement(this, 'enc4')"
+                  onkeydown="handleKeyPress(event, 4)"></textarea>
+        <div class="char-count" id="count4">0 characters</div>
+        <div class="encouragement" id="enc4">What you notice, you can release. What you release, God can heal.</div>
+        <div class="typing-prompt" id="prompt4">Check your body. Check your thoughts. Check your heart. Where is it clinging?</div>
+      </div>
+      
+      <div class="step question">
+        <h2>Step 5: Break the False Agreement</h2>
+        <div class="step-guidance">What truth cancels the lie? Let the Father speak over the distortion.</div>
+        <textarea id="input5" placeholder="Write out the truth God wants you to walk in instead."
+                  aria-label="Break the agreement with truth"
+                  oninput="updateCharCount(this, 'count5'); showEncouragement(this, 'enc5')"
+                  onkeydown="handleKeyPress(event, 5)"></textarea>
+        <div class="char-count" id="count5">0 characters</div>
+        <div class="encouragement" id="enc5">The Father is not silent. His truth overrules every distortion.</div>
+        <div class="trinity-callout">🕊 The Father restores: "I will give you a new heart..." — Ezekiel 36:26</div>
+      </div>
+      
+      <div class="step question">
+        <h2>Step 6: Receive Fresh Alignment</h2>
+        <div class="step-guidance">What does Jesus want to give you in place of this distortion?</div>
+        <textarea id="input6" placeholder="Receive His restoration — what burden is He lifting now?"
+                  aria-label="Receive fresh alignment from Jesus"
+                  oninput="updateCharCount(this, 'count6'); showEncouragement(this, 'enc6')"
+                  onkeydown="handleKeyPress(event, 6)"></textarea>
+        <div class="char-count" id="count6">0 characters</div>
+        <div class="encouragement" id="enc6">You're not meant to carry what He already took on.</div>
+        <div class="typing-prompt" id="prompt6">Ask: "What do You want me to know, Lord?" Then let Him answer.</div>
+        <div class="trinity-callout">✝️ The Son lifts the burden: "Come to me... I will give you rest." — Matthew 11:28</div>
+      </div>
+      
+      <div class="step question">
+        <h2>Step 7: Declare and Walk It Out</h2>
+        <div class="step-guidance">What will you choose to believe and embody from this moment forward?</div>
+        <textarea id="input7" placeholder="Declare a new spiritual posture. What are you walking in now?"
+                  aria-label="Declare and walk out the new truth"
+                  oninput="updateCharCount(this, 'count7'); showEncouragement(this, 'enc7')"
+                  onkeydown="handleKeyPress(event, 7)"></textarea>
+        <div class="char-count" id="count7">0 characters</div>
+        <div class="encouragement" id="enc7">The Holy Spirit empowers what you commit to.</div>
+        <div class="typing-prompt" id="prompt7">Faith is made visible through decision. Write it, declare it, walk it.</div>
+        <div class="trinity-callout">🔥 The Spirit fills the gap: "You will receive power..." — Acts 1:8</div>
+      </div>
+      
+      <div class="step breath-step">
+        <div class="breath-icon">🌬️</div>
+        <h2>Take a Breath</h2>
+        <div class="breath-content">
+          <p>You've done holy, courageous work. Before we look back on what's shifted, take a moment to breathe. Let what you've just processed settle in your body and spirit.</p>
+          <div class="scripture-quote">"Be still and know that I am God." — Psalm 46:10</div>
+          <div class="breath-affirmation">You are not broken. You're becoming clear.</div>
+        </div>
+      </div>
+      
+      <div class="step question">
+        <h2>Step 8: You've Done Holy Work</h2>
+        <div class="step-guidance">This wasn't just introspection — it was spiritual metabolization. You named distortion, welcomed truth, and allowed God to do the aligning. That kind of clarity takes presence and courage.</div>
+        <div class="step-guidance">Here's what shifted as you moved through this process:</div>
+        
+        <div class="reflection-summary" id="reflectionSummary">
+          <div class="summary-compact">
+            <div class="summary-line"><strong>What felt spiritually off:</strong> <span id="summary1"></span></div>
+            <div class="summary-line"><strong>Where it came from:</strong> <span id="summary2"></span></div>
+            <div class="summary-line"><strong>What agreement it held:</strong> <span id="summary3"></span></div>
+            <div class="summary-line"><strong>Where it left residue:</strong> <span id="summary4"></span></div>
+            <div class="summary-line"><strong>The Father's truth:</strong> <span id="summary5"></span></div>
+            <div class="summary-line"><strong>Jesus' restoration:</strong> <span id="summary6"></span></div>
+            <div class="summary-line"><strong>What the Spirit empowers now:</strong> <span id="summary7"></span></div>
+          </div>
+        </div>
+        
+        <textarea id="input8" placeholder="I see now..."
+                  aria-label="Optional reflection on your process"
+                  oninput="updateCharCount(this, 'count8'); showEncouragement(this, 'enc8')"
+                  onkeydown="handleKeyPress(event, 8)"></textarea>
+        <div class="char-count" id="count8">0 characters</div>
+        <div class="encouragement" id="enc8">Let whatever insights surface come naturally.</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button onclick="prevStep()" id="prevBtn" style="display: none;">Back</button>
+      <button onclick="nextStep()" id="nextBtn" disabled>Next</button>
+      <button onclick="nextStep()" id="continueBtn" style="display: none;">Continue to Reflection</button>
+      <button onclick="toggleModal()" id="trinityBtn" style="display: none;">✨ Trinity Speaks</button>
+      <button onclick="printResults()" id="printBtn" style="display: none;" aria-label="Print or save your reflection">Save/Print</button>
+      <button onclick="downloadResults()" id="downloadBtn" style="display: none;" aria-label="Download your reflection as a text file">Download .txt</button>
+      <button onclick="resetTool()" id="resetBtn" style="display: none;" aria-label="Clear all responses and start over">Start Over</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="trinityModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <span class="close-btn" onclick="toggleModal()" aria-label="Close modal">&times;</span>
+      <h2 id="modalTitle">Let the Trinity Speak</h2>
+      <blockquote>
+        <p><strong>The Father restores:</strong> "I will give you a new heart and put a new spirit in you; I will remove from you your heart of stone and give you a heart of flesh." — Ezekiel 36:26</p>
+        <p><strong>The Son lifts the burden:</strong> "Come to me, all you who are weary and burdened, and I will give you rest." — Matthew 11:28</p>
+        <p><strong>The Spirit fills the gap:</strong> "But you will receive power when the Holy Spirit comes on you..." — Acts 1:8</p>
+      </blockquote>
+      <p style="margin-top: 1rem;"><em>This is not spiritual bypass — it's spiritual clarity.</em></p>
+      <button onclick="toggleModal()" aria-label="Close modal">Got it</button>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 0;
+    let typingTimers = {};
+    const steps = document.querySelectorAll('.step');
+    const stepNum = document.getElementById('stepNum');
+    const dots = document.querySelectorAll('.dot');
+
+    function showStep(index) {
+      // Fade out current step
+      const currentStepEl = document.querySelector('.step.active');
+      if (currentStepEl) {
+        currentStepEl.classList.add('fade-out');
+        setTimeout(() => {
+          currentStepEl.classList.remove('active', 'fade-out');
+        }, 300);
+      }
+
+      // Show new step with fade in
+      setTimeout(() => {
+        steps[index].classList.add('active', 'fade-in');
+        stepNum.textContent = index + 1;
+        
+        // Update progress dots
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === index);
+        });
+        
+        // Focus on textarea
+        const textarea = steps[index].querySelector('textarea');
+        if (textarea) {
+          textarea.focus();
+        }
+        
+        // Update button states
+        updateButtonStates();
+        
+        // Show/hide tool purpose based on step
+        const toolPurpose = document.getElementById('toolPurpose');
+        if (toolPurpose) {
+          toolPurpose.style.display = index === 0 ? 'block' : 'none';
+        }
+        
+        setTimeout(() => {
+          steps[index].classList.remove('fade-in');
+        }, 400);
+      }, 200);
+    }
+
+    function nextStep() {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    }
+
+    function updateButtonStates() {
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const continueBtn = document.getElementById('continueBtn');
+      const trinityBtn = document.getElementById('trinityBtn');
+      const printBtn = document.getElementById('printBtn');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      
+      // Back button: Show on all steps except first (step 0)
+      prevBtn.style.display = currentStep === 0 ? 'none' : 'inline-block';
+      prevBtn.disabled = false;
+      
+      // Check if current step has content (1+ characters) - not needed for Step 7 (breath step)
+      const currentTextarea = steps[currentStep].querySelector('textarea');
+      const hasContent = currentTextarea ? currentTextarea.value.trim().length >= 1 : true;
+      
+      // Step 7 (Take a Breath) - special handling
+      if (currentStep === 6) { // Step 7 (index 6)
+        nextBtn.style.display = 'none';
+        continueBtn.style.display = 'inline-block';
+        continueBtn.disabled = false;
+      } else if (currentStep === steps.length - 1) {
+        // Final step - hide both next buttons
+        nextBtn.style.display = 'none';
+        continueBtn.style.display = 'none';
+      } else {
+        // Regular steps - show Next button
+        nextBtn.style.display = 'inline-block';
+        nextBtn.disabled = !hasContent;
+        continueBtn.style.display = 'none';
+      }
+      
+      // Final step buttons: Show only on last step (step 7 for 8 steps)
+      const isLastStep = currentStep === steps.length - 1;
+      trinityBtn.style.display = isLastStep ? 'inline-block' : 'none';
+      printBtn.style.display = isLastStep ? 'inline-block' : 'none';
+      downloadBtn.style.display = isLastStep ? 'inline-block' : 'none';
+      resetBtn.style.display = isLastStep ? 'inline-block' : 'none';
+      
+      // Update reflection summary if on step 8
+      if (currentStep === 7) {
+        updateReflectionSummary();
+      }
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const themeToggle = document.querySelector('.theme-toggle');
+      
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙';
+        themeToggle.setAttribute('aria-label', 'Toggle dark mode');
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+        themeToggle.setAttribute('aria-label', 'Toggle light mode');
+      }
+    }
+
+    function handleKeyPress(event, step) {
+      // Ctrl+Enter to advance
+      if (event.key === 'Enter' && event.ctrlKey) {
+        const nextButton = document.getElementById('nextBtn');
+        if (nextButton && !nextButton.disabled) {
+          event.preventDefault();
+          nextStep();
+        }
+      }
+
+      // Typing prompt logic
+      const promptId = `prompt${step}`;
+      const promptElement = document.getElementById(promptId);
+      if (promptElement) {
+        clearTimeout(typingTimers[promptId]);
+        promptElement.classList.remove('show');
+        typingTimers[promptId] = setTimeout(() => {
+          if (document.activeElement.id === event.target.id) {
+            promptElement.classList.add('show');
+          }
+        }, 10000);
+      }
+    }
+
+    function updateCharCount(textarea, countId) {
+      const count = textarea.value.length;
+      const countElement = document.getElementById(countId);
+      if (countElement) {
+        countElement.textContent = `${count} characters`;
+      }
+      updateButtonStates();
+    }
+
+    function showEncouragement(textarea, encId) {
+      const encouragement = document.getElementById(encId);
+      if (encouragement) {
+        if (textarea.value.length > 20) {
+          encouragement.classList.add('show');
+        } else {
+          encouragement.classList.remove('show');
+        }
+      }
+    }
+
+    function toggleModal() {
+      const modal = document.getElementById('trinityModal');
+      modal.classList.toggle('hidden');
+      document.body.style.overflow = modal.classList.contains('hidden') ? 'auto' : 'hidden';
+    }
+
+    function resetTool() {
+      const resetBtn = document.getElementById('resetBtn');
+      
+      if (resetBtn.classList.contains('warning')) {
+        // Second click - actually reset
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+          textarea.value = '';
+          updateCharCount(textarea, textarea.id.replace('input', 'count'));
+          showEncouragement(textarea, textarea.id.replace('input', 'enc'));
+        });
+        currentStep = 0;
+        showStep(0);
+        
+        // Reset button appearance
+        resetBtn.classList.remove('warning');
+        resetBtn.textContent = 'Start Over';
+        resetBtn.style.backgroundColor = '';
+        resetBtn.style.color = '';
+      } else {
+        // First click - show warning state immediately
+        resetBtn.classList.add('warning');
+        resetBtn.textContent = 'Click Again to Confirm';
+        resetBtn.style.backgroundColor = '#dc3545';
+        resetBtn.style.color = 'white';
+        
+        // Reset warning state after 3 seconds if not clicked
+        setTimeout(() => {
+          if (resetBtn.classList.contains('warning')) {
+            resetBtn.classList.remove('warning');
+            resetBtn.textContent = 'Start Over';
+            resetBtn.style.backgroundColor = '';
+            resetBtn.style.color = '';
+          }
+        }, 3000);
+      }
+    }
+
+    function printResults() {
+      try {
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = 'Opening print...';
+        button.disabled = true;
+
+        setTimeout(() => {
+          window.print();
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.disabled = false;
+          }, 1000);
+        }, 100);
+      } catch (error) {
+        console.error('Print error:', error);
+        alert('Print function encountered an error. Please use the Download .txt option instead.');
+      }
+    }
+
+    function downloadResults() {
+      const responses = [];
+      for (let i = 1; i <= 6; i++) {
+        const textarea = document.getElementById(`input${i}`);
+        const value = textarea ? textarea.value.trim() : '';
+        responses.push(value);
+      }
+      
+      // Add optional Step 8 reflection
+      const step8textarea = document.getElementById('input8');
+      const step8value = step8textarea ? step8textarea.value.trim() : '';
+
+      const stepTitles = [
+        "Notice the Distortion",
+        "Identify the Source", 
+        "Acknowledge the Agreement",
+        "Locate the Residue",
+        "Break the Agreement (Father)",
+        "Receive Fresh Alignment (Son)"
+      ];
+
+      let content = `SPIRITUAL METABOLIZER REFLECTION
+================================
+
+`;
+
+      stepTitles.forEach((title, index) => {
+        content += `${index + 1}. ${title}
+${'-'.repeat(title.length + 3)}
+${responses[index] || '(No response recorded)'}
+
+`;
+      });
+      
+      if (step8value) {
+        content += `Final Reflection:
+-----------------
+${step8value}
+
+`;
+      }
+
+      content += `---
+
+You've done the work of noticing, tracing, and releasing. That's sacred movement toward clarity.
+
+Keep returning to truth. God is near.
+
+– Clarity Metabolics
+
+Date: ${new Date().toLocaleDateString()}`;
+
+      // Create and download file
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'spiritual-metabolizer-reflection.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }
+
+    function updateReflectionSummary() {
+      for (let i = 1; i <= 7; i++) {
+        const textarea = document.getElementById(`input${i}`);
+        const summaryElement = document.getElementById(`summary${i}`);
+        const value = textarea ? textarea.value.trim() : '';
+        
+        if (summaryElement) {
+          summaryElement.textContent = value || '(No response recorded)';
+        }
+      }
+    }
+
+    function copyToClipboard() {
+      const summaryElement = document.getElementById('reflectionSummary');
+      const text = summaryElement.innerText;
+      
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Reflection copied to clipboard!');
+        }).catch(() => {
+          // Fallback for older browsers
+          fallbackCopyToClipboard(text);
+        });
+      } else {
+        fallbackCopyToClipboard(text);
+      }
+    }
+
+    function fallbackCopyToClipboard(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert('Reflection copied to clipboard!');
+      } catch (err) {
+        alert('Unable to copy to clipboard. Please use the download option instead.');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    // Initialize
+    updateButtonStates();
+    
+    // Close modal when clicking outside
+    document.addEventListener('click', (e) => {
+      const modal = document.getElementById('trinityModal');
+      if (e.target === modal) {
+        toggleModal();
+      }
+    });
+  </script>
+</body>
+</html>
