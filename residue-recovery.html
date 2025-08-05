@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<!--
+Residue Recovery v1.0.1
+Release Date: August 5, 2025
+Author: Clarity Metabolics
+Part of: Discernment Toolkit Series
+Features: 7-step residue processing, checkbox selection, breathing pause, Trinity integration, dark/light modes
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -121,11 +128,27 @@ height: 8px;
 border-radius: 50%;
 background: var(--accent);
 transition: all 0.3s ease;
+position: relative;
 }
 
 .dot.active {
 background: var(--main);
 transform: scale(1.2);
+}
+
+.dot.completed {
+background: #4CAF50;
+transform: scale(1.1);
+}
+
+.dot.completed::after {
+content: '✓';
+position: absolute;
+top: -2px;
+left: 1px;
+font-size: 10px;
+color: white;
+font-weight: bold;
 }
 
 .progress-note {
@@ -206,42 +229,6 @@ textarea:focus {
 outline: none;
 border-color: var(--main);
 box-shadow: 0 0 0 2px rgba(122, 148, 168, 0.15);
-}
-
-.progress-dots {
-display: flex;
-justify-content: center;
-gap: 8px;
-margin-bottom: 20px;
-}
-
-.dot {
-width: 8px;
-height: 8px;
-border-radius: 50%;
-background: var(--accent);
-transition: all 0.3s ease;
-position: relative;
-}
-
-.dot.active {
-background: var(--main);
-transform: scale(1.2);
-}
-
-.dot.completed {
-background: #4CAF50;
-transform: scale(1.1);
-}
-
-.dot.completed::after {
-content: '✓';
-position: absolute;
-top: -2px;
-left: 1px;
-font-size: 10px;
-color: white;
-font-weight: bold;
 }
 
 .auto-save-notification {
@@ -481,6 +468,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 z-index: 1000;
+overflow-y: auto;
 }
 
 .modal.hidden {
@@ -493,12 +481,15 @@ padding: 2rem;
 border-radius: 15px;
 max-width: 500px;
 width: 90%;
+max-height: 90vh;
+overflow-y: auto;
 color: var(--text-primary);
 box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 position: relative;
 text-align: center;
 animation: fadeInModal 0.3s ease-out forwards;
 border: 2px solid var(--accent);
+margin: 20px;
 }
 
 .modal-content .body-text {
@@ -630,7 +621,7 @@ Even after a breakthrough, something can still cling to us — a leftover sting,
 <div class="progress-fill" style="width: 14%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 <div class="dot"></div>
 <div class="dot"></div>
@@ -698,8 +689,8 @@ Even after a breakthrough, something can still cling to us — a leftover sting,
 <div class="progress-fill" style="width: 29%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
-<div class="dot"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 <div class="dot"></div>
 <div class="dot"></div>
@@ -721,7 +712,7 @@ onkeydown="handleKeyPress(event, 2)"></textarea>
 </div>
 
 <div class="button-group">
-<button class="button secondary" onclick="previousStep('intro-screen')" id="back2">← Back</button>
+<button class="button secondary" onclick="previousStep('step1')" id="back2">← Back</button>
 <button class="button" onclick="nextStep('step3')" id="next2" disabled>Next</button>
 </div>
 </div>
@@ -733,9 +724,9 @@ onkeydown="handleKeyPress(event, 2)"></textarea>
 <div class="progress-fill" style="width: 43%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 <div class="dot"></div>
 <div class="dot"></div>
@@ -768,10 +759,10 @@ onkeydown="handleKeyPress(event, 3)"></textarea>
 <div class="progress-fill" style="width: 57%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 <div class="dot"></div>
 <div class="dot"></div>
@@ -803,11 +794,11 @@ onkeydown="handleKeyPress(event, 4)"></textarea>
 <div class="progress-fill" style="width: 71%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 <div class="dot"></div>
 </div>
@@ -838,12 +829,12 @@ onkeydown="handleKeyPress(event, 5)"></textarea>
 <div class="progress-fill" style="width: 85%"></div>
 </div>
 <div class="progress-dots">
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
+<div class="dot completed"></div>
 <div class="dot active"></div>
 </div>
 
@@ -904,14 +895,17 @@ You've done beautiful, difficult work. Before we continue to your reflection, ta
 <div class="body-text">Below is a reflection of what you've just uncovered. Save or print if you wish — but more importantly, notice what feels lighter. What feels clearer.</div>
 
 <div class="summary-box" id="personalized-summary">
-<!-- Personalized summary will be populated -->
+<h3 style="color: var(--main); margin-bottom: 15px;">Your Residue Recovery Reflection</h3>
+<div id="summary-content">
+<!-- Summary will be populated by JavaScript -->
+</div>
 </div>
 
 <div class="action-buttons">
 <button onclick="downloadResults()" aria-label="Download your reflection as a text file">Download .txt</button>
 <button onclick="printResults()" aria-label="Print or save your reflection">Save/Print</button>
 <button onclick="showTrinityModal()" aria-label="Let the Trinity speak into this">✨ Trinity Speaks</button>
-<button id="start-over-btn">Start Over</button>
+<button onclick="startOver()" id="start-over-btn">Start Over</button>
 </div>
 </div>
 
@@ -921,403 +915,454 @@ You've done beautiful, difficult work. Before we continue to your reflection, ta
 <span class="close-btn" onclick="toggleTrinityModal()" aria-label="Close modal">&times;</span>
 <h2 id="modalTitle">✨ Let the Trinity Speak Into This</h2>
 <div class="body-text">
-<p>The <strong>Father</strong> restores what was lost. The <strong>Son</strong> takes what clung to you and carries it. The <strong>Spirit</strong> fills the clean space with truth.</p>
-<br>
-<p>You were never meant to walk with residue. You were meant to walk free.</p>
-<br>
-<blockquote style="font-style: italic; color: var(--main); border-left: 3px solid var(--main); padding-left: 15px; margin: 20px 0;">
-"He has sent me to bind up the brokenhearted, to proclaim freedom for the captives and release from darkness for the prisoners." <br>
-<span style="font-size: 0.9rem; opacity: 0.8;">- Isaiah 61:1</span>
-</blockquote>
-<blockquote style="font-style: italic; color: var(--main); border-left: 3px solid var(--main); padding-left: 15px; margin: 20px 0;">
-"So if the Son sets you free, you will be free indeed." <br>
-<span style="font-size: 0.9rem; opacity: 0.8;">- John 8:36</span>
-</blockquote>
+<p><strong>Father:</strong> "My child, I see every wound that has touched you. What feels like residue to you is known to Me. I am making all things new — including the places that still ache. Rest in My love that never changes, never leaves, never lies."</p>
+
+<p><strong>Jesus:</strong> "I know what it's like to carry what doesn't belong to you. I took on shame that wasn't Mine so you could be free of shame that isn't yours. The cross finished what fear started. Let My finished work finish what's still clinging to you."</p>
+
+<p><strong>Holy Spirit:</strong> "I am the Comforter, the One who comes alongside. What feels stuck in you, I can unstick. What feels tangled, I can untangle. Breathe Me in. Let Me breathe through what's been holding its breath."</p>
+
+<p style="text-align: center; font-style: italic; color: var(--main); margin-top: 20px;">
+"And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus."<br>
+<span style="font-size: 0.9rem;">- Philippians 4:7</span>
+</p>
 </div>
-<button onclick="toggleTrinityModal()" aria-label="Close modal">Amen</button>
+<button onclick="toggleTrinityModal()">Close</button>
 </div>
 </div>
 
 </div>
 
 <script>
-let userResponses = {
-residue: [],
-customResidue: '',
-cause: '',
-attachment: '',
-cost: '',
-truth: '',
-release: ''
-};
+let currentStep = 'intro-screen';
+let userResponses = {};
 
-let typingTimers = {};
-let completedSteps = [];
-
-function showAutoSaveNotification() {
-const notification = document.getElementById('autoSaveNotification');
-notification.classList.add('show');
-setTimeout(() => {
-notification.classList.remove('show');
-}, 2000);
+// Auto-save functionality
+function autoSave() {
+    const notification = document.getElementById('autoSaveNotification');
+    notification.classList.add('show');
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 2000);
 }
 
+// Theme toggle
 function toggleTheme() {
-const html = document.documentElement;
-const themeToggle = document.querySelector('.theme-toggle');
-
-if (html.getAttribute('data-theme') === 'dark') {
-html.removeAttribute('data-theme');
-themeToggle.textContent = '🌙';
-themeToggle.setAttribute('aria-label', 'Toggle dark mode');
-} else {
-html.setAttribute('data-theme', 'dark');
-themeToggle.textContent = '☀️';
-themeToggle.setAttribute('aria-label', 'Toggle light mode');
-}
+    const body = document.body;
+    const themeToggle = document.querySelector('.theme-toggle');
+    
+    if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        themeToggle.textContent = '🌙';
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+    }
 }
 
-function handleKeyPress(event, step) {
-if (event.key === 'Enter' && event.ctrlKey) {
-const nextButton = document.getElementById(`next${step}`);
-if (nextButton && !nextButton.disabled) {
-event.preventDefault();
-nextButton.click();
-}
-}
-
-const promptId = `prompt${step}`;
-const promptElement = document.getElementById(promptId);
-if (promptElement) {
-clearTimeout(typingTimers[promptId]);
-promptElement.classList.remove('show');
-
-typingTimers[promptId] = setTimeout(() => {
-if (document.activeElement.id === event.target.id) {
-promptElement.classList.add('show');
-}
-}, 10000);
-}
-}
-
+// Character count and encouragement
 function updateCharCount(textarea, countId) {
-const count = textarea.value.length;
-const countElement = document.getElementById(countId);
-if (countElement) {
-countElement.textContent = `${count} characters`;
-}
-
-const stepNum = countId.replace('count', '');
-const nextButton = document.getElementById(`next${stepNum}`);
-if (nextButton) {
-nextButton.disabled = count < 1;
-}
-
-// Show auto-save notification on typing
-if (count > 0) {
-showAutoSaveNotification();
-}
+    const count = textarea.value.length;
+    document.getElementById(countId).textContent = `${count} characters`;
+    
+    // Enable/disable next button based on content (only need 1 character)
+    const stepNum = countId.replace('count', '');
+    const nextBtn = document.getElementById('next' + stepNum);
+    if (nextBtn) {
+        nextBtn.disabled = count < 1;
+    }
+    
+    // Auto-save simulation
+    if (count > 0) {
+        clearTimeout(window.autoSaveTimeout);
+        window.autoSaveTimeout = setTimeout(autoSave, 1000);
+    }
 }
 
 function showEncouragement(textarea, encId) {
-const encouragement = document.getElementById(encId);
-if (encouragement) {
-if (textarea.value.length > 20) {
-encouragement.classList.add('show');
-} else {
-encouragement.classList.remove('show');
-}
-}
-}
-
-function saveCurrentStep() {
-const residueCheckboxes = document.querySelectorAll('#step1 input[type="checkbox"]:checked');
-userResponses.residue = Array.from(residueCheckboxes).map(cb => cb.value);
-
-const customResidueInput = document.querySelector('#custom-residue-input input');
-if (customResidueInput) {
-userResponses.customResidue = customResidueInput.value;
+    const encouragement = document.getElementById(encId);
+    const prompt = document.getElementById(encId.replace('enc', 'prompt'));
+    
+    if (textarea.value.length > 20) {
+        encouragement.classList.add('show');
+        prompt.classList.add('show');
+    }
 }
 
-const causeInput = document.getElementById('cause-input');
-if (causeInput) userResponses.cause = causeInput.value;
-
-const attachmentInput = document.getElementById('attachment-input');
-if (attachmentInput) userResponses.attachment = attachmentInput.value;
-
-const costInput = document.getElementById('cost-input');
-if (costInput) userResponses.cost = costInput.value;
-
-const truthInput = document.getElementById('truth-input');
-if (truthInput) userResponses.truth = truthInput.value;
-
-const releaseInput = document.getElementById('release-input');
-if (releaseInput) userResponses.release = releaseInput.value;
-
-const nextButton1 = document.getElementById('next1');
-if (nextButton1) {
-nextButton1.disabled = userResponses.residue.length === 0;
-}
+// Handle Enter key to move to next step
+function handleKeyPress(event, stepNum) {
+    if (event.key === 'Enter' && event.ctrlKey) {
+        const nextBtn = document.getElementById('next' + stepNum);
+        if (nextBtn && !nextBtn.disabled) {
+            nextBtn.click();
+        }
+    }
 }
 
-function nextStep(stepId) {
-saveCurrentStep();
-markStepCompleted();
-
-if (stepId === 'final') {
-populatePersonalizedSummary();
+// Navigation functions
+function nextStep(nextStepId) {
+    // Save current responses
+    saveCurrentResponse();
+    
+    // Hide current step
+    document.getElementById(currentStep).classList.add('hidden');
+    
+    // Show next step
+    document.getElementById(nextStepId).classList.remove('hidden');
+    currentStep = nextStepId;
+    
+    // Update progress dots
+    updateProgressDots();
+    
+    // Focus on first input if it exists
+    const nextInput = document.querySelector(`#${nextStepId} textarea, #${nextStepId} input[type="text"]`);
+    if (nextInput) {
+        setTimeout(() => nextInput.focus(), 100);
+    }
 }
 
-const currentStep = document.querySelector('.card:not(.hidden)');
-if (currentStep) {
-currentStep.classList.add('fade-out');
-setTimeout(() => {
-currentStep.classList.add('hidden');
-currentStep.classList.remove('fade-out');
-}, 300);
-}
-
-setTimeout(() => {
-const nextStepElement = document.getElementById(stepId);
-nextStepElement.classList.remove('hidden');
-nextStepElement.classList.add('fade-in');
-
-const textarea = nextStepElement.querySelector('textarea');
-if (textarea) {
-textarea.focus();
-}
-}, 400);
-}
-
-function previousStep(stepId) {
-saveCurrentStep();
-
-const currentStep = document.querySelector('.card:not(.hidden)');
-if (currentStep) {
-currentStep.classList.add('fade-out');
-setTimeout(() => {
-currentStep.classList.add('hidden');
-currentStep.classList.remove('fade-out');
-}, 300);
-}
-
-setTimeout(() => {
-const prevStepElement = document.getElementById(stepId);
-prevStepElement.classList.remove('hidden');
-prevStepElement.classList.add('fade-in');
-}, 400);
-}
-
-function markStepCompleted() {
-const currentStep = document.querySelector('.card:not(.hidden)');
-if (currentStep) {
-const stepId = currentStep.id;
-const stepNumber = getStepNumber(stepId);
-if (stepNumber && !completedSteps.includes(stepNumber)) {
-completedSteps.push(stepNumber);
-updateProgressDots();
-}
-}
-}
-
-function getStepNumber(stepId) {
-const stepMap = {
-'intro-screen': 1,
-'step1': 2,
-'step2': 3,
-'step3': 4,
-'step4': 5,
-'step5': 6,
-'step6': 7
-};
-return stepMap[stepId];
+function previousStep(prevStepId) {
+    // Save current responses
+    saveCurrentResponse();
+    
+    // Hide current step
+    document.getElementById(currentStep).classList.add('hidden');
+    
+    // Show previous step
+    document.getElementById(prevStepId).classList.remove('hidden');
+    currentStep = prevStepId;
+    
+    // Update progress dots
+    updateProgressDots();
 }
 
 function updateProgressDots() {
-document.querySelectorAll('.dot').forEach((dot, index) => {
-const stepNumber = index + 1;
-if (completedSteps.includes(stepNumber)) {
-dot.classList.add('completed');
-dot.classList.remove('active');
+    const dots = document.querySelectorAll('.dot');
+    const steps = ['intro-screen', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'breathing-pause', 'final'];
+    const currentIndex = steps.indexOf(currentStep);
+    
+    dots.forEach((dot, index) => {
+        dot.classList.remove('active', 'completed');
+        if (index < currentIndex) {
+            dot.classList.add('completed');
+        } else if (index === currentIndex) {
+            dot.classList.add('active');
+        }
+    });
 }
+
+function saveCurrentResponse() {
+    // Save checkbox selections
+    const checkboxes = document.querySelectorAll(`#${currentStep} input[type="checkbox"]:checked`);
+    if (checkboxes.length > 0) {
+        userResponses.selectedResidues = Array.from(checkboxes).map(cb => cb.value);
+        
+        // Save custom input if "something-else" is selected
+        const customInput = document.querySelector('#custom-residue-input input');
+        if (customInput && customInput.value) {
+            userResponses.customResidue = customInput.value;
+        }
+    }
+    
+    // Save textarea responses
+    const textarea = document.querySelector(`#${currentStep} textarea`);
+    if (textarea && textarea.value) {
+        const stepMapping = {
+            'step2': 'cause',
+            'step3': 'attachment', 
+            'step4': 'cost',
+            'step5': 'truth',
+            'step6': 'release'
+        };
+        
+        const responseKey = stepMapping[currentStep];
+        if (responseKey) {
+            userResponses[responseKey] = textarea.value;
+        }
+    }
+}
+
+// Checkbox handling
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle checkbox selections
+    const checkboxes = document.querySelectorAll('#step1 input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const nextBtn = document.getElementById('next1');
+            const anyChecked = document.querySelectorAll('#step1 input[type="checkbox"]:checked').length > 0;
+            nextBtn.disabled = !anyChecked;
+            
+            // Show/hide custom input
+            if (this.id === 'something-else') {
+                const customInput = document.getElementById('custom-residue-input');
+                if (this.checked) {
+                    customInput.classList.remove('hidden');
+                    customInput.querySelector('input').focus();
+                } else {
+                    customInput.classList.add('hidden');
+                }
+            }
+        });
+    });
+    
+    // Handle click on checkbox items (not just the checkbox itself)
+    const checkboxItems = document.querySelectorAll('.checkbox-item');
+    checkboxItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            if (e.target.type !== 'checkbox' && e.target.tagName !== 'INPUT') {
+                const checkbox = this.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+                checkbox.dispatchEvent(new Event('change'));
+            }
+        });
+    });
 });
+
+// Final summary generation
+function generateSummary() {
+    let summary = '<h4 style="color: var(--main);">What you discovered:</h4><br>';
+    
+    if (userResponses.selectedResidues) {
+        summary += `<strong>Residue identified:</strong> ${userResponses.selectedResidues.join(', ')}`;
+        if (userResponses.customResidue) {
+            summary += `, ${userResponses.customResidue}`;
+        }
+        summary += '<br><br>';
+    }
+    
+    if (userResponses.cause) {
+        summary += `<strong>When it began:</strong> ${userResponses.cause}<br><br>`;
+    }
+    
+    if (userResponses.attachment) {
+        summary += `<strong>Where it attached:</strong> ${userResponses.attachment}<br><br>`;
+    }
+    
+    if (userResponses.cost) {
+        summary += `<strong>What it cost you:</strong> ${userResponses.cost}<br><br>`;
+    }
+    
+    if (userResponses.truth) {
+        summary += `<strong>What's truer:</strong> ${userResponses.truth}<br><br>`;
+    }
+    
+    if (userResponses.release) {
+        summary += `<strong>Your act of release:</strong> ${userResponses.release}<br><br>`;
+    }
+    
+    summary += '<p style="font-style: italic; color: var(--main); margin-top: 20px;">Remember: You are seen, known, and deeply loved. What was once clinging has loosened its grip.</p>';
+    
+    document.getElementById('summary-content').innerHTML = summary;
 }
 
-function populatePersonalizedSummary() {
-const summaryBox = document.getElementById('personalized-summary');
-const residueText = userResponses.residue.join(' and ') + (userResponses.customResidue ? ` and ${userResponses.customResidue}` : '');
-
-summaryBox.innerHTML = `
-<h3 style="color: var(--contrast); margin-bottom: 15px;">Your Residue Recovery Journey</h3>
-<p><strong>What was clinging:</strong> ${residueText}</p>
-<br>
-<p><strong>When it began:</strong> ${userResponses.cause || 'Not specified'}</p>
-<br>
-<p><strong>Where it attached:</strong> ${userResponses.attachment || 'Not specified'}</p>
-<br>
-<p><strong>What it cost you:</strong> ${userResponses.cost || 'Not specified'}</p>
-<br>
-<p><strong>The truth that's emerging:</strong> ${userResponses.truth || 'Not specified'}</p>
-<br>
-<p><strong>Your act of release:</strong> ${userResponses.release || 'Not specified'}</p>
-<br>
-<p style="font-style: italic; color: var(--main);">You've done the work of noticing, naming, and releasing. That's sacred movement toward freedom.</p>
-`;
+// Show final step
+function showFinal() {
+    saveCurrentResponse();
+    generateSummary();
+    nextStep('final');
 }
 
-function showPrayerPrompt() {
-const modal = document.getElementById('prayerModal');
-modal.classList.remove('hidden');
-document.body.style.overflow = 'hidden';
-}
+// Update the step navigation to use showFinal for the last step
+document.addEventListener('DOMContentLoaded', function() {
+    const completeBtn = document.getElementById('next6');
+    if (completeBtn) {
+        completeBtn.onclick = function() { nextStep('breathing-pause'); };
+    }
+});
 
-function togglePrayerModal() {
-const modal = document.getElementById('prayerModal');
-modal.classList.toggle('hidden');
-document.body.style.overflow = modal.classList.contains('hidden') ? 'auto' : 'hidden';
-}
-
+// Trinity modal functions
 function showTrinityModal() {
-const modal = document.getElementById('trinityModal');
-modal.classList.remove('hidden');
-document.body.style.overflow = 'hidden';
+    document.getElementById('trinityModal').classList.remove('hidden');
 }
 
 function toggleTrinityModal() {
-const modal = document.getElementById('trinityModal');
-modal.classList.toggle('hidden');
-document.body.style.overflow = modal.classList.contains('hidden') ? 'auto' : 'hidden';
+    document.getElementById('trinityModal').classList.toggle('hidden');
 }
 
+// Download and print functions
 function downloadResults() {
-const residueText = userResponses.residue.join(' and ') + (userResponses.customResidue ? ` and ${userResponses.customResidue}` : '');
-
-const content = `RESIDUE RECOVERY REFLECTION
-==========================
-
-What was clinging:
-${residueText}
-
-When it began:
-${userResponses.cause || 'Not specified'}
-
-Where it attached:
-${userResponses.attachment || 'Not specified'}
-
-What it cost you:
-${userResponses.cost || 'Not specified'}
-
-The truth that's emerging:
-${userResponses.truth || 'Not specified'}
-
-Your act of release:
-${userResponses.release || 'Not specified'}
-
----
-
-The Father restores what was lost. 
-The Son takes what clung to you and carries it. 
-The Spirit fills the clean space with truth.
-
-You were never meant to walk with residue. 
-You were meant to walk free.
-
--- Clarity Metabolics
-
-Date: ${new Date().toLocaleDateString()}`;
-
-const blob = new Blob([content], { type: 'text/plain' });
-const url = window.URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = url;
-a.download = 'residue-recovery-reflection.txt';
-document.body.appendChild(a);
-a.click();
-document.body.removeChild(a);
-window.URL.revokeObjectURL(url);
+    saveCurrentResponse();
+    const timestamp = new Date().toLocaleDateString();
+    let content = `Residue Recovery Reflection - ${timestamp}\n`;
+    content += `Generated by Clarity Metabolics Discernment Toolkit\n\n`;
+    content += `========================================\n\n`;
+    
+    if (userResponses.selectedResidues) {
+        content += `RESIDUE IDENTIFIED:\n${userResponses.selectedResidues.join(', ')}`;
+        if (userResponses.customResidue) {
+            content += `, ${userResponses.customResidue}`;
+        }
+        content += '\n\n';
+    }
+    
+    if (userResponses.cause) {
+        content += `WHEN IT BEGAN:\n${userResponses.cause}\n\n`;
+    }
+    
+    if (userResponses.attachment) {
+        content += `WHERE IT ATTACHED:\n${userResponses.attachment}\n\n`;
+    }
+    
+    if (userResponses.cost) {
+        content += `WHAT IT COST YOU:\n${userResponses.cost}\n\n`;
+    }
+    
+    if (userResponses.truth) {
+        content += `WHAT'S TRUER:\n${userResponses.truth}\n\n`;
+    }
+    
+    if (userResponses.release) {
+        content += `YOUR ACT OF RELEASE:\n${userResponses.release}\n\n`;
+    }
+    
+    content += `========================================\n\n`;
+    content += `TRINITY REFLECTION:\n\n`;
+    content += `Father: "My child, I see every wound that has touched you. What feels like residue to you is known to Me. I am making all things new — including the places that still ache. Rest in My love that never changes, never leaves, never lies."\n\n`;
+    content += `Jesus: "I know what it's like to carry what doesn't belong to you. I took on shame that wasn't Mine so you could be free of shame that isn't yours. The cross finished what fear started. Let My finished work finish what's still clinging to you."\n\n`;
+    content += `Holy Spirit: "I am the Comforter, the One who comes alongside. What feels stuck in you, I can unstick. What feels tangled, I can untangle. Breathe Me in. Let Me breathe through what's been holding its breath."\n\n`;
+    content += `"And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus." - Philippians 4:7\n\n`;
+    content += `Remember: You are seen, known, and deeply loved. What was once clinging has loosened its grip.\n\n`;
+    content += `For more tools and support: claritymetabolics.github.io/clarity-tools`;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `residue-recovery-reflection-${timestamp.replace(/\//g, '-')}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
 }
 
 function printResults() {
-try {
-const button = event.target;
-const originalText = button.textContent;
-button.textContent = 'Opening print...';
-button.disabled = true;
-
-setTimeout(() => {
-window.print();
-setTimeout(() => {
-button.textContent = originalText;
-button.disabled = false;
-}, 500);
-}, 200);
-} catch (error) {
-console.error('Print error:', error);
-const button = event.target;
-button.textContent = 'Save/Print';
-button.disabled = false;
-alert('Print function encountered an error. Please use the Download .txt option instead.');
-}
+    window.print();
 }
 
-document.getElementById('something-else').addEventListener('change', function() {
-const customInput = document.getElementById('custom-residue-input');
-if (this.checked) {
-customInput.classList.remove('hidden');
-} else {
-customInput.classList.add('hidden');
-customInput.querySelector('input').value = '';
+function startOver() {
+    const startOverBtn = document.getElementById('start-over-btn');
+    
+    // Change button to red confirmation state
+    if (!startOverBtn.classList.contains('confirm-state')) {
+        startOverBtn.style.background = '#e74c3c';
+        startOverBtn.textContent = 'Click Again to Confirm';
+        startOverBtn.classList.add('confirm-state');
+        
+        // Reset after 3 seconds if not clicked
+        setTimeout(() => {
+            if (startOverBtn.classList.contains('confirm-state')) {
+                startOverBtn.style.background = '';
+                startOverBtn.textContent = 'Start Over';
+                startOverBtn.classList.remove('confirm-state');
+            }
+        }, 3000);
+        
+        return;
+    }
+    
+    // Actually start over
+    userResponses = {};
+    
+    // Reset all form inputs
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.querySelectorAll('textarea').forEach(ta => ta.value = '');
+    document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+    
+    // Reset character counts
+    document.querySelectorAll('.char-count').forEach(count => count.textContent = '0 characters');
+    
+    // Hide encouragements
+    document.querySelectorAll('.encouragement').forEach(enc => enc.classList.remove('show'));
+    document.querySelectorAll('.typing-prompt').forEach(prompt => prompt.classList.remove('show'));
+    
+    // Hide custom input
+    document.getElementById('custom-residue-input').classList.add('hidden');
+    
+    // Disable all next buttons
+    document.querySelectorAll('[id^="next"]').forEach(btn => btn.disabled = true);
+    
+    // Reset button state
+    startOverBtn.style.background = '';
+    startOverBtn.textContent = 'Start Over';
+    startOverBtn.classList.remove('confirm-state');
+    
+    // Go back to intro
+    document.getElementById(currentStep).classList.add('hidden');
+    document.getElementById('intro-screen').classList.remove('hidden');
+    currentStep = 'intro-screen';
+    
+    updateProgressDots();
 }
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateProgressDots();
+    
+    // Handle checkbox selections for step 1
+    const checkboxes = document.querySelectorAll('#step1 input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const nextBtn = document.getElementById('next1');
+            const anyChecked = document.querySelectorAll('#step1 input[type="checkbox"]:checked').length > 0;
+            nextBtn.disabled = !anyChecked;
+            
+            // Show/hide custom input
+            if (this.id === 'something-else') {
+                const customInput = document.getElementById('custom-residue-input');
+                if (this.checked) {
+                    customInput.classList.remove('hidden');
+                    customInput.querySelector('input').focus();
+                } else {
+                    customInput.classList.add('hidden');
+                }
+            }
+        });
+    });
+    
+    // Handle click on checkbox items (including the label text)
+    const checkboxItems = document.querySelectorAll('.checkbox-item');
+    checkboxItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            // Don't trigger if clicking on input field
+            if (e.target.tagName === 'INPUT' && e.target.type === 'text') {
+                return;
+            }
+            
+            // If not clicking directly on checkbox, toggle it
+            if (e.target.type !== 'checkbox') {
+                const checkbox = this.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+                checkbox.dispatchEvent(new Event('change'));
+            }
+        });
+    });
+    
+    // Update breathing pause to go to final
+    const breathingContinue = document.querySelector('#breathing-pause .button:not(.secondary)');
+    if (breathingContinue) {
+        breathingContinue.onclick = function() { 
+            saveCurrentResponse();
+            generateSummary();
+            nextStep('final');
+        };
+    }
 });
 
-document.querySelectorAll('#step1 input[type="checkbox"]').forEach(checkbox => {
-checkbox.addEventListener('change', function() {
-saveCurrentStep();
-});
-});
-
+// Close modal when clicking outside
 document.addEventListener('click', function(event) {
-const trinityModal = document.getElementById('trinityModal');
-const prayerModal = document.getElementById('prayerModal');
-if (event.target === trinityModal) {
-toggleTrinityModal();
-}
-if (event.target === prayerModal) {
-togglePrayerModal();
-}
+    const modal = document.getElementById('trinityModal');
+    if (event.target === modal) {
+        toggleTrinityModal();
+    }
 });
 
-// Enhanced keyboard navigation
+// Escape key to close modal
 document.addEventListener('keydown', function(event) {
-if (event.key === 'Tab') {
-// Allow natural tab navigation
-return;
-}
-if (event.key === 'Escape') {
-// Close any open modals
-const trinityModal = document.getElementById('trinityModal');
-const prayerModal = document.getElementById('prayerModal');
-if (!trinityModal.classList.contains('hidden')) {
-toggleTrinityModal();
-}
-if (!prayerModal.classList.contains('hidden')) {
-togglePrayerModal();
-}
-}
-});
-</script>
-
-<script>
-let confirmReset = false;
-const startOverBtn = document.getElementById('start-over-btn');
-startOverBtn.addEventListener('click', function () {
-if (!confirmReset) {
-startOverBtn.textContent = 'Click again to confirm';
-startOverBtn.style.backgroundColor = '#cc3b3b'; // red tone
-confirmReset = true;
-} else {
-location.reload();
-}
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('trinityModal');
+        if (!modal.classList.contains('hidden')) {
+            toggleTrinityModal();
+        }
+    }
 });
 </script>
 </body>
