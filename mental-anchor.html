@@ -1,38 +1,38 @@
 <!--
   ============================================================
   Project: Clarity Metabolics — 5 Anchors
-  Module: Mental Anchor — The Clarity Lens
-  File: mental-anchor-v1.2.1.html
-  Version: 1.2.0
-  Build Date: 2025-08-08
+  Module: Mental Anchor — The Clarity Lens (Universal Template)
+  File: mental-anchor-v2.0.0.html
+  Version: 2.0.0
+  Build Date: 2025-08-09
   Author: ChatGPT (prep for Claude)
   ------------------------------------------------------------
   Changelog
-  - v1.2.0: Step 1 adds third column (🟡 Not Mine / Unsure) alongside
-            🟢 Clarity & My Part and 🔴 Fear-Driven. Button enable logic
-            updated; summary includes all three; mobile stacking tuned.
-  - v1.1.0: 3-step flow (Filter / Zoom Out / Pattern) with micro-practices,
-            progress bar, light/dark toggle, Sacred Reflection modal,
-            stacked final actions, Emotional Anchor handoff, download summary.
-  - v1.0.0: Minimal 3-panel base with toggles and structural anchors.
+  - v2.0.0: Optimized 7-screen flow:
+            (0) Welcome
+            (1) Filter Out the Noise — stacked Green/Yellow/Red textareas
+            (2) Zoom Out — Situational Reframe → Time Horizon (3w/3m/3y)
+            (3) What's in Your Control — mine vs release
+            (4) Spot the Pattern — + micro-practice line
+            (5) Recap + Sacred Reflection (modal)
+            (6) Emotional Anchor handoff CTA
+            Light/Dark toggle, progress, Start Over confirm, Download Summary.
+  - v1.1.x: Prior 5-screen variant (archived).
   ------------------------------------------------------------
   Editing Notes
-  - Keep this as MASTER. For changes, save as mental-anchor-v1.2.X.html
-    and update Version + Changelog.
-  - Section anchors like <!-- STEP 1: Filter the Noise --> help target edits safely.
+  - Treat this file as MASTER. For any change, duplicate and bump version.
+  - Use the STEP anchors (e.g., <!-- STEP 2: Zoom Out -->) to target safe edits.
   ============================================================
 -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Mental Anchor — The Clarity Lens</title>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* Mental Anchor palette */
     --main-color:#B7AFA3;      /* primary (bar/buttons) */
     --accent-color:#EFEDE7;    /* soft panels */
     --contrast-color:#6A655B;  /* deep accent text/borders */
@@ -42,11 +42,9 @@
     --shadow:0 2px 12px rgba(0,0,0,.08);
     --success-color:#5a7c41;   /* progress dots done */
     --warning-color:#dc3545;   /* Start Over confirm */
-
-    /* Traffic-light fills */
-    --green-fill:#E7F3E7;
-    --yellow-fill:#FFF7DD;
-    --red-fill:#FBE9E9;
+    --green-panel:#E5EBDD;
+    --yellow-panel:#FFF8CC;
+    --red-panel:#F5E6E6;
   }
   [data-theme="dark"]{
     --text-color:#e6e6e6;
@@ -54,10 +52,9 @@
     --border-color:#3b3a36;
     --accent-color:#2a2825;
     --shadow:0 2px 14px rgba(0,0,0,.35);
-
-    --green-fill:#1f2a1f;
-    --yellow-fill:#3a3218;
-    --red-fill:#3a1f1f;
+    --green-panel:#2d352a;
+    --yellow-panel:#3a3620;
+    --red-panel:#3a2828;
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -85,6 +82,7 @@
     margin-bottom:6px;
   }
   .subtitle{ text-align:center; font-style:italic; opacity:.95; }
+
   .header-controls{ position:absolute; top:10px; right:10px; display:flex; gap:8px }
   .header-btn{
     background:rgba(255,255,255,.15);
@@ -94,6 +92,7 @@
     font-size:.8rem;transition:all .2s ease;
   }
   .header-btn:hover{background:rgba(255,255,255,.25)}
+
   .progress-bar{height:4px;background:rgba(255,255,255,.28);border-radius:3px;margin-top:14px;overflow:hidden}
   .progress-fill{height:100%;background:#fff;width:0%;transition:width .6s ease}
 
@@ -131,7 +130,20 @@
     outline:none;border-color:var(--main-color);box-shadow:0 0 0 3px rgba(183,175,163,.18)
   }
 
-  /* Navigation buttons */
+  /* Panels for G/Y/R */
+  .panel{
+    border:2px solid var(--border-color);
+    border-radius:10px;
+    padding:12px;
+  }
+  .panel h3{
+    font-family:'Libre Baskerville',serif;
+    font-size:1.1rem;
+    margin-bottom:8px;
+    color:var(--contrast-color);
+  }
+
+  /* Buttons */
   .nav-row{display:flex;gap:12px;align-items:center;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-color)}
   .nav-row .btn{flex:1}
   .btn{
@@ -147,13 +159,12 @@
 
   .micro{ text-align:center; margin-top:6px; font-style:italic; color:var(--contrast-color); opacity:.85 }
 
-  /* Final-screen: stacked action buttons */
+  /* Final actions + Next Phase CTA */
   .final-actions{
     display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;
   }
   .final-actions .btn{ display:block; width:100%; max-width:280px; min-height:50px; text-align:center; }
 
-  /* Next-phase CTA on final screen */
   .next-phase {
     margin-top: 22px;
     padding: 16px;
@@ -192,44 +203,19 @@
     transform: translateY(-1px);
   }
 
-  /* Traffic-light grid (Step 1) */
-  .traffic-grid{
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap:12px;
-    margin: 14px 0;
-  }
-  .bucket{
-    border:2px solid var(--border-color);
-    border-radius:10px;
-    padding:10px;
-    background:var(--accent-color);
-  }
-  .bucket.green textarea{ background:var(--green-fill); }
-  .bucket.yellow textarea{ background:var(--yellow-fill); }
-  .bucket.red textarea{ background:var(--red-fill); }
-  .bucket h3{
-    margin:0 0 8px 0;
-    font-family:'Libre Baskerville',serif;
-    color:var(--contrast-color);
-    font-size:1.05rem;
-  }
-  .bucket small{ display:block; opacity:.85; margin:-6px 0 8px 0; color:var(--contrast-color) }
-
-  @media (max-width:860px){
-    .traffic-grid{ grid-template-columns: 1fr; }
-  }
-
   /* Branding */
   .branding{ text-align:center; padding:18px; font-size:.85rem; color:var(--text-color); opacity:.75; border-top:1px solid var(--border-color) }
   .branding a{ color:var(--contrast-color); text-decoration:none }
   .branding a:hover{ text-decoration:underline }
 
   .scripture{font-style:italic;background:var(--accent-color);padding:16px;border-left:4px solid var(--main-color);border-radius:8px;margin:16px 0}
-  .cross-link{ background:linear-gradient(135deg,var(--main-color),var(--contrast-color)); color:#fff; padding:14px; text-align:center; border-radius:10px; margin-top:18px }
+
+  @media (max-width:640px){
+    .nav-row{flex-direction:column}
+    .btn{width:100%}
+  }
 </style>
 </head>
-
 <body>
 <div id="pageTop" style="position:absolute;top:0"></div>
 <div class="container">
@@ -244,56 +230,49 @@
   </header>
 
   <main class="content">
-    <!-- STEP 0: Intro -->
+    <!-- STEP 0: Welcome -->
     <section class="step active" data-step="0">
       <div class="step-indicator">
-        <div class="step-counter">Step 1 of 5</div>
-        <div class="dots">
-          <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-        </div>
+        <div class="step-counter">Step 1 of 7</div>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
-      <h2>Welcome</h2>
-      <p class="lead">When the mind feels noisy, your clarity lens can focus and refine what's real. This tool walks you through three simple steps you can recall anytime.</p>
+      <h2>The Clarity Lens</h2>
+      <p class="lead">This is your space to clear mental fog, spot residue, and choose a better next step.</p>
       <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin</button></div>
       <div class="micro">Take your time. There's no rush here.</div>
       <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
     </section>
 
-    <!-- STEP 1: Filter Out the Noise -->
+    <!-- STEP 1: Filter Out the Noise (stacked G/Y/R) -->
     <section class="step" data-step="1">
       <div class="step-indicator">
-        <div class="step-counter">Step 2 of 5 — Filter Out the Noise</div>
-        <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="step-counter">Step 2 of 7 — Filter Out the Noise</div>
+        <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
       <h2>Filter Out the Noise</h2>
-      <p class="lead">Distinguishing what's true from what's fear-driven helps you choose your response instead of reacting on autopilot.</p>
+      <p class="lead">Distinguishing what's true from what's fear-driven helps you respond rather than react.</p>
 
       <div class="form-group">
-        <label for="thoughtInput"><strong>What's one thought that's really been on your mind lately?</strong></label>
+        <label for="thoughtInput"><strong>What's one thought that's really been on your mind?</strong></label>
         <textarea id="thoughtInput" placeholder="Type your thought here..." rows="3"></textarea>
       </div>
 
-      <p>Now sort what belongs where. Any column can stay blank — use what helps.</p>
-
-      <div class="traffic-grid">
-        <div class="bucket green">
-          <h3>🟢 Clarity &amp; My Part</h3>
-          <small>What's factual and within my responsibility?</small>
-          <textarea id="trueGrounded" placeholder="What is true? What's mine to do?" rows="5"></textarea>
-        </div>
-        <div class="bucket yellow">
-          <h3>🟡 Not Mine / Unsure</h3>
-          <small>What isn't mine to carry, or I'm unsure about?</small>
-          <textarea id="notMine" placeholder="Release or park these for later." rows="5"></textarea>
-        </div>
-        <div class="bucket red">
-          <h3>🔴 Fear-Driven</h3>
-          <small>Assumptions, worst-case stories, distortions.</small>
-          <textarea id="fearDriven" placeholder="What's fueled by fear or pressure?" rows="5"></textarea>
-        </div>
+      <div class="form-group panel" style="background:var(--green-panel)">
+        <h3>True &amp; Grounded</h3>
+        <textarea id="trueGrounded" placeholder="What is factual, steady, or grounded about this thought?" rows="4"></textarea>
       </div>
 
-      <div class="tip"><strong>Micro-practice:</strong> Cross out any words that feel like panic or manipulation. Keep what remains true and yours.</div>
+      <div class="form-group panel" style="background:var(--yellow-panel)">
+        <h3>Unknowns / Not Yet Clear</h3>
+        <textarea id="unknowns" placeholder="What facts are missing or not yet known? What remains to be seen?" rows="4"></textarea>
+      </div>
+
+      <div class="form-group panel" style="background:var(--red-panel)">
+        <h3>Fear-Driven</h3>
+        <textarea id="fearDriven" placeholder="What sounds like panic, assumption, or distortion?" rows="4"></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Gently cross out the words that sound like pressure or panic. Keep what's still true.</div>
 
       <div class="nav-row">
         <button class="btn btn-secondary" onclick="prevStep()">Back</button>
@@ -303,67 +282,101 @@
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
     </section>
 
-    <!-- STEP 2: Zoom Out -->
+    <!-- STEP 2: Zoom Out (Situational → Time Horizon) -->
     <section class="step" data-step="2">
       <div class="step-indicator">
-        <div class="step-counter">Step 3 of 5 — Zoom Out</div>
-        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="step-counter">Step 3 of 7 — Zoom Out</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
       <h2>Zoom Out</h2>
-      <p class="lead">Widen your perspective to reduce tunnel vision and pressure.</p>
+      <p class="lead">Widen perspective to lower urgency and see options.</p>
 
       <div class="form-group">
-        <label for="zoomReframe">How does this look from higher up — 3 weeks, 3 months, 3 years from now?</label>
-        <textarea id="zoomReframe" placeholder="From a wider view, what matters most? What fades?"></textarea>
+        <label for="situationalReframe">Situational Reframe</label>
+        <textarea id="situationalReframe" placeholder="If you looked at this from outside the situation, what might you see differently?"></textarea>
       </div>
 
-      <div class="tip"><strong>Micro-practice:</strong> Take 3 slow breaths. Imagine looking at this situation from above, like you're viewing a map.</div>
+      <div class="form-group">
+        <label for="timeHorizon">Time Horizon (3 weeks, 3 months, 3 years)</label>
+        <textarea id="timeHorizon" placeholder="What matters most across these horizons? What fades with time?"></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Take 3 slow breaths. Imagine you're viewing your situation on a map from above.</div>
 
       <div class="nav-row">
         <button class="btn btn-secondary" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" onclick="nextStep()">Spot the Pattern</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
       </div>
       <div class="micro">Context calms urgency.</div>
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
     </section>
 
-    <!-- STEP 3: Spot the Pattern -->
+    <!-- STEP 3: What's in Your Control -->
     <section class="step" data-step="3">
       <div class="step-indicator">
-        <div class="step-counter">Step 4 of 5 — Spot the Pattern</div>
-        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+        <div class="step-counter">Step 4 of 7 — What's in Your Control</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>What's in Your Control</h2>
+      <p class="lead">Separate what's yours to act on from what's yours to release.</p>
+
+      <div class="form-group">
+        <label for="controlMine">Mine to Act On</label>
+        <textarea id="controlMine" placeholder="One or two tiny actions that are truly yours. Keep it doable."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="controlRelease">To Release (others, God, or time)</label>
+        <textarea id="controlRelease" placeholder="What isn't yours to carry or solve right now?"></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Say out loud: "I'll do my part, and release what isn't mine."</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Spot the Pattern</button>
+      </div>
+      <div class="micro">Discernment reduces overwhelm.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 4: Spot the Pattern (enriched) -->
+    <section class="step" data-step="4">
+      <div class="step-indicator">
+        <div class="step-counter">Step 5 of 7 — Spot the Pattern</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
       <h2>Spot the Pattern</h2>
       <p class="lead">Recognize recurring narratives so you can respond differently.</p>
 
       <div class="form-group">
-        <label for="patternSeen">Where have you seen this loop before? What usually follows?</label>
-        <textarea id="patternSeen" placeholder="A personal pattern, a media story, a family script…"></textarea>
+        <label for="patternSeen">Have you met this thought before? When else did it show up?</label>
+        <textarea id="patternSeen" placeholder="A personal loop, a family script, or a social storyline…"></textarea>
       </div>
 
       <div class="form-group">
-        <label for="patternResponse">What response would break the pattern this time?</label>
-        <textarea id="patternResponse" placeholder="One tiny step or choice that changes the usual outcome…"></textarea>
+        <label for="patternFollows">What tends to happen when you follow it? What changes when you interrupt it?</label>
+        <textarea id="patternFollows" placeholder="Name the usual outcome—and the alternative you want."></textarea>
       </div>
 
-      <div class="tip"><strong>Micro-practice:</strong> Name the pattern out loud (e.g., "catastrophizing," "people-pleasing"). Naming it reduces its grip.</div>
+      <div class="tip"><strong>Micro-practice:</strong> Name it out loud (e.g., "catastrophizing," "people-pleasing"). Naming loosens its grip.</div>
 
       <div class="nav-row">
         <button class="btn btn-secondary" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" onclick="nextStep()">Complete</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
       </div>
       <div class="micro">Awareness opens new options.</div>
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
     </section>
 
-    <!-- STEP 4: Summary -->
-    <section class="step" data-step="4">
+    <!-- STEP 5: Recap + Sacred Reflection -->
+    <section class="step" data-step="5">
       <div class="step-indicator">
-        <div class="step-counter">Step 5 of 5 — Summary</div>
-        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
+        <div class="step-counter">Step 6 of 7 — Summary</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
       </div>
       <h2>Your Clarity Lens Summary</h2>
-      <p>You practiced filtering for truth, widening perspective, and naming patterns.</p>
+      <p>You filtered for truth, widened your view, chose what's yours, and named the pattern.</p>
 
       <div style="background:var(--accent-color);padding:16px;border-radius:10px;margin:12px 0">
         <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color)">Filter the Noise</h3>
@@ -372,22 +385,46 @@
         <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Zoom Out</h3>
         <p id="sumZoom">—</p>
 
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">What's in Your Control</h3>
+        <p id="sumControl">—</p>
+
         <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Spot the Pattern</h3>
         <p id="sumPattern">—</p>
       </div>
 
-      <!-- FINAL ACTIONS (stacked) -->
-      <div class="final-actions" id="finalActions">
+      <div class="final-actions">
         <button class="btn btn-primary" onclick="downloadSummary()">📄 Download Summary</button>
         <button class="btn btn-secondary" onclick="openSacred()">✨ Sacred Reflection</button>
-        <button class="btn btn-secondary" id="startOverBtn" onclick="confirmStartOver()">🔄 Start Over</button>
       </div>
 
-      <!-- NEXT PHASE: Emotional Anchor lead-in -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;">
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">Back</button>
+        <button class="btn btn-primary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="nextStep()">Next</button>
+      </div>
+
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 6: Emotional Anchor lead-in -->
+    <section class="step" data-step="6">
+      <div class="step-indicator">
+        <div class="step-counter">Step 7 of 7 — Next Step</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
+      </div>
+      <h2>Your Next Anchor: Emotional</h2>
+      <p class="lead">Now that your mind is clearer, let's steady your emotional footing.</p>
+
       <div class="next-phase" aria-label="Move to Emotional Anchor">
-        <div class="lead"><strong>Your clarity is stronger now. Let's carry it into the way you feel.</strong></div>
+        <div class="lead"><strong>Carry your clarity into how you feel.</strong></div>
         <button class="btn-next" onclick="goToEmotionalAnchor()">→ Begin the Emotional Anchor</button>
-        <div class="sub">Discover how to steady your emotions when truth feels heavy.</div>
+        <div class="sub">Learn to respond from a grounded heart, not just a clear head.</div>
+      </div>
+
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:22px 0; width:100%;">
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">Back</button>
+        <button class="btn btn-secondary" id="startOverBtn" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="confirmStartOver()">🔄 Start Over</button>
       </div>
 
       <div class="branding">
@@ -395,15 +432,11 @@
         <div style="font-style:italic;margin-top:4px">Quiet the world. Reconnect with what's real.</div>
         <div><a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
       </div>
-
-      <div class="nav-row" style="justify-content:center">
-        <button class="btn btn-secondary" style="max-width:280px" onclick="prevStep()">Back</button>
-      </div>
     </section>
   </main>
 </div>
 
-<!-- Sacred Reflection Modal -->
+<!-- Sacred Reflection Modal (Trinity) -->
 <div id="sacredModal" style="position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000">
   <div style="background:var(--bg-color);color:var(--text-color);max-width:560px;width:100%;border-radius:12px;box-shadow:var(--shadow);padding:22px">
     <h3 style="font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:8px">Sacred Reflection</h3>
@@ -421,17 +454,15 @@
 <script>
   // --- State
   let currentStep = 0;
-  const totalSteps = 5;
+  const totalSteps = 7;
   const responses = {
-    thoughtInput:'',
-    trueGrounded:'',  // green
-    notMine:'',       // yellow
-    fearDriven:'',    // red
-    zoomReframe:'',
-    patternSeen:'', patternResponse:''
+    thoughtInput:'', trueGrounded:'', unknowns:'', fearDriven:'',
+    situationalReframe:'', timeHorizon:'',
+    controlMine:'', controlRelease:'',
+    patternSeen:'', patternFollows:''
   };
 
-  // Dark / Light toggle (moon ↔ sun)
+  // Light / Dark toggle
   document.getElementById('themeBtn').addEventListener('click', () => {
     const body = document.body;
     const btn = document.getElementById('themeBtn');
@@ -442,13 +473,12 @@
     }
   });
 
-  // Step navigation
+  // Step navigation helpers
   function showStep(i){
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     const stepEl = document.querySelector(`.step[data-step="${i}"]`);
     if (stepEl) stepEl.classList.add('active');
 
-    // progress
     document.getElementById('progressFill').style.width = ((i)/ (totalSteps-1)) * 100 + '%';
     document.querySelectorAll('.step .dots').forEach(group => {
       [...group.children].forEach((d, idx) => {
@@ -458,17 +488,17 @@
       });
     });
 
-    // scroll + focus
     requestAnimationFrame(()=>{
       document.getElementById('pageTop').scrollIntoView({behavior:'auto',block:'start'});
       setTimeout(()=>{
         if (i===1) document.getElementById('thoughtInput')?.focus();
-        if (i===2) document.getElementById('zoomReframe')?.focus();
-        if (i===3) document.getElementById('patternSeen')?.focus();
+        if (i===2) document.getElementById('situationalReframe')?.focus();
+        if (i===3) document.getElementById('controlMine')?.focus();
+        if (i===4) document.getElementById('patternSeen')?.focus();
       },100);
     });
 
-    if (i===4){ document.getElementById('mainHeader')?.classList.add('completed'); updateSummary(); }
+    if (i===5){ document.getElementById('mainHeader')?.classList.add('completed'); updateSummary(); }
   }
 
   function nextStep(){ saveCurrent(); if (currentStep < totalSteps-1){ currentStep++; showStep(currentStep); } }
@@ -480,36 +510,48 @@
       case 1:
         responses.thoughtInput = document.getElementById('thoughtInput').value.trim();
         responses.trueGrounded = document.getElementById('trueGrounded').value.trim();
-        responses.notMine = document.getElementById('notMine').value.trim();
+        responses.unknowns = document.getElementById('unknowns').value.trim();
         responses.fearDriven = document.getElementById('fearDriven').value.trim();
         break;
       case 2:
-        responses.zoomReframe = document.getElementById('zoomReframe').value.trim();
+        responses.situationalReframe = document.getElementById('situationalReframe').value.trim();
+        responses.timeHorizon = document.getElementById('timeHorizon').value.trim();
         break;
       case 3:
+        responses.controlMine = document.getElementById('controlMine').value.trim();
+        responses.controlRelease = document.getElementById('controlRelease').value.trim();
+        break;
+      case 4:
         responses.patternSeen = document.getElementById('patternSeen').value.trim();
-        responses.patternResponse = document.getElementById('patternResponse').value.trim();
+        responses.patternFollows = document.getElementById('patternFollows').value.trim();
         break;
     }
   }
 
   // Summary
   function updateSummary(){
-    const originalThought = responses.thoughtInput || '—';
-    const green = responses.trueGrounded || '—';
-    const yellow = responses.notMine || '—';
-    const red = responses.fearDriven || '—';
-    const zoom = responses.zoomReframe || '—';
-    const pattern = (responses.patternSeen || '—') + (responses.patternResponse ? `  |  Response: ${responses.patternResponse}` : '');
+    const noiseHTML = [
+      '<strong>Original Thought:</strong> ' + (responses.thoughtInput || '—'),
+      '<strong>True & Grounded:</strong> ' + (responses.trueGrounded || '—'),
+      '<strong>Unknowns:</strong> ' + (responses.unknowns || '—'),
+      '<strong>Fear-Driven:</strong> ' + (responses.fearDriven || '—')
+    ].join('<br>');
 
-    document.getElementById('sumNoise').innerHTML = `
-      <strong>Original Thought:</strong> ${originalThought}<br>
-      <strong>Clarity &amp; My Part (🟢):</strong> ${green}<br>
-      <strong>Not Mine / Unsure (🟡):</strong> ${yellow}<br>
-      <strong>Fear-Driven (🔴):</strong> ${red}
-    `;
-    document.getElementById('sumZoom').textContent = zoom;
-    document.getElementById('sumPattern').textContent = pattern;
+    document.getElementById('sumNoise').innerHTML = noiseHTML;
+    document.getElementById('sumZoom').innerHTML = [
+      '<strong>Situational Reframe:</strong> ' + (responses.situationalReframe || '—'),
+      '<strong>Time Horizon (3w/3m/3y):</strong> ' + (responses.timeHorizon || '—')
+    ].join('<br>');
+
+    document.getElementById('sumControl').innerHTML = [
+      '<strong>Mine to Act On:</strong> ' + (responses.controlMine || '—'),
+      '<strong>To Release:</strong> ' + (responses.controlRelease || '—')
+    ].join('<br>');
+
+    document.getElementById('sumPattern').innerHTML = [
+      '<strong>Seen Before:</strong> ' + (responses.patternSeen || '—'),
+      '<strong>What Follows / Alternative:</strong> ' + (responses.patternFollows || '—')
+    ].join('<br>');
   }
 
   // Start Over confirm
@@ -531,8 +573,7 @@
     document.querySelectorAll('textarea, input[type="text"]').forEach(t => t.value='');
     const btn = document.getElementById('startOverBtn');
     if (btn){ startOverArmed=false; btn.className='btn btn-secondary'; btn.textContent='🔄 Start Over'; }
-    const saveBtn = document.getElementById('saveNoiseStep');
-    if (saveBtn) saveBtn.disabled = true;
+    const saveBtn = document.getElementById('saveNoiseStep'); if (saveBtn) saveBtn.disabled = true;
     currentStep = 0; showStep(currentStep);
   }
 
@@ -544,16 +585,21 @@
       '',
       'FILTER OUT THE NOISE:',
       'Original Thought: ' + (responses.thoughtInput || '—'),
-      'Clarity & My Part (🟢): ' + (responses.trueGrounded || '—'),
-      'Not Mine / Unsure (🟡): ' + (responses.notMine || '—'),
-      'Fear-Driven (🔴): ' + (responses.fearDriven || '—'),
+      'True & Grounded: ' + (responses.trueGrounded || '—'),
+      'Unknowns: ' + (responses.unknowns || '—'),
+      'Fear-Driven: ' + (responses.fearDriven || '—'),
       '',
       'ZOOM OUT:',
-      responses.zoomReframe || '—',
+      'Situational Reframe: ' + (responses.situationalReframe || '—'),
+      'Time Horizon (3w/3m/3y): ' + (responses.timeHorizon || '—'),
+      '',
+      'WHAT\'S IN YOUR CONTROL:',
+      'Mine to Act On: ' + (responses.controlMine || '—'),
+      'To Release: ' + (responses.controlRelease || '—'),
       '',
       'SPOT THE PATTERN:',
-      responses.patternSeen || '—',
-      responses.patternResponse ? ('Response: ' + responses.patternResponse) : '',
+      'Seen Before: ' + (responses.patternSeen || '—'),
+      'What Follows / Alternative: ' + (responses.patternFollows || '—'),
       '',
       '— © 2025 Clarity Metabolics | claritymetabolics.com'
     ].join('\n');
@@ -572,21 +618,23 @@
 
   // Emotional Anchor link (update route when ready)
   function goToEmotionalAnchor(){
-    window.location.href = "/emotional-anchor";
+    alert('The Emotional Anchor tool will be available soon! This would normally navigate to the next tool in the Five Anchors series.');
   }
 
-  // Init + enable logic for Step 1 button
+  // Enable/disable Save on STEP 1
+  function checkFilterInputs() {
+    const g = document.getElementById('trueGrounded')?.value.trim() || '';
+    const y = document.getElementById('unknowns')?.value.trim() || '';
+    const r = document.getElementById('fearDriven')?.value.trim() || '';
+    const saveBtn = document.getElementById('saveNoiseStep');
+    if (saveBtn) saveBtn.disabled = !(g || y || r);
+  }
+
+  // Init
   function init(){ 
-    showStep(0); 
-    function checkFilterInputs() {
-      const g = document.getElementById('trueGrounded')?.value.trim() || '';
-      const y = document.getElementById('notMine')?.value.trim() || '';
-      const r = document.getElementById('fearDriven')?.value.trim() || '';
-      const saveBtn = document.getElementById('saveNoiseStep');
-      if (saveBtn) saveBtn.disabled = !(g || y || r);
-    }
+    showStep(0);
     setTimeout(() => {
-      ['trueGrounded','notMine','fearDriven'].forEach(id=>{
+      ['trueGrounded','unknowns','fearDriven'].forEach(id=>{
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', checkFilterInputs);
       });
