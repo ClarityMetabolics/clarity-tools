@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Physical Anchor Interactive Tool - A Grounding Compass for the Body</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --main-color:#7C8B60;
+    --accent-color:#E5EBDD;
+    --contrast-color:#3D472C;
+    --text-color:#333;
+    --bg-color:#fff;
+    --border-color:#ddd;
+    --shadow:0 2px 10px rgba(0,0,0,.1);
+    --success-color:#5a7c41;
+    --warning-color:#dc3545;
+  }
+  [data-theme="dark"]{
+    --text-color:#e6e6e6;
+    --bg-color:#1a1a1a;
+    --border-color:#444;
+    --accent-color:#2a3225;
+    --shadow:0 2px 12px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Open Sans',sans-serif;
+    color:var(--text-color);
+    background:var(--bg-color);
+    line-height:1.6;
+  }
+  .container{max-width:780px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+  /* Header */
+  .header{
+    color:#fff;
+    background:linear-gradient(135deg,var(--main-color),var(--contrast-color));
+    padding:22px 18px 18px;
+    position:relative;
+  }
+  .header h1{
+    font-family:'Libre Baskerville',serif;
+    font-size:2.0rem;
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .subtitle{ text-align:center; font-style:italic; opacity:.95; }
+  .header-controls{ position:absolute; top:10px; right:10px; display:flex; gap:8px }
+  .header-btn{
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.3);
+    color:#fff;
+    padding:.35rem .6rem;border-radius:18px;cursor:pointer;
+    font-size:.8rem;transition:all .2s ease;
+  }
+  .header-btn:hover{background:rgba(255,255,255,.25)}
+  .progress-bar{height:4px;background:rgba(255,255,255,.28);border-radius:3px;margin-top:14px;overflow:hidden}
+  .progress-fill{height:100%;background:#fff;width:0%;transition:width .6s ease}
+
+  /* Content & steps */
+  main.content{flex:1;padding:22px}
+  .step{display:none;animation:fade .25s ease}
+  .step.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .step-indicator{ text-align:center; margin:10px 0 18px }
+  .step-counter{font-weight:700;color:var(--main-color)}
+  .dots{display:flex;justify-content:center;gap:8px;margin-top:6px}
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--border-color)}
+  .dot.active{background:var(--main-color)}
+  .dot.done{background:var(--success-color)}
+
+  h2{font-family:'Libre Baskerville',serif;color:var(--main-color);font-size:1.7rem;margin-bottom:12px}
+  p.lead{opacity:.95;margin-bottom:10px}
+
+  .tip{
+    background:linear-gradient(135deg, rgba(124,139,96,.10), rgba(124,139,96,.05));
+    border-left:4px solid var(--main-color);
+    padding:12px;border-radius:0 8px 8px 0;margin:14px 0;font-style:italic
+  }
+
+  .form-group{margin:16px 0}
+  label{display:block;font-weight:700;color:var(--main-color);margin-bottom:6px}
+  textarea{
+    width:100%;min-height:110px;resize:vertical;border:2px solid var(--border-color);
+    border-radius:10px;padding:12px;font:inherit;color:inherit;background:var(--bg-color);
+    transition:all .2s ease;
+  }
+  textarea:focus{outline:none;border-color:var(--main-color);box-shadow:0 0 0 3px rgba(124,139,96,.12)}
+
+  /* Navigation buttons */
+  .nav-row{display:flex;gap:12px;align-items:center;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-color)}
+  .nav-row .btn{flex:1}
+  .btn{
+    border:none;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;
+    transition:transform .1s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary{background:var(--main-color);color:#fff}
+  .btn-primary:hover{background:var(--contrast-color);box-shadow:var(--shadow);transform:translateY(-1px)}
+  .btn-secondary{background:var(--accent-color);color:var(--contrast-color);border:1px solid var(--border-color)}
+  .btn-secondary:hover{background:var(--border-color)}
+  .btn-warning{background:var(--warning-color);color:#fff}
+  .btn-warning:hover{background:#c82333}
+
+  .micro{ text-align:center; margin-top:6px; font-style:italic; color:var(--main-color) }
+
+  /* Final-screen: stacked action buttons */
+  .final-actions{
+    display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;
+  }
+  .final-actions .btn{ display:block; width:100%; max-width:280px; min-height:50px; text-align:center; }
+
+  /* Branding */
+  .branding{ text-align:center; padding:18px; font-size:.85rem; color:var(--text-color); opacity:.75; border-top:1px solid var(--border-color) }
+  .branding a{ color:var(--main-color); text-decoration:none }
+  .branding a:hover{ text-decoration:underline }
+
+  .scripture{font-style:italic;background:var(--accent-color);padding:16px;border-left:4px solid var(--main-color);border-radius:8px;margin:16px 0}
+  .cross-link{ background:linear-gradient(135deg,var(--main-color),var(--contrast-color)); color:#fff; padding:14px; text-align:center; border-radius:10px; margin-top:18px }
+
+  /* Accordion */
+  .accordion-item{
+    margin:12px 0;
+    border:1px solid var(--border-color);
+    border-radius:10px;
+    background:var(--accent-color);
+    overflow:hidden;
+  }
+  .accordion-header{
+    background:var(--accent-color);
+    border:none;
+    width:100%;
+    padding:14px 16px;
+    text-align:left;
+    cursor:pointer;
+    font-weight:700;
+    color:var(--contrast-color);
+    display:flex; justify-content:space-between; align-items:center;
+    transition:background .2s ease;
+  }
+  .accordion-header:hover{ background:rgba(124,139,96,.08); }
+  .accordion-icon{ font-size:1.2em; transition:transform .3s ease; }
+  .accordion-content{ display:none; padding:16px; background:var(--bg-color); border-top:1px solid var(--border-color); }
+  .accordion-content.open{ display:block; }
+
+  /* Checklist */
+  .effect-grid {
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+    gap:10px; padding:12px; background:var(--accent-color);
+    border-radius:10px; border:1px solid var(--border-color);
+  }
+  .effect-item{ display:flex; align-items:center; gap:8px; padding:8px; border-radius:6px; cursor:pointer; transition:background .2s ease; }
+  .effect-item:hover{ background:rgba(124,139,96,.1); }
+  .effect-item input[type="checkbox"]{ margin:0; transform:scale(1.2); }
+
+  @media (max-width:640px){
+    .nav-row{flex-direction:column}
+    .btn{width:100%}
+    .effect-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+
+<body>
+<div id="pageTop" style="position:absolute;top:0"></div>
+<div class="container">
+
+  <header class="header" id="mainHeader">
+    <div class="header-controls">
+      <button class="header-btn" id="themeBtn" title="Toggle theme">🌙</button>
+      <button class="header-btn" id="quietBtn" title="Quiet mode" onclick="toggleQuietMode()">◐</button>
+    </div>
+    <h1>Physical Anchor Interactive Tool</h1>
+    <p class="subtitle">🧭 A Grounding Compass for the Body</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
+
+  <main class="content">
+    <!-- Step 1 -->
+    <section class="step active" data-step="0">
+      <div class="step-indicator">
+        <div class="step-counter">Step 1 of 8 — Physical Anchor</div>
+        <div class="dots">
+          <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <h2>Welcome to the Physical Anchor</h2>
+      <p class="lead">Let's slow down and take a couple of deep, full breaths to help you settle in. Then just notice what you notice about how you feel in your body and in your mind. No judgment, no pressure — just a little check-in.</p>
+      <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin</button></div>
+      <div class="micro">Take your time. There's no rush here.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- Step 2 -->
+    <section class="step" data-step="1">
+      <div class="step-indicator">
+        <div class="step-counter">Step 2 of 8 — Physical Anchor: Noticing</div>
+        <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>What are you noticing?</h2>
+      <p class="lead">Close your eyes for one slow breath. Scan from head to toe. You don't have to force anything — just notice.</p>
+      <div class="tip">If nothing jumps out at first, that's okay. Small things often give the best clues.</div>
+
+      <div class="form-group">
+        <label for="bodyNotice">What sensations do you notice?</label>
+        <p style="font-size:0.9em;color:var(--main-color);margin-bottom:8px;font-style:italic;">Take a moment to scan from your head down to your toes.</p>
+        <textarea id="bodyNotice" placeholder="Example: tight jaw, flutter in stomach, pressure behind eyes, heavy shoulders, restless legs…"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="standingOut">What stands out most right now?</label>
+        <p style="font-size:0.9em;color:var(--main-color);margin-bottom:8px;font-style:italic;">This could be physical, emotional, or energetic.</p>
+        <textarea id="standingOut" placeholder="What feels most urgent, uncomfortable, or surprisingly calm right now?"></textarea>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+      </div>
+      <div class="micro">Every small awareness is valuable.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- Step 3 -->
+    <section class="step" data-step="2">
+      <div class="step-indicator">
+        <div class="step-counter">Step 3 of 8 — Effects</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>How does it affect you?</h2>
+      <p>Physical sensations rarely exist in isolation—they often influence how we think, feel, and move through our day. Check anything that resonates with your current experience.</p>
+
+      <div class="form-group">
+        <label>Common effects</label>
+        <div class="effect-grid">
+          <label class="effect-item"><input type="checkbox" name="effect" value="focus"> It's hard to focus</label>
+          <label class="effect-item"><input type="checkbox" name="effect" value="anxious"> It's making me anxious</label>
+          <label class="effect-item"><input type="checkbox" name="effect" value="energy"> It's draining my energy</label>
+          <label class="effect-item"><input type="checkbox" name="effect" value="disconnected"> I feel disconnected</label>
+          <label class="effect-item"><input type="checkbox" name="effect" value="overwhelmed"> I feel overwhelmed</label>
+          <label class="effect-item"><input type="checkbox" name="effect" value="unsure"> I'm not sure</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="otherEffect">If "Other," please describe:</label>
+        <textarea id="otherEffect" placeholder="Describe any other effect..."></textarea>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Show Me</button>
+      </div>
+      <div class="micro">Your awareness is already healing.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- Step 4 -->
+    <section class="step" data-step="3">
+      <div class="step-indicator">
+        <div class="step-counter">Step 4 of 8 — What your body might need</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>What might your body need?</h2>
+      <p>What you're feeling physically might be pointing toward something your body needs to feel safe and restored. Explore whichever sections draw your attention.</p>
+
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">Rest <span class="accordion-icon">+</span></button>
+        <div class="accordion-content"><p>You may be running on empty while telling yourself you're fine. Your body might be asking for permission to truly restore, not just push through.</p></div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">Safety <span class="accordion-icon">+</span></button>
+        <div class="accordion-content"><p>Your nervous system may be signaling that something doesn't feel safe (physically, emotionally, or spiritually). This tension could be protection.</p></div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">Boundaries <span class="accordion-icon">+</span></button>
+        <div class="accordion-content"><p>Physical tension often shows up when we're saying yes with our mouth but no with our body. What boundary might need attention?</p></div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">Movement <span class="accordion-icon">+</span></button>
+        <div class="accordion-content"><p>Gentle motion can help stagnant energy flow again. Even a minute or two makes a difference.</p></div>
+      </div>
+
+      <div class="form-group">
+        <label for="otherNeeds">Other insights about what your body might need:</label>
+        <textarea id="otherNeeds" placeholder="Anything else come to mind?"></textarea>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Keep Going</button>
+      </div>
+      <div class="micro">Trust what your body is telling you.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- Step 5 -->
+    <section class="step" data-step="4">
+      <div class="step-indicator">
+        <div class="step-counter">Step 5 of 8 — Regulate</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <div class="tip">Before we begin supporting and smoothing out our nervous system, take a moment to appreciate how you're getting in touch with your body - something not many people take time to do. What feels different from when you began?</div>
+      <h2>Let's regulate together</h2>
+      <p>Regulation is simply helping your body remember how to feel safe and settled again—these tools will simply remind your body how. Choose any that feel helpful.</p>
+
+      <!-- Breathe deeper (text only) -->
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Breathe deeper <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-content">
+          <p>When you're stressed, breathing becomes shallow and fast. Intentional deep breathing reverses this pattern and calms your entire system.</p>
+          <p style="margin-top:10px;font-style:italic;color:var(--main-color)"><strong>Try this now:</strong> One slow inhale through your nose, then let it fall out with an audible sigh.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">Sip some water <span class="accordion-icon">+</span></button>
+        <div class="accordion-content">
+          <p>Water signals safety to your nervous system and naturally helps your body unwind. It's one of the gentlest ways to nourish yourself.</p>
+          <p style="margin-top:10px;font-style:italic;color:var(--main-color)"><strong>Try this now:</strong> If you have water nearby, take one mindful sip right now and notice how your body receives it.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">Change your temperature <span class="accordion-icon">+</span></button>
+        <div class="accordion-content"><p>Step outside for a moment, splash cold water on your face, or place a warm hand over your chest. These tiny shifts affect your nervous system.</p></div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">Move your body <span class="accordion-icon">+</span></button>
+        <div class="accordion-content">
+          <h3>Movement Reset</h3>
+          <p>Take a moment to stand up and guide your body through its natural range of motion. Move slowly and within a comfortable range.</p>
+          <ul>
+            <li><strong>Neck:</strong> Gently nod your head up and down. Look side to side. Tuck your chin and roll your head from shoulder to shoulder.</li>
+            <li><strong>Shoulders:</strong> Roll shoulders forward a few times, then back. Gently reach your arms forward and behind you.</li>
+            <li><strong>Hands & wrists:</strong> Make a fist and open your hands wide several times. Circle your wrists in both directions.</li>
+            <li><strong>Torso:</strong> With hands on hips, gently twist left and right. Reach one arm overhead while the other hand rests on your hip, bending sideways toward the hand on your hip. Switch sides.</li>
+            <li><strong>Low back & front body:</strong> Sit with hands on knees, lift your chest and look up to arch your back. Switch to a rounded back, gently tucking your chin.</li>
+            <li><strong>Hips & ankles:</strong> While seated, place one foot on your opposite knee (or shin if the knee is out of reach) and hold for a few breaths. Switch sides. Circle each ankle in both directions.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">Light & Sleep <span class="accordion-icon">+</span></button>
+        <div class="accordion-content">
+          <p>Spend <strong>2–5 minutes</strong> outside in natural light within an hour of waking to support your body's rhythm. In the evening, dim lights about an hour before bed and <strong>avoid screens/blue light</strong> during that time to support deeper, more restorative sleep.</p>
+          <ul>
+            <li><strong>Morning:</strong> Step outside briefly (no sunglasses if possible).</li>
+            <li><strong>Evening:</strong> Use lamps instead of bright overhead lighting.</li>
+            <li><strong>Screen-free:</strong> Aim for the last <strong>60 minutes</strong> before bed.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+      </div>
+      <div class="micro">Small changes can have big impacts.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- Step 6 -->
+    <section class="step" data-step="5">
+      <div class="step-indicator">
+        <div class="step-counter">Step 6 of 8 — What's shifting?</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>What's shifting?</h2>
+      <p>After that pause, how are things feeling now?</p>
+
+      <div class="form-group">
+        <label for="regulationTried">Did you try any of the regulation techniques? Which ones?</label>
+        <p style="font-size:0.9em;color:var(--main-color);margin-bottom:8px;font-style:italic;">Even just reading about them counts as engaging with the practices.</p>
+        <textarea id="regulationTried" placeholder="Example: I tried the long exhale and a glass of water…"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="shiftingNotice">How does your body want to respond right now?</label>
+        <p style="font-size:0.9em;color:var(--main-color);margin-bottom:8px;font-style:italic;">Your body might want to move, rest, breathe differently, or something else entirely.</p>
+        <textarea id="shiftingNotice" placeholder="Any changes in sensation, energy, or state?"></textarea>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Almost Done</button>
+      </div>
+      <div class="micro">You're learning to listen. That's powerful.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- Step 7 -->
+    <section class="step" data-step="6">
+      <div class="step-indicator">
+        <div class="step-counter">Step 7 of 8 — One insight to keep</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+      </div>
+      <h2>One insight to keep</h2>
+      <p>Before we wrap up, what matters most from this session?</p>
+
+      <div class="form-group">
+        <label for="oneInsight">If you could carry one insight about honoring your body into your week, what would it be?</label>
+        <textarea id="oneInsight" placeholder="Your one thing to remember…"></textarea>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Next Step</button>
+      </div>
+      <div class="micro">This insight is yours to keep.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- Step 8 -->
+    <section class="step" data-step="7">
+      <div class="step-indicator">
+        <div class="step-counter">Step 8 of 8 — Summary</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div></div>
+      </div>
+      <h2>Your Physical Anchor Summary</h2>
+      <p>You just practiced listening to your body rather than overriding it.</p>
+
+      <div style="background:var(--accent-color);padding:16px;border-radius:10px;margin:12px 0">
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color)">Your insight to keep</h3>
+        <p id="summaryInsight">No specific insight noted.</p>
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">What you noticed</h3>
+        <p id="summaryBodyNotice">—</p>
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">How it affected you</h3>
+        <p id="summaryEffects">No specific effects noted.</p>
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">What your body might need</h3>
+        <p id="summaryNeeds">—</p>
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">What shifted</h3>
+        <p id="summaryShifting">No changes noted.</p>
+      </div>
+
+      <div class="cross-link">
+        <div><strong>Your next step: Mental Anchor</strong></div>
+        <div style="opacity:.9">Continue building your foundation with clarity of thought.</div>
+      </div>
+
+      <div class="final-actions" id="finalActions">
+        <button class="btn btn-primary" onclick="downloadSummary()">📄 Download Summary</button>
+        <button class="btn btn-secondary" onclick="openPrayer()">🙏 Sacred Reflection</button>
+        <button class="btn btn-secondary" id="startOverBtn" onclick="confirmStartOver()">🔄 Start Over</button>
+        <button class="btn btn-secondary" style="max-width:280px" onclick="prevStep()">Back</button>
+      </div>
+
+      <div class="branding">
+        <div><strong>Created by Clarity Metabolics</strong></div>
+        <div style="font-style:italic;margin-top:4px">Quiet the world. Reconnect with what's real.</div>
+        <div><a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Sacred Reflection Modal -->
+<div id="prayerModal" style="position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000">
+  <div style="background:var(--bg-color);color:var(--text-color);max-width:560px;width:100%;border-radius:12px;box-shadow:var(--shadow);padding:22px">
+    <h3 style="font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:8px">Sacred Reflection</h3>
+    <div class="scripture" style="margin:10px 0 16px 0">
+      <p><strong>Gratitude to the Father:</strong> Thank You for the gift of this body and the breath that sustains me. Help me honor Your design as I slow down and listen.</p>
+      <p><strong>With Jesus:</strong> Walk with me as I learn to rest and release striving. Teach me gentleness toward my limits and compassion for my needs.</p>
+      <p><strong>By the Spirit:</strong> Guide me back to truth and peace. Grow awareness that restores my body and steadies my heart.</p>
+    </div>
+    <div style="text-align:center">
+      <button class="btn btn-primary" onclick="closePrayer()">Amen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // State
+  let currentStep = 0;
+  const totalSteps = 8;
+  let quiet = false;
+  const responses = { bodyNotice:'',standingOut:'',effects:[],otherEffect:'', otherNeeds:'',regulationTried:'',shiftingNotice:'',oneInsight:'' };
+
+  // Theme toggle (moon ↔ sun)
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const body = document.body;
+    const btn = document.getElementById('themeBtn');
+    if (body.getAttribute('data-theme') === 'dark') {
+      body.removeAttribute('data-theme'); btn.textContent = '🌙';
+    } else {
+      body.setAttribute('data-theme','dark'); btn.textContent = '☀️';
+    }
+  });
+  function toggleQuietMode(){ quiet = !quiet; document.getElementById('quietBtn').classList.toggle('active', quiet); }
+
+  // Accordion
+  function toggleAccordion(button) {
+    const content = button.nextElementSibling;
+    const icon = button.querySelector('.accordion-icon');
+    if (content.classList.contains('open')) { content.classList.remove('open'); icon.textContent = '+'; }
+    else { content.classList.add('open'); icon.textContent = '−'; }
+  }
+
+  // Steps
+  function showStep(i){
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    const stepEl = document.querySelector(`.step[data-step="${i}"]`);
+    if (stepEl) stepEl.classList.add('active');
+
+    document.getElementById('progressFill').style.width = ((i)/ (totalSteps-1)) * 100 + '%';
+    document.querySelectorAll('.step .dots').forEach(group => {
+      [...group.children].forEach((d, idx) => {
+        d.classList.remove('active','done');
+        if (idx < i) d.classList.add('done');
+        if (idx === i) d.classList.add('active');
+      });
+    });
+
+    requestAnimationFrame(()=>{
+      document.getElementById('pageTop').scrollIntoView({behavior:'auto',block:'start'});
+      setTimeout(()=>{
+        if (i===1) document.getElementById('bodyNotice')?.focus();
+        if (i===5) document.getElementById('regulationTried')?.focus();
+        if (i===6) document.getElementById('oneInsight')?.focus();
+      },100);
+    });
+  }
+  function nextStep(){ saveCurrent(); if (currentStep < totalSteps-1){ currentStep++; if (currentStep===7) updateSummary(); showStep(currentStep); } }
+  function prevStep(){ if (currentStep>0){ currentStep--; showStep(currentStep);} }
+
+  function saveCurrent(){
+    switch(currentStep){
+      case 1:
+        responses.bodyNotice = document.getElementById('bodyNotice').value.trim();
+        responses.standingOut = document.getElementById('standingOut').value.trim();
+        break;
+      case 2:
+        responses.effects = [...document.querySelectorAll('input[name="effect"]:checked')].map(cb=>cb.value);
+        responses.otherEffect = document.getElementById('otherEffect').value.trim();
+        break;
+      case 3:
+        responses.otherNeeds = document.getElementById('otherNeeds').value.trim();
+        break;
+      case 5:
+        responses.regulationTried = document.getElementById('regulationTried').value.trim();
+        responses.shiftingNotice = document.getElementById('shiftingNotice').value.trim();
+        break;
+      case 6:
+        responses.oneInsight = document.getElementById('oneInsight').value.trim();
+        break;
+    }
+  }
+
+  function updateSummary(){
+    const effectMap = {focus:"Difficulty focusing", anxious:"Creating anxiety", energy:"Draining energy", disconnected:"Feeling disconnected", overwhelmed:"Feeling overwhelmed", unsure:"Uncertain"};
+    const std = responses.effects.filter(e=>e!=='other').map(e=>effectMap[e]).join(', ');
+    const effectsText = responses.otherEffect || std || 'No specific effects noted.';
+    const noticed = (responses.bodyNotice || 'No specific sensations noted.') + (responses.standingOut? ` What stood out most: ${responses.standingOut}`:'');
+    const needs = responses.otherNeeds || 'No specific insights noted.';
+    let shifting = responses.shiftingNotice || 'No changes noted.';
+    if (responses.regulationTried) shifting = `After trying: ${responses.regulationTried}. ${shifting}`;
+
+    document.getElementById('summaryInsight').textContent = responses.oneInsight || 'No specific insight noted.';
+    document.getElementById('summaryBodyNotice').textContent = noticed;
+    document.getElementById('summaryEffects').textContent = effectsText;
+    document.getElementById('summaryNeeds').textContent = needs;
+    document.getElementById('summaryShifting').textContent = shifting;
+  }
+
+  // Final actions
+  let startOverArmed = false;
+  function confirmStartOver(){
+    const btn = document.getElementById('startOverBtn');
+    if (!startOverArmed){
+      startOverArmed = true;
+      btn.classList.remove('btn-secondary'); btn.classList.add('btn-warning');
+      btn.textContent = 'Confirm Start Over';
+      setTimeout(()=>{ if(startOverArmed){ startOverArmed=false; btn.classList.remove('btn-warning'); btn.classList.add('btn-secondary'); btn.textContent='🔄 Start Over'; }},3000);
+    } else { restartTool(); }
+  }
+  function restartTool(){
+    Object.keys(responses).forEach(k => responses[k] = Array.isArray(responses[k])?[]:'');
+    document.querySelectorAll('textarea').forEach(t => t.value='');
+    document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked=false);
+    const btn = document.getElementById('startOverBtn');
+    if (btn){ startOverArmed=false; btn.className='btn btn-secondary'; btn.textContent='🔄 Start Over'; }
+    currentStep = 0; showStep(currentStep);
+  }
+
+  // Download summary
+  function downloadSummary(){
+    const lines = [
+      'Physical Anchor Tool — Session Summary',
+      'Generated: ' + new Date().toLocaleString(),
+      '',
+      'KEY INSIGHT TO KEEP:',
+      responses.oneInsight || 'None noted',
+      '',
+      'BODY SENSATIONS NOTICED:',
+      responses.bodyNotice || 'None noted',
+      responses.standingOut ? ('What stood out most: ' + responses.standingOut) : '',
+      '',
+      'HOW IT AFFECTED YOU:',
+      responses.otherEffect || (responses.effects.join(', ') || 'None noted'),
+      '',
+      'WHAT YOUR BODY MIGHT NEED:',
+      responses.otherNeeds || 'None noted',
+      '',
+      'WHAT YOU TRIED:',
+      responses.regulationTried || 'None noted',
+      '',
+      'WHAT SHIFTED:',
+      responses.shiftingNotice || 'None noted',
+      '',
+      '— © 2025 Clarity Metabolics | claritymetabolics.com'
+    ].join('\n');
+
+    const blob = new Blob([lines],{type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href=url; a.download='physical-anchor-summary.txt';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  // Prayer modal
+  function openPrayer(){ document.getElementById('prayerModal').style.display='flex'; }
+  function closePrayer(){ document.getElementById('prayerModal').style.display='none'; }
+
+  // Init
+  function init(){ showStep(0); }
+  if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
+</script>
+</body>
+</html>
