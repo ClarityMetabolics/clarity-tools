@@ -1,27 +1,32 @@
 <!--
   ============================================================
-  Project: Clarity Metabolics — 5 Anchors
-  Module: Mental Anchor — The Clarity Lens (Universal Template)
-  File: mental-anchor-v2.0.0.html
-  Version: 2.0.0
-  Build Date: 2025-08-09
-  Author: ChatGPT (prep for Claude)
-  ------------------------------------------------------------
-  Changelog
-  - v2.0.0: Optimized 7-screen flow:
-            (0) Welcome
-            (1) Filter Out the Noise — stacked Green/Yellow/Red textareas
-            (2) Zoom Out — Situational Reframe → Time Horizon (3w/3m/3y)
-            (3) What's in Your Control — mine vs release
-            (4) Spot the Pattern — + micro-practice line
-            (5) Recap + Sacred Reflection (modal)
-            (6) Emotional Anchor handoff CTA
-            Light/Dark toggle, progress, Start Over confirm, Download Summary.
-  - v1.1.x: Prior 5-screen variant (archived).
-  ------------------------------------------------------------
-  Editing Notes
-  - Treat this file as MASTER. For any change, duplicate and bump version.
-  - Use the STEP anchors (e.g., <!-- STEP 2: Zoom Out -->) to target safe edits.
+  Clarity Metabolics - Mental Anchor: The Clarity Lens
+  Interactive Web Tool for Post-Awakening Mental Clarity
+  ============================================================
+  
+  Version: 3.0.0 (Final)
+  Created: August 2025
+  Author: Clarity Metabolics
+  
+  Description:
+  7-step interactive tool to help users filter mental noise,
+  distinguish truth from fear, and find grounded next steps.
+  Part of the Five Anchors framework for post-awakening support.
+  
+  Features:
+  - Progressive 7-step flow
+  - Light/dark theme toggle
+  - Download summary functionality
+  - Sacred reflection modal
+  - Mobile responsive design
+  - Progress tracking
+  
+  Usage:
+  Standalone HTML file - no dependencies required
+  Open in any modern web browser
+  
+  License: © 2025 Clarity Metabolics
+  Website: https://claritymetabolics.com
   ============================================================
 -->
 <!DOCTYPE html>
@@ -237,7 +242,7 @@
         <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
       <h2>The Clarity Lens</h2>
-      <p class="lead">This is your space to clear mental fog, spot residue, and choose a better next step.</p>
+      <p class="lead">This is your space to clear mental fog, untangle chaotic thoughts, and choose a better nest step.</p>
       <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin</button></div>
       <div class="micro">Take your time. There's no rush here.</div>
       <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
@@ -250,7 +255,7 @@
         <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
       <h2>Filter Out the Noise</h2>
-      <p class="lead">Distinguishing what's true from what's fear-driven helps you respond rather than react.</p>
+      <p class="lead">Distinguishing what's true from what's frenzied or fear-driven helps you respond rather than react.</p>
 
       <div class="form-group">
         <label for="thoughtInput"><strong>What's one thought that's really been on your mind?</strong></label>
@@ -258,21 +263,24 @@
       </div>
 
       <div class="form-group panel" style="background:var(--green-panel)">
-        <h3>True &amp; Grounded</h3>
+        <h3>True &amp; Grounded — What's the clearest thought you see right now?</h3>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Write it exactly as it appears in your mind</p>
         <textarea id="trueGrounded" placeholder="What is factual, steady, or grounded about this thought?" rows="4"></textarea>
       </div>
 
       <div class="form-group panel" style="background:var(--yellow-panel)">
-        <h3>Unknowns / Not Yet Clear</h3>
+        <h3>Unknowns / Not Yet Clear — What's the thought?</h3>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Write it exactly as it appears in your mind</p>
         <textarea id="unknowns" placeholder="What facts are missing or not yet known? What remains to be seen?" rows="4"></textarea>
       </div>
 
       <div class="form-group panel" style="background:var(--red-panel)">
-        <h3>Fear-Driven</h3>
+        <h3>Fear-Driven — What fear might be fueling it?</h3>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Identify the fear, story, or assumption that could be coloring how you see this.</p>
         <textarea id="fearDriven" placeholder="What sounds like panic, assumption, or distortion?" rows="4"></textarea>
       </div>
 
-      <div class="tip"><strong>Micro-practice:</strong> Gently cross out the words that sound like pressure or panic. Keep what's still true.</div>
+      <div class="tip"><strong>Micro-practice:</strong> Consider deleting the words that sound like pressure or panic. Keep what's still true, solid, and clear.</div>
 
       <div class="nav-row">
         <button class="btn btn-secondary" onclick="prevStep()">Back</button>
@@ -292,12 +300,14 @@
       <p class="lead">Widen perspective to lower urgency and see options.</p>
 
       <div class="form-group">
-        <label for="situationalReframe">Situational Reframe</label>
+        <label for="situationalReframe">Situational Reframe — How might this look from the outside?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Step back and view this situation as if you're advising a friend</p>
         <textarea id="situationalReframe" placeholder="If you looked at this from outside the situation, what might you see differently?"></textarea>
       </div>
 
       <div class="form-group">
-        <label for="timeHorizon">Time Horizon (3 weeks, 3 months, 3 years)</label>
+        <label for="timeHorizon">Time Horizon — What matters across different time spans?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Consider what feels urgent now vs. what will matter in 3 weeks, 3 months, 3 years</p>
         <textarea id="timeHorizon" placeholder="What matters most across these horizons? What fades with time?"></textarea>
       </div>
 
@@ -321,12 +331,14 @@
       <p class="lead">Separate what's yours to act on from what's yours to release.</p>
 
       <div class="form-group">
-        <label for="controlMine">Mine to Act On</label>
+        <label for="controlMine">Mine to Act On — What can you actually do right now?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Focus on small, concrete actions that are truly within your power</p>
         <textarea id="controlMine" placeholder="One or two tiny actions that are truly yours. Keep it doable."></textarea>
       </div>
 
       <div class="form-group">
-        <label for="controlRelease">To Release (others, God, or time)</label>
+        <label for="controlRelease">To Release — What isn't yours to carry?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Name what belongs to others, time, or circumstances beyond your control</p>
         <textarea id="controlRelease" placeholder="What isn't yours to carry or solve right now?"></textarea>
       </div>
 
@@ -350,12 +362,14 @@
       <p class="lead">Recognize recurring narratives so you can respond differently.</p>
 
       <div class="form-group">
-        <label for="patternSeen">Have you met this thought before? When else did it show up?</label>
+        <label for="patternSeen">Pattern Recognition — Where have you seen this before?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Notice if this thought feels familiar from other situations or times in your life</p>
         <textarea id="patternSeen" placeholder="A personal loop, a family script, or a social storyline…"></textarea>
       </div>
 
       <div class="form-group">
-        <label for="patternFollows">What tends to happen when you follow it? What changes when you interrupt it?</label>
+        <label for="patternFollows">Pattern Impact — What happens when you follow this pattern?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Name the usual outcome, and what changes when you interrupt it</p>
         <textarea id="patternFollows" placeholder="Name the usual outcome—and the alternative you want."></textarea>
       </div>
 
@@ -376,7 +390,7 @@
         <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
       </div>
       <h2>Your Clarity Lens Summary</h2>
-      <p>You filtered for truth, widened your view, chose what's yours, and named the pattern.</p>
+      <p>You filtered for truth, widened your view, chose what's yours, and named the pattern. You've transformed chaotic thoughts into clear, actionable insight.</p>
 
       <div style="background:var(--accent-color);padding:16px;border-radius:10px;margin:12px 0">
         <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color)">Filter the Noise</h3>
@@ -399,7 +413,7 @@
 
       <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;">
         <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="nextStep()">Next</button>
+        <button class="btn btn-primary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="nextStep()">Next Steps</button>
       </div>
 
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
@@ -420,8 +434,6 @@
         <div class="sub">Learn to respond from a grounded heart, not just a clear head.</div>
       </div>
 
-      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
-
       <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:22px 0; width:100%;">
         <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">Back</button>
         <button class="btn btn-secondary" id="startOverBtn" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="confirmStartOver()">🔄 Start Over</button>
@@ -432,6 +444,8 @@
         <div style="font-style:italic;margin-top:4px">Quiet the world. Reconnect with what's real.</div>
         <div><a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
       </div>
+
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
     </section>
   </main>
 </div>
