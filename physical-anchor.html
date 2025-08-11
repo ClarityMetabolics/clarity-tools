@@ -256,8 +256,8 @@
         </div>
       </div>
       <h2>Welcome to Your Physical Anchor</h2>
-      <p class="lead">Let's slow down and take a couple of deep, full breaths to help you settle in. Then just notice what you notice about how you feel in your body and in your mind. No judgment, no pressure — just a little check-in.</p>
-      <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin →</button></div>
+      <p class="lead">Take a moment to arrive here. Take a couple of deep, full breaths and let yourself settle in. When you're ready, we'll begin this gentle check-in with your body.</p>
+      <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Let's Begin</button></div>
       <div class="micro">Take your time. There's no rush here.</div>
       <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
     </section>
@@ -510,7 +510,7 @@
     <!-- Step 8: Summary (cleaned up) -->
     <section class="step" data-step="7">
       <div class="step-indicator">
-        <div class="step-counter">Step 8 of 9 — Your Physical Anchor Summary</div>
+        <div class="step-counter">Step 8 of 9</div>
         <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
       </div>
       <h2>Your Physical Anchor Summary</h2>
@@ -559,7 +559,7 @@
     <!-- Step 9: Next Steps - Mental Anchor lead-in -->
     <section class="step" data-step="8">
       <div class="step-indicator">
-        <div class="step-counter">Step 9 of 9 — Next Steps</div>
+        <div class="step-counter">Step 9 of 9</div>
         <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
       </div>
       <h2>Your Next Anchor: Mental</h2>
@@ -671,7 +671,7 @@
       },100);
     });
 
-    if (i===8){ document.getElementById('mainHeader')?.classList.add('completed'); updateSummary(); }
+    if (i===7){ document.getElementById('mainHeader')?.classList.add('completed'); updateSummary(); }
   }
 
   function nextStep(){ saveCurrent(); if (currentStep < totalSteps-1){ currentStep++; showStep(currentStep); } }
@@ -839,8 +839,12 @@
         Object.keys(savedResponses).forEach(key => {
           const el = document.getElementById(key);
           if (el && savedResponses[key]) {
-            if (el.type === 'checkbox') {
-              el.checked = savedResponses[key].includes(el.value);
+            if (key === 'effects' && Array.isArray(savedResponses[key])) {
+              // Handle effects checkboxes
+              savedResponses[key].forEach(value => {
+                const checkbox = document.querySelector(`input[name="effect"][value="${value}"]`);
+                if (checkbox) checkbox.checked = true;
+              });
             } else {
               el.value = savedResponses[key];
             }
@@ -857,7 +861,7 @@
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', checkBodyInputs);
       });
-      // Check button state on load
+      // Check button state on load to handle restored content
       checkBodyInputs();
     }, 100);
   }
