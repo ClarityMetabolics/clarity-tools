@@ -17,7 +17,7 @@
   - Progressive 7-step flow
   - Light/dark theme toggle
   - Download summary functionality
-  - Sacred reflection modal
+  - Meaningful reflection modal
   - Mobile responsive design
   - Progress tracking
   
@@ -219,6 +219,12 @@
     .nav-row{flex-direction:column}
     .btn{width:100%}
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step { animation: none; }
+    .progress-fill { transition: none; }
+    .btn { transition: none; }
+  }
 </style>
 </head>
 <body>
@@ -227,7 +233,7 @@
 
   <header class="header" id="mainHeader">
     <div class="header-controls">
-      <button class="header-btn" id="themeBtn" title="Toggle theme">🌙</button>
+      <button class="header-btn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">🌙</button>
     </div>
     <h1>Mental Anchor — The Clarity Lens</h1>
     <p class="subtitle">Sharpen your mental focus and see truth clearly.</p>
@@ -242,8 +248,8 @@
         <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
       <h2>The Clarity Lens</h2>
-      <p class="lead">This is your space to clear mental fog, untangle chaotic thoughts, and choose a better next step.</p>
-      <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin</button></div>
+      <p class="lead">This is your space to clear mental fog, untangle chaotic thoughts, and choose a better next step. Take a couple of full, deep breaths and when you're settled in, let's begin.</p>
+      <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin →</button></div>
       <div class="micro">Take your time. There's no rush here.</div>
       <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
     </section>
@@ -255,11 +261,12 @@
         <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
       <h2>Filter Out the Noise</h2>
-      <p class="lead">Distinguishing what's true from what's frenzied or fear-driven helps you respond rather than react.</p>
+      <p class="lead">Like static on a radio, mental noise makes it hard to hear the clear signal underneath. Distinguishing what's true from what's frenzied or fear-driven helps you respond rather than react.</p>
 
       <div class="form-group">
         <label for="thoughtInput"><strong>What's one thought that's really been on your mind?</strong></label>
-        <textarea id="thoughtInput" placeholder="Type your thought here..." rows="3"></textarea>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">This could be a worry, decision, situation, or anything that keeps coming up</p>
+        <textarea id="thoughtInput" placeholder="Example: I'm (worried, concerned, overwhelmed, uncertain) about..." rows="3"></textarea>
       </div>
 
       <div class="form-group panel" style="background:var(--green-panel)">
@@ -283,8 +290,8 @@
       <div class="tip"><strong>Micro-practice:</strong> Consider deleting the words that sound like pressure or panic. Keep what's still true, solid, and clear.</div>
 
       <div class="nav-row">
-        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" id="saveNoiseStep" onclick="nextStep()" disabled>Save & Continue</button>
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" id="saveNoiseStep" onclick="nextStep()" disabled>Complete Filter Out the Noise textboxes to Continue</button>
       </div>
       <div class="micro">Clarity often starts by removing what doesn't belong.</div>
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
@@ -297,25 +304,25 @@
         <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
       <h2>Zoom Out</h2>
-      <p class="lead">Widen perspective to lower urgency and see options.</p>
+      <p class="lead">It's hard to see the forest when you're staring at one tree. Distance reveals patterns and possibilities that are invisible up close. Widen perspective to lower urgency and see options.</p>
 
       <div class="form-group">
-        <label for="situationalReframe">Situational Reframe — How might this look from the outside?</label>
-        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Step back and view this situation as if you're advising a friend</p>
-        <textarea id="situationalReframe" placeholder="If you looked at this from outside the situation, what might you see differently?"></textarea>
+        <label for="situationalReframe">Situational Reframe — How might this look from a bird's eye perspective?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Step back and imagine you're advising a friend going through this exact situation</p>
+        <textarea id="situationalReframe" placeholder="What would you tell your friend? What do you see that they might be missing?"></textarea>
       </div>
 
       <div class="form-group">
         <label for="timeHorizon">Time Horizon — What matters across different time spans?</label>
-        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Consider what feels urgent now vs. what will matter in 3 weeks, 3 months, 3 years</p>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Urgency often fades with time, but importance reveals itself in the moment. Consider what feels urgent now vs. what will matter in 3 weeks, 3 months, 3 years</p>
         <textarea id="timeHorizon" placeholder="What matters most across these horizons? What fades with time?"></textarea>
       </div>
 
       <div class="tip"><strong>Micro-practice:</strong> Take 3 slow breaths. Imagine you're viewing your situation on a map from above.</div>
 
       <div class="nav-row">
-        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">What's in Your Control →</button>
       </div>
       <div class="micro">Context calms urgency.</div>
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
@@ -328,7 +335,7 @@
         <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
       <h2>What's in Your Control</h2>
-      <p class="lead">Separate what's yours to act on from what's yours to release.</p>
+      <p class="lead">Clarity comes when you stop wrestling with what isn't yours to solve. Separate what's yours to act on from what's yours to release, and find peace in your actual sphere of influence.</p>
 
       <div class="form-group">
         <label for="controlMine">Mine to Act On — What can you actually do right now?</label>
@@ -345,8 +352,8 @@
       <div class="tip"><strong>Micro-practice:</strong> Say out loud: "I'll do my part, and release what isn't mine."</div>
 
       <div class="nav-row">
-        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" onclick="nextStep()">Spot the Pattern</button>
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Spot the Pattern →</button>
       </div>
       <div class="micro">Discernment reduces overwhelm.</div>
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
@@ -359,7 +366,7 @@
         <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
       <h2>Spot the Pattern</h2>
-      <p class="lead">Recognize recurring narratives so you can respond differently.</p>
+      <p class="lead">You can't change what you can't see, but once you spot the pattern, you have options and can change your results for the better. Recognize recurring narratives or stories you tell yourself about situations, so you can respond differently.</p>
 
       <div class="form-group">
         <label for="patternSeen">Pattern Recognition — Where have you seen this before?</label>
@@ -373,11 +380,17 @@
         <textarea id="patternFollows" placeholder="Name the usual outcome—and the alternative you want."></textarea>
       </div>
 
-      <div class="tip"><strong>Micro-practice:</strong> Name it out loud (e.g., "catastrophizing," "people-pleasing"). Naming loosens its grip.</div>
+      <div class="form-group">
+        <label for="mentalAnchorStatement">Your Mental Anchor Statement — What clarity will you hold onto?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">A simple truth about your thinking that you can return to when mental fog returns</p>
+        <textarea id="mentalAnchorStatement" placeholder="Even when everything feels uncertain, I know that..."></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Read your mental anchor statement once aloud, slowly. Let this clarity settle into your mind.</div>
 
       <div class="nav-row">
-        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Your Clarity Lens →</button>
       </div>
       <div class="micro">Awareness opens new options.</div>
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
@@ -406,14 +419,21 @@
         <p id="sumPattern">—</p>
       </div>
 
+      <!-- Mental Anchor Statement Highlight -->
+      <div style="background:linear-gradient(135deg,var(--main-color),var(--contrast-color));color:#fff;padding:20px;border-radius:12px;margin:20px 0;text-align:center;box-shadow:var(--shadow)">
+        <h3 style="font-family:'Libre Baskerville',serif;font-size:1.2rem;margin-bottom:12px;opacity:0.9">Your Mental Anchor Statement</h3>
+        <p id="mentalAnchorHighlight" style="font-family:'Libre Baskerville',serif;font-size:1.1rem;font-style:italic;line-height:1.6">—</p>
+        <p style="font-size:0.85rem;margin-top:10px;opacity:0.8">Your clarity to return to when mental fog returns</p>
+      </div>
+
       <div class="final-actions">
         <button class="btn btn-primary" onclick="downloadSummary()">📄 Download Summary</button>
-        <button class="btn btn-secondary" onclick="openSacred()">✨ Sacred Reflection</button>
+        <button class="btn btn-secondary" onclick="openMeaningful()">✨ Meaningful Reflection</button>
       </div>
 
       <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;">
-        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="nextStep()">Next Steps</button>
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="nextStep()">Next Steps →</button>
       </div>
 
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
@@ -426,7 +446,7 @@
         <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
       </div>
       <h2>Your Next Anchor: Emotional</h2>
-      <p class="lead">Now that your mind is clearer, let's steady your emotional footing.</p>
+      <p class="lead">Now that your mind is clearer and less reactive, let's steady your emotional footing so your feelings support rather than overwhelm you.</p>
 
       <div class="next-phase" aria-label="Move to Emotional Anchor">
         <div class="lead"><strong>Carry your clarity into how you feel.</strong></div>
@@ -435,7 +455,7 @@
       </div>
 
       <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:22px 0; width:100%;">
-        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">Back</button>
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">← Back</button>
         <button class="btn btn-secondary" id="startOverBtn" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="confirmStartOver()">🔄 Start Over</button>
       </div>
 
@@ -450,17 +470,30 @@
   </main>
 </div>
 
-<!-- Sacred Reflection Modal (Trinity) -->
-<div id="sacredModal" style="position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000">
-  <div style="background:var(--bg-color);color:var(--text-color);max-width:560px;width:100%;border-radius:12px;box-shadow:var(--shadow);padding:22px">
-    <h3 style="font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:8px">Sacred Reflection</h3>
+<!-- Meaningful Reflection Modal -->
+<div id="meaningfulModal" style="position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000">
+  <div style="background:var(--bg-color);color:var(--text-color);max-width:560px;width:100%;max-height:90vh;border-radius:12px;box-shadow:var(--shadow);padding:22px;overflow-y:auto">
+    <h3 style="font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:8px">Meaningful Reflection</h3>
     <div class="scripture" style="margin:10px 0 16px 0">
-      <p><strong>Father:</strong> Guide me toward Your truth and away from confusion.</p>
-      <p><strong>Son:</strong> Thank You for showing me how to walk in clarity and grace.</p>
-      <p><strong>Holy Spirit:</strong> Reveal what I could not see on my own.</p>
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">FATHER</p>
+        <p style="margin-left:16px;line-height:1.7">Guide me toward Your truth and away from confusion. Help me see clearly and think with Your wisdom.</p>
+      </div>
+      
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">SON</p>
+        <p style="margin-left:16px;line-height:1.7">Thank You for showing me how to walk in clarity and grace. Transform my thoughts to align with Your truth.</p>
+      </div>
+      
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">HOLY SPIRIT</p>
+        <p style="margin-left:16px;line-height:1.7">Reveal what I could not see on my own. Illuminate my mind and help me discern Your voice above the noise.</p>
+      </div>
+      
+      <p style="margin-top:28px;font-style:italic;text-align:center;opacity:0.9">✨ <strong>"Trust in the Lord with all your heart and lean not on your own understanding." — Proverbs 3:5</strong></p>
     </div>
     <div style="text-align:center">
-      <button class="btn btn-primary" onclick="closeSacred()">Amen</button>
+      <button class="btn btn-primary" onclick="closeMeaningful()">Amen</button>
     </div>
   </div>
 </div>
@@ -473,7 +506,7 @@
     thoughtInput:'', trueGrounded:'', unknowns:'', fearDriven:'',
     situationalReframe:'', timeHorizon:'',
     controlMine:'', controlRelease:'',
-    patternSeen:'', patternFollows:''
+    patternSeen:'', patternFollows:'', mentalAnchorStatement:''
   };
 
   // Light / Dark toggle
@@ -538,7 +571,14 @@
       case 4:
         responses.patternSeen = document.getElementById('patternSeen').value.trim();
         responses.patternFollows = document.getElementById('patternFollows').value.trim();
+        responses.mentalAnchorStatement = document.getElementById('mentalAnchorStatement').value.trim();
         break;
+    }
+    // Save to localStorage
+    try {
+      localStorage.setItem('mentalAnchorResponses', JSON.stringify(responses));
+    } catch (e) {
+      console.warn('Could not save to localStorage:', e);
     }
   }
 
@@ -564,8 +604,12 @@
 
     document.getElementById('sumPattern').innerHTML = [
       '<strong>Seen Before:</strong> ' + (responses.patternSeen || '—'),
-      '<strong>What Follows / Alternative:</strong> ' + (responses.patternFollows || '—')
+      '<strong>What Follows / Alternative:</strong> ' + (responses.patternFollows || '—'),
+      '<strong>Mental Anchor Statement:</strong> ' + (responses.mentalAnchorStatement || '—')
     ].join('<br>');
+    
+    // Update highlighted mental anchor statement
+    document.getElementById('mentalAnchorHighlight').textContent = responses.mentalAnchorStatement || 'Your mental anchor statement will appear here';
   }
 
   // Start Over confirm
@@ -588,6 +632,11 @@
     const btn = document.getElementById('startOverBtn');
     if (btn){ startOverArmed=false; btn.className='btn btn-secondary'; btn.textContent='🔄 Start Over'; }
     const saveBtn = document.getElementById('saveNoiseStep'); if (saveBtn) saveBtn.disabled = true;
+    try {
+      localStorage.removeItem('mentalAnchorResponses');
+    } catch (e) {
+      console.warn('Could not clear localStorage:', e);
+    }
     currentStep = 0; showStep(currentStep);
   }
 
@@ -614,6 +663,7 @@
       'SPOT THE PATTERN:',
       'Seen Before: ' + (responses.patternSeen || '—'),
       'What Follows / Alternative: ' + (responses.patternFollows || '—'),
+      'Mental Anchor Statement: ' + (responses.mentalAnchorStatement || '—'),
       '',
       '— © 2025 Clarity Metabolics | claritymetabolics.com'
     ].join('\n');
@@ -626,9 +676,9 @@
     document.body.removeChild(a); URL.revokeObjectURL(url);
   }
 
-  // Sacred Reflection modal
-  function openSacred(){ document.getElementById('sacredModal').style.display='flex'; }
-  function closeSacred(){ document.getElementById('sacredModal').style.display='none'; }
+  // Meaningful Reflection modal
+  function openMeaningful(){ document.getElementById('meaningfulModal').style.display='flex'; }
+  function closeMeaningful(){ document.getElementById('meaningfulModal').style.display='none'; }
 
   // Emotional Anchor link (update route when ready)
   function goToEmotionalAnchor(){
@@ -641,17 +691,39 @@
     const y = document.getElementById('unknowns')?.value.trim() || '';
     const r = document.getElementById('fearDriven')?.value.trim() || '';
     const saveBtn = document.getElementById('saveNoiseStep');
-    if (saveBtn) saveBtn.disabled = !(g || y || r);
+    if (saveBtn) {
+      const hasContent = !!(g || y || r);
+      saveBtn.disabled = !hasContent;
+      saveBtn.textContent = hasContent ? 'Zoom Out →' : 'Complete Filter Out the Noise textboxes to Continue';
+    }
   }
 
   // Init
   function init(){ 
+    // Load saved responses
+    try {
+      const saved = localStorage.getItem('mentalAnchorResponses');
+      if (saved) {
+        const savedResponses = JSON.parse(saved);
+        Object.assign(responses, savedResponses);
+        // Populate form fields
+        Object.keys(savedResponses).forEach(key => {
+          const el = document.getElementById(key);
+          if (el && savedResponses[key]) el.value = savedResponses[key];
+        });
+      }
+    } catch (e) {
+      console.warn('Could not load from localStorage:', e);
+    }
+    
     showStep(0);
     setTimeout(() => {
       ['trueGrounded','unknowns','fearDriven'].forEach(id=>{
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', checkFilterInputs);
       });
+      // Check button state on load
+      checkFilterInputs();
     }, 100);
   }
   if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
