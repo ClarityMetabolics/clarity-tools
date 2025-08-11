@@ -1,0 +1,694 @@
+<!--
+  ============================================================
+  Clarity Metabolics - Spiritual Anchor: The Communion Bridge
+  Interactive Web Tool for Post-Awakening Spiritual Grounding
+  ============================================================
+  
+  Version: 3.0.0 (Final)
+  Created: August 2025
+  Author: Clarity Metabolics
+  
+  Description:
+  7-step interactive tool to help users reconnect with divine purpose,
+  find spiritual grounding, and anchor in what doesn't shake.
+  Part of the Five Anchors framework for post-awakening support.
+  
+  Features:
+  - Progressive 7-step flow
+  - Light/dark theme toggle
+  - Download summary functionality
+  - Sacred reflection modal
+  - Mobile responsive design
+  - Progress tracking
+  
+  Usage:
+  Standalone HTML file - no dependencies required
+  Open in any modern web browser
+  
+  License: © 2025 Clarity Metabolics
+  Website: https://claritymetabolics.com
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spiritual Anchor — The Communion Bridge</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --main-color:#B6B0C3;      /* primary (bar/buttons) */
+    --accent-color:#EEEAF3;    /* soft panels */
+    --contrast-color:#4F4A60;  /* deep accent text/borders */
+    --text-color:#333;
+    --bg-color:#fff;
+    --border-color:#d9d6cf;
+    --shadow:0 2px 12px rgba(0,0,0,.08);
+    --success-color:#5a7c41;   /* progress dots done */
+    --warning-color:#dc3545;   /* Start Over confirm */
+    --green-panel:#E5EBDD;
+    --yellow-panel:#FFF8CC;
+    --red-panel:#F5E6E6;
+  }
+  [data-theme="dark"]{
+    --text-color:#e6e6e6;
+    --bg-color:#1c1c1c;
+    --border-color:#3b3a36;
+    --accent-color:#2a2825;
+    --shadow:0 2px 14px rgba(0,0,0,.35);
+    --green-panel:#2d352a;
+    --yellow-panel:#3a3620;
+    --red-panel:#3a2828;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Open Sans',sans-serif;
+    color:var(--text-color);
+    background:var(--bg-color);
+    line-height:1.6;
+  }
+  .container{max-width:780px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+  /* Header */
+  .header{
+    color:#fff;
+    background:linear-gradient(135deg,var(--main-color),var(--contrast-color));
+    padding:22px 18px 18px;
+    position:relative;
+    transition: box-shadow .5s ease;
+  }
+  .header.completed{ box-shadow:0 0 18px rgba(182,176,195,.55); }
+  .header h1{
+    font-family:'Libre Baskerville',serif;
+    font-size:2rem;
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .subtitle{ text-align:center; font-style:italic; opacity:.95; }
+
+  .header-controls{ position:absolute; top:10px; right:10px; display:flex; gap:8px }
+  .header-btn{
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.3);
+    color:#fff;
+    padding:.35rem .6rem;border-radius:18px;cursor:pointer;
+    font-size:.8rem;transition:all .2s ease;
+  }
+  .header-btn:hover{background:rgba(255,255,255,.25)}
+
+  .progress-bar{height:4px;background:rgba(255,255,255,.28);border-radius:3px;margin-top:14px;overflow:hidden}
+  .progress-fill{height:100%;background:#fff;width:0%;transition:width .6s ease}
+
+  /* Content & steps */
+  main.content{flex:1;padding:22px}
+  .step{display:none;animation:fade .25s ease}
+  .step.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .step-indicator{ text-align:center; margin:10px 0 18px }
+  .step-counter{font-weight:700;color:#ffffff; background:var(--contrast-color); display:inline-block; padding:4px 10px; border-radius:12px }
+  .dots{display:flex;justify-content:center;gap:8px;margin-top:10px}
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--border-color)}
+  .dot.active{background:var(--main-color)}
+  .dot.done{background:var(--success-color)}
+
+  h2{font-family:'Libre Baskerville',serif;color:var(--main-color);font-size:1.7rem;margin:14px 0 10px}
+  p.lead{opacity:.95;margin-bottom:10px}
+
+  .tip{
+    background:linear-gradient(135deg, rgba(182,176,195,.12), rgba(79,74,96,.06));
+    border-left:4px solid var(--main-color);
+    padding:12px;border-radius:0 8px 8px 0;margin:14px 0;font-style:italic
+  }
+
+  .form-group{margin:16px 0}
+  label{display:block;font-weight:700;color:var(--contrast-color);margin-bottom:6px}
+  textarea, input[type="text"]{
+    width:100%;min-height:110px;resize:vertical;border:2px solid var(--border-color);
+    border-radius:10px;padding:12px;font:inherit;color:inherit;background:var(--bg-color);
+    transition:all .2s ease;
+  }
+  input[type="text"]{ min-height:auto; }
+  textarea:focus, input[type="text"]:focus{
+    outline:none;border-color:var(--main-color);box-shadow:0 0 0 3px rgba(182,176,195,.18)
+  }
+
+  /* Panels for G/Y/R */
+  .panel{
+    border:2px solid var(--border-color);
+    border-radius:10px;
+    padding:12px;
+  }
+  .panel h3{
+    font-family:'Libre Baskerville',serif;
+    font-size:1.1rem;
+    margin-bottom:8px;
+    color:var(--contrast-color);
+  }
+
+  /* Buttons */
+  .nav-row{display:flex;gap:12px;align-items:center;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-color)}
+  .nav-row .btn{flex:1}
+  .btn{
+    border:none;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;
+    transition:transform .1s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary{background:var(--main-color);color:#fff}
+  .btn-primary:hover{background:var(--contrast-color);box-shadow:var(--shadow);transform:translateY(-1px)}
+  .btn-secondary{background:var(--accent-color);color:var(--contrast-color);border:1px solid var(--border-color)}
+  .btn-secondary:hover{background:var(--border-color)}
+  .btn-warning{background:var(--warning-color);color:#fff}
+  .btn-warning:hover{background:#c82333}
+
+  .micro{ text-align:center; margin-top:6px; font-style:italic; color:var(--contrast-color); opacity:.85 }
+
+  /* Final actions + Next Phase CTA */
+  .final-actions{
+    display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;
+  }
+  .final-actions .btn{ display:block; width:100%; max-width:280px; min-height:50px; text-align:center; }
+
+  .next-phase {
+    margin-top: 22px;
+    padding: 16px;
+    background: var(--accent-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .next-phase .lead {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.05rem;
+    color: var(--contrast-color);
+    margin-bottom: 10px;
+  }
+  .next-phase .sub {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 6px;
+  }
+  .next-phase .btn-next {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    background: var(--main-color);
+    color: #fff;
+    transition: transform .1s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .next-phase .btn-next:hover {
+    background: var(--contrast-color);
+    box-shadow: var(--shadow);
+    transform: translateY(-1px);
+  }
+
+  /* Branding */
+  .branding{ text-align:center; padding:18px; font-size:.85rem; color:var(--text-color); opacity:.75; border-top:1px solid var(--border-color) }
+  .branding a{ color:var(--contrast-color); text-decoration:none }
+  .branding a:hover{ text-decoration:underline }
+
+  .scripture{font-style:italic;background:var(--accent-color);padding:16px;border-left:4px solid var(--main-color);border-radius:8px;margin:16px 0}
+
+  @media (max-width:640px){
+    .nav-row{flex-direction:column}
+    .btn{width:100%}
+  }
+</style>
+</head>
+<body>
+<div id="pageTop" style="position:absolute;top:0"></div>
+<div class="container">
+
+  <header class="header" id="mainHeader">
+    <div class="header-controls">
+      <button class="header-btn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">🌙</button>
+    </div>
+    <h1>Spiritual Anchor — The Communion Bridge</h1>
+    <p class="subtitle">✨ Connect with what's sacred and anchor in what doesn't shake.</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
+
+  <main class="content">
+    <!-- STEP 0: Welcome -->
+    <section class="step active" data-step="0">
+      <div class="step-indicator">
+        <div class="step-counter">Step 1 of 7</div>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>The Communion Bridge</h2>
+      <p class="lead">This is your space to release the weight you were never meant to carry alone, reconnect with the One who invites you to rest, and remember you don't have to have it all figured out. Take a couple deep breaths to settle in, and when you're ready, let's begin.</p>
+      <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin →</button></div>
+      <div class="micro">Meaningful reflection takes meaningful time.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- STEP 1: Sacred Space Assessment -->
+    <section class="step" data-step="1">
+      <div class="step-indicator">
+        <div class="step-counter">Step 2 of 7 — Your Spiritual Check-in</div>
+        <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>Your Spiritual Check-in</h2>
+      <p class="lead">Recognize where you are spiritually right now—without judgment, just honest awareness. (Reflect: What's your relationship with God, faith, or meaning? If God feels distant or unclear, imagine Him as a gentle, loving Father.)</p>
+
+      <div class="form-group">
+        <label for="spiritualState"><strong>How would you describe your spiritual state right now?</strong></label>
+        <textarea id="spiritualState" placeholder="Dry, seeking, overwhelmed, disconnected, yearning, peaceful..." rows="3"></textarea>
+      </div>
+
+      <div class="form-group panel" style="background:var(--green-panel)">
+        <h3>What Feels Sacred Right Now — What still holds meaning?</h3>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Name what hasn't been shaken, what still feels holy or meaningful</p>
+        <textarea id="feelsSacred" placeholder="Examples: Prayer, time in nature, music that moves you, moments of gratitude, helping others, reading Scripture, quiet moments alone, family traditions..." rows="4"></textarea>
+      </div>
+
+      <div class="form-group panel" style="background:var(--yellow-panel)">
+        <h3>Questions & Seeking — What are you wrestling with?</h3>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Name the spiritual questions or longings you're carrying</p>
+        <textarea id="questionsSeeking" placeholder="Examples: Why is there so much suffering? How do I know God's will? What's my purpose? Is God really there? How do I pray? What happens after death? Am I enough?..." rows="4"></textarea>
+      </div>
+
+      <div class="form-group panel" style="background:var(--red-panel)">
+        <h3>What Feels Shaken — What's been disrupted?</h3>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Acknowledge what's been disrupted or no longer serves you</p>
+        <textarea id="feelsShaken" placeholder="Examples: Faith feels dry or distant, doubting God's goodness, questioning if prayers matter, feeling abandoned by God, church hurt or disappointment, beliefs that no longer fit..." rows="4"></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Take three slow breaths. Remind yourself quietly: "This is where I am, this is my starting point."</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" id="saveSacredStep" onclick="nextStep()" disabled>Complete Spiritual Check-in to Continue</button>
+      </div>
+      <div class="micro">Honest assessment opens the path to authentic connection.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 2: Divine Purpose Reflection -->
+    <section class="step" data-step="2">
+      <div class="step-indicator">
+        <div class="step-counter">Step 3 of 7 — Your Personal Calling</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>Your Personal Calling</h2>
+      <p class="lead">Connect with how God has equipped you and what He's calling you to right now. The gifts and passions God has placed in your heart aren't random - they're intentional clues pointing toward the unique purpose He has for your life.</p>
+
+      <div class="form-group">
+        <label for="uniqueGifts">Your Design — How has God shaped and prepared you?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Consider your natural talents, life experiences, and what comes easily to you</p>
+        <textarea id="uniqueGifts" placeholder="What gifts, skills, or perspectives has God given you that feel uniquely yours?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="divineAssignment">Your Current Calling — What feels like yours to do right now?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">What feels like God's assignment for you in this chapter of life, even if it's unclear or small</p>
+        <textarea id="divineAssignment" placeholder="What work, relationships, or responsibilities feel like God has entrusted them specifically to you?"></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Ask quietly: "God, what would You have me focus on today?" Then listen without forcing an answer.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Meaningful Practices →</button>
+      </div>
+      <div class="micro">Your purpose is woven into who you already are.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 3: Sacred Practices & Rhythms -->
+    <section class="step" data-step="3">
+      <div class="step-indicator">
+        <div class="step-counter">Step 4 of 7 — Meaningful Practices & Rhythms</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>Meaningful Practices & Rhythms</h2>
+      <p class="lead">Meaningful rhythms are simply the spiritual habits you do regularly—whether daily, weekly, or monthly—that help you stay close to God. Identify the practices that draw you closer to God and create rhythms you can maintain.</p>
+
+      <div class="form-group">
+        <label for="nourishing">What Nourishes Your Spirit — What practices feed your soul?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Prayer, nature, music, service, silence, Scripture, community...</p>
+        <textarea id="nourishing" placeholder="What spiritual practices consistently nourish and restore you?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="sustainableRhythm">Sustainable Rhythm — What could you realistically commit to?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Start with small spiritual practices you can maintain the rhythm of — they become powerful helpers when challenges arise</p>
+        <textarea id="sustainableRhythm" placeholder="What daily, weekly, or monthly spiritual rhythm feels sustainable right now?"></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Choose one small meaningful practice you could do tomorrow, to develop it into a habit you can maintain. Consistency over intensity builds spiritual muscle.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Find Your Foundation →</button>
+      </div>
+      <div class="micro">Small, consistent practices build strong spiritual foundations.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 4: Eternal Foundation -->
+    <section class="step" data-step="4">
+      <div class="step-indicator">
+        <div class="step-counter">Step 5 of 7 — Eternal Foundation</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>Eternal Foundation</h2>
+      <p class="lead">Eternal Truths are the foundational realities about God that don't change, even when everything else feels unstable and chaotic. Anchoring into these truths provides a steady reference point you can return to in moments of doubt or fear.</p>
+
+      <div class="form-group">
+        <label for="unchangingTruths">Unchanging Truths — What remains constant no matter what?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">God's love, His faithfulness, His presence, His promises...</p>
+        <textarea id="unchangingTruths" placeholder="What spiritual truths remain solid regardless of external circumstances?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="anchorStatement">Personal Anchor Statement — What truth will you stand on?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">A simple statement you can return to when everything feels unstable</p>
+        <textarea id="anchorStatement" placeholder="Write a personal anchor statement you can return to in difficult moments."></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Read your anchor statement once aloud, slowly. Let it settle deep into your spirit.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Your Communion Bridge →</button>
+      </div>
+      <div class="micro">What you stand on determines how you stand up.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 5: Recap + Sacred Reflection -->
+    <section class="step" data-step="5">
+      <div class="step-indicator">
+        <div class="step-counter">Step 6 of 7 — Summary</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+      </div>
+      <h2>Your Communion Bridge Summary</h2>
+      <p>You've completed your spiritual check-in, connected with your personal calling, identified meaningful practices, and anchored in eternal truth. You've built a bridge between your spirit and God.</p>
+
+      <div style="background:var(--accent-color);padding:16px;border-radius:10px;margin:12px 0">
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color)">Your Spiritual Check-in</h3>
+        <p id="sumSacred">—</p>
+
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Your Personal Calling</h3>
+        <p id="sumPurpose">—</p>
+
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Meaningful Practices</h3>
+        <p id="sumPractices">—</p>
+
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Eternal Foundation</h3>
+        <p id="sumFoundation">—</p>
+      </div>
+
+      <div class="final-actions">
+        <button class="btn btn-primary" onclick="downloadSummary()">📄 Download Summary</button>
+        <button class="btn btn-secondary" onclick="openMeaningful()">✨ Meaningful Reflection</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;">
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="nextStep()">Next Steps →</button>
+      </div>
+
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 6: Community Anchor lead-in -->
+    <section class="step" data-step="6">
+      <div class="step-indicator">
+        <div class="step-counter">Step 7 of 7 — Next Step</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
+      </div>
+      <h2>Your Next Anchor: Relational</h2>
+      <p class="lead">With your inner spirit anchored, let's explore how to stay balanced in the outer world — building meaningful relationships, setting healthy boundaries, and finding community that supports your growth.</p>
+
+      <div class="next-phase" aria-label="Move to Relational Anchor">
+        <div class="lead"><strong>Carry your spiritual grounding into conscious community.</strong></div>
+        <button class="btn-next" onclick="goRelationalAnchor()">→ Begin the Relational Anchor</button>
+        <div class="sub">Learn to build relationships that honor your awakening and support your growth.</div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:22px 0; width:100%;">
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">← Back</button>
+        <button class="btn btn-secondary" id="startOverBtn" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="confirmStartOver()">🔄 Start Over</button>
+      </div>
+
+      <div class="branding">
+        <div><strong>Created by Clarity Metabolics</strong></div>
+        <div style="font-style:italic;margin-top:4px">Quiet the world. Reconnect with what's real.</div>
+        <div><a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+      </div>
+
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+  </main>
+</div>
+
+<!-- Meaningful Reflection Modal -->
+<div id="meaningfulModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000">
+  <div style="background:var(--bg-color);color:var(--text-color);max-width:560px;width:100%;max-height:90vh;border-radius:12px;box-shadow:var(--shadow);padding:22px;overflow-y:auto">
+    <h3 style="font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:8px">Meaningful Reflection</h3>
+    <div class="scripture" style="margin:10px 0 16px 0">
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">FATHER</p>
+        <p style="margin-left:16px;line-height:1.7">Thank You for Your unchanging love that anchors me when everything else feels uncertain. You know exactly where I am and what I need—thank You for meeting me here with open arms. In Your presence I find the rest my soul has been searching for, and I surrender my need to have it all figured out, trusting in Your perfect timing.</p>
+      </div>
+      
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">SON</p>
+        <p style="margin-left:16px;line-height:1.7">Help me walk in Your footsteps, carrying Your peace into a world that desperately needs hope. Show me how to love like You love, especially when it's hard and the world feels dark. Remind me that I don't have to carry this burden alone—You've already made a way, and I ask You to transform my heart to reflect Your love even in the midst of chaos and confusion.</p>
+      </div>
+      
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">HOLY SPIRIT</p>
+        <p style="margin-left:16px;line-height:1.7">Fill me with Your wisdom and strength to live from this sacred space You've created in my heart. Breathe life into my calling and help me trust the unique way You've designed me to serve. Keep me rooted in truth, help me discern Your voice above all the noise, and guide my steps forward so I can be a light that points others to You.</p>
+      </div>
+      
+      <p style="margin-top:28px;font-style:italic;text-align:center;opacity:0.9">✨ <strong>"Be still and know that I am God." — Psalm 46:10</strong></p>
+    </div>
+    <div style="text-align:center">
+      <button class="btn btn-primary" onclick="closeMeaningful()">Amen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- State
+  let currentStep = 0;
+  const totalSteps = 7;
+  const responses = {
+    spiritualState:'', feelsSacred:'', questionsSeeking:'', feelsShaken:'',
+    uniqueGifts:'', divineAssignment:'',
+    nourishing:'', sustainableRhythm:'',
+    unchangingTruths:'', anchorStatement:''
+  };
+
+  // Light / Dark toggle
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const body = document.body;
+    const btn = document.getElementById('themeBtn');
+    if (body.getAttribute('data-theme') === 'dark') {
+      body.removeAttribute('data-theme'); btn.textContent = '🌙';
+    } else {
+      body.setAttribute('data-theme','dark'); btn.textContent = '☀️';
+    }
+  });
+
+  // Step navigation helpers
+  function showStep(i){
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    const stepEl = document.querySelector(`.step[data-step="${i}"]`);
+    if (stepEl) stepEl.classList.add('active');
+
+    document.getElementById('progressFill').style.width = ((i)/ (totalSteps-1)) * 100 + '%';
+    document.querySelectorAll('.step .dots').forEach(group => {
+      [...group.children].forEach((d, idx) => {
+        d.classList.remove('active','done');
+        if (idx < i) d.classList.add('done');
+        if (idx === i) d.classList.add('active');
+      });
+    });
+
+    requestAnimationFrame(()=>{
+      document.getElementById('pageTop').scrollIntoView({behavior:'auto',block:'start'});
+      setTimeout(()=>{
+        if (i===1) document.getElementById('spiritualState')?.focus();
+        if (i===2) document.getElementById('uniqueGifts')?.focus();
+        if (i===3) document.getElementById('nourishing')?.focus();
+        if (i===4) document.getElementById('unchangingTruths')?.focus();
+      },100);
+    });
+
+    if (i===5){ document.getElementById('mainHeader')?.classList.add('completed'); updateSummary(); }
+  }
+
+  function nextStep(){ saveCurrent(); if (currentStep < totalSteps-1){ currentStep++; showStep(currentStep); } }
+  function prevStep(){ if (currentStep>0){ currentStep--; showStep(currentStep);} }
+
+  // Save per-step
+  function saveCurrent(){
+    switch(currentStep){
+      case 1:
+        responses.spiritualState = document.getElementById('spiritualState').value.trim();
+        responses.feelsSacred = document.getElementById('feelsSacred').value.trim();
+        responses.questionsSeeking = document.getElementById('questionsSeeking').value.trim();
+        responses.feelsShaken = document.getElementById('feelsShaken').value.trim();
+        break;
+      case 2:
+        responses.uniqueGifts = document.getElementById('uniqueGifts').value.trim();
+        responses.divineAssignment = document.getElementById('divineAssignment').value.trim();
+        break;
+      case 3:
+        responses.nourishing = document.getElementById('nourishing').value.trim();
+        responses.sustainableRhythm = document.getElementById('sustainableRhythm').value.trim();
+        break;
+      case 4:
+        responses.unchangingTruths = document.getElementById('unchangingTruths').value.trim();
+        responses.anchorStatement = document.getElementById('anchorStatement').value.trim();
+        break;
+    }
+    // Save to localStorage
+    localStorage.setItem('spiritualAnchorResponses', JSON.stringify(responses));
+  }
+
+  // Summary
+  function updateSummary(){
+    const sacredHTML = [
+      '<strong>Current State:</strong> ' + (responses.spiritualState || '—'),
+      '<strong>What Feels Sacred:</strong> ' + (responses.feelsSacred || '—'),
+      '<strong>Questions & Seeking:</strong> ' + (responses.questionsSeeking || '—'),
+      '<strong>What Feels Shaken:</strong> ' + (responses.feelsShaken || '—')
+    ].join('<br>');
+
+    document.getElementById('sumSacred').innerHTML = sacredHTML;
+    document.getElementById('sumPurpose').innerHTML = [
+      '<strong>Unique Gifts:</strong> ' + (responses.uniqueGifts || '—'),
+      '<strong>Divine Assignment:</strong> ' + (responses.divineAssignment || '—')
+    ].join('<br>');
+
+    document.getElementById('sumPractices').innerHTML = [
+      '<strong>What Nourishes:</strong> ' + (responses.nourishing || '—'),
+      '<strong>Sustainable Rhythm:</strong> ' + (responses.sustainableRhythm || '—')
+    ].join('<br>');
+
+    document.getElementById('sumFoundation').innerHTML = [
+      '<strong>Unchanging Truths:</strong> ' + (responses.unchangingTruths || '—'),
+      '<strong>Anchor Statement:</strong> ' + (responses.anchorStatement || '—')
+    ].join('<br>');
+  }
+
+  // Start Over confirm
+  let startOverArmed = false;
+  function confirmStartOver(){
+    const btn = document.getElementById('startOverBtn');
+    if (!startOverArmed){
+      startOverArmed = true;
+      btn.classList.remove('btn-secondary'); btn.classList.add('btn-warning');
+      btn.textContent = 'Confirm Start Over';
+      setTimeout(()=>{ if(startOverArmed){
+        startOverArmed=false; btn.classList.remove('btn-warning'); btn.classList.add('btn-secondary'); btn.textContent='🔄 Start Over';
+      }},3000);
+    } else { restartTool(); }
+  }
+
+  function restartTool(){
+    Object.keys(responses).forEach(k => responses[k] = '');
+    document.querySelectorAll('textarea, input[type="text"]').forEach(t => t.value='');
+    const btn = document.getElementById('startOverBtn');
+    if (btn){ startOverArmed=false; btn.className='btn btn-secondary'; btn.textContent='🔄 Start Over'; }
+    const saveBtn = document.getElementById('saveSacredStep'); if (saveBtn) saveBtn.disabled = true;
+    localStorage.removeItem('spiritualAnchorResponses');
+    currentStep = 0; showStep(currentStep);
+  }
+
+  // Download summary
+  function downloadSummary(){
+    const lines = [
+      'Spiritual Anchor — The Communion Bridge (Session Summary)',
+      'Generated: ' + new Date().toLocaleString(),
+      '',
+      'SACRED SPACE ASSESSMENT:',
+      'Current State: ' + (responses.spiritualState || '—'),
+      'What Feels Sacred: ' + (responses.feelsSacred || '—'),
+      'Questions & Seeking: ' + (responses.questionsSeeking || '—'),
+      'What Feels Shaken: ' + (responses.feelsShaken || '—'),
+      '',
+      'DIVINE PURPOSE REFLECTION:',
+      'Unique Gifts: ' + (responses.uniqueGifts || '—'),
+      'Divine Assignment: ' + (responses.divineAssignment || '—'),
+      '',
+      'SACRED PRACTICES & RHYTHMS:',
+      'What Nourishes: ' + (responses.nourishing || '—'),
+      'Sustainable Rhythm: ' + (responses.sustainableRhythm || '—'),
+      '',
+      'ETERNAL FOUNDATION:',
+      'Unchanging Truths: ' + (responses.unchangingTruths || '—'),
+      'Anchor Statement: ' + (responses.anchorStatement || '—'),
+      '',
+      '— © 2025 Clarity Metabolics | claritymetabolics.com'
+    ].join('\n');
+
+    const blob = new Blob([lines],{type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href=url; a.download='spiritual-anchor-communion-bridge-summary.txt';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  // Meaningful Reflection modal
+  function openMeaningful(){ document.getElementById('meaningfulModal').style.display='flex'; }
+  function closeMeaningful(){ document.getElementById('meaningfulModal').style.display='none'; }
+
+  // Relational Anchor link
+  function goRelationalAnchor(){
+    alert('The Relational Anchor tool will be available soon! This would normally navigate to the next tool in the Five Anchors series.');
+  }
+
+  // Enable/disable Save on STEP 1
+  function checkSacredInputs() {
+    const sacred = document.getElementById('feelsSacred')?.value.trim() || '';
+    const questions = document.getElementById('questionsSeeking')?.value.trim() || '';
+    const shaken = document.getElementById('feelsShaken')?.value.trim() || '';
+    const saveBtn = document.getElementById('saveSacredStep');
+    if (saveBtn) {
+      const hasContent = !!(sacred || questions || shaken);
+      saveBtn.disabled = !hasContent;
+      saveBtn.textContent = hasContent ? 'Your Personal Calling →' : 'Complete Spiritual Check-in to Continue';
+    }
+  }
+
+  // Init
+  function init(){ 
+    // Load saved responses
+    const saved = localStorage.getItem('spiritualAnchorResponses');
+    if (saved) {
+      const savedResponses = JSON.parse(saved);
+      Object.assign(responses, savedResponses);
+      // Populate form fields
+      Object.keys(savedResponses).forEach(key => {
+        const el = document.getElementById(key);
+        if (el && savedResponses[key]) el.value = savedResponses[key];
+      });
+    }
+    
+    showStep(0);
+    setTimeout(() => {
+      ['feelsSacred','questionsSeeking','feelsShaken'].forEach(id=>{
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', checkSacredInputs);
+      });
+      // Check button state on load
+      checkSacredInputs();
+    }, 100);
+  }
+  if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
+</script>
+</body>
+</html>
