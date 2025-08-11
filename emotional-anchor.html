@@ -9,17 +9,34 @@
   Author: Clarity Metabolics
   
   Description:
-  7-step interactive tool to help users regulate emotions,
-  distinguish feelings from reactions, and find grounded responses.
+  8-step interactive tool to help users process intense emotions,
+  distinguish feelings from reactive stories, and choose grounded responses.
+  Features unique Red→Yellow→Green emotional progression and pattern recognition.
   Part of the Five Anchors framework for post-awakening support.
   
   Features:
-  - Progressive 7-step flow
+  - Progressive 8-step flow with universal grounding intro
+  - Red→Yellow→Green emotional deconstruction (Reactive→Recognition→Truth)
+  - Body's early warning system identification
+  - Pattern recognition for emotional triggers
+  - Emotional Anchor Statement creation
   - Light/dark theme toggle
   - Download summary functionality
-  - Sacred reflection modal
+  - Meaningful reflection modal with Trinity prayer
   - Mobile responsive design
-  - Progress tracking
+  - Progress tracking with validation
+  - localStorage session persistence
+  - Auto-focus and smooth scrolling
+  
+  Flow:
+  1. Universal grounding and settling
+  2. From Reaction to Truth (Red→Yellow→Green panels)
+  3. Your Body's Early Warning System
+  4. What Your Core Feeling Is Protecting
+  5. Spot Your Emotional Pattern (triggers and anchor statement)
+  6. Choose Your Response (honor feeling + wise action)
+  7. Summary with highlighted Emotional Anchor Statement
+  8. Next Steps: Spiritual Anchor introduction
   
   Usage:
   Standalone HTML file - no dependencies required
@@ -140,6 +157,7 @@
     border:2px solid var(--border-color);
     border-radius:10px;
     padding:12px;
+    margin-bottom:16px;
   }
   .panel h3{
     font-family:'Libre Baskerville',serif;
@@ -219,6 +237,12 @@
     .nav-row{flex-direction:column}
     .btn{width:100%}
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step { animation: none; }
+    .progress-fill { transition: none; }
+    .btn { transition: none; }
+  }
 </style>
 </head>
 <body>
@@ -227,7 +251,7 @@
 
   <header class="header" id="mainHeader">
     <div class="header-controls">
-      <button class="header-btn" id="themeBtn" title="Toggle theme">🌙</button>
+      <button class="header-btn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">🌙</button>
     </div>
     <h1>Emotional Anchor — The Stability Well</h1>
     <p class="subtitle">🪣 Ground your emotions and respond from inner stability.</p>
@@ -238,125 +262,163 @@
     <!-- STEP 0: Welcome -->
     <section class="step active" data-step="0">
       <div class="step-indicator">
-        <div class="step-counter">Step 1 of 7</div>
-        <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="step-counter">Step 1 of 8</div>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
-      <h2>The Stability Well</h2>
-      <p class="lead">This is your space to process intense emotions, separate feelings from reactions, and choose responses that honor your inner wisdom. Like drawing from a deep well, take a couple of deep, full breaths and allow yourself to settle in. When you're ready, let's begin.</p>
+      <h2>Welcome to Your Emotional Anchor</h2>
+      <p class="lead">Like drawing from a deep well of inner stability, this space helps you process intense emotions with compassion and wisdom, transforming overwhelming feelings into clear, purposeful action. That's what this tool is here to help you with. Take a few deep, full breaths to settle in. When you're ready, let's begin.</p>
       <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin</button></div>
-      <div class="micro">Your feelings are valid. Your responses are your choice.</div>
+      <div class="micro">Take your time. There's no rush here.</div>
       <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
     </section>
 
-    <!-- STEP 1: Name What You're Feeling (stacked G/Y/R) -->
+    <!-- STEP 1: Name What You're Feeling (structured panels) -->
     <section class="step" data-step="1">
       <div class="step-indicator">
-        <div class="step-counter">Step 2 of 7 — Name What You're Feeling</div>
-        <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="step-counter">Step 2 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
-      <h2>Name What You're Feeling</h2>
-      <p class="lead">Distinguishing core emotions from reactive stories helps you respond rather than react.</p>
+      <h2>From Reaction to Truth</h2>
+      <p class="lead">Distinguishing core emotions from reactive stories helps you respond rather than react. Take a moment to scan your emotional landscape right now.</p>
 
       <div class="form-group">
-        <label for="emotionInput"><strong>What's the strongest emotion you're experiencing right now?</strong></label>
-        <textarea id="emotionInput" placeholder="Describe what you're feeling..." rows="3"></textarea>
+        <label for="emotionInput"><strong>What emotion feels strongest for you right now?</strong></label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Describe what you're feeling without judgment</p>
+        <textarea id="emotionInput" placeholder="I'm feeling _____ about _____" rows="3"></textarea>
+      </div>
+
+      <div class="form-group panel" style="background:var(--red-panel)">
+        <h3>Reactive Story — What's your first emotional response?</h3>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">The surface emotion that matches the story you're telling yourself about this situation</p>
+        <textarea id="reactiveStory" placeholder="I'm angry because... I'm frustrated that... I'm disappointed about..." rows="3"></textarea>
+      </div>
+
+      <div class="form-group panel" style="background:var(--yellow-panel)">
+        <h3>Something's Not Quite Right — What feels incomplete about that response?</h3>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Notice where your first response feels too simple or like there's more beneath the surface</p>
+        <textarea id="somethingOff" placeholder="This feels like only part of the story... There's something deeper... I also feel..." rows="3"></textarea>
       </div>
 
       <div class="form-group panel" style="background:var(--green-panel)">
         <h3>Core Feeling — What's the purest emotion underneath?</h3>
-        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Strip away the story and find the simple, honest feeling</p>
-        <textarea id="coreFeeling" placeholder="Sadness, fear, anger, joy, grief, love... what's the raw emotion?" rows="4"></textarea>
-      </div>
-
-      <div class="form-group panel" style="background:var(--yellow-panel)">
-        <h3>Mixed Messages — What's confusing or unclear?</h3>
-        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Notice where you feel pulled in different directions</p>
-        <textarea id="mixedMessages" placeholder="What emotions are competing? What feels contradictory?" rows="4"></textarea>
-      </div>
-
-      <div class="form-group panel" style="background:var(--red-panel)">
-        <h3>Reactive Stories — What drama is your mind adding?</h3>
-        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Identify the interpretations, assumptions, or dramatizations layered on top</p>
-        <textarea id="reactiveStories" placeholder="What stories, blame, or catastrophizing is amplifying this feeling?" rows="4"></textarea>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Strip away the story and find the foundational emotion driving this situation</p>
+        <textarea id="coreFeeling" placeholder="Fear, sadness, grief, shame, loneliness, excitement, love... what's the raw emotion?" rows="3"></textarea>
       </div>
 
       <div class="tip"><strong>Micro-practice:</strong> Consider: anger, fear, sadness, joy, shame, excitement, grief, hope, disgust, love. Place your hand on your heart. Say: "I feel [core emotion] and that's okay."</div>
 
       <div class="nav-row">
-        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" id="saveEmotionStep" onclick="nextStep()" disabled>Save & Continue</button>
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" id="saveEmotionStep" onclick="nextStep()" disabled>Complete Emotional Check-in to Continue</button>
       </div>
       <div class="micro">Naming emotions reduces their intensity.</div>
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
     </section>
 
-    <!-- STEP 2: Where You Feel It -->
+    <!-- STEP 2: Your Body's Early Warning System -->
     <section class="step" data-step="2">
       <div class="step-indicator">
-        <div class="step-counter">Step 3 of 7 — Where You Feel It</div>
-        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="step-counter">Step 3 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
-      <h2>Where You Feel It</h2>
-      <p class="lead">Your body holds emotional wisdom. Listen to what it's telling you.</p>
+      <h2>Your Body's Early Warning System</h2>
+      <p class="lead">Your body often knows you're heading toward reactivity before your mind does. Learning to read these signals helps you catch patterns before they take over.</p>
 
       <div class="form-group">
-        <label for="bodyLocation">Body Location — Where do you feel this emotion physically?</label>
-        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Scan from head to toe. Notice tension, heaviness, warmth, tightness, or lightness</p>
-        <textarea id="bodyLocation" placeholder="Chest tight, stomach churning, shoulders heavy, jaw clenched..."></textarea>
+        <label for="bodySignals">What signals was your body sending before you went into reactive mode?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Think back to the moments before the reaction. What physical sensations were present?</p>
+        <textarea id="bodySignals" placeholder="Chest tightening, shoulders tensing, stomach dropping, jaw clenching, breathing shallow..."></textarea>
       </div>
 
       <div class="form-group">
-        <label for="bodyMessage">Body Message — What is your body asking for?</label>
-        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Listen deeper. What does this physical sensation need?</p>
-        <textarea id="bodyMessage" placeholder="Rest, movement, space, comfort, expression, boundaries..."></textarea>
+        <label for="bodyWarning">What was your body trying to warn you about?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Your body's signals often point to what you need to protect or what feels unsafe</p>
+        <textarea id="bodyWarning" placeholder="Boundary being crossed, feeling unsafe, being overwhelmed, needing space..."></textarea>
       </div>
 
-      <div class="tip"><strong>Micro-practice:</strong> Take 5 deep breaths into wherever you feel the emotion strongest. Send a soft sort of kindness there like when you comfort a friend.</div>
+      <div class="tip"><strong>Micro-practice:</strong> Your body is always sending you information. The key is learning to listen before the reaction takes over.</div>
 
       <div class="nav-row">
-        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">What It's Protecting →</button>
       </div>
-      <div class="micro">Your body never lies.</div>
+      <div class="micro">Your body is your wisest advisor.</div>
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
     </section>
 
     <!-- STEP 3: What It's Protecting -->
     <section class="step" data-step="3">
       <div class="step-indicator">
-        <div class="step-counter">Step 4 of 7 — What It's Protecting</div>
-        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="step-counter">Step 4 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
-      <h2>What It's Protecting</h2>
-      <p class="lead">Every emotion has intelligence. It's trying to protect something you value.</p>
+      <h2>What Your Core Feeling Is Protecting</h2>
+      <p class="lead">Your emotions aren't random - Not only are they signals and clues to point you to truth (if we interpret them wisely) they're protective responses to threats against what you value most. Fear protects safety, anger protects boundaries, sadness protects connection.</p>
+      
+      <div class="form-group">
+        <label for="emotionProtecting">What Value Is The Core Feeling You Identified In Step 2 Protecting? — What does this foundational emotion care about?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Looking at the core feeling you identified, what precious value is it trying to guard?</p>
+        <textarea id="emotionProtecting" placeholder="What important value or need is this core emotion defending?"></textarea>
+      </div>
 
       <div class="form-group">
-        <label for="emotionProtecting">What Value is Being Protected — What does this emotion care about?</label>
-        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Every emotion guards something precious - safety, connection, justice, truth, love</p>
-        <textarea id="emotionProtecting" placeholder="What important value or need is this emotion defending?"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="emotionWisdom">Emotional Wisdom — What truth is this feeling revealing?</label>
-        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Honor the messenger, even if you don't follow its suggestions</p>
-        <textarea id="emotionWisdom" placeholder="What is this emotion trying to tell you about your situation or needs?"></textarea>
+        <label for="emotionWisdom">What Truth is Your Core Feeling Revealing — What is this foundational emotion trying to tell you?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Honor the messenger of your core feeling, even if you don't follow all its suggestions</p>
+        <textarea id="emotionWisdom" placeholder="What is this core emotion trying to tell you about your situation or needs?"></textarea>
       </div>
 
       <div class="tip"><strong>Micro-practice:</strong> Even difficult emotions guard what you value most. Can you feel grateful that something in you cares so deeply about protecting what matters?</div>
 
       <div class="nav-row">
-        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" onclick="nextStep()">Choose Response</button>
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Spot the Pattern →</button>
       </div>
       <div class="micro">Emotions are allies, not enemies.</div>
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
     </section>
 
-    <!-- STEP 4: Choose Your Response -->
+    <!-- STEP 4: NEW - Spot the Pattern (like Mental/Physical Anchors) -->
     <section class="step" data-step="4">
       <div class="step-indicator">
-        <div class="step-counter">Step 5 of 7 — Choose Your Response</div>
-        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="step-counter">Step 5 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>Spot Your Emotional Pattern</h2>
+      <p class="lead">Your emotions often follow familiar patterns. Recognizing these patterns helps you respond with more wisdom and compassion, breaking cycles that keep you stuck or just aren't helping you anymore.</p>
+
+      <div class="form-group">
+        <label for="emotionalPattern">Beyond the situation from Step 2, when else have you felt this core feeling?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Consider similar relationships, conflicts, or life circumstances where this pattern shows up</p>
+        <textarea id="emotionalPattern" placeholder="Times of conflict, stress, rejection, disappointment, similar triggers..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="emotionalTriggers">In hindsight, can you see the early emotional warning signs you had before these situations developed?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">The first signals that tell you an emotional storm might be brewing</p>
+        <textarea id="emotionalTriggers" placeholder="Irritability, withdrawal, overthinking, physical tension, sensitivity..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="emotionalAnchorStatement">Your Emotional Anchor Statement — What truth about your emotions will you remember?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">A simple truth about honoring your emotions that you can return to when overwhelmed</p>
+        <textarea id="emotionalAnchorStatement" placeholder="Even when emotions feel overwhelming, I can..."></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Read your emotional anchor statement once aloud, slowly. Let this truth settle into your heart.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Choose Response →</button>
+      </div>
+      <div class="micro">Patterns once seen can be gently changed.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 5: Choose Your Response -->
+    <section class="step" data-step="5">
+      <div class="step-indicator">
+        <div class="step-counter">Step 6 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
       <h2>Choose Your Response</h2>
       <p class="lead">You can honor your feelings while choosing wise actions.</p>
@@ -376,66 +438,76 @@
       <div class="tip"><strong>Micro-practice:</strong> Ask: "How can I honor what this emotion is protecting while choosing my wisest response?"</div>
 
       <div class="nav-row">
-        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Your Summary →</button>
       </div>
       <div class="micro">Wise responses create lasting peace.</div>
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
     </section>
 
-    <!-- STEP 5: Recap + Sacred Reflection -->
-    <section class="step" data-step="5">
+    <!-- STEP 6: Summary -->
+    <section class="step" data-step="6">
       <div class="step-indicator">
-        <div class="step-counter">Step 6 of 7 — Summary</div>
-        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+        <div class="step-counter">Step 7 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
       </div>
       <h2>Your Stability Well Summary</h2>
-      <p>You named your emotions, honored your body's wisdom, discovered what you're protecting, and chose a grounded response. You've transformed emotional overwhelm into stable, wise action.</p>
+      <p>You named your emotions, honored your body's wisdom, discovered what you're protecting, recognized your patterns, and chose a grounded response. You've transformed emotional overwhelm into stable, wise action.</p>
 
       <div style="background:var(--accent-color);padding:16px;border-radius:10px;margin:12px 0">
-        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color)">Name What You're Feeling</h3>
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color)">From Reaction to Truth</h3>
         <p id="sumEmotions">—</p>
 
-        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Where You Feel It</h3>
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Your Body's Early Warning System</h3>
         <p id="sumBody">—</p>
 
-        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">What It's Protecting</h3>
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">What Your Core Feeling Is Protecting</h3>
         <p id="sumProtecting">—</p>
+
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Spot Your Emotional Pattern</h3>
+        <p id="sumPatterns">—</p>
 
         <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Choose Your Response</h3>
         <p id="sumResponse">—</p>
       </div>
 
+      <!-- Emotional Anchor Statement Highlight -->
+      <div style="background:linear-gradient(135deg,var(--main-color),var(--contrast-color));color:#fff;padding:20px;border-radius:12px;margin:20px 0;text-align:center;box-shadow:var(--shadow)">
+        <h3 style="font-family:'Libre Baskerville',serif;font-size:1.2rem;margin-bottom:12px;opacity:0.9">Your Emotional Anchor Statement</h3>
+        <p id="emotionalAnchorHighlight" style="font-family:'Libre Baskerville',serif;font-size:1.1rem;font-style:italic;line-height:1.6">—</p>
+        <p style="font-size:0.85rem;margin-top:10px;opacity:0.8">Your truth to return to when emotions feel overwhelming</p>
+      </div>
+
       <div class="final-actions">
         <button class="btn btn-primary" onclick="downloadSummary()">📄 Download Summary</button>
-        <button class="btn btn-secondary" onclick="openSacred()">✨ Sacred Reflection</button>
+        <button class="btn btn-secondary" onclick="openMeaningfulReflection()">✨ Meaningful Reflection</button>
       </div>
 
       <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;">
-        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">Back</button>
-        <button class="btn btn-primary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="nextStep()">Next Steps</button>
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="nextStep()">Next Steps →</button>
       </div>
 
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
     </section>
 
-    <!-- STEP 6: Physical Anchor lead-in -->
-    <section class="step" data-step="6">
+    <!-- STEP 7: Next Steps - Spiritual Anchor lead-in -->
+    <section class="step" data-step="7">
       <div class="step-indicator">
-        <div class="step-counter">Step 7 of 7 — Next Step</div>
-        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
+        <div class="step-counter">Step 8 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
       </div>
       <h2>Your Next Anchor: Spiritual</h2>
-      <p class="lead">Now that your emotions are stable, let's create sacred space for Divine communion.</p>
+      <p class="lead">Now that your emotions are stable and you're responding from wisdom rather than reactivity, let's strengthen your connection to what's eternal and unchanging.</p>
 
       <div class="next-phase" aria-label="Move to Spiritual Anchor">
-        <div class="lead"><strong>Connect with the Trinity from a place of inner peace and emotional groundedness.</strong></div>
+        <div class="lead"><strong>Carry your emotional stability into sacred connection.</strong></div>
         <button class="btn-next" onclick="goToSpiritualAnchor()">→ Begin the Spiritual Anchor</button>
         <div class="sub">Connect with the Trinity from a place of inner peace and emotional groundedness.</div>
       </div>
 
       <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:22px 0; width:100%;">
-        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">Back</button>
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">← Back</button>
         <button class="btn btn-secondary" id="startOverBtn" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="confirmStartOver()">🔄 Start Over</button>
       </div>
 
@@ -444,23 +516,34 @@
         <div style="font-style:italic;margin-top:4px">Quiet the world. Reconnect with what's real.</div>
         <div><a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
       </div>
-
-      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
     </section>
   </main>
 </div>
 
-<!-- Sacred Reflection Modal (Trinity) -->
-<div id="sacredModal" style="position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000">
-  <div style="background:var(--bg-color);color:var(--text-color);max-width:560px;width:100%;border-radius:12px;box-shadow:var(--shadow);padding:22px">
-    <h3 style="font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:8px">Sacred Reflection</h3>
+<!-- Meaningful Reflection Modal -->
+  <div id="meaningfulModal" style="position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000">
+  <div style="background:var(--bg-color);color:var(--text-color);max-width:560px;width:100%;max-height:90vh;border-radius:12px;box-shadow:var(--shadow);padding:22px;overflow-y:auto">
+    <h3 style="font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:8px">Meaningful Reflection</h3>
     <div class="scripture" style="margin:10px 0 16px 0">
-      <p><strong>Father:</strong> Help me feel my emotions without being overwhelmed by them.</p>
-      <p><strong>Son:</strong> Thank You for showing me how to respond with both compassion and wisdom.</p>
-      <p><strong>Holy Spirit:</strong> Guide my heart to peace and my actions to love.</p>
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">FATHER</p>
+        <p style="margin-left:16px;line-height:1.7">Help me feel my emotions without being overwhelmed by them. Grant me wisdom to honor what they protect while choosing responses that align with Your heart.</p>
+      </div>
+      
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">SON</p>
+        <p style="margin-left:16px;line-height:1.7">Jesus, You felt the full range of human emotion - joy, sorrow, anger, compassion. Teach me to follow Your example of feeling deeply while responding wisely.</p>
+      </div>
+      
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">HOLY SPIRIT</p>
+        <p style="margin-left:16px;line-height:1.7">Spirit, guide my heart to peace and my actions to love. Help me discern between emotions that serve and reactions that harm.</p>
+      </div>
+      
+      <p style="margin-top:28px;font-style:italic;text-align:center;opacity:0.9">✨ <strong>"Be angry and do not sin; do not let the sun go down on your anger." — Ephesians 4:26</strong></p>
     </div>
     <div style="text-align:center">
-      <button class="btn btn-primary" onclick="closeSacred()">Amen</button>
+      <button class="btn btn-primary" onclick="closeMeaningfulReflection()">Amen</button>
     </div>
   </div>
 </div>
@@ -468,11 +551,12 @@
 <script>
   // --- State
   let currentStep = 0;
-  const totalSteps = 7;
+  const totalSteps = 8;
   const responses = {
-    emotionInput:'', coreFeeling:'', mixedMessages:'', reactiveStories:'',
-    bodyLocation:'', bodyMessage:'',
+    emotionInput:'', reactiveStory:'', somethingOff:'', coreFeeling:'',
+    bodySignals:'', bodyWarning:'',
     emotionProtecting:'', emotionWisdom:'',
+    emotionalPattern:'', emotionalTriggers:'', emotionalAnchorStatement:'',
     honorFeeling:'', wiseAction:''
   };
 
@@ -503,16 +587,17 @@
     });
 
     requestAnimationFrame(()=>{
-      document.getElementById('pageTop').scrollIntoView({behavior:'auto',block:'start'});
+      document.getElementById('pageTop').scrollIntoView({behavior:'smooth',block:'start'});
       setTimeout(()=>{
         if (i===1) document.getElementById('emotionInput')?.focus();
-        if (i===2) document.getElementById('bodyLocation')?.focus();
+        if (i===2) document.getElementById('bodySignals')?.focus();
         if (i===3) document.getElementById('emotionProtecting')?.focus();
-        if (i===4) document.getElementById('honorFeeling')?.focus();
-      },100);
+        if (i===4) document.getElementById('emotionalPattern')?.focus();
+        if (i===5) document.getElementById('honorFeeling')?.focus();
+      },150);
     });
 
-    if (i===5){ document.getElementById('mainHeader')?.classList.add('completed'); updateSummary(); }
+    if (i===6){ document.getElementById('mainHeader')?.classList.add('completed'); updateSummary(); }
   }
 
   function nextStep(){ saveCurrent(); if (currentStep < totalSteps-1){ currentStep++; showStep(currentStep); } }
@@ -523,22 +608,33 @@
     switch(currentStep){
       case 1:
         responses.emotionInput = document.getElementById('emotionInput').value.trim();
+        responses.reactiveStory = document.getElementById('reactiveStory').value.trim();
+        responses.somethingOff = document.getElementById('somethingOff').value.trim();
         responses.coreFeeling = document.getElementById('coreFeeling').value.trim();
-        responses.mixedMessages = document.getElementById('mixedMessages').value.trim();
-        responses.reactiveStories = document.getElementById('reactiveStories').value.trim();
         break;
       case 2:
-        responses.bodyLocation = document.getElementById('bodyLocation').value.trim();
-        responses.bodyMessage = document.getElementById('bodyMessage').value.trim();
+        responses.bodySignals = document.getElementById('bodySignals').value.trim();
+        responses.bodyWarning = document.getElementById('bodyWarning').value.trim();
         break;
       case 3:
         responses.emotionProtecting = document.getElementById('emotionProtecting').value.trim();
         responses.emotionWisdom = document.getElementById('emotionWisdom').value.trim();
         break;
       case 4:
+        responses.emotionalPattern = document.getElementById('emotionalPattern').value.trim();
+        responses.emotionalTriggers = document.getElementById('emotionalTriggers').value.trim();
+        responses.emotionalAnchorStatement = document.getElementById('emotionalAnchorStatement').value.trim();
+        break;
+      case 5:
         responses.honorFeeling = document.getElementById('honorFeeling').value.trim();
         responses.wiseAction = document.getElementById('wiseAction').value.trim();
         break;
+    }
+    // Save to localStorage
+    try {
+      localStorage.setItem('emotionalAnchorResponses', JSON.stringify(responses));
+    } catch (e) {
+      console.warn('Could not save to localStorage:', e);
     }
   }
 
@@ -546,15 +642,20 @@
   function updateSummary(){
     const emotionsHTML = [
       '<strong>Original Emotion:</strong> ' + (responses.emotionInput || '—'),
-      '<strong>Core Feeling:</strong> ' + (responses.coreFeeling || '—'),
-      '<strong>Mixed Messages:</strong> ' + (responses.mixedMessages || '—'),
-      '<strong>Reactive Stories:</strong> ' + (responses.reactiveStories || '—')
+      '<strong>Reactive Story:</strong> ' + (responses.reactiveStory || '—'),
+      '<strong>Something\'s Not Quite Right:</strong> ' + (responses.somethingOff || '—'),
+      '<strong>Core Feeling:</strong> ' + (responses.coreFeeling || '—')
     ].join('<br>');
+
+    const patterns = [
+      responses.emotionalPattern ? 'When felt before: ' + responses.emotionalPattern : '',
+      responses.emotionalTriggers ? 'Early warning signs: ' + responses.emotionalTriggers : ''
+    ].filter(Boolean).join(' | ') || 'No patterns noted.';
 
     document.getElementById('sumEmotions').innerHTML = emotionsHTML;
     document.getElementById('sumBody').innerHTML = [
-      '<strong>Body Location:</strong> ' + (responses.bodyLocation || '—'),
-      '<strong>Body Message:</strong> ' + (responses.bodyMessage || '—')
+      '<strong>Body Signals:</strong> ' + (responses.bodySignals || '—'),
+      '<strong>Body Warning:</strong> ' + (responses.bodyWarning || '—')
     ].join('<br>');
 
     document.getElementById('sumProtecting').innerHTML = [
@@ -562,10 +663,15 @@
       '<strong>Emotional Wisdom:</strong> ' + (responses.emotionWisdom || '—')
     ].join('<br>');
 
+    document.getElementById('sumPatterns').textContent = patterns;
+
     document.getElementById('sumResponse').innerHTML = [
       '<strong>Honor the Feeling:</strong> ' + (responses.honorFeeling || '—'),
       '<strong>Wise Action:</strong> ' + (responses.wiseAction || '—')
     ].join('<br>');
+    
+    // Update highlighted emotional anchor statement
+    document.getElementById('emotionalAnchorHighlight').textContent = responses.emotionalAnchorStatement || 'Your emotional anchor statement will appear here';
   }
 
   // Start Over confirm
@@ -588,6 +694,11 @@
     const btn = document.getElementById('startOverBtn');
     if (btn){ startOverArmed=false; btn.className='btn btn-secondary'; btn.textContent='🔄 Start Over'; }
     const saveBtn = document.getElementById('saveEmotionStep'); if (saveBtn) saveBtn.disabled = true;
+    try {
+      localStorage.removeItem('emotionalAnchorResponses');
+    } catch (e) {
+      console.warn('Could not clear localStorage:', e);
+    }
     currentStep = 0; showStep(currentStep);
   }
 
@@ -597,19 +708,26 @@
       'Emotional Anchor — The Stability Well (Session Summary)',
       'Generated: ' + new Date().toLocaleString(),
       '',
-      'NAME WHAT YOU\'RE FEELING:',
+      'EMOTIONAL ANCHOR STATEMENT:',
+      responses.emotionalAnchorStatement || 'None noted',
+      '',
+      'FROM REACTION TO TRUTH:',
       'Original Emotion: ' + (responses.emotionInput || '—'),
+      'Reactive Story: ' + (responses.reactiveStory || '—'),
+      'Something\'s Not Quite Right: ' + (responses.somethingOff || '—'),
       'Core Feeling: ' + (responses.coreFeeling || '—'),
-      'Mixed Messages: ' + (responses.mixedMessages || '—'),
-      'Reactive Stories: ' + (responses.reactiveStories || '—'),
       '',
-      'WHERE YOU FEEL IT:',
-      'Body Location: ' + (responses.bodyLocation || '—'),
-      'Body Message: ' + (responses.bodyMessage || '—'),
+      'YOUR BODY\'S EARLY WARNING SYSTEM:',
+      'Body Signals: ' + (responses.bodySignals || '—'),
+      'Body Warning: ' + (responses.bodyWarning || '—'),
       '',
-      'WHAT IT\'S PROTECTING:',
+      'WHAT YOUR CORE FEELING IS PROTECTING:',
       'Value Being Protected: ' + (responses.emotionProtecting || '—'),
       'Emotional Wisdom: ' + (responses.emotionWisdom || '—'),
+      '',
+      'SPOT YOUR EMOTIONAL PATTERN:',
+      'When felt before: ' + (responses.emotionalPattern || '—'),
+      'Early warning signs: ' + (responses.emotionalTriggers || '—'),
       '',
       'CHOOSE YOUR RESPONSE:',
       'Honor the Feeling: ' + (responses.honorFeeling || '—'),
@@ -626,9 +744,9 @@
     document.body.removeChild(a); URL.revokeObjectURL(url);
   }
 
-  // Sacred Reflection modal
-  function openSacred(){ document.getElementById('sacredModal').style.display='flex'; }
-  function closeSacred(){ document.getElementById('sacredModal').style.display='none'; }
+  // Meaningful Reflection modal
+  function openMeaningfulReflection(){ document.getElementById('meaningfulModal').style.display='flex'; }
+  function closeMeaningfulReflection(){ document.getElementById('meaningfulModal').style.display='none'; }
 
   // Spiritual Anchor link (update route when ready)
   function goToSpiritualAnchor(){
@@ -637,21 +755,43 @@
 
   // Enable/disable Save on STEP 1
   function checkEmotionInputs() {
+    const reactive = document.getElementById('reactiveStory')?.value.trim() || '';
+    const off = document.getElementById('somethingOff')?.value.trim() || '';
     const core = document.getElementById('coreFeeling')?.value.trim() || '';
-    const mixed = document.getElementById('mixedMessages')?.value.trim() || '';
-    const reactive = document.getElementById('reactiveStories')?.value.trim() || '';
     const saveBtn = document.getElementById('saveEmotionStep');
-    if (saveBtn) saveBtn.disabled = !(core || mixed || reactive);
+    if (saveBtn) {
+      const hasContent = !!(reactive || off || core);
+      saveBtn.disabled = !hasContent;
+      saveBtn.textContent = hasContent ? 'Where You Feel It →' : 'Complete Emotional Check-in to Continue';
+    }
   }
 
   // Init
   function init(){ 
+    // Load saved responses
+    try {
+      const saved = localStorage.getItem('emotionalAnchorResponses');
+      if (saved) {
+        const savedResponses = JSON.parse(saved);
+        Object.assign(responses, savedResponses);
+        // Populate form fields
+        Object.keys(savedResponses).forEach(key => {
+          const el = document.getElementById(key);
+          if (el && savedResponses[key]) el.value = savedResponses[key];
+        });
+      }
+    } catch (e) {
+      console.warn('Could not load from localStorage:', e);
+    }
+    
     showStep(0);
     setTimeout(() => {
-      ['coreFeeling','mixedMessages','reactiveStories'].forEach(id=>{
+      ['reactiveStory','somethingOff','coreFeeling'].forEach(id=>{
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', checkEmotionInputs);
       });
+      // Check button state on load to handle restored content
+      checkEmotionInputs();
     }, 100);
   }
   if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
