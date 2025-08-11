@@ -1,6 +1,6 @@
 <!--
   ============================================================
-  Clarity Metabolics - Emotional Anchor: The Stability Lens
+  Clarity Metabolics - Emotional Anchor: The Stability Well
   Interactive Web Tool for Post-Awakening Emotional Stability
   ============================================================
   
@@ -34,7 +34,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Emotional Anchor — The Stability Lens</title>
+<title>Emotional Anchor — The Stability Well</title>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -229,8 +229,8 @@
     <div class="header-controls">
       <button class="header-btn" id="themeBtn" title="Toggle theme">🌙</button>
     </div>
-    <h1>Emotional Anchor — The Stability Lens</h1>
-    <p class="subtitle">🤍 Ground your emotions and respond from inner stability.</p>
+    <h1>Emotional Anchor — The Stability Well</h1>
+    <p class="subtitle">🪣 Ground your emotions and respond from inner stability.</p>
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   </header>
 
@@ -241,8 +241,8 @@
         <div class="step-counter">Step 1 of 7</div>
         <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
-      <h2>The Stability Lens</h2>
-      <p class="lead">This is your space to process intense emotions, separate feelings from reactions, and choose responses that honor your inner wisdom. Take a couple of deep, full breaths and allow yourself to settle in. When you're ready, let's begin.</p>
+      <h2>The Stability Well</h2>
+      <p class="lead">This is your space to process intense emotions, separate feelings from reactions, and choose responses that honor your inner wisdom. Like drawing from a deep well, take a couple of deep, full breaths and allow yourself to settle in. When you're ready, let's begin.</p>
       <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin</button></div>
       <div class="micro">Your feelings are valid. Your responses are your choice.</div>
       <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
@@ -389,7 +389,7 @@
         <div class="step-counter">Step 6 of 7 — Summary</div>
         <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
       </div>
-      <h2>Your Stability Lens Summary</h2>
+      <h2>Your Stability Well Summary</h2>
       <p>You named your emotions, honored your body's wisdom, discovered what you're protecting, and chose a grounded response. You've transformed emotional overwhelm into stable, wise action.</p>
 
       <div style="background:var(--accent-color);padding:16px;border-radius:10px;margin:12px 0">
@@ -594,7 +594,7 @@
   // Download summary
   function downloadSummary(){
     const lines = [
-      'Emotional Anchor — The Stability Lens (Session Summary)',
+      'Emotional Anchor — The Stability Well (Session Summary)',
       'Generated: ' + new Date().toLocaleString(),
       '',
       'NAME WHAT YOU\'RE FEELING:',
@@ -621,7 +621,7 @@
     const blob = new Blob([lines],{type:'text/plain'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href=url; a.download='emotional-anchor-stability-lens-summary.txt';
+    a.href=url; a.download='emotional-anchor-stability-well-summary.txt';
     document.body.appendChild(a); a.click();
     document.body.removeChild(a); URL.revokeObjectURL(url);
   }
