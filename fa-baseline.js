@@ -1,145 +1,197 @@
-// Baseline v1 (external) — calendar + notes only
+// fa-baseline.js — Baseline v1 with stronger colors + note badge + click-to-detail
+console.log('Baseline v1 external loaded');
 
 let state = {
   viewYear: new Date().getFullYear(),
   viewMonth: new Date().getMonth(),
-  selected: null, // 'YYYY-MM-DD'
-  daily: {}       // 'YYYY-MM-DD': { ratings:{physical,mental,emotional,spiritual,relational}, notes:'' }
+  selected: null,              // 'YYYY-MM-DD'
+  daily: {}                    // { 'YYYY-MM-DD': { ratings:{physical,mental,emotional,spiritual,relational}, notes:'' } }
 };
 
-function save(){ localStorage.setItem('cm_dashboard_state', JSON.stringify(state)); }
-function load(){ try{ const s=localStorage.getItem('cm_dashboard_state'); if(s){ const o=JSON.parse(s); state={...state,...o}; } }catch(e){} }
+function save(){ try{ localStorage.setItem('cm_dashboard_state', JSON.stringify(state)); }catch(e){} }
+function load(){ try{ const s=localStorage.getItem('cm_dashboard_state'); if(s) state={...state, ...JSON.parse(s)}; }catch(e){} }
 
-function fmt(d){ const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
-function parseDate(str){ const [y,m,d]=str.split('-').map(n=>parseInt(n,10)); return new Date(y,m-1,d); }
+function fmt(d){ const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
+function parseDate(str){ const [y,m,d]=str.split('-').map(n=>parseInt(n,10)); return new Date(y, m-1, d); }
 
 function monthDays(y,m){
-  const start=new Date(y,m,1), end=new Date(y,m+1,0);
-  const first=start.getDay(), total=end.getDate();
-  const out=[];
-  for(let i=0;i<first;i++){ const d=new Date(y,m,-(first-1-i)); out.push({date:fmt(d), other:true}); }
-  for(let i=1;i<=total;i++){ const d=new Date(y,m,i); out.push({date:fmt(d), other:false}); }
-  while(out.length%7!==0){ const d=new Date(y,m,total+(out.length%7)); out.push({date:fmt(d), other:true}); }
+  const first = new Date(y,m,1), last = new Date(y,m+1,0);
+  const out = [];
+  const lead = first.getDay();
+  for(let i=0;i<lead;i++) out.push({date:fmt(new Date(y,m, i - lead + 1)), other:true});
+  for(let d=1; d<=last.getDate(); d++) out.push({date:fmt(new Date(y,m,d)), other:false});
+  const trail = (7 - (out.length % 7)) % 7;
+  for(let i=1;i<=trail;i++) out.push({date:fmt(new Date(y,m,last.getDate()+i)), other:true});
   return out;
 }
 
-function blendBg(r){
-  const palette={physical:[124,139,96],mental:[95,115,155],emotional:[180,97,108],spiritual:[140,120,168],relational:[153,142,123]};
+// Base colors for each anchor (the same palette you saw)
+const palette = {
+  physical:   [124,139, 96],
+  mental:     [ 95,115,155],
+  emotional:  [180, 97,108],
+  spiritual:  [140,120,168],
+  relational: [153,142,123]
+};
+
+// Blend all anchors present that day into one gradient, with stronger intensity
+function blendBg(ratings){
   let R=0,G=0,B=0,W=0;
-  for(const k in palette){ const v=r && r[k] ? r[k]/5 : 0; R+=palette[k][0]*v; G+=palette[k][1]*v; B+=palette[k][2]*v; W+=v; }
-  if(W>0){ R/=W; G/=W; B/=W; } else { R=124; G=139; B=96; }
-  const a=x=>Math.round(x);
-  return `linear-gradient(135deg, rgba(${a(R)},${a(G)},${a(B)}, .22), rgba(${a(R)},${a(G)},${a(B)}, .38))`;
+  for(const k in palette){
+    const v = ratings && ratings[k] ? ratings[k]/5 : 0; // 0..1
+    R += palette[k][0]*v; G += palette[k][1]*v; B += palette[k][2]*v; W += v;
+  }
+  if(W>0){ R=Math.round(R/W); G=Math.round(G/W); B=Math.round(B/W); }
+  else { R=124; G=139; B=96; } // neutral fallback
+
+  // bolder gradient than before
+  return `linear-gradient(135deg, rgba(${R},${G},${B}, .35), rgba(${R},${G},${B}, .65))`;
+}
+
+function showDetail(dateStr, data){
+  state.selected = dateStr;
+  const d = parseDate(dateStr);
+  const elDate = document.getElementById('detailDate');
+  if(elDate){
+    elDate.textContent = d.toLocaleDateString(undefined, {weekday:'long', month:'long', day:'numeric', year:'numeric'});
+  }
+
+  const fields = ['physical','mental','emotional','spiritual','relational'];
+  const ratings = (data && data.ratings) ? data.ratings : {};
+  const hasRatings = fields.some(f => (ratings?.[f]||0) > 0);
+
+  const noRatings = document.getElementById('noRatings');
+  if(noRatings) noRatings.style.display = hasRatings ? 'none' : 'block';
+
+  fields.forEach(f=>{
+    const slot = document.getElementById(`d-${f}`);
+    if(slot) slot.textContent = ratings?.[f] || '—';
+  });
+
+  const note = document.getElementById('note');
+  if(note) note.value = (data && data.notes) ? data.notes : '';
+
+  // Save notes for this date (and keep the view in sync)
+  const btn = document.getElementById('saveNote');
+  if(btn){
+    btn.replaceWith(btn.cloneNode(true)); // remove previous listeners
+  }
+  document.getElementById('saveNote')?.addEventListener('click', ()=>{
+    state.daily[dateStr] = state.daily[dateStr] || {ratings:{physical:0,mental:0,emotional:0,spiritual:0,relational:0}, notes:''};
+    if(note) state.daily[dateStr].notes = note.value || '';
+    save();
+    render();
+    showDetail(dateStr, state.daily[dateStr]); // keep the same day visible
+    alert('Day updated.');
+  }, {once:true});
+
+  document.getElementById('detail')?.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function makeDay(dateStr, other){
-  const data = state.daily[dateStr] || null;
   const d = parseDate(dateStr);
+  const data = state.daily[dateStr] || null;
   const el = document.createElement('div');
-  el.className='day'+(other?' other':'');
-  if(dateStr===fmt(new Date())) el.classList.add('today');
+  el.className = 'day' + (other ? ' other' : '');
 
-  const hasRatings = !!(data && data.ratings);
+  if(fmt(new Date()) === dateStr) el.classList.add('today');
+  if(state.selected === dateStr) el.classList.add('selected');
+
+  const ratings = data?.ratings || null;
+  const hasRatings = !!(ratings && ['physical','mental','emotional','spiritual','relational'].some(k=>ratings[k]>0));
   if(hasRatings){
-    const avg = Object.values(data.ratings).reduce((a,b)=>a+b,0)/5;
-    el.style.background = blendBg(data.ratings);
-    el.style.opacity = Math.max(.6, .55 + (avg/5)*.45);
+    el.style.background = blendBg(ratings);
+    const total = Object.values(ratings).reduce((a,b)=>a+(b||0),0); // 0..25
+    el.style.opacity = Math.max(.6, .55 + (total/25)*.45);
+  }else{
+    el.style.background = '';
+    el.style.opacity = '';
   }
 
-  el.innerHTML = `<div class="num">${d.getDate()}</div>${hasRatings?'<div class="badge">📊</div>':''}`;
-  el.addEventListener('click', ()=> {
-    document.querySelectorAll('.day.selected').forEach(x=>x.classList.remove('selected'));
+  const noteMark = (data && data.notes && data.notes.trim()) ? '📝' : '';
+  const ratingMark = hasRatings ? '📊' : '';
+
+  el.innerHTML = `<div class="num">${d.getDate()}</div>${
+    (noteMark||ratingMark) ? `<div class="badge">${noteMark}${ratingMark}</div>` : ''
+  }`;
+
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('.day.selected').forEach(n=>n.classList.remove('selected'));
     el.classList.add('selected');
     showDetail(dateStr, data);
   });
+
   return el;
 }
 
-function render(){
-  const y=state.viewYear, m=state.viewMonth;
-  document.getElementById('monthLabel').textContent =
-    new Date(y,m,1).toLocaleDateString(undefined,{month:'long',year:'numeric'});
-  const grid=document.getElementById('grid'); grid.innerHTML='';
-  monthDays(y,m).forEach(x=> grid.appendChild(makeDay(x.date, x.other)));
-}
-
 function updateStats(){
-  const y=state.viewYear, m=state.viewMonth;
-  const first=new Date(y,m,1), last=new Date(y,m+1,0);
-  const list=[];
-  for(let d=new Date(first); d<=last; d.setDate(d.getDate()+1)){
-    const key=fmt(d); list.push({date:key, ...state.daily[key]});
+  const start = new Date(state.viewYear, state.viewMonth, 1);
+  const end   = new Date(state.viewYear, state.viewMonth+1, 0);
+  const inMonth = d => d >= start && d <= end;
+
+  const fields = ['physical','mental','emotional','spiritual','relational'];
+  const sums   = {physical:0,mental:0,emotional:0,spiritual:0,relational:0};
+  const counts = {physical:0,mental:0,emotional:0,spiritual:0,relational:0};
+
+  let bestDay=null, bestTotal=-1;
+
+  Object.entries(state.daily).forEach(([k,day])=>{
+    const d = parseDate(k); if(!inMonth(d) || !day?.ratings) return;
+    let total=0;
+    fields.forEach(f=>{
+      const v = Number(day.ratings[f]||0);
+      if(v>0){ sums[f]+=v; counts[f]++; total+=v; }
+    });
+    if(total>bestTotal){ bestTotal=total; bestDay=d; }
+  });
+
+  const setVal=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = isFinite(val)? val.toFixed(1) : '—'; };
+  setVal('avg-physical',  counts.physical?  sums.physical /counts.physical : NaN);
+  setVal('avg-mental',    counts.mental?    sums.mental   /counts.mental   : NaN);
+  setVal('avg-emotional', counts.emotional? sums.emotional/counts.emotional: NaN);
+  setVal('avg-spiritual', counts.spiritual? sums.spiritual/counts.spiritual: NaN);
+  setVal('avg-relational',counts.relational?sums.relational/counts.relational:NaN);
+
+  const bestEl = document.getElementById('best-day');
+  if(bestEl) bestEl.textContent = bestDay
+    ? bestDay.toLocaleDateString(undefined,{month:'short', day:'numeric'})
+    : '—';
+}
+
+function render(){
+  // Month title
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const title = document.querySelector('#calendar h2, #calendar .monthTitle, #monthTitle');
+  if(title) title.textContent = `${months[state.viewMonth]} ${state.viewYear}`;
+
+  // Grid
+  const grid = document.querySelector('#calendar .grid, #calendar .days');
+  if(grid){
+    grid.innerHTML = '';
+    monthDays(state.viewYear, state.viewMonth).forEach(({date,other})=>{
+      grid.appendChild(makeDay(date, other));
+    });
   }
-  const keys=['physical','mental','emotional','spiritual','relational'];
-  const acc={physical:0,mental:0,emotional:0,spiritual:0,relational:0,count:0};
-  list.forEach(day=>{ if(day && day.ratings){ keys.forEach(k=> acc[k]+=day.ratings[k]||0); acc.count++; }});
-  keys.forEach(k=>{ const el=document.getElementById('avg-'+k); if(!el) return; el.textContent = acc.count ? (acc[k]/acc.count).toFixed(1) : '—'; });
-
-  let best=-Infinity, days=[];
-  list.forEach(d=>{ if(d && d.ratings){ const tot=Object.values(d.ratings).reduce((a,b)=>a+b,0);
-    if(tot>best){best=tot;days=[d];} else if(tot===best){days.push(d);} }});
-  const bestEl=document.getElementById('best-day');
-  if(bestEl){
-    if(!days.length){ bestEl.textContent='—'; }
-    else{
-      const labels=days.map(d=> new Date(d.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}));
-      bestEl.textContent = labels.length<=2 ? labels.join(' & ') : labels.slice(0,2).join(' & ') + ` (+${labels.length-2})`;
-    }
-  }
+  updateStats();
 }
 
-function showDetail(key, data){
-  state.selected = key; save();
-  const d=parseDate(key);
-  document.getElementById('detailDate').textContent =
-    d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-
-  const r = data && data.ratings ? data.ratings : null;
-  const val = (k)=> r ? (r[k] ?? '—') : '—';
-  document.getElementById('d-physical').textContent  = val('physical');
-  document.getElementById('d-mental').textContent    = val('mental');
-  document.getElementById('d-emotional').textContent = val('emotional');
-  document.getElementById('d-spiritual').textContent = val('spiritual');
-  document.getElementById('d-relational').textContent= val('relational');
-
-  const notes = document.getElementById('note');
-  notes.value = (data && data.notes) ? data.notes : '';
-
-  const hint = document.getElementById('noRatings');
-  hint.style.display = r ? 'none' : 'block';
-
-  const detail=document.getElementById('detail');
-  detail.style.display='block';
-  setTimeout(()=>{ detail.scrollIntoView({behavior:'smooth',block:'nearest'}); detail.classList.remove('flash'); void detail.offsetWidth; detail.classList.add('flash');}, 100);
+function goto(delta){
+  const d = new Date(state.viewYear, state.viewMonth + delta, 1);
+  state.viewYear = d.getFullYear();
+  state.viewMonth = d.getMonth();
+  save(); render();
 }
 
-function wire(){
-  document.getElementById('prev').addEventListener('click', ()=>{
-    state.viewMonth--; if(state.viewMonth<0){state.viewMonth=11;state.viewYear--;}
-    save(); render(); updateStats();
-  });
-  document.getElementById('next').addEventListener('click', ()=>{
-    state.viewMonth++; if(state.viewMonth>11){state.viewMonth=0;state.viewYear++;}
-    save(); render(); updateStats();
-  });
-
-  document.getElementById('saveNote').addEventListener('click', ()=>{
-    const key = state.selected; if(!key) return;
-    const val = document.getElementById('note').value || '';
-    if(!state.daily[key]) state.daily[key]={};
-    state.daily[key].notes = val;
-    state.daily[key].timestamp = new Date().toISOString();
-    save();
-    render();
-    alert('Day updated.');
-  });
+function wireNav(){
+  document.querySelector('#calendar .prev, button.prev, [data-nav="prev"]')?.addEventListener('click', ()=>goto(-1));
+  document.querySelector('#calendar .next, button.next, [data-nav="next"]')?.addEventListener('click', ()=>goto(1));
 }
 
+load();
 document.addEventListener('DOMContentLoaded', ()=>{
-  console.log('Baseline v1 external loaded');
-  load(); wire(); render(); updateStats();
-  const today=fmt(new Date());
-  const prefix = `${state.viewYear}-${String(state.viewMonth+1).padStart(2,'0')}`;
-  if(today.startsWith(prefix)){ showDetail(today, state.daily[today]||null); }
+  wireNav();
+  state.selected = state.selected || fmt(new Date());
+  save();
+  render();
+  showDetail(state.selected, state.daily[state.selected]); // show selected (today by default)
 });
-
