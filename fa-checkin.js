@@ -1,50 +1,45 @@
-// fa-checkin.js — connect Daily Check-in to the same state/calendar
-document.addEventListener('DOMContentLoaded', () => {
-  if (typeof state === 'undefined') return; // safety
+// fa-checkin.js — daily rating save + UI highlights
+console.log('checkin loaded');
 
-  const todayKey = (() => {
-    const d=new Date(), y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0');
-    return `${y}-${m}-${dd}`;
-  })();
+(function(){
+  const root = document.getElementById('checkin');
+  if(!root){ console.warn('checkin section not found'); return; }
 
-  const anchors = ['physical','mental','emotional','spiritual','relational'];
-  const pending = (state.daily[todayKey] && state.daily[todayKey].ratings)
-    ? {...state.daily[todayKey].ratings}
-    : {};
-
-  // show existing selections
-  anchors.forEach(a => {
-    const v = pending[a];
-    if (!v) return;
-    const btn = document.querySelector(`#checkin .rates[data-a="${a}"] .rate[data-v="${v}"]`);
-    if (btn) btn.classList.add('active');
-  });
-
-  // choose 1–5
-  document.querySelectorAll('#checkin .rate').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const a = btn.dataset.a, v = parseInt(btn.dataset.v,10);
-      pending[a] = v;
-      btn.closest('.rates').querySelectorAll('.rate').forEach(b => b.classList.remove('active'));
+  // tap to select 1..5 in each group
+  root.querySelectorAll('.rate').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const grp = btn.closest('.rates');
+      grp?.querySelectorAll('.rate').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
     });
   });
 
-  // save → updates state, refreshes calendar/stats, shows today
-  const saveBtn = document.getElementById('saveToday');
-  if (saveBtn) saveBtn.addEventListener('click', () => {
-    state.daily[todayKey] = state.daily[todayKey] || {};
-    state.daily[todayKey].ratings = {
-      physical: pending.physical || 0,
-      mental: pending.mental || 0,
-      emotional: pending.emotional || 0,
-      spiritual: pending.spiritual || 0,
-      relational: pending.relational || 0,
-    };
-    if (typeof save==='function') save();
-    if (typeof render==='function') render();
-    if (typeof updateStats==='function') updateStats();
-    if (typeof showDetail==='function') showDetail(todayKey, state.daily[todayKey]);
-    alert('Today saved.');
+  const fields = ['physical','mental','emotional','spiritual','relational'];
+
+  document.getElementById('saveToday')?.addEventListener('click', ()=>{
+    // gather selections
+    const values = {};
+    const groups = root.querySelectorAll('.rates');
+    fields.forEach((f,i)=>{
+      const active = groups[i]?.querySelector('.rate.active');
+      values[f] = active ? Number(active.dataset.val) : 0;
+    });
+
+    // ensure shared state exists
+    window.state = window.state || {daily:{}};
+
+    // save to today
+    const d = new Date();
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    window.state.daily[key] = window.state.daily[key] || {ratings:{}, notes:''};
+    window.state.daily[key].ratings = values;
+
+    try{ localStorage.setItem('cm_dashboard_state', JSON.stringify(window.state)); }catch(e){}
+
+    // refresh UI
+    if(typeof render==='function') render();
+    if(typeof showDetail==='function') showDetail(key, window.state.daily[key]);
+
+    alert('Saved today.');
   });
-});
+})();
