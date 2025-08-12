@@ -8,8 +8,11 @@ let state = {
   daily: {}                    // { 'YYYY-MM-DD': { ratings:{physical,mental,emotional,spiritual,relational}, notes:'' } }
 };
 
+// expose globally so fa-checkin.js can update it
+window.state = state;
+
 function save(){ try{ localStorage.setItem('cm_dashboard_state', JSON.stringify(state)); }catch(e){} }
-function load(){ try{ const s=localStorage.getItem('cm_dashboard_state'); if(s) state={...state, ...JSON.parse(s)}; }catch(e){} }
+function load(){ try{ const s=localStorage.getItem('cm_dashboard_state'); if(s){ state={...state, ...JSON.parse(s)}; window.state = state; } }catch(e){} }
 
 function fmt(d){ const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
 function parseDate(str){ const [y,m,d]=str.split('-').map(n=>parseInt(n,10)); return new Date(y, m-1, d); }
@@ -25,7 +28,7 @@ function monthDays(y,m){
   return out;
 }
 
-// Base colors for each anchor (the same palette you saw)
+// Base palette
 const palette = {
   physical:   [124,139, 96],
   mental:     [ 95,115,155],
@@ -34,17 +37,15 @@ const palette = {
   relational: [153,142,123]
 };
 
-// Blend all anchors present that day into one gradient, with stronger intensity
+// Strong blended gradient
 function blendBg(ratings){
   let R=0,G=0,B=0,W=0;
   for(const k in palette){
-    const v = ratings && ratings[k] ? ratings[k]/5 : 0; // 0..1
+    const v = ratings && ratings[k] ? ratings[k]/5 : 0;
     R += palette[k][0]*v; G += palette[k][1]*v; B += palette[k][2]*v; W += v;
   }
   if(W>0){ R=Math.round(R/W); G=Math.round(G/W); B=Math.round(B/W); }
-  else { R=124; G=139; B=96; } // neutral fallback
-
-  // bolder gradient than before
+  else { R=124; G=139; B=96; }
   return `linear-gradient(135deg, rgba(${R},${G},${B}, .35), rgba(${R},${G},${B}, .65))`;
 }
 
@@ -71,22 +72,21 @@ function showDetail(dateStr, data){
   const note = document.getElementById('note');
   if(note) note.value = (data && data.notes) ? data.notes : '';
 
-  // Save notes for this date (and keep the view in sync)
+  // rebind Update button
   const btn = document.getElementById('saveNote');
-  if(btn){
-    btn.replaceWith(btn.cloneNode(true)); // remove previous listeners
-  }
+  if(btn){ btn.replaceWith(btn.cloneNode(true)); }
   document.getElementById('saveNote')?.addEventListener('click', ()=>{
     state.daily[dateStr] = state.daily[dateStr] || {ratings:{physical:0,mental:0,emotional:0,spiritual:0,relational:0}, notes:''};
     if(note) state.daily[dateStr].notes = note.value || '';
     save();
     render();
-    showDetail(dateStr, state.daily[dateStr]); // keep the same day visible
+    showDetail(dateStr, state.daily[dateStr]);
     alert('Day updated.');
   }, {once:true});
 
   document.getElementById('detail')?.scrollIntoView({behavior:'smooth', block:'start'});
 }
+window.showDetail = showDetail;
 
 function makeDay(dateStr, other){
   const d = parseDate(dateStr);
@@ -101,7 +101,7 @@ function makeDay(dateStr, other){
   const hasRatings = !!(ratings && ['physical','mental','emotional','spiritual','relational'].some(k=>ratings[k]>0));
   if(hasRatings){
     el.style.background = blendBg(ratings);
-    const total = Object.values(ratings).reduce((a,b)=>a+(b||0),0); // 0..25
+    const total = Object.values(ratings).reduce((a,b)=>a+(b||0),0);
     el.style.opacity = Math.max(.6, .55 + (total/25)*.45);
   }else{
     el.style.background = '';
@@ -110,7 +110,6 @@ function makeDay(dateStr, other){
 
   const noteMark = (data && data.notes && data.notes.trim()) ? '📝' : '';
   const ratingMark = hasRatings ? '📊' : '';
-
   el.innerHTML = `<div class="num">${d.getDate()}</div>${
     (noteMark||ratingMark) ? `<div class="badge">${noteMark}${ratingMark}</div>` : ''
   }`;
@@ -164,7 +163,7 @@ function render(){
   const title = document.querySelector('#calendar h2, #calendar .monthTitle, #monthTitle');
   if(title) title.textContent = `${months[state.viewMonth]} ${state.viewYear}`;
 
-  // Grid
+  // Grid container (support either .grid or .days)
   const grid = document.querySelector('#calendar .grid, #calendar .days');
   if(grid){
     grid.innerHTML = '';
@@ -174,6 +173,7 @@ function render(){
   }
   updateStats();
 }
+window.render = render;
 
 function goto(delta){
   const d = new Date(state.viewYear, state.viewMonth + delta, 1);
@@ -191,7 +191,8 @@ load();
 document.addEventListener('DOMContentLoaded', ()=>{
   wireNav();
   state.selected = state.selected || fmt(new Date());
+  window.state = state; // keep global in sync after load()
   save();
   render();
-  showDetail(state.selected, state.daily[state.selected]); // show selected (today by default)
+  showDetail(state.selected, state.daily[state.selected]);
 });
