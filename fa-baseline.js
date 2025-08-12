@@ -118,6 +118,8 @@ function makeDay(dateStr, other){
     document.querySelectorAll('.day.selected').forEach(n=>n.classList.remove('selected'));
     el.classList.add('selected');
     showDetail(dateStr, data);
+
+    
   });
 
   return el;
