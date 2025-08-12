@@ -1,1 +1,830 @@
+<!--
+  ============================================================
+  Clarity Metabolics - Relational Anchor: The Harmony Web
+  Interactive Web Tool for Post-Awakening Relational Wisdom
+  ============================================================
+  
+  Version: 3.0.0 (Final)
+  Created: August 2025
+  Author: Clarity Metabolics
+  
+  Description:
+  8-step interactive tool to help users navigate changing relationships,
+  build conscious connections, and create authentic community from a grounded place.
+  Completes the Five Anchors framework - the capstone that bridges inner work
+  with outer expression through healthy relationships and conscious community.
+  
+  Features:
+  - Progressive 8-step flow with universal grounding intro
+  - Green→Yellow→Red relationship reality assessment
+  - Boundary wisdom and authentic self-expression guidance
+  - Community building and connection strategies
+  - Relational pattern recognition with early warning system
+  - Relational Anchor Statement creation and highlighting
+  - Conscious connection response strategies
+  - Light/dark theme toggle with sunset orange palette
+  - Download summary functionality with complete insights
+  - Meaningful reflection modal with Trinity prayer for relationships
+  - Mobile responsive design with accessibility features
+  - Progress tracking with input validation
+  - localStorage session persistence across page reloads
+  - Auto-focus and smooth scrolling navigation
+  - Journey completion celebration
+  
+  Five Anchors Framework Journey:
+  Physical → Mental → Emotional → Spiritual → Relational
+  (Body grounding → Mental clarity → Emotional wisdom → Spiritual foundation → Conscious relationships)
+  
+  Inner Foundation Building:
+  1. Physical Anchor: Ground in your body's wisdom and nervous system regulation
+  2. Mental Anchor: Filter mental noise and see truth clearly through chaos
+  3. Emotional Anchor: Transform reactions into wise responses from core feelings
+  
+  Spiritual Center:
+  4. Spiritual Anchor: Anchor in what's eternal and unchanging (God/Divine)
+  
+  Outward Expression:
+  5. Relational Anchor: Carry your grounding into conscious community and authentic relationships
+  
+  Flow:
+  1. Universal grounding and settling into relational awareness
+  2. Relationship Reality Check (Green→Yellow→Red assessment of current connections)
+  3. Boundary Wisdom (protection and authentic self-expression strategies)
+  4. Finding Your People (community building and conscious connection)
+  5. Spot Your Relational Pattern (triggers, patterns, and anchor statement)
+  6. Conscious Connection (wise response strategies from grounded center)
+  7. Summary with highlighted Relational Anchor Statement
+  8. Journey Completion (celebrating the complete Five Anchors framework)
+  
+  Post-Awakening Sensitivity:
+  Addresses the unique relational challenges faced by truth-seekers and those
+  experiencing spiritual/personal awakening - including family rejection,
+  social isolation, community displacement, and the need to rebuild
+  relationships from authenticity rather than conformity.
+  
+  Universal Application:
+  Uses inclusive language that serves anyone navigating relationship changes
+  during personal growth, value shifts, life transitions, or spiritual evolution.
+  
+  Usage:
+  Standalone HTML file - no dependencies required
+  Open in any modern web browser
+  Can be integrated into larger Five Anchors ecosystem
+  
+  License: © 2025 Clarity Metabolics
+  Website: https://claritymetabolics.com
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Relational Anchor — The Conscious Bridge</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --main-color:#E8934A;      /* primary (bar/buttons) */
+    --accent-color:#FEF6F0;    /* soft panels */
+    --contrast-color:#B5621F;  /* deep accent text/borders */
+    --text-color:#333;
+    --bg-color:#fff;
+    --border-color:#e6d3cf;
+    --shadow:0 2px 12px rgba(0,0,0,.08);
+    --success-color:#5a7c41;   /* progress dots done */
+    --warning-color:#dc3545;   /* Start Over confirm */
+    --green-panel:#E5EBDD;
+    --yellow-panel:#FFF8CC;
+    --red-panel:#F5E6E6;
+  }
+  [data-theme="dark"]{
+    --text-color:#e6e6e6;
+    --bg-color:#1c1c1c;
+    --border-color:#423532;
+    --accent-color:#2d2625;
+    --shadow:0 2px 14px rgba(0,0,0,.35);
+    --green-panel:#2d352a;
+    --yellow-panel:#3a3620;
+    --red-panel:#3a2828;
+  }
 
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Open Sans',sans-serif;
+    color:var(--text-color);
+    background:var(--bg-color);
+    line-height:1.6;
+  }
+  .container{max-width:780px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+  /* Header */
+  .header{
+    color:#fff;
+    background:linear-gradient(135deg,var(--main-color),var(--contrast-color));
+    padding:22px 18px 18px;
+    position:relative;
+    transition: box-shadow .5s ease;
+  }
+  .header.completed{ box-shadow:0 0 18px rgba(232,147,74,.55); }
+  .header h1{
+    font-family:'Libre Baskerville',serif;
+    font-size:2rem;
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .subtitle{ text-align:center; font-style:italic; opacity:.95; }
+
+  .header-controls{ position:absolute; top:10px; right:10px; display:flex; gap:8px }
+  .header-btn{
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.3);
+    color:#fff;
+    padding:.35rem .6rem;border-radius:18px;cursor:pointer;
+    font-size:.8rem;transition:all .2s ease;
+  }
+  .header-btn:hover{background:rgba(255,255,255,.25)}
+
+  .progress-bar{height:4px;background:rgba(255,255,255,.28);border-radius:3px;margin-top:14px;overflow:hidden}
+  .progress-fill{height:100%;background:#fff;width:0%;transition:width .6s ease}
+
+  /* Content & steps */
+  main.content{flex:1;padding:22px}
+  .step{display:none;animation:fade .25s ease}
+  .step.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .step-indicator{ text-align:center; margin:10px 0 18px }
+  .step-counter{font-weight:700;color:#ffffff; background:var(--contrast-color); display:inline-block; padding:4px 10px; border-radius:12px }
+  .dots{display:flex;justify-content:center;gap:8px;margin-top:10px}
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--border-color)}
+  .dot.active{background:var(--main-color)}
+  .dot.done{background:var(--success-color)}
+
+  h2{font-family:'Libre Baskerville',serif;color:var(--main-color);font-size:1.7rem;margin:14px 0 10px}
+  p.lead{opacity:.95;margin-bottom:10px}
+
+  .tip{
+    background:linear-gradient(135deg, rgba(232,147,74,.12), rgba(181,98,31,.06));
+    border-left:4px solid var(--main-color);
+    padding:12px;border-radius:0 8px 8px 0;margin:14px 0;font-style:italic
+  }
+
+  .form-group{margin:16px 0}
+  label{display:block;font-weight:700;color:var(--contrast-color);margin-bottom:6px}
+  textarea, input[type="text"]{
+    width:100%;min-height:110px;resize:vertical;border:2px solid var(--border-color);
+    border-radius:10px;padding:12px;font:inherit;color:inherit;background:var(--bg-color);
+    transition:all .2s ease;
+  }
+  input[type="text"]{ min-height:auto; }
+  textarea:focus, input[type="text"]:focus{
+    outline:none;border-color:var(--main-color);box-shadow:0 0 0 3px rgba(232,147,74,.18)
+  }
+
+  /* Panels for structured input */
+  .panel{
+    border:2px solid var(--border-color);
+    border-radius:10px;
+    padding:12px;
+    margin-bottom:16px;
+  }
+  .panel h3{
+    font-family:'Libre Baskerville',serif;
+    font-size:1.1rem;
+    margin-bottom:8px;
+    color:var(--contrast-color);
+  }
+
+  /* Navigation buttons */
+  .nav-row{display:flex;gap:12px;align-items:center;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-color)}
+  .nav-row .btn{flex:1}
+  .btn{
+    border:none;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;
+    transition:transform .1s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary{background:var(--main-color);color:#fff}
+  .btn-primary:hover{background:var(--contrast-color);box-shadow:var(--shadow);transform:translateY(-1px)}
+  .btn-secondary{background:var(--accent-color);color:var(--contrast-color);border:1px solid var(--border-color)}
+  .btn-secondary:hover{background:var(--border-color)}
+  .btn-warning{background:var(--warning-color);color:#fff}
+  .btn-warning:hover{background:#c82333}
+
+  .micro{ text-align:center; margin-top:6px; font-style:italic; color:var(--contrast-color); opacity:.85 }
+
+  /* Final actions + Next Phase CTA */
+  .final-actions{
+    display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;
+  }
+  .final-actions .btn{ display:block; width:100%; max-width:280px; min-height:50px; text-align:center; }
+
+  .next-phase {
+    margin-top: 22px;
+    padding: 16px;
+    background: var(--accent-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .next-phase .lead {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.05rem;
+    color: var(--contrast-color);
+    margin-bottom: 10px;
+  }
+  .next-phase .sub {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 6px;
+  }
+  .next-phase .btn-next {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    background: var(--main-color);
+    color: #fff;
+    transition: transform .1s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .next-phase .btn-next:hover {
+    background: var(--contrast-color);
+    box-shadow: var(--shadow);
+    transform: translateY(-1px);
+  }
+
+  /* Branding */
+  .branding{ text-align:center; padding:18px; font-size:.85rem; color:var(--text-color); opacity:.75; border-top:1px solid var(--border-color) }
+  .branding a{ color:var(--contrast-color); text-decoration:none }
+  .branding a:hover{ text-decoration:underline }
+
+  .scripture{font-style:italic;background:var(--accent-color);padding:16px;border-left:4px solid var(--main-color);border-radius:8px;margin:16px 0}
+
+  @media (max-width:640px){
+    .nav-row{flex-direction:column}
+    .btn{width:100%}
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step { animation: none; }
+    .progress-fill { transition: none; }
+    .btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div id="pageTop" style="position:absolute;top:0"></div>
+<div class="container">
+
+  <header class="header" id="mainHeader">
+    <div class="header-controls">
+      <button class="header-btn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">🌙</button>
+    </div>
+    <h1>Relational Anchor — The Harmony Web</h1>
+    <p class="subtitle">🌐 Build authentic connections from your grounded center.</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
+
+  <main class="content">
+    <!-- Step 1: Welcome -->
+    <section class="step active" data-step="0">
+      <div class="step-indicator">
+        <div class="step-counter">Step 1 of 8</div>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>Welcome to Your Relational Anchor</h2>
+      <p class="lead">Take a moment to arrive here. Take a couple of deep, full breaths and let yourself settle in. When you're ready, we'll begin this gentle exploration of how to build meaningful connections from your grounded center.</p>
+      <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin</button></div>
+      <div class="micro">Take your time. There's no rush here.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- Step 2: Relationship Reality Check -->
+    <section class="step" data-step="1">
+      <div class="step-indicator">
+        <div class="step-counter">Step 2 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>Relationship Reality Check</h2>
+      <p class="lead">When you're growing or changing, relationships often shift too. Some connections deepen, others feel strained, and sometimes you realize you've outgrown old patterns. Take an honest look at where your relationships stand right now.</p>
+
+      <div class="form-group">
+        <label for="relationshipState"><strong>How would you describe your relational world right now?</strong></label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Be honest about the current state of your relationships</p>
+        <textarea id="relationshipState" placeholder="Isolated, changing, strained, supportive, in transition..." rows="3"></textarea>
+      </div>
+
+      <div class="form-group panel" style="background:var(--green-panel)">
+        <h3>What's Working — Which relationships still feel healthy and supportive?</h3>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Identify the connections that nourish and support your growth</p>
+        <textarea id="whatsWorking" placeholder="Family members, friends, community connections that feel authentic and supportive..." rows="3"></textarea>
+      </div>
+
+      <div class="form-group panel" style="background:var(--yellow-panel)">
+        <h3>What's Unclear — Which relationships feel complicated or in transition?</h3>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Notice relationships that feel uncertain or evolving</p>
+        <textarea id="whatsUnclear" placeholder="Relationships that feel strained, distant, or where you're not sure how to connect..." rows="3"></textarea>
+      </div>
+
+      <div class="form-group panel" style="background:var(--red-panel)">
+        <h3>What's Draining — Which relationships feel exhausting or unhealthy?</h3>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Acknowledge connections that drain your energy or undermine your peace</p>
+        <textarea id="whatsDraining" placeholder="Relationships that feel toxic, demanding, dismissive, or consistently negative..." rows="3"></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Remember that noticing these patterns isn't about judgment—it's about honest awareness that helps you choose your next steps wisely.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" id="saveRelationshipStep" onclick="nextStep()" disabled>Complete Relationship Check-in to Continue</button>
+      </div>
+      <div class="micro">Clarity about where you are helps you decide where to go.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- Step 3: Boundary Wisdom -->
+    <section class="step" data-step="2">
+      <div class="step-indicator">
+        <div class="step-counter">Step 3 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>Boundary Wisdom</h2>
+      <p class="lead">Healthy boundaries aren't walls that keep people out—they're gates that help you decide who gets access to what parts of your life. They protect your peace while allowing for authentic connection.</p>
+
+      <div class="form-group">
+        <label for="boundaryNeeds">Where do you need better boundaries?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Notice where you feel overwhelmed, drained, or taken advantage of</p>
+        <textarea id="boundaryNeeds" placeholder="Family expectations, work demands, friend dynamics, social situations..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="authenticSelf">What does it look like to be your authentic self in relationships?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Consider how you want to show up honestly without hiding who you are</p>
+        <textarea id="authenticSelf" placeholder="Speaking your truth, honoring your values, being genuine about your beliefs and perspectives..."></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Boundaries are an act of love—they help you show up as your best self in relationships rather than becoming resentful or overwhelmed.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Finding Your People →</button>
+      </div>
+      <div class="micro">Good boundaries create space for authentic connection.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- Step 4: Finding Your People -->
+    <section class="step" data-step="3">
+      <div class="step-indicator">
+        <div class="step-counter">Step 4 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>Finding Your People</h2>
+      <p class="lead">Community isn't just about having people around—it's about finding those who see you, support your growth, and share your values. Sometimes this means cultivating existing relationships, and sometimes it means building new ones.</p>
+
+      <div class="form-group">
+        <label for="communityQualities">What qualities matter most to you in relationships?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Think about the values and characteristics you want in your close connections</p>
+        <textarea id="communityQualities" placeholder="Honesty, mutual respect, spiritual depth, intellectual curiosity, emotional maturity..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="communityBuilding">How might you find or build community that aligns with who you're becoming?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Consider practical steps for connecting with like-minded people</p>
+        <textarea id="communityBuilding" placeholder="Join groups that share your interests, volunteer for causes you care about, attend events that align with your values..."></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Remember that building meaningful community takes time. Start with one small step toward connecting with people who share your values.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Spot the Pattern →</button>
+      </div>
+      <div class="micro">Your people are out there—sometimes you just need to create space for them to find you.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- Step 5: Spot Your Relational Pattern -->
+    <section class="step" data-step="4">
+      <div class="step-indicator">
+        <div class="step-counter">Step 5 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>Spot Your Relational Pattern</h2>
+      <p class="lead">We all have patterns in how we relate to others—some serve us well, others keep us stuck. Recognizing these patterns helps you make conscious choices about how you want to show up in relationships.</p>
+
+      <div class="form-group">
+        <label for="relationalPatterns">What patterns do you notice in your relationships?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Consider recurring themes in how you connect with others, both helpful and unhelpful</p>
+        <textarea id="relationalPatterns" placeholder="People-pleasing, conflict avoidance, being overly responsible for others' emotions, attracting drama..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="relationshipTriggers">What situations tend to trigger your less helpful relational patterns?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Notice what circumstances bring out your reactive relationship habits</p>
+        <textarea id="relationshipTriggers" placeholder="Family gatherings, conflict situations, feeling misunderstood, being criticized..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="relationalAnchorStatement">Your Relational Anchor Statement — What truth about relationships will you remember?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">A simple truth about healthy relationships that you can return to when things get complicated</p>
+        <textarea id="relationalAnchorStatement" placeholder="Even when relationships feel challenging, I can..."></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Read your relational anchor statement once aloud, slowly. Let this wisdom settle into your heart.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Conscious Connection →</button>
+      </div>
+      <div class="micro">Awareness of patterns gives you the power to choose differently.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- Step 6: Conscious Connection -->
+    <section class="step" data-step="5">
+      <div class="step-indicator">
+        <div class="step-counter">Step 6 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>Conscious Connection</h2>
+      <p class="lead">Conscious connection means choosing how to relate from your grounded center rather than reacting from old patterns. It's about showing up authentically while respecting both your needs and others'.</p>
+
+      <div class="form-group">
+        <label for="relationshipApproach">How do you want to approach challenging relationships?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Consider how you can stay grounded while navigating difficult dynamics</p>
+        <textarea id="relationshipApproach" placeholder="Stay calm, speak truth kindly, maintain boundaries, focus on what I can control..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="connectionWisdom">What does wise, grounded connection look like for you?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Describe how you want to show up in relationships from your anchored place</p>
+        <textarea id="connectionWisdom" placeholder="Listen deeply, respond rather than react, be honest without being harsh, love without enabling..."></textarea>
+      </div>
+
+      <div class="tip"><strong>Micro-practice:</strong> Ask yourself: "How can I honor both my truth and my care for this person in how I respond?"</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Your Summary →</button>
+      </div>
+      <div class="micro">Conscious connection honors both authenticity and love.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- Step 7: Summary -->
+    <section class="step" data-step="6">
+      <div class="step-indicator">
+        <div class="step-counter">Step 7 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+      </div>
+      <h2>Your Harmony Web Summary</h2>
+      <p>You've assessed your relational reality, clarified your boundaries, identified community needs, recognized your patterns, and chosen conscious ways to connect. You've built a web of authentic connections from your grounded center.</p>
+
+      <div style="background:var(--accent-color);padding:16px;border-radius:10px;margin:12px 0">
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color)">Relationship Reality Check</h3>
+        <p id="sumRelationships">—</p>
+
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Boundary Wisdom</h3>
+        <p id="sumBoundaries">—</p>
+
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Finding Your People</h3>
+        <p id="sumCommunity">—</p>
+
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Relational Patterns</h3>
+        <p id="sumPatterns">—</p>
+
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-top:10px">Conscious Connection</h3>
+        <p id="sumConnection">—</p>
+      </div>
+
+      <!-- Relational Anchor Statement Highlight -->
+      <div style="background:linear-gradient(135deg,var(--main-color),var(--contrast-color));color:#fff;padding:20px;border-radius:12px;margin:20px 0;text-align:center;box-shadow:var(--shadow)">
+        <h3 style="font-family:'Libre Baskerville',serif;font-size:1.2rem;margin-bottom:12px;opacity:0.9">Your Relational Anchor Statement</h3>
+        <p id="relationalAnchorHighlight" style="font-family:'Libre Baskerville',serif;font-size:1.1rem;font-style:italic;line-height:1.6">—</p>
+        <p style="font-size:0.85rem;margin-top:10px;opacity:0.8">Your truth to return to when relationships feel challenging</p>
+      </div>
+
+      <div class="final-actions">
+        <button class="btn btn-primary" onclick="downloadSummary()">📄 Download Summary</button>
+        <button class="btn btn-secondary" onclick="openMeaningfulReflection()">✨ Meaningful Reflection</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;">
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="nextStep()">Complete Your Journey →</button>
+      </div>
+
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- Step 8: Journey Completion -->
+    <section class="step" data-step="7">
+      <div class="step-indicator">
+        <div class="step-counter">Step 8 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
+      </div>
+      <h2>Your Five Anchors Journey Complete</h2>
+      <p class="lead">You've now completed all Five Anchors—Physical, Mental, Emotional, Spiritual, and Relational. You've built a complete foundation for navigating life from a grounded, conscious place.</p>
+
+      <div class="next-phase" aria-label="Journey Completion">
+        <div class="lead"><strong>You now have tools to stay anchored in any storm.</strong></div>
+        <p style="margin:16px 0;line-height:1.6;">Your journey through the Five Anchors has equipped you with practical wisdom for staying grounded in your body, clear in your thinking, wise in your emotions, connected to what's eternal, and conscious in your relationships. These aren't one-time tools—they're lifelong companions for navigating whatever comes your way.</p>
+        <button class="btn-next" onclick="returnToBeginning()">→ Explore Other Anchors</button>
+        <div class="sub">Return anytime to deepen your practice with any of the Five Anchors.</div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:22px 0; width:100%;">
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">← Back</button>
+        <button class="btn btn-secondary" id="startOverBtn" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="confirmStartOver()">🔄 Start Over</button>
+      </div>
+
+      <div class="branding">
+        <div><strong>Created by Clarity Metabolics</strong></div>
+        <div style="font-style:italic;margin-top:4px">Quiet the world. Reconnect with what's real.</div>
+        <div><a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Meaningful Reflection Modal -->
+<div id="meaningfulModal" style="position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000">
+  <div style="background:var(--bg-color);color:var(--text-color);max-width:560px;width:100%;max-height:90vh;border-radius:12px;box-shadow:var(--shadow);padding:22px;overflow-y:auto">
+    <h3 style="font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:8px">Meaningful Reflection</h3>
+    <div class="scripture" style="margin:10px 0 16px 0">
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">FATHER</p>
+        <p style="margin-left:16px;line-height:1.7">Thank You for the gift of relationship and community. Help me love others well while honoring the truth You've placed in my heart. Give me wisdom to know when to speak and when to listen, when to stay and when to step back.</p>
+      </div>
+      
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">SON</p>
+        <p style="margin-left:16px;line-height:1.7">Jesus, You navigated relationships with perfect love and truth. Teach me to follow Your example—to be gentle with the wounded, firm with the prideful, and always anchored in love. Help me build bridges where possible and boundaries where necessary.</p>
+      </div>
+      
+      <div style="margin-bottom:24px">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px">HOLY SPIRIT</p>
+        <p style="margin-left:16px;line-height:1.7">Guide me to the people You want in my life and help me be the kind of person others can trust and depend on. Give me discernment in relationships and the courage to be authentic while remaining kind.</p>
+      </div>
+      
+      <p style="margin-top:28px;font-style:italic;text-align:center;opacity:0.9">✨ <strong>"As iron sharpens iron, so one person sharpens another." — Proverbs 27:17</strong></p>
+    </div>
+    <div style="text-align:center">
+      <button class="btn btn-primary" onclick="closeMeaningfulReflection()">Amen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- State
+  let currentStep = 0;
+  const totalSteps = 8;
+  const responses = {
+    relationshipState:'', whatsWorking:'', whatsUnclear:'', whatsDraining:'',
+    boundaryNeeds:'', authenticSelf:'',
+    communityQualities:'', communityBuilding:'',
+    relationalPatterns:'', relationshipTriggers:'', relationalAnchorStatement:'',
+    relationshipApproach:'', connectionWisdom:''
+  };
+
+  // Light / Dark toggle
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const body = document.body;
+    const btn = document.getElementById('themeBtn');
+    if (body.getAttribute('data-theme') === 'dark') {
+      body.removeAttribute('data-theme'); btn.textContent = '🌙';
+    } else {
+      body.setAttribute('data-theme','dark'); btn.textContent = '☀️';
+    }
+  });
+
+  // Step navigation helpers
+  function showStep(i){
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    const stepEl = document.querySelector(`.step[data-step="${i}"]`);
+    if (stepEl) stepEl.classList.add('active');
+
+    document.getElementById('progressFill').style.width = ((i)/ (totalSteps-1)) * 100 + '%';
+    document.querySelectorAll('.step .dots').forEach(group => {
+      [...group.children].forEach((d, idx) => {
+        d.classList.remove('active','done');
+        if (idx < i) d.classList.add('done');
+        if (idx === i) d.classList.add('active');
+      });
+    });
+
+    requestAnimationFrame(()=>{
+      document.getElementById('pageTop').scrollIntoView({behavior:'smooth',block:'start'});
+      setTimeout(()=>{
+        if (i===1) document.getElementById('relationshipState')?.focus();
+        if (i===2) document.getElementById('boundaryNeeds')?.focus();
+        if (i===3) document.getElementById('communityQualities')?.focus();
+        if (i===4) document.getElementById('relationalPatterns')?.focus();
+        if (i===5) document.getElementById('relationshipApproach')?.focus();
+      },150);
+    });
+
+    if (i===6){ document.getElementById('mainHeader')?.classList.add('completed'); updateSummary(); }
+  }
+
+  function nextStep(){ saveCurrent(); if (currentStep < totalSteps-1){ currentStep++; showStep(currentStep); } }
+  function prevStep(){ if (currentStep>0){ currentStep--; showStep(currentStep);} }
+
+  // Save per-step
+  function saveCurrent(){
+    switch(currentStep){
+      case 1:
+        responses.relationshipState = document.getElementById('relationshipState').value.trim();
+        responses.whatsWorking = document.getElementById('whatsWorking').value.trim();
+        responses.whatsUnclear = document.getElementById('whatsUnclear').value.trim();
+        responses.whatsDraining = document.getElementById('whatsDraining').value.trim();
+        break;
+      case 2:
+        responses.boundaryNeeds = document.getElementById('boundaryNeeds').value.trim();
+        responses.authenticSelf = document.getElementById('authenticSelf').value.trim();
+        break;
+      case 3:
+        responses.communityQualities = document.getElementById('communityQualities').value.trim();
+        responses.communityBuilding = document.getElementById('communityBuilding').value.trim();
+        break;
+      case 4:
+        responses.relationalPatterns = document.getElementById('relationalPatterns').value.trim();
+        responses.relationshipTriggers = document.getElementById('relationshipTriggers').value.trim();
+        responses.relationalAnchorStatement = document.getElementById('relationalAnchorStatement').value.trim();
+        break;
+      case 5:
+        responses.relationshipApproach = document.getElementById('relationshipApproach').value.trim();
+        responses.connectionWisdom = document.getElementById('connectionWisdom').value.trim();
+        break;
+    }
+    // Save to localStorage
+    try {
+      localStorage.setItem('relationalAnchorResponses', JSON.stringify(responses));
+    } catch (e) {
+      console.warn('Could not save to localStorage:', e);
+    }
+  }
+
+  // Summary
+  function updateSummary(){
+    const relationshipsHTML = [
+      '<strong>Current State:</strong> ' + (responses.relationshipState || '—'),
+      '<strong>What\'s Working:</strong> ' + (responses.whatsWorking || '—'),
+      '<strong>What\'s Unclear:</strong> ' + (responses.whatsUnclear || '—'),
+      '<strong>What\'s Draining:</strong> ' + (responses.whatsDraining || '—')
+    ].join('<br>');
+
+    const patterns = [
+      responses.relationalPatterns ? 'Patterns: ' + responses.relationalPatterns : '',
+      responses.relationshipTriggers ? 'Triggers: ' + responses.relationshipTriggers : ''
+    ].filter(Boolean).join(' | ') || 'No patterns noted.';
+
+    document.getElementById('sumRelationships').innerHTML = relationshipsHTML;
+    document.getElementById('sumBoundaries').innerHTML = [
+      '<strong>Boundary Needs:</strong> ' + (responses.boundaryNeeds || '—'),
+      '<strong>Authentic Self:</strong> ' + (responses.authenticSelf || '—')
+    ].join('<br>');
+
+    document.getElementById('sumCommunity').innerHTML = [
+      '<strong>Community Qualities:</strong> ' + (responses.communityQualities || '—'),
+      '<strong>Community Building:</strong> ' + (responses.communityBuilding || '—')
+    ].join('<br>');
+
+    document.getElementById('sumPatterns').textContent = patterns;
+
+    document.getElementById('sumConnection').innerHTML = [
+      '<strong>Relationship Approach:</strong> ' + (responses.relationshipApproach || '—'),
+      '<strong>Connection Wisdom:</strong> ' + (responses.connectionWisdom || '—')
+    ].join('<br>');
+    
+    // Update highlighted relational anchor statement
+    document.getElementById('relationalAnchorHighlight').textContent = responses.relationalAnchorStatement || 'Your relational anchor statement will appear here';
+  }
+
+  // Start Over confirm
+  let startOverArmed = false;
+  function confirmStartOver(){
+    const btn = document.getElementById('startOverBtn');
+    if (!startOverArmed){
+      startOverArmed = true;
+      btn.classList.remove('btn-secondary'); btn.classList.add('btn-warning');
+      btn.textContent = 'Confirm Start Over';
+      setTimeout(()=>{ if(startOverArmed){
+        startOverArmed=false; btn.classList.remove('btn-warning'); btn.classList.add('btn-secondary'); btn.textContent='🔄 Start Over';
+      }},3000);
+    } else { restartTool(); }
+  }
+
+  function restartTool(){
+    Object.keys(responses).forEach(k => responses[k] = '');
+    document.querySelectorAll('textarea, input[type="text"]').forEach(t => t.value='');
+    const btn = document.getElementById('startOverBtn');
+    if (btn){ startOverArmed=false; btn.className='btn btn-secondary'; btn.textContent='🔄 Start Over'; }
+    const saveBtn = document.getElementById('saveRelationshipStep'); if (saveBtn) saveBtn.disabled = true;
+    try {
+      localStorage.removeItem('relationalAnchorResponses');
+    } catch (e) {
+      console.warn('Could not clear localStorage:', e);
+    }
+    currentStep = 0; showStep(currentStep);
+  }
+
+  // Download summary
+  function downloadSummary(){
+    const lines = [
+      'Relational Anchor — The Harmony Web (Session Summary)',
+      'Generated: ' + new Date().toLocaleString(),
+      '',
+      'RELATIONAL ANCHOR STATEMENT:',
+      responses.relationalAnchorStatement || 'None noted',
+      '',
+      'RELATIONSHIP REALITY CHECK:',
+      'Current State: ' + (responses.relationshipState || '—'),
+      'What\'s Working: ' + (responses.whatsWorking || '—'),
+      'What\'s Unclear: ' + (responses.whatsUnclear || '—'),
+      'What\'s Draining: ' + (responses.whatsDraining || '—'),
+      '',
+      'BOUNDARY WISDOM:',
+      'Boundary Needs: ' + (responses.boundaryNeeds || '—'),
+      'Authentic Self: ' + (responses.authenticSelf || '—'),
+      '',
+      'FINDING YOUR PEOPLE:',
+      'Community Qualities: ' + (responses.communityQualities || '—'),
+      'Community Building: ' + (responses.communityBuilding || '—'),
+      '',
+      'RELATIONAL PATTERNS:',
+      'Patterns: ' + (responses.relationalPatterns || '—'),
+      'Triggers: ' + (responses.relationshipTriggers || '—'),
+      '',
+      'CONSCIOUS CONNECTION:',
+      'Relationship Approach: ' + (responses.relationshipApproach || '—'),
+      'Connection Wisdom: ' + (responses.connectionWisdom || '—'),
+      '',
+      '— © 2025 Clarity Metabolics | claritymetabolics.com'
+    ].join('\n');
+
+    const blob = new Blob([lines],{type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href=url;     a.download='relational-anchor-harmony-web-summary.txt';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  // Meaningful Reflection modal
+  function openMeaningfulReflection(){ document.getElementById('meaningfulModal').style.display='flex'; }
+  function closeMeaningfulReflection(){ document.getElementById('meaningfulModal').style.display='none'; }
+
+  // Journey completion
+  function returnToBeginning(){
+    alert('This would normally navigate back to the Five Anchors overview page where users can choose which anchor to explore next.');
+  }
+
+  // Enable/disable Save on STEP 1
+  function checkRelationshipInputs() {
+    const working = document.getElementById('whatsWorking')?.value.trim() || '';
+    const unclear = document.getElementById('whatsUnclear')?.value.trim() || '';
+    const draining = document.getElementById('whatsDraining')?.value.trim() || '';
+    const saveBtn = document.getElementById('saveRelationshipStep');
+    if (saveBtn) {
+      const hasContent = !!(working || unclear || draining);
+      saveBtn.disabled = !hasContent;
+      saveBtn.textContent = hasContent ? 'Boundary Wisdom →' : 'Complete Relationship Check-in to Continue';
+    }
+  }
+
+  // Init
+  function init(){ 
+    // Load saved responses
+    try {
+      const saved = localStorage.getItem('relationalAnchorResponses');
+      if (saved) {
+        const savedResponses = JSON.parse(saved);
+        Object.assign(responses, savedResponses);
+        // Populate form fields
+        Object.keys(savedResponses).forEach(key => {
+          const el = document.getElementById(key);
+          if (el && savedResponses[key]) el.value = savedResponses[key];
+        });
+      }
+    } catch (e) {
+      console.warn('Could not load from localStorage:', e);
+    }
+    
+    showStep(0);
+    setTimeout(() => {
+      ['whatsWorking','whatsUnclear','whatsDraining'].forEach(id=>{
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', checkRelationshipInputs);
+      });
+      // Check button state on load to handle restored content
+      checkRelationshipInputs();
+    }, 100);
+  }
+  if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
+</script>
+</body>
+</html>
