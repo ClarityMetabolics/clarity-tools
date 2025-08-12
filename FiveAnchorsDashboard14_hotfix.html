@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Five Anchors Dashboard</title>
 <meta name="description" content="Your Stability Center — navigate life from a grounded, conscious place">
-
 <style>
   :root {
     --bg-color: #f6f7f8;
@@ -18,58 +16,118 @@
     --border: rgba(2, 6, 12, .08);
     --shadow: 0 8px 30px rgba(2,6,12,.08);
   }
+  html, body { margin:0; padding:0; background:var(--bg-color); color:var(--ink); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  .container { max-width:1100px; margin:0 auto; padding:0 16px 48px 16px; }
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg-color);
-    color: var(--ink);
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+  /* Header */
+  .header { position:relative; overflow:hidden; border-bottom:1px solid var(--border); background:linear-gradient(120deg, rgba(124,139,96,0.18), rgba(124,139,96,0.6)); }
+  .header-inner { max-width:1100px; margin:0 auto; padding:40px 16px 28px 16px; }
+  .header-title { font-size:clamp(28px,6vw,44px); line-height:1.1; margin:0 0 6px 0; font-weight:800; color:#fff; text-shadow:0 2px 18px rgba(0,0,0,.12); }
+  .header-sub { color:rgba(255,255,255,.95); font-size:clamp(14px,2.4vw,18px); margin:0; text-shadow:0 2px 16px rgba(0,0,0,.10); }
 
-  .container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 16px 48px 16px;
-  }
+  /* Tabs */
+  .tabs { display:flex; gap:14px; flex-wrap:wrap; padding:18px 0; border-bottom:1px solid var(--border); background:#fff; }
+  .tab { display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:#fff; color:var(--ink); text-decoration:none; font-weight:600; cursor:pointer; }
+  .tab.active { background:#f3f5f2; border-color:rgba(124,139,96,.35); }
 
-  /* ---------- Header ---------- */
-  .header {
-    position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid var(--border);
-    background: linear-gradient(120deg, rgba(124,139,96,0.18), rgba(124,139,96,0.6));
-  }
-  .header-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 40px 16px 28px 16px;
-  }
-  .header-title {
-    font-size: clamp(28px, 6vw, 44px);
-    line-height: 1.1;
-    margin: 0 0 6px 0;
-    font-weight: 800;
-    color: #fff;
-    text-shadow: 0 2px 18px rgba(0,0,0,.12);
-  }
-  .header-sub {
-    color: rgba(255,255,255,.95);
-    font-size: clamp(14px, 2.4vw, 18px);
-    margin: 0;
-    text-shadow: 0 2px 16px rgba(0,0,0,.10);
-  }
+  /* Cards */
+  .card { background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); }
+  .card-pad { padding:18px; }
+  .card-title { font-size:22px; font-weight:800; margin:8px 0 2px 0; text-align:center; }
+  .section { margin-top:22px; }
 
-  /* ---------- Tabs ---------- */
-  .tabs {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    padding: 18px 0;
-    border-bottom: 1px solid var(--border);
-    background: #fff;
-  }
-  .tab {
-    display: inline-flex;
+  /* Calendar */
+  .calendar-wrap { margin-top:14px; }
+  .calendar-head { display:flex; align-items:center; justify-content:space-between; padding:10px 4px 14px 4px; }
+  .calendar-title { font-size:20px; font-weight:700; margin:0; }
+  .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:12px; padding:6px 6px 18px 6px; }
+  .dow { text-align:center; font-weight:700; color:var(--muted); }
+
+  /* state helpers for notes + editor */
+  .calendar-day.note-only { border:2px dashed var(--border); }
+  .calendar-day.has-note .day-note { display:block; }
+  .day-note { position:absolute; top:6px; right:6px; font-size:0.85rem; opacity:0.9; display:none; }
+
+  .rating-editor { margin-top:12px; display:none; }
+  .rating-row { display:flex; align-items:center; gap:8px; margin:6px 0; }
+  .rating-label { min-width:90px; font-weight:600; }
+  .pill { padding:4px 8px; border-radius:16px; border:1px solid var(--border); cursor:pointer; font-size:0.85rem; }
+  .pill-selected { background:#eef4ea; border-color:#a7b59a; }
+
+  .calendar-day { position:relative; min-height:106px; border:1px solid var(--border); border-radius:12px; background:linear-gradient(135deg, rgba(124,139,96,.08), rgba(124,139,96,.2)); cursor:pointer; transition: box-shadow .2s, transform .05s; display:flex; align-items:center; justify-content:center; text-align:center; }
+  .calendar-day:hover { box-shadow:0 10px 30px rgba(2,6,12,.1); transform: translateY(-1px); }
+  .calendar-day.other { opacity:.35; }
+  .calendar-day.today { outline:2px solid rgba(124,139,96,.45); }
+  .calendar-day.selected { box-shadow:0 0 0 3px rgba(124,139,96,.5) inset; }
+  .day-number { font-weight:700; font-size:16px; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.25); }
+  .day-wellness { position:absolute; bottom:8px; left:10px; font-size:16px; }
+
+  .calendar-stats { display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:12px; margin-top:12px; }
+  .stat { background:#f6f8f6; border:1px solid var(--border); border-radius:12px; padding:14px; text-align:center; }
+  .stat .val { font-size:22px; font-weight:800; color:#6b7c5e; }
+  .stat .lbl { font-size:12px; color:var(--muted); }
+
+  /* Day Detail */
+  .day-detail { display:none; margin-top:18px; }
+  .detail-head { margin:0 0 8px 0; }
+  .detail-row { display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:8px; }
+  .detail-col { background:#f7f8f7; border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center; }
+  .detail-col .lbl { font-size:12px; color:var(--muted); }
+  .detail-col .val { font-weight:700; font-size:18px; margin-top:2px; }
+
+  .notes-box { width:100%; border-radius:12px; border:1px solid var(--border); padding:12px; min-height:120px; font-size:14px; resize:vertical; background:#fff; }
+
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border-radius:10px; padding:8px 12px; border:1px solid var(--border); background:#fff; font-weight:600; cursor:pointer; }
+  .btn-primary { background:#1f2937; color:#fff; }
+  .btn-secondary { background:#f1f5f9; }
+
+  @keyframes dayFlash { from { box-shadow:0 0 0 6px rgba(124,139,96,0.28);} to { box-shadow:0 0 0 0 rgba(124,139,96,0);} }
+  .flash-once { animation: dayFlash 900ms ease-out; border-radius:12px; }
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <h1 class="header-title">The Five Anchors Dashboard</h1>
+      <p class="header-sub">Your Stability Center — navigate life from a grounded, conscious place</p>
+    </div>
+    <div class="tabs container">
+      <a class="tab" href="#overview">📊 Overview</a>
+      <a class="tab" href="#checkin">🗓️ Daily Check-in</a>
+      <a class="tab" href="#plan">📝 Action Plan</a>
+      <a class="tab active" href="#calendar">🗂️ Progress Calendar</a>
+      <a class="tab" href="#statements">🧭 Anchor Statements</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="calendar" class="section">
+      <div class="card card-pad">
+        <h2 class="card-title">Your Progress Calendar</h2>
+
+        <div class="calendar-head">
+          <button class="btn" id="prev-month">← Previous</button>
+          <h3 id="month-label" class="calendar-title">August 2025</h3>
+          <button class="btn" id="next-month">Next →</button>
+        </div>
+
+        <div class="calendar-grid" id="dow">
+          <div class="dow">Sun</div><div class="dow">Mon</div><div class="dow">Tue</div>
+          <div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div>
+        </div>
+
+        <div class="calendar-grid" id="calendar-grid"></div>
+
+        <div class="calendar-stats" id="month-insights">
+          <div class="stat"><div class="val" id="avg-physical">—</div><div class="lbl">Physical Average</div></div>
+          <div class="stat"><div class="val" id="avg-mental">—</div><div class="lbl">Mental Average</div></div>
+          <div class="stat"><div class="val" id="avg-emotional">—</div><div class="lbl">Emotional Average</div></div>
+          <div class="stat"><div class="val" id="avg-spiritual">—</div><div class="lbl">Spiritual Average</div></div>
+          <div class="stat"><div class="val" id="avg-relational">—</div><div class="lbl">Community Average</div></div>
+          <div class="stat"><div class="val" id="best-day">—</div><div class="lbl">Best Day</div></div>
+        </div>
+
+        <div class="day-detail" id="day-detail">
+          <h3 class="detail-head" id="detail-date">—</h3>
+          <p id="no-ratings-hint" style="opacity:.7; font-size:.9
