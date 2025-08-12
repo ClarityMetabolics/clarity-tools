@@ -3,131 +3,170 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Five Anchors Dashboard</title>
-<meta name="description" content="Your Stability Center — navigate life from a grounded, conscious place">
+<title>The Five Anchors Dashboard — Baseline v1</title>
 <style>
-  :root {
-    --bg-color: #f6f7f8;
-    --card: #ffffff;
-    --ink: #1e1f22;
-    --muted: #6b7280;
-    --accent: #7C8B60;
-    --accent-2: #97a784;
-    --border: rgba(2, 6, 12, .08);
-    --shadow: 0 8px 30px rgba(2,6,12,.08);
+  :root{
+    --bg:#f6f7f8; --card:#fff; --ink:#1e1f22; --muted:#6b7280;
+    --border:rgba(2,6,12,.08); --shadow:0 8px 30px rgba(2,6,12,.08);
+    --olive:124,139,96;
   }
-  html, body { margin:0; padding:0; background:var(--bg-color); color:var(--ink); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-  .container { max-width:1100px; margin:0 auto; padding:0 16px 48px 16px; }
-
-  /* Header */
-  .header { position:relative; overflow:hidden; border-bottom:1px solid var(--border); background:linear-gradient(120deg, rgba(124,139,96,0.18), rgba(124,139,96,0.6)); }
-  .header-inner { max-width:1100px; margin:0 auto; padding:40px 16px 28px 16px; }
-  .header-title { font-size:clamp(28px,6vw,44px); line-height:1.1; margin:0 0 6px 0; font-weight:800; color:#fff; text-shadow:0 2px 18px rgba(0,0,0,.12); }
-  .header-sub { color:rgba(255,255,255,.95); font-size:clamp(14px,2.4vw,18px); margin:0; text-shadow:0 2px 16px rgba(0,0,0,.10); }
-
-  /* Tabs */
-  .tabs { display:flex; gap:14px; flex-wrap:wrap; padding:18px 0; border-bottom:1px solid var(--border); background:#fff; }
-  .tab { display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:#fff; color:var(--ink); text-decoration:none; font-weight:600; cursor:pointer; }
-  .tab.active { background:#f3f5f2; border-color:rgba(124,139,96,.35); }
-
-  /* Cards */
-  .card { background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); }
-  .card-pad { padding:18px; }
-  .card-title { font-size:22px; font-weight:800; margin:8px 0 2px 0; text-align:center; }
-  .section { margin-top:22px; }
-
-  /* Calendar */
-  .calendar-wrap { margin-top:14px; }
-  .calendar-head { display:flex; align-items:center; justify-content:space-between; padding:10px 4px 14px 4px; }
-  .calendar-title { font-size:20px; font-weight:700; margin:0; }
-  .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:12px; padding:6px 6px 18px 6px; }
-  .dow { text-align:center; font-weight:700; color:var(--muted); }
-
-  /* state helpers for notes + editor */
-  .calendar-day.note-only { border:2px dashed var(--border); }
-  .calendar-day.has-note .day-note { display:block; }
-  .day-note { position:absolute; top:6px; right:6px; font-size:0.85rem; opacity:0.9; display:none; }
-
-  .rating-editor { margin-top:12px; display:none; }
-  .rating-row { display:flex; align-items:center; gap:8px; margin:6px 0; }
-  .rating-label { min-width:90px; font-weight:600; }
-  .pill { padding:4px 8px; border-radius:16px; border:1px solid var(--border); cursor:pointer; font-size:0.85rem; }
-  .pill-selected { background:#eef4ea; border-color:#a7b59a; }
-
-  .calendar-day { position:relative; min-height:106px; border:1px solid var(--border); border-radius:12px; background:linear-gradient(135deg, rgba(124,139,96,.08), rgba(124,139,96,.2)); cursor:pointer; transition: box-shadow .2s, transform .05s; display:flex; align-items:center; justify-content:center; text-align:center; }
-  .calendar-day:hover { box-shadow:0 10px 30px rgba(2,6,12,.1); transform: translateY(-1px); }
-  .calendar-day.other { opacity:.35; }
-  .calendar-day.today { outline:2px solid rgba(124,139,96,.45); }
-  .calendar-day.selected { box-shadow:0 0 0 3px rgba(124,139,96,.5) inset; }
-  .day-number { font-weight:700; font-size:16px; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.25); }
-  .day-wellness { position:absolute; bottom:8px; left:10px; font-size:16px; }
-
-  .calendar-stats { display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:12px; margin-top:12px; }
-  .stat { background:#f6f8f6; border:1px solid var(--border); border-radius:12px; padding:14px; text-align:center; }
-  .stat .val { font-size:22px; font-weight:800; color:#6b7c5e; }
-  .stat .lbl { font-size:12px; color:var(--muted); }
-
-  /* Day Detail */
-  .day-detail { display:none; margin-top:18px; }
-  .detail-head { margin:0 0 8px 0; }
-  .detail-row { display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:8px; }
-  .detail-col { background:#f7f8f7; border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center; }
-  .detail-col .lbl { font-size:12px; color:var(--muted); }
-  .detail-col .val { font-weight:700; font-size:18px; margin-top:2px; }
-
-  .notes-box { width:100%; border-radius:12px; border:1px solid var(--border); padding:12px; min-height:120px; font-size:14px; resize:vertical; background:#fff; }
-
-  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border-radius:10px; padding:8px 12px; border:1px solid var(--border); background:#fff; font-weight:600; cursor:pointer; }
-  .btn-primary { background:#1f2937; color:#fff; }
-  .btn-secondary { background:#f1f5f9; }
-
-  @keyframes dayFlash { from { box-shadow:0 0 0 6px rgba(124,139,96,0.28);} to { box-shadow:0 0 0 0 rgba(124,139,96,0);} }
-  .flash-once { animation: dayFlash 900ms ease-out; border-radius:12px; }
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  .container{max-width:1100px;margin:0 auto;padding:0 16px 48px}
+  .header{background:linear-gradient(120deg, rgba(124,139,96,.18), rgba(124,139,96,.6));border-bottom:1px solid var(--border)}
+  .header-inner{max-width:1100px;margin:0 auto;padding:40px 16px 28px}
+  .title{font-size:clamp(28px,6vw,44px);font-weight:800;color:#fff;margin:0 0 6px}
+  .sub{color:rgba(255,255,255,.95);margin:0}
+  .tabs{display:flex;gap:14px;flex-wrap:wrap;padding:18px 0;border-bottom:1px solid var(--border);background:#fff}
+  .tab{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:#fff;font-weight:600;text-decoration:none;color:var(--ink)}
+  .tab.active{background:#f3f5f2;border-color:rgba(124,139,96,.35)}
+  .section{margin-top:22px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+  .pad{padding:18px}
+  h2{margin:8px 0 2px;text-align:center}
+  .cal-head{display:flex;justify-content:space-between;align-items:center;padding:10px 4px 14px}
+  .btn{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-weight:600;cursor:pointer}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;padding:6px 6px 18px}
+  .dow{text-align:center;font-weight:700;color:var(--muted)}
+  .day{position:relative;min-height:106px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(135deg, rgba(var(--olive),.08), rgba(var(--olive),.2));display:flex;align-items:center;justify-content:center;cursor:pointer;transition:box-shadow .2s,transform .05s}
+  .day:hover{box-shadow:0 10px 30px rgba(2,6,12,.1);transform:translateY(-1px)}
+  .day.other{opacity:.35}
+  .day.today{outline:2px solid rgba(124,139,96,.45)}
+  .day.selected{box-shadow:0 0 0 3px rgba(124,139,96,.5) inset}
+  .num{font-weight:700;font-size:16px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.25)}
+  .badge{position:absolute;bottom:8px;left:10px}
+  .stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:12px}
+  .stat{background:#f6f8f6;border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+  .val{font-size:22px;font-weight:800;color:#6b7c5e}
+  .lbl{font-size:12px;color:var(--muted)}
+  .detail{display:none;margin-top:18px}
+  .row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+  .col{background:#f7f8f7;border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+  .col .lbl{font-size:12px;color:var(--muted)}
+  .col .val{font-weight:700;font-size:18px;margin-top:2px}
+  .notes{width:100%;border-radius:12px;border:1px solid var(--border);padding:12px;min-height:120px;background:#fff}
+  @keyframes flash{from{box-shadow:0 0 0 6px rgba(124,139,96,.28)}to{box-shadow:0 0 0 0 rgba(124,139,96,0)}}
+  .flash{animation:flash 900ms ease-out;border-radius:12px}
 </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="header-inner">
-      <h1 class="header-title">The Five Anchors Dashboard</h1>
-      <p class="header-sub">Your Stability Center — navigate life from a grounded, conscious place</p>
+<header class="header">
+  <div class="header-inner">
+    <h1 class="title">The Five Anchors Dashboard</h1>
+    <p class="sub">Your Stability Center — navigate life from a grounded, conscious place</p>
+  </div>
+  <div class="tabs container">
+    <a class="tab" href="#overview">📊 Overview</a>
+    <a class="tab" href="#checkin">🗓️ Daily Check-in</a>
+    <a class="tab" href="#plan">📝 Action Plan</a>
+    <a class="tab active" href="#calendar">🗂️ Progress Calendar</a>
+    <a class="tab" href="#statements">🧭 Anchor Statements</a>
+  </div>
+</header>
+
+<main class="container">
+  <section id="calendar" class="section">
+    <div class="card pad">
+      <h2>Your Progress Calendar</h2>
+      <div class="cal-head">
+        <button id="prev" class="btn">← Previous</button>
+        <h3 id="monthLabel" style="margin:0;font-weight:700">—</h3>
+        <button id="next" class="btn">Next →</button>
+      </div>
+
+      <div class="grid">
+        <div class="dow">Sun</div><div class="dow">Mon</div><div class="dow">Tue</div>
+        <div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div>
+      </div>
+
+      <div id="grid" class="grid"></div>
+
+      <div class="stats">
+        <div class="stat"><div class="val" id="avg-physical">—</div><div class="lbl">Physical Average</div></div>
+        <div class="stat"><div class="val" id="avg-mental">—</div><div class="lbl">Mental Average</div></div>
+        <div class="stat"><div class="val" id="avg-emotional">—</div><div class="lbl">Emotional Average</div></div>
+        <div class="stat"><div class="val" id="avg-spiritual">—</div><div class="lbl">Spiritual Average</div></div>
+        <div class="stat"><div class="val" id="avg-relational">—</div><div class="lbl">Community Average</div></div>
+        <div class="stat"><div class="val" id="best-day">—</div><div class="lbl">Best Day</div></div>
+      </div>
+
+      <div id="detail" class="detail">
+        <h3 id="detailDate" style="margin:0 0 8px 0">—</h3>
+        <p id="noRatings" style="opacity:.7;font-size:.95rem;margin:4px 0 10px 0;display:none;">No ratings yet — add a quick note if you like.</p>
+        <div class="row">
+          <div class="col"><div class="lbl">Physical</div><div class="val" id="d-physical">—</div></div>
+          <div class="col"><div class="lbl">Mental</div><div class="val" id="d-mental">—</div></div>
+          <div class="col"><div class="lbl">Emotional</div><div class="val" id="d-emotional">—</div></div>
+          <div class="col"><div class="lbl">Spiritual</div><div class="val" id="d-spiritual">—</div></div>
+          <div class="col"><div class="lbl">Community</div><div class="val" id="d-relational">—</div></div>
+        </div>
+        <div style="margin-top:16px">
+          <label for="note" style="display:block;font-weight:700;margin:0 0 6px 0">Notes</label>
+          <textarea id="note" class="notes" placeholder="Add a quick note…"></textarea>
+          <div style="margin-top:8px"><button id="saveNote" class="btn" style="background:#1f2937;color:#fff">Update Day</button></div>
+        </div>
+      </div>
     </div>
-    <div class="tabs container">
-      <a class="tab" href="#overview">📊 Overview</a>
-      <a class="tab" href="#checkin">🗓️ Daily Check-in</a>
-      <a class="tab" href="#plan">📝 Action Plan</a>
-      <a class="tab active" href="#calendar">🗂️ Progress Calendar</a>
-      <a class="tab" href="#statements">🧭 Anchor Statements</a>
-    </div>
-  </header>
+  </section>
+</main>
 
-  <main class="container">
-    <section id="calendar" class="section">
-      <div class="card card-pad">
-        <h2 class="card-title">Your Progress Calendar</h2>
+<script>
+console.log('Baseline v1 loaded');
 
-        <div class="calendar-head">
-          <button class="btn" id="prev-month">← Previous</button>
-          <h3 id="month-label" class="calendar-title">August 2025</h3>
-          <button class="btn" id="next-month">Next →</button>
-        </div>
+/* ---------- State ---------- */
+let state = {
+  viewYear: new Date().getFullYear(),
+  viewMonth: new Date().getMonth(),
+  selected: null, // 'YYYY-MM-DD'
+  daily: {}       // 'YYYY-MM-DD': { ratings:{physical,mental,emotional,spiritual,relational}, notes:'' }
+};
 
-        <div class="calendar-grid" id="dow">
-          <div class="dow">Sun</div><div class="dow">Mon</div><div class="dow">Tue</div>
-          <div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div>
-        </div>
+function save(){ localStorage.setItem('cm_dashboard_state', JSON.stringify(state)); }
+function load(){ try{ const s=localStorage.getItem('cm_dashboard_state'); if(s){ const o=JSON.parse(s); state={...state,...o}; } }catch(e){} }
 
-        <div class="calendar-grid" id="calendar-grid"></div>
+function fmt(d){ const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
+function parse(str){ const [y,m,d]=str.split('-').map(n=>parseInt(n,10)); return new Date(y,m-1,d); }
 
-        <div class="calendar-stats" id="month-insights">
-          <div class="stat"><div class="val" id="avg-physical">—</div><div class="lbl">Physical Average</div></div>
-          <div class="stat"><div class="val" id="avg-mental">—</div><div class="lbl">Mental Average</div></div>
-          <div class="stat"><div class="val" id="avg-emotional">—</div><div class="lbl">Emotional Average</div></div>
-          <div class="stat"><div class="val" id="avg-spiritual">—</div><div class="lbl">Spiritual Average</div></div>
-          <div class="stat"><div class="val" id="avg-relational">—</div><div class="lbl">Community Average</div></div>
-          <div class="stat"><div class="val" id="best-day">—</div><div class="lbl">Best Day</div></div>
-        </div>
+function monthDays(y,m){
+  const start=new Date(y,m,1), end=new Date(y,m+1,0);
+  const first=start.getDay(), total=end.getDate();
+  const out=[];
+  for(let i=0;i<first;i++){ const d=new Date(y,m,-(first-1-i)); out.push({date:fmt(d), other:true}); }
+  for(let i=1;i<=total;i++){ const d=new Date(y,m,i); out.push({date:fmt(d), other:false}); }
+  while(out.length%7!==0){ const d=new Date(y,m,total+(out.length%7)); out.push({date:fmt(d), other:true}); }
+  return out;
+}
 
-        <div class="day-detail" id="day-detail">
-          <h3 class="detail-head" id="detail-date">—</h3>
-          <p id="no-ratings-hint" style="opacity:.7; font-size:.9
+function blendBg(r){
+  const palette={physical:[124,139,96],mental:[95,115,155],emotional:[180,97,108],spiritual:[140,120,168],relational:[153,142,123]};
+  let R=0,G=0,B=0,W=0;
+  for(const k in palette){ const v=r[k]?r[k]/5:0; R+=palette[k][0]*v; G+=palette[k][1]*v; B+=palette[k][2]*v; W+=v; }
+  if(W>0){ R/=W; G/=W; B/=W; } else { R=124; G=139; B=96; }
+  const a=(x)=>Math.round(x);
+  return `linear-gradient(135deg, rgba(${a(R)},${a(G)},${a(B)}, .22), rgba(${a(R)},${a(G)},${a(B)}, .38))`;
+}
+
+function makeDay(dateStr, other){
+  const data = state.daily[dateStr] || null;
+  const d = parse(dateStr);
+  const el = document.createElement('div');
+  el.className='day'+(other?' other':'');
+  if(dateStr===fmt(new Date())) el.classList.add('today');
+
+  const hasRatings = !!(data && data.ratings);
+  if(hasRatings){
+    const avg = Object.values(data.ratings).reduce((a,b)=>a+b,0)/5;
+    el.style.background = blendBg(data.ratings);
+    el.style.opacity = Math.max(.6, .55 + (avg/5)*.45);
+  }
+
+  el.innerHTML = `<div class="num">${d.getDate()}</div>${hasRatings?'<div class="badge">📊</div>':''}`;
+  el.addEventListener('click', ()=> {
+    document.querySelectorAll('.day.selected').forEach(x=>x.classList.remove('selected'));
+    el.classList.add('selected');
+    showDetail(dateStr, data);
+  });
+  return el;
+}
+
+function render(){
+  const y=stat
