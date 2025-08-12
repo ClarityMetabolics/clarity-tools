@@ -50,6 +50,13 @@
 .rates{display:flex;gap:6px;margin-top:6px}
 .rate{border:1px solid var(--border);border-radius:8px;padding:6px 10px}
 .rate.active{box-shadow:0 0 0 2px rgba(124,139,96,.4) inset;font-weight:600}
+  /* Calendar day polish */
+.day{position:relative;border-radius:12px}
+.day .num{font-weight:600}
+.day .badge{position:absolute;right:6px;top:6px;font-size:12px;opacity:.9}
+.day.today{outline:2px solid var(--olive, #7c8b60)}
+.day.selected{box-shadow:0 0 0 3px rgba(124,139,96,.35) inset}
+
 
 </style>
   <script src="fa-baseline.js" defer></script>
