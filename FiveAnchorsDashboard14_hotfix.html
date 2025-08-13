@@ -153,6 +153,29 @@
     </div>
   </div>
 </section>
+<!-- Day detail panel -->
+<div id="detail" class="card" style="display:none;margin-top:16px;">
+  <h3 id="detailDate" style="margin:0 0 8px 0"></h3>
+  <p id="noRatings" style="opacity:.7;font-size:.95rem;margin:4px 0 10px 0;display:none;">
+    No ratings yet — add a quick note if you like.
+  </p>
+
+  <div class="row">
+    <div class="col"><div class="lbl">Physical</div><div class="val" id="d-physical"></div></div>
+    <div class="col"><div class="lbl">Mental</div><div class="val" id="d-mental"></div></div>
+    <div class="col"><div class="lbl">Emotional</div><div class="val" id="d-emotional"></div></div>
+    <div class="col"><div class="lbl">Spiritual</div><div class="val" id="d-spiritual"></div></div>
+    <div class="col"><div class="lbl">Community</div><div class="val" id="d-relational"></div></div>
+  </div>
+
+  <div style="margin-top:16px;">
+    <label for="note" style="display:block;font-weight:700;margin:0 0 6px 0">Notes</label>
+    <textarea id="note" class="notes" placeholder="Add a quick note…"></textarea>
+    <div style="margin-top:8px">
+      <button id="saveNote" class="btn" style="background:#1f2937;color:#fff">Update Day</button>
+    </div>
+  </div>
+</div>
 
   <section id="calendar" class="section">
     <div class="card pad">
