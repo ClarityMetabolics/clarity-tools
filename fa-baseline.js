@@ -118,6 +118,14 @@ function makeDay(dateStr, other){
     document.querySelectorAll('.day.selected').forEach(n=>n.classList.remove('selected'));
     el.classList.add('selected');
     showDetail(dateStr, data);
+// Smooth-scroll to the detail panel
+const panel = document.getElementById('detail');
+if (panel) {
+  panel.style.display = ''; // in case it was hidden initially
+  requestAnimationFrame(() => {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
 
     
   });
