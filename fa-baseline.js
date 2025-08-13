@@ -118,6 +118,32 @@ function makeDay(dateStr, other){
     document.querySelectorAll('.day.selected').forEach(n=>n.classList.remove('selected'));
     el.classList.add('selected');
     showDetail(dateStr, data);
+    // Smooth-scroll to the Day Detail panel (robust version)
+const panel = document.getElementById('detail');
+if (panel) {
+  // Ensure it's visible before measuring
+  if (getComputedStyle(panel).display === 'none') {
+    panel.style.display = 'block';
+  }
+
+  // Next animation frame so layout is up-to-date
+  requestAnimationFrame(() => {
+    // Choose the page scroller (body/html) in a cross-browser way
+    const scroller = document.scrollingElement || document.documentElement;
+
+    // How much space to leave for the sticky header
+    // Tweak if you want a bit more/less padding.
+    const OFFSET = window.innerWidth <= 640 ? 120 : 120;
+
+    // Absolute Y position of the panel
+    const targetY = panel.getBoundingClientRect().top + window.pageYOffset - OFFSET;
+
+    // Perform the scroll
+    scroller.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+
+  });
+}
+
 // Smooth-scroll to the detail panel
 const panel = document.getElementById('detail');
 if (panel) {
