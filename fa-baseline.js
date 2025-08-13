@@ -158,6 +158,61 @@ function updateStats(){
     ? bestDay.toLocaleDateString(undefined,{month:'short', day:'numeric'})
     : '—';
 }
+// Open the day detail panel and fill it
+function showDetail(dateStr, data){
+  // derive a Date for the header
+  const [y,m,d] = dateStr.split('-').map(n => parseInt(n,10));
+  const when = new Date(y, m-1, d);
+
+  // grab panel pieces
+  const panel     = document.getElementById('detail');
+  const dateEl    = document.getElementById('detailDate');
+  const noRatings = document.getElementById('noRatings');
+  const noteEl    = document.getElementById('note');
+  const saveBtn   = document.getElementById('saveNote');
+
+  // show the panel
+  if (panel) panel.style.display = 'block';
+
+  // header date
+  if (dateEl) {
+    dateEl.textContent = when.toLocaleDateString(undefined, {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
+
+  // fill ratings
+  const fields = ['physical','mental','emotional','spiritual','relational'];
+  const ratings = (data && data.ratings) ? data.ratings : null;
+
+  fields.forEach(k => {
+    const slot = document.getElementById('d-' + k);
+    if (!slot) return;
+    const v = ratings && ratings[k] ? ratings[k] : '';
+    slot.textContent = v ? String(v) : '—';
+  });
+
+  // “no ratings yet” message
+  if (noRatings) {
+    const hasRatings = !!(ratings && Object.values(ratings).some(n => !!n));
+    noRatings.style.display = hasRatings ? 'none' : '';
+  }
+
+  // notes textbox
+  if (noteEl) noteEl.value = (data && data.notes) ? data.notes : '';
+
+  // save note for THIS date
+  if (saveBtn) {
+    saveBtn.onclick = () => {
+      state.daily[dateStr] = {
+        ...(state.daily[dateStr] || {}),
+        notes: (noteEl ? noteEl.value : '')
+      };
+      save();
+      render(); // refresh badges (📝/▮) on the calendar
+    };
+  }
+}
 
 function render(){
   // Month title
