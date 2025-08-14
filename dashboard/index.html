@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Five Anchors Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Component -->
+    <div id="header-component"></div>
+    
+    <!-- Main Navigation Component -->
+    <div id="nav-component"></div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="section-header">
+                <h1 class="section-title">Your Clarity Dashboard</h1>
+                <p class="section-subtitle">Monitor your anchor strength and find your center</p>
+            </div>
+            
+            <!-- Five Anchors Progress Component -->
+            <div id="anchor-circles-component"></div>
+            
+            <!-- Daily Check-In Component -->
+            <div id="daily-checkin-component"></div>
+            
+            <!-- Today's Focus Component -->
+            <div class="card">
+                <h3>Today's Focus</h3>
+                <div id="focus-recommendations">
+                    <p class="focus-message">Complete your daily check-in to receive personalized recommendations.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Other Sections (My Progress, Five Anchors, etc.) -->
+        <div id="other-sections-component"></div>
+    </main>
+    
+    <!-- Footer Component -->
+    <div id="footer-component"></div>
+    
+    <!-- Crisis Support Button -->
+    <button class="crisis-support" onclick="showSection('crisis')">
+        🆘 Crisis Support
+    </button>
+    
+    <!-- Load Components and Scripts -->
+    <script src="js/components.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
