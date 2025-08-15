@@ -1,1087 +1,981 @@
-<!DOCTYPE html>
 <!--
-Thought Refiner v1.0.0
-Release Date: August 5, 2025
-Author: Clarity Metabolics
-Part of: Discernment Toolkit Series
-Features: Multi-step thought processing, emotional regulation integration, truth discernment framework, auto-save, dark/light modes
+  ============================================================
+  Clarity Metabolics - Thought Refiner: Signal from Noise
+  Interactive Web Tool for Advanced Thought Discernment
+  ============================================================
+  
+  Version: 3.1.0 (Refined for Accessibility & Impact)
+  Created: August 2025
+  Author: Clarity Metabolics
+  
+  Key Refinements:
+  - Enhanced Step 5 with clearer "gap preview"
+  - Improved Sacred Gap accessibility with optional perspectives
+  - More practical redirect plan examples
+  - Smoother transitions between concepts
+  
+  ============================================================
 -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thought Refiner | Discernment Toolkit by Clarity Metabolics</title>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Thought Refiner — Signal from Noise</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root {
---main: #7A94A8;
---accent: #E7EEF1;
---contrast: #4A5A6A;
---bg-primary: #fff;
---bg-secondary: #E7EEF1;
---text-primary: #4A5A6A;
---text-secondary: #888;
-}
-
-[data-theme="dark"] {
---main: #9BB4C8;
---accent: #2A3441;
---contrast: #E8EDF2;
---bg-primary: #1A2028;
---bg-secondary: #2A3441;
---text-primary: #E8EDF2;
---text-secondary: #B0B8C0;
-}
-
-* {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-}
-
-body {
-font-family: 'Open Sans', sans-serif;
-background: var(--bg-secondary);
-min-height: 100vh;
-color: var(--text-primary);
-line-height: 1.6;
-transition: all 0.3s ease;
-}
-
-.container {
-max-width: 650px;
-margin: 0 auto;
-padding: 20px;
-min-height: 100vh;
-display: flex;
-flex-direction: column;
-justify-content: center;
-position: relative;
-}
-
-.theme-toggle {
-position: fixed;
-top: 20px;
-right: 20px;
-background: var(--main);
-color: var(--bg-primary);
-border: none;
-border-radius: 50%;
-width: 50px;
-height: 50px;
-font-size: 1.2rem;
-cursor: pointer;
-transition: all 0.3s ease;
-z-index: 1000;
-box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.theme-toggle:hover {
-transform: scale(1.1);
-background: var(--contrast);
-}
-
-.auto-save-notification {
-position: fixed;
-top: 80px;
-right: 20px;
-background: var(--main);
-color: var(--bg-primary);
-padding: 8px 16px;
-border-radius: 20px;
-font-size: 0.8rem;
-opacity: 0;
-transform: translateY(-10px);
-transition: all 0.3s ease;
-z-index: 999;
-box-shadow: 0 4px 12px rgba(122, 148, 168, 0.3);
-}
-
-.auto-save-notification.show {
-opacity: 1;
-transform: translateY(0);
-}
-
-.card {
-background: var(--bg-primary);
-border-radius: 20px;
-padding: 40px 35px;
-box-shadow: 0 10px 30px rgba(74, 90, 106, 0.1);
-text-align: center;
-transition: all 0.3s ease;
-border: 1px solid var(--accent);
-}
-
-.progress-bar {
-width: 100%;
-height: 6px;
-background: var(--accent);
-border-radius: 3px;
-margin-bottom: 25px;
-overflow: hidden;
-}
-
-.progress-fill {
-height: 100%;
-background: linear-gradient(90deg, var(--main), var(--contrast));
-border-radius: 3px;
-transition: width 0.3s ease;
-}
-
-.progress-indicator {
-text-align: center;
-font-size: 0.9rem;
-color: var(--text-secondary);
-margin-bottom: 10px;
-font-weight: 500;
-}
-
-.progress-dots {
-display: flex;
-justify-content: center;
-gap: 8px;
-margin-bottom: 20px;
-}
-
-.dot {
-width: 8px;
-height: 8px;
-border-radius: 50%;
-background: var(--accent);
-transition: all 0.3s ease;
-position: relative;
-}
-
-.dot.active {
-background: var(--main);
-transform: scale(1.2);
-}
-
-.dot.completed {
-background: #4CAF50;
-transform: scale(1.1);
-}
-
-.dot.completed::after {
-content: '✓';
-position: absolute;
-top: -2px;
-left: 1px;
-font-size: 10px;
-color: white;
-font-weight: bold;
-}
-
-.progress-note {
-text-align: center;
-font-size: 0.8rem;
-color: var(--text-secondary);
-font-style: italic;
-margin-bottom: 15px;
-}
-
-.icon-header {
-font-size: 3rem;
-margin-bottom: 20px;
-opacity: 0.8;
-}
-
-h1 {
-font-family: 'Libre Baskerville', serif;
-font-size: 2.2rem;
-color: var(--text-primary);
-margin-bottom: 15px;
-line-height: 1.3;
-}
-
-.subtitle {
-font-style: italic;
-font-size: 1.1rem;
-color: var(--main);
-margin-bottom: 25px;
-font-family: 'Libre Baskerville', serif;
-font-weight: 500;
-}
-
-h2 {
-font-family: 'Libre Baskerville', serif;
-font-size: 1.8rem;
-color: var(--text-primary);
-margin-bottom: 20px;
-}
-
-.body-text {
-font-size: 1.05rem;
-color: var(--text-primary);
-margin-bottom: 30px;
-text-align: left;
-line-height: 1.75;
-}
-
-.prompt {
-font-size: 1.1rem;
-margin-bottom: 20px;
-color: var(--text-primary);
-text-align: left;
-font-weight: 600;
-}
-
-.input-group {
-margin: 25px 0;
-position: relative;
-}
-
-textarea {
-width: 100%;
-padding: 15px;
-border: 2px solid var(--main);
-border-radius: 12px;
-font-size: 1rem;
-font-family: 'Open Sans', sans-serif;
-background: var(--bg-primary);
-color: var(--text-primary);
-transition: all 0.3s ease;
-min-height: 80px;
-resize: vertical;
-font-size: 16px;
-}
-
-textarea:focus {
-outline: none;
-border-color: var(--main);
-box-shadow: 0 0 0 2px rgba(122, 148, 168, 0.15);
-}
-
-.char-count {
-text-align: right;
-font-size: 0.8rem;
-color: var(--text-secondary);
-margin-top: 5px;
-}
-
-.encouragement {
-background: rgba(122, 148, 168, 0.1);
-color: var(--main);
-padding: 8px 12px;
-border-radius: 8px;
-font-size: 0.9rem;
-margin-top: 8px;
-opacity: 0;
-transform: translateY(-5px);
-transition: all 0.3s ease;
-font-style: italic;
-}
-
-.encouragement.show {
-opacity: 1;
-transform: translateY(0);
-}
-
-.typing-prompt {
-color: var(--main);
-font-size: 0.9rem;
-font-style: italic;
-margin-top: 8px;
-opacity: 0;
-transition: opacity 0.3s ease;
-}
-
-.typing-prompt.show {
-opacity: 1;
-}
-
-.button {
-background: var(--main);
-color: var(--bg-primary);
-border: none;
-padding: 15px 30px;
-border-radius: 25px;
-font-size: 1rem;
-font-weight: 600;
-cursor: pointer;
-transition: all 0.3s ease;
-margin: 10px;
-min-width: 140px;
-}
-
-.button:hover:not(:disabled) {
-background: var(--contrast);
-transform: translateY(-2px);
-box-shadow: 0 5px 15px rgba(122, 148, 168, 0.3);
-}
-
-.button:disabled {
-background: var(--text-secondary);
-cursor: not-allowed;
-transform: none;
-box-shadow: none;
-}
-
-.button-group {
-display: flex;
-gap: 10px;
-justify-content: center;
-flex-wrap: wrap;
-margin-top: 20px;
-}
-
-.button-group .button {
-padding: 10px 18px;
-font-size: 0.9rem;
-min-width: 100px;
-margin: 5px;
-}
-
-.button.secondary {
-background: transparent;
-color: var(--main);
-border: 2px solid var(--main);
-}
-
-.button.secondary:hover:not(:disabled) {
-background: var(--main);
-color: var(--bg-primary);
-}
-
-.interlude-box {
-background: linear-gradient(135deg, var(--accent) 0%, var(--bg-secondary) 100%);
-border-left: 4px solid var(--main);
-padding: 25px;
-margin: 20px 0;
-border-radius: 12px;
-text-align: left;
-}
-
-.summary-box {
-background: linear-gradient(135deg, rgba(122, 148, 168, 0.1) 0%, var(--accent) 100%);
-border-left: 4px solid var(--main);
-padding: 25px;
-margin: 20px 0;
-border-radius: 12px;
-text-align: left;
-}
-
-.action-buttons {
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-gap: 15px;
-margin-top: 30px;
-}
-
-.action-buttons button {
-background: var(--main);
-color: var(--bg-primary);
-border: none;
-padding: 12px 20px;
-border-radius: 20px;
-font-size: 0.9rem;
-font-weight: 600;
-cursor: pointer;
-transition: all 0.3s ease;
-min-width: 140px;
-}
-
-.action-buttons button:hover:not(:disabled) {
-background: var(--contrast);
-transform: translateY(-2px);
-}
-
-.action-buttons button:disabled {
-background: var(--text-secondary);
-cursor: not-allowed;
-transform: none;
-box-shadow: none;
-}
-
-.question {
-opacity: 1;
-transition: opacity 0.3s ease-in-out;
-}
-
-.fade-out { 
-opacity: 0; 
-}
-
-.fade-in {
-opacity: 0;
-animation: fadeIn 0.4s ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-to { opacity: 1; }
-}
-
-.hidden {
-display: none;
-}
-
-.modal {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(20, 20, 20, 0.6);
-display: flex;
-align-items: center;
-justify-content: center;
-z-index: 1000;
-overflow-y: auto;
-}
-
-.modal.hidden {
-display: none;
-}
-
-.modal-content {
-background-color: var(--bg-primary);
-padding: 2rem;
-border-radius: 15px;
-max-width: 500px;
-width: 90%;
-max-height: 90vh;
-overflow-y: auto;
-color: var(--text-primary);
-box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-position: relative;
-text-align: center;
-animation: fadeInModal 0.3s ease-out forwards;
-border: 2px solid var(--accent);
-margin: 20px;
-}
-
-.modal-content .body-text {
-text-align: left;
-line-height: 1.75;
-}
-
-.modal-content button {
-background: var(--main);
-color: var(--bg-primary);
-border: none;
-padding: 12px 24px;
-border-radius: 20px;
-font-size: 1rem;
-font-weight: 600;
-cursor: pointer;
-transition: all 0.3s ease;
-margin-top: 20px;
-}
-
-.modal-content button:hover {
-background: var(--contrast);
-transform: translateY(-2px);
-}
-
-.close-btn {
-position: absolute;
-top: 0.7rem;
-right: 1rem;
-font-size: 1.5rem;
-cursor: pointer;
-color: var(--text-primary);
-}
-
-@keyframes fadeInModal {
-from {
-transform: scale(0.9);
-opacity: 0;
-}
-to {
-transform: scale(1);
-opacity: 1;
-}
-}
-
-@media (max-width: 768px) {
-.container {
-padding: 15px;
-margin: 1rem;
-}
-
-.card {
-padding: 25px 20px;
-}
-
-.theme-toggle {
-top: 15px;
-right: 15px;
-width: 45px;
-height: 45px;
-font-size: 1.1rem;
-}
-
-h1 {
-font-size: 1.8rem;
-}
-
-.icon-header {
-font-size: 1.6rem;
-margin-bottom: 0.4em;
-}
-
-textarea {
-padding: 0.8rem;
-resize: none;
-}
-
-.action-buttons {
-flex-direction: column;
-align-items: center;
-}
-
-.action-buttons button {
-width: 100%;
-max-width: 300px;
-}
-
-.button-group {
-gap: 8px;
-}
-
-.button-group .button {
-min-width: 90px;
-padding: 8px 15px;
-font-size: 0.85rem;
-}
-}
+  :root{
+    --main-color:#7A94A8;      /* discernment blue-gray */
+    --accent-color:#E7EEF1;    /* soft panels */
+    --contrast-color:#4A5A6A;  /* deep accent text/borders */
+    --text-color:#333;
+    --bg-color:#fff;
+    --border-color:#d9d6cf;
+    --shadow:0 2px 12px rgba(0,0,0,.08);
+    --success-color:#5a7c41;   /* progress dots done */
+    --warning-color:#dc3545;   /* Start Over confirm */
+    --green-panel:#E5EBDD;
+    --yellow-panel:#FFF8CC;
+    --red-panel:#F5E6E6;
+  }
+  [data-theme="dark"]{
+    --text-color:#e6e6e6;
+    --bg-color:#1c1c1c;
+    --border-color:#3b3a36;
+    --accent-color:#2a2825;
+    --shadow:0 2px 14px rgba(0,0,0,.35);
+    --green-panel:#2d352a;
+    --yellow-panel:#3a3620;
+    --red-panel:#3a2828;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Open Sans',sans-serif;
+    color:var(--text-color);
+    background:var(--bg-color);
+    line-height:1.6;
+  }
+  .container{max-width:780px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+  /* Header */
+  .header{
+    color:#fff;
+    background:linear-gradient(135deg,var(--main-color),var(--contrast-color));
+    padding:22px 18px 18px;
+    position:relative;
+    transition: box-shadow .5s ease;
+  }
+  .header.completed{ box-shadow:0 0 18px rgba(122,148,168,.55); }
+  .header h1{
+    font-family:'Libre Baskerville',serif;
+    font-size:2rem;
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .subtitle{ text-align:center; font-style:italic; opacity:.95; }
+
+  .header-controls{ position:absolute; top:10px; right:10px; display:flex; gap:8px }
+  .header-btn{
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.3);
+    color:#fff;
+    padding:.35rem .6rem;border-radius:18px;cursor:pointer;
+    font-size:.8rem;transition:all .2s ease;
+  }
+  .header-btn:hover{background:rgba(255,255,255,.25)}
+
+  .progress-bar{height:4px;background:rgba(255,255,255,.28);border-radius:3px;margin-top:14px;overflow:hidden}
+  .progress-fill{height:100%;background:#fff;width:0%;transition:width .6s ease}
+
+  /* Content & steps */
+  main.content{flex:1;padding:22px}
+  .step{display:none;animation:fade .25s ease}
+  .step.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .step-indicator{ text-align:center; margin:10px 0 18px }
+  .step-counter{font-weight:700;color:#ffffff; background:var(--contrast-color); display:inline-block; padding:4px 10px; border-radius:12px }
+  .dots{display:flex;justify-content:center;gap:8px;margin-top:10px}
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--border-color)}
+  .dot.active{background:var(--main-color)}
+  .dot.done{background:var(--success-color)}
+
+  h2{font-family:'Libre Baskerville',serif;color:var(--main-color);font-size:1.7rem;margin:14px 0 10px}
+  h2 .subtitle{font-weight:400;font-style:italic;opacity:0.7;font-size:1.1rem}
+  p.lead{opacity:.95;margin-bottom:10px}
+
+  .tip{
+    background:linear-gradient(135deg, rgba(122,148,168,.12), rgba(74,90,106,.06));
+    border-left:4px solid var(--main-color);
+    padding:12px;border-radius:0 8px 8px 0;margin:14px 0;font-style:italic
+  }
+
+  .form-group{margin:16px 0}
+  label{display:block;font-weight:700;color:var(--contrast-color);margin-bottom:6px}
+  textarea, input[type="text"]{
+    width:100%;min-height:110px;resize:vertical;border:2px solid var(--border-color);
+    border-radius:10px;padding:12px;font:inherit;color:inherit;background:var(--bg-color);
+    transition:all .2s ease;
+  }
+  input[type="text"]{ min-height:auto; }
+  textarea:focus, input[type="text"]:focus{
+    outline:none;border-color:var(--main-color);box-shadow:0 0 0 3px rgba(122,148,168,.18)
+  }
+
+  /* Enhanced Character Count */
+  .char-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 0.85rem;
+  }
+  
+  .char-count {
+    color: var(--text-color);
+    opacity: 0.7;
+  }
+  
+  .encouragement {
+    color: var(--main-color);
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .encouragement.show {
+    opacity: 1;
+  }
+
+  /* Buttons */
+  .nav-row{display:flex;gap:12px;align-items:center;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-color)}
+  .nav-row .btn{flex:1}
+  .btn{
+    border:none;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;
+    transition:transform .1s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary{background:var(--main-color);color:#fff}
+  .btn-primary:hover{background:var(--contrast-color);box-shadow:var(--shadow);transform:translateY(-1px)}
+  .btn-secondary{background:var(--accent-color);color:var(--contrast-color);border:1px solid var(--border-color)}
+  .btn-secondary:hover{background:var(--border-color)}
+  .btn-warning{background:var(--warning-color);color:#fff}
+  .btn-warning:hover{background:#c82333}
+  .btn:disabled{background:var(--border-color);color:var(--text-color);opacity:0.6;cursor:not-allowed;transform:none}
+
+  .micro{ text-align:center; margin-top:6px; font-style:italic; color:var(--contrast-color); opacity:.85 }
+
+  /* Final actions */
+  .final-actions{
+    display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;
+  }
+  .final-actions .btn{ display:block; width:100%; max-width:280px; min-height:50px; text-align:center; }
+
+  /* Trinity Modal Styles */
+  .modal{
+    position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000;
+  }
+  .modal-content{
+    background:var(--bg-color);color:var(--text-color);max-width:600px;width:100%;max-height:90vh;
+    border-radius:12px;box-shadow:var(--shadow);padding:24px;overflow-y:auto;
+  }
+  .modal h3{
+    font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:16px;font-size:1.4rem;
+  }
+  .trinity-section{
+    margin-bottom:20px;padding:16px;background:var(--accent-color);border-radius:8px;
+  }
+  .trinity-role{
+    font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px;
+  }
+  .scripture{
+    font-style:italic;background:var(--accent-color);padding:16px;border-left:4px solid var(--main-color);
+    border-radius:8px;margin:16px 0;text-align:center;
+  }
+
+  /* Perspective Toggle */
+  .perspective-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  
+  .perspective-btn {
+    padding: 8px 16px;
+    border: 2px solid var(--main-color);
+    background: var(--bg-color);
+    color: var(--main-color);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+  
+  .perspective-btn.active {
+    background: var(--main-color);
+    color: #fff;
+  }
+  
+  .perspective-content {
+    display: none;
+  }
+  
+  .perspective-content.active {
+    display: block;
+  }
+
+  /* Branding */
+  .branding{ text-align:center; padding:18px; font-size:.85rem; color:var(--text-color); opacity:.75; border-top:1px solid var(--border-color) }
+  .branding a{ color:var(--contrast-color); text-decoration:none }
+  .branding a:hover{ text-decoration:underline }
+
+  @media (max-width:640px){
+    .nav-row{flex-direction:column}
+    .btn{width:100%}
+    .header h1{font-size:1.7rem}
+    .perspective-toggle { flex-direction: column; }
+    .perspective-btn { width: 100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step { animation: none; }
+    .progress-fill { transition: none; }
+    .btn { transition: none; }
+  }
 </style>
 </head>
 <body>
-<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">🌙</button>
-<div class="auto-save-notification" id="autoSaveNotification">Progress saved ✓</div>
-
+<div id="pageTop" style="position:absolute;top:0"></div>
 <div class="container">
-<!-- Intro Screen -->
-<div id="intro-screen" class="card">
-<div class="progress-indicator">Step 1 of 7</div>
-<div class="progress-bar">
-<div class="progress-fill" style="width: 0%"></div>
-</div>
-<div class="progress-dots">
-<div class="dot active"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-</div>
-<div class="progress-note">Your progress is automatically saved as you type</div>
 
-<div class="icon-header">🔍</div>
-<h1>Thought Refiner</h1>
-<p class="subtitle">Not every thought deserves your attention. Let's sort the signal from the noise.</p>
+  <header class="header" id="mainHeader">
+    <div class="header-controls">
+      <button class="header-btn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">🌙</button>
+    </div>
+    <h1>🔍 Thought Refiner — Separate Signal from Noise</h1>
+    <p class="subtitle">Not every thought deserves your attention. Let's sort the signal from the noise.</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
 
-<div class="body-text">
-Your mind processes thousands of thoughts daily. Some are helpful invitations to truth, others are distractions or lies masquerading as wisdom. This tool helps you discern which thoughts deserve your energy and which ones to release.
+  <main class="content">
+    <!-- STEP 0: Welcome -->
+    <section class="step active" data-step="0">
+      <div class="step-indicator">
+        <div class="step-counter">Step 1 of 10</div>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🔍 Discernment at the Source</h2>
+      <p class="lead">Your mind processes thousands of thoughts daily. Some are helpful invitations to truth, others are distractions that demand attention they don't deserve. This tool helps you discern which thoughts deserve your energy and which ones to release. Take a deep, full breath and when you're ready, let's begin.</p>
+      
+      <div class="tip">
+        <strong>How it works:</strong> We'll examine one persistent thought through seven focused steps: capture it, identify triggers, expose false promises, reveal actual outcomes, recognize the loop pattern, find the space for choice, and create a redirect plan anchored in truth.
+      </div>
+      
+      <p style="font-style: italic; color: var(--main-color); font-weight: 500; text-align: center; margin: 20px 0;">What thought has been demanding your attention lately?</p>
+      
+      <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin Refining →</button></div>
+      <div class="micro">Take your time. There's no rush here.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- STEP 1: Capture the Thought -->
+    <section class="step" data-step="1">
+      <div class="step-indicator">
+        <div class="step-counter">Step 2 of 9</div>
+        <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>📝 Capture the Thought <span class="subtitle">— Instead of being captured by it</span></h2>
+      <p class="lead">Before we can refine a thought, we need to see it clearly. With so many thoughts competing for attention, start by noticing which one feels the loudest and most urgent.</p>
+
+      <!-- Optional Overflow Section for Crisis Moments -->
+      <div style="margin: 20px 0; padding: 16px; background: rgba(122,148,168,0.05); border-radius: 10px; border-left: 3px solid var(--main-color);">
+        <div style="cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 12px;" onclick="toggleOverflow()">
+          <span style="font-weight: 600; color: var(--main-color);">Feeling overwhelmed? Start here first</span>
+          <span id="overflowToggle" style="color: var(--main-color); font-size: 1.2rem;">↓</span>
+        </div>
+        <div id="overflowSection" style="display: none;">
+          <p style="font-size: 0.9rem; font-style: italic; color: var(--contrast-color); margin-bottom: 12px;">If you're feeling overwhelmed right now, use this space to dump everything flooding your mind, body, and soul. It doesn't have to make sense or be organized - just get it out. This won't appear in your summary.</p>
+          <textarea id="overflowDump" placeholder="Let it all out... every worry, fear, thought, feeling, sensation. No editing, no organizing, just release..." style="width:100%; min-height:120px; resize:vertical; border:2px solid var(--border-color); border-radius:10px; padding:12px; font:inherit; color:inherit; background:var(--bg-color); transition:all .2s ease; opacity: 0.8;"></textarea>
+          <p style="font-size: 0.8rem; color: var(--text-color); opacity: 0.6; margin-top: 8px; text-align: center;">When you're ready, continue below to focus on one specific thought.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="thoughtCapture">What specific thought or mental pattern has been circling in your mind?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Choose the one that keeps interrupting the others or creates the most tension in your body</p>
+        <textarea id="thoughtCapture" placeholder="Don't censor. Write the exact thought or worry as it appears in your mind."></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count1">0 characters</div>
+          <div class="encouragement" id="enc1">Good. Getting it out of your head and onto the page is the first step to clarity.</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clues:</strong> Don't edit it yet. Just capture it exactly as it shows up in your mind, pressure and all.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next1" disabled>Complete thought capture to Continue</button>
+      </div>
+      <div class="micro">Honesty opens the door to freedom.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 2: When Does It Show Up? -->
+    <section class="step" data-step="2">
+      <div class="step-indicator">
+        <div class="step-counter">Step 3 of 10</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>⏰ When Does It Show Up? <span class="subtitle">— Revealing invisible triggers</span></h2>
+      <p class="lead">Every persistent thought has predictable triggers - specific conditions that make your mind vulnerable to it. Once you spot the pattern, you can interrupt it before it takes hold.</p>
+
+      <div class="form-group">
+        <label for="triggers">What situations, times, or triggers tend to activate this thought pattern?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Think back to the last time you had this thought - what was happening?</p>
+        <textarea id="triggers" placeholder="When do you notice this thought appearing? What seems to trigger it?"></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count2">0 characters</div>
+          <div class="encouragement" id="enc2">Patterns often reveal themselves when we pay attention to timing and context.</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clues:</strong> Notice the patterns. When is your mind most vulnerable to this thought? Late at night? During stress? Around certain people?</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next2" disabled>Complete trigger analysis to Continue</button>
+      </div>
+      <div class="micro">Awareness of patterns creates opportunities for change.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 3: What Does It Promise? -->
+    <section class="step" data-step="3">
+      <div class="step-indicator">
+        <div class="step-counter">Step 4 of 10</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🎁 What Does It Promise? <span class="subtitle">— Exposing false promises</span></h2>
+      <p class="lead">Persistent thoughts often convince us they're helpful when they're not. Your recurring thought has convinced you it's necessary: keeping you safe, helping you prepare, or making you wise to dangers. Understanding what it promises reveals why it feels so hard to let go.</p>
+
+      <div class="form-group">
+        <label for="promises">What does this thought claim it will do for you?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">How does it try to convince you it's necessary?</p>
+        <textarea id="promises" placeholder="What benefit or protection does this thought promise to provide?"></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count3">0 characters</div>
+          <div class="encouragement" id="enc3">Even destructive thoughts often masquerade as helpers. What's this one's disguise?</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clues:</strong> Common disguises: Does it claim to keep you safe? Help you prepare for problems? Make you wise to dangers? Protect you from disappointment?</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next3" disabled>Complete promise analysis to Continue</button>
+      </div>
+      <div class="micro">Understanding the false promise reveals the deception.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 4: What Does It Actually Deliver? -->
+    <section class="step" data-step="4">
+      <div class="step-indicator">
+        <div class="step-counter">Step 5 of 10</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>📦 What Does It Actually Deliver? <span class="subtitle">— When promises become problems</span></h2>
+      <p class="lead">Your thought has made its promises. Now let's examine what actually happens when you follow it. Does it deliver the protection it claims, or create more anxiety? Does it help you prepare, or paralyze you? This reality check reveals the gap between what thoughts promise and what they actually produce.</p>
+
+      <div class="form-group">
+        <label for="reality">When you follow this thought, what do you actually experience? How do you feel afterward?</label>
+        <textarea id="reality" placeholder="What's the real outcome when you engage with this thought?"></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count4">0 characters</div>
+          <div class="encouragement" id="enc4">Truth is found in the fruit. What has this thought actually produced in your life?</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clues:</strong> Be honest about the gap between promise and reality. Does this thought actually protect you, or does it create more fear? Does it help you prepare, or paralyze you?</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next4" disabled>Complete reality check to Continue</button>
+      </div>
+      <div class="micro">Reality checks reveal where thoughts lead us astray.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 5: Lies on a Loop (Enhanced) -->
+    <section class="step" data-step="5">
+      <div class="step-indicator">
+        <div class="step-counter">Step 6 of 10</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🔄 Lies on a Loop <span class="subtitle">— Escaping the endless cycle</span></h2>
+      <p class="lead">Now you see it: this thought creates an endless loop, promising help but delivering problems that make you need the thought even more. But here's what most people miss - between the end of one loop cycle and the beginning of another, there's a tiny space. A pause. Most minds rush right past it, racing from one anxious thought to the next. But it's there, waiting to be noticed.</p>
+
+      <div class="form-group">
+        <label for="loopPattern">How do you recognize when you're caught in this thought loop?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">What does it feel like when this cycle starts repeating?</p>
+        <textarea id="loopPattern" placeholder="Describe the feeling or signs that tell you you're cycling through this pattern again..."></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count5">0 characters</div>
+          <div class="encouragement" id="enc5">Recognition is the first step toward finding the way out.</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clues:</strong> There's a tiny gap between thoughts - like taking a breath between sentences. Most people miss it and jump straight to the next worry. But what if you noticed that gap and stayed there for a moment instead of rushing forward?</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next5" disabled>Complete loop analysis to Continue</button>
+      </div>
+      <div class="micro">The pause between thoughts is where choice begins.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 6: The Sacred Gap (Enhanced Accessibility) -->
+    <section class="step" data-step="6">
+      <div class="step-indicator">
+        <div class="step-counter">Step 7 of 10</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🌬️ The Sacred Gap <span class="subtitle">— Where truth is revealed and choice is restored</span></h2>
+      <p class="lead">You've done the hard work of understanding this thought pattern. You captured it, revealed its triggers, exposed its false promises, and saw how those promises become problems. You recognized the endless loop. Now comes the discovery: between the end of one thought and the beginning of another lies a space where something deeper than thinking exists.</p>
+
+      <!-- Spiritual Content -->
+      <div style="background:var(--accent-color);padding:20px;border-radius:10px;margin:20px 0;border-left:4px solid var(--main-color);">
+        <p style="font-style:italic;text-align:center;color:var(--contrast-color);line-height:1.7;font-size:1.05rem;">
+          "Be still, and know that I am God."<br>
+          <span style="font-size:0.9rem;opacity:0.8;">— Psalm 46:10</span>
+        </p>
+      </div>
+
+      <p style="margin:20px 0;color:var(--text-color);line-height:1.7;">In this gap lies solid ground. Here you discover you're not stuck alone with your thoughts. There's something peaceful here you can trust - something that knows how to handle what your mind can't figure out. You don't need to think your way out of this - you just need to rest here for a moment.</p>
+
+      <p style="margin:20px 0;color:var(--text-color);line-height:1.7;">If you can notice that small space even for a split second, you begin to break the old pattern. This tiny pause can shift something deep inside you. Over time and with practice, the pause gets longer and it becomes easier to spot other thoughts that help you escape the cycle that's been running your life.</p>
+
+      <div style="text-align:center;margin:20px 0;">
+        <button class="btn btn-primary" onclick="openPracticeModal()" style="box-shadow: 0 0 20px rgba(122,148,168,0.5), 0 4px 15px rgba(122,148,168,0.3);">✨ Practice This Now</button>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Choose from Truth →</button>
+      </div>
+      <div class="micro">In the stillness between thoughts, wisdom emerges.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 7: Free to Choose (Enhanced) -->
+    <section class="step" data-step="7">
+      <div class="step-indicator">
+        <div class="step-counter">Step 8 of 10</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>✨ Free to Choose <span class="subtitle">— Transformed thinking in action</span></h2>
+      <p class="lead">From that space of peace, you can now choose. Not from fear, not from loops, not from deception - but from the place where truth was revealed. What would wisdom whisper instead of what worry shouts?</p>
+
+      <div class="form-group">
+        <label for="trueThing">What truer thought emerges from this space of awareness?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">What does wisdom whisper when the noise stops?</p>
+        <textarea id="trueThing" placeholder="What truth emerges when you listen from that peaceful space?"></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count6">0 characters</div>
+          <div class="encouragement" id="enc6">Truth doesn't need to shout. It can be gentle and still be powerful.</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clues:</strong> Don't force it or try to think up the 'perfect' thought. Just listen. Often the truest thoughts are the gentlest ones - they don't need to shout to be powerful.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next6" disabled>Complete truth selection to Continue</button>
+      </div>
+      <div class="micro">Truth replaces lies when chosen from sacred space.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 8: Redirect Plan (Enhanced with Examples) -->
+    <section class="step" data-step="8">
+      <div class="step-indicator">
+        <div class="step-counter">Step 9 of 10</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+      </div>
+      <h2>🧭 Your Redirect Plan <span class="subtitle">— Practical steps for lasting change</span></h2>
+      <p class="lead">Knowledge without action remains powerless. When this thought pattern shows up again (and it will), what's your plan? How will you redirect your attention from the lie to the truth? The key is having a specific, simple action you can take in the moment.</p>
+
+      <div style="background:var(--accent-color);padding:16px;border-radius:10px;margin:16px 0;">
+        <h4 style="color:var(--main-color);margin-bottom:8px;">Redirect Examples:</h4>
+        <ul style="margin:0;padding-left:20px;color:var(--text-color);opacity:0.9;">
+          <li><strong>Physical:</strong> Take 3 deep breaths, go for a walk, splash cold water on face</li>
+          <li><strong>Mental:</strong> Ask "Is this thought helping or hurting?" Repeat your truth statement</li>
+          <li><strong>Emotional:</strong> Name the feeling, ask what it's protecting, honor it without acting on it</li>
+          <li><strong>Spiritual:</strong> Pray, recite a verse, ask for divine guidance</li>
+          <li><strong>Relational:</strong> Call a trusted friend, journal, speak truth out loud</li>
+        </ul>
+      </div>
+
+      <div class="form-group">
+        <label for="redirectPlan">When this thought pattern shows up again, what specific action will you take to redirect your attention?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Choose something simple and concrete you can do in the moment</p>
+        <textarea id="redirectPlan" placeholder="Write your specific redirect plan - what will you do when this thought returns?"></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count7">0 characters</div>
+          <div class="encouragement" id="enc7">Having a plan makes all the difference. You're not at the mercy of every thought.</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clues:</strong> Simple works best. What's one concrete thing you can do when this thought returns? The simpler your plan, the more likely you'll actually use it.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next7" disabled>Complete redirect plan to Continue</button>
+      </div>
+      <div class="micro">A simple plan transforms awareness into lasting freedom.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 9: Summary & Trinity Speaks -->
+    <section class="step" data-step="9">
+      <div class="step-indicator">
+        <div class="step-counter">Step 10 of 10</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div></div>
+      </div>
+      <h2>🔍 Thought Pattern Refined</h2>
+      <p class="lead">You've completed a powerful journey of discernment. You captured a thought that was capturing you, revealed its patterns and false promises, found the space between thoughts where choice lives, and created a practical plan for freedom. Below is a map of what you've discovered. More importantly, notice what feels clearer now.</p>
+
+      <div style="background:var(--accent-color);padding:20px;border-radius:10px;margin:20px 0">
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-bottom:15px">Your Thought Pattern Analysis</h3>
+        
+        <div style="margin-bottom:15px">
+          <strong style="color:var(--main-color)">The Thought:</strong>
+          <p id="sumThought" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+        
+        <div style="margin-bottom:15px">
+          <strong style="color:var(--main-color)">When It Shows Up:</strong>
+          <p id="sumTriggers" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+        
+        <div style="margin-bottom:15px">
+          <strong style="color:var(--main-color)">What It Promises:</strong>
+          <p id="sumPromises" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+        
+        <div style="margin-bottom:15px">
+          <strong style="color:var(--main-color)">What It Actually Delivers:</strong>
+          <p id="sumReality" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+        
+        <div style="margin-bottom:15px">
+          <strong style="color:var(--main-color)">The Loop Pattern:</strong>
+          <p id="sumLoop" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+        
+        <div style="margin-bottom:15px">
+          <strong style="color:var(--main-color)">What's Truer:</strong>
+          <p id="sumTruth" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+        
+        <div>
+          <strong style="color:var(--main-color)">Your Redirect Plan:</strong>
+          <p id="sumRedirect" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+      </div>
+
+      <div class="final-actions">
+        <button class="btn btn-primary" onclick="downloadSummary()">📄 Download Summary</button>
+        <button class="btn btn-secondary" onclick="openTrinityModal()">✨ Trinity Speaks</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;">
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">← Back</button>
+        <button class="btn btn-secondary" id="startOverBtn" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="confirmStartOver()">🔄 Start Over</button>
+      </div>
+
+      <div style="text-align:center;margin:20px 0;padding:16px;background:rgba(122,148,168,0.08);border-radius:8px;border:1px solid rgba(122,148,168,0.15);">
+        <h3 style="color:var(--main-color);margin-bottom:8px;font-family:'Libre Baskerville',serif;">🔍 Thought Refiner</h3>
+        <p style="margin:0;font-size:0.9rem;line-height:1.5;color:var(--text-color);opacity:0.9;">
+          Part of the comprehensive Five Anchors and Discernment Tools designed to help you find stability and clarity in overwhelming times.
+        </p>
+      </div>
+
+      <div class="branding">
+        <div><strong>Created by Clarity Metabolics</strong></div>
+        <div style="font-style:italic;margin-top:4px">Finding balance in a chaotic world.</div>
+        
+        <div style="margin:16px 0;padding:16px;background:rgba(122,148,168,0.08);border-radius:8px;border:1px solid rgba(122,148,168,0.15);">
+          <p style="margin:0;font-size:0.9rem;line-height:1.5;color:var(--text-color);opacity:0.9;">
+            For the complete toolkit that addresses every aspect of human experience, visit <strong><a href="https://claritymetabolics.com" target="_blank" style="color:var(--main-color);text-decoration:none;">claritymetabolics.com</a></strong>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
 </div>
 
-<p style="font-style: italic; color: var(--main); font-weight: 500;">What thought has been demanding your attention lately?</p>
-
-<button class="button" onclick="nextStep('step1')">Start Refining</button>
+<!-- Practice Modal -->
+<div id="practiceModal" class="modal">
+  <div class="modal-content">
+    <h3>✨ Practice Finding the Gap</h3>
+    
+    <p style="margin-bottom:20px;">Let's practice noticing the space between thoughts right now. This is where your freedom lives.</p>
+    
+    <div style="background:var(--accent-color);padding:20px;border-radius:8px;margin:20px 0;">
+      <h4 style="color:var(--main-color);margin-bottom:12px;">Step 1: Notice Your Thoughts</h4>
+      <p>Take three deep breaths and just notice whatever thoughts are happening right now. Don't judge them, just observe.</p>
+    </div>
+    
+    <div style="background:var(--accent-color);padding:20px;border-radius:8px;margin:20px 0;">
+      <h4 style="color:var(--main-color);margin-bottom:12px;">Step 2: Catch the Gap</h4>
+      <p>Can you catch one thought ending and pause before the next one arrives? Even a split second counts.</p>
+    </div>
+    
+    <div style="background:var(--accent-color);padding:20px;border-radius:8px;margin:20px 0;">
+      <h4 style="color:var(--main-color);margin-bottom:12px;">Step 3: Practice Your Escape</h4>
+      <p>Now think of your problem thought from the beginning. Pause. Choose a different thought instead.</p>
+      
+      <div style="margin-top:12px;padding:12px;background:rgba(122,148,168,.1);border-radius:6px;">
+        <strong>Examples:</strong><br>
+        "I'm going to fail" → <em>pause</em> → "I can handle whatever comes"<br>
+        "They hate me" → <em>pause</em> → "I don't actually know what they're thinking"
+      </div>
+    </div>
+    
+    <p style="text-align:center;margin:20px 0;font-weight:500;color:var(--main-color);">This is your escape route. The more you practice, the easier it becomes.</p>
+    
+    <div style="text-align:center">
+      <button class="btn btn-primary" onclick="closePracticeModal()">I've Got It</button>
+    </div>
+  </div>
 </div>
-
-<!-- Step 1: Capture the Thought -->
-<div id="step1" class="card hidden">
-<div class="progress-indicator">Step 2 of 7</div>
-<div class="progress-bar">
-<div class="progress-fill" style="width: 14%"></div>
-</div>
-<div class="progress-dots">
-<div class="dot completed"></div>
-<div class="dot active"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-</div>
-
-<h2>📝 Capture the Thought</h2>
-<p class="prompt">What specific thought or mental pattern has been circling in your mind?</p>
-
-<div class="input-group">
-<textarea id="thought-input" placeholder="Write the exact thought or worry as it appears in your mind..." 
-aria-label="Describe the specific thought you want to examine"
-oninput="updateCharCount(this, 'count1'); showEncouragement(this, 'enc1')"
-onkeydown="handleKeyPress(event, 1)"></textarea>
-<div class="char-count" id="count1">0 characters</div>
-<div class="encouragement" id="enc1">Good. Getting it out of your head and onto the page is the first step to clarity.</div>
-<div class="typing-prompt" id="prompt1">Don't edit it yet. Just capture it exactly as it shows up in your mind.</div>
-</div>
-
-<div class="button-group">
-<button class="button secondary" onclick="previousStep('intro-screen')" id="back1">← Back</button>
-<button class="button" onclick="nextStep('step2')" id="next1" disabled>Next</button>
-</div>
-</div>
-
-<!-- Step 2: When does it show up? -->
-<div id="step2" class="card hidden">
-<div class="progress-indicator">Step 3 of 7</div>
-<div class="progress-bar">
-<div class="progress-fill" style="width: 29%"></div>
-</div>
-<div class="progress-dots">
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot active"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-</div>
-
-<h2>⏰ When does it show up?</h2>
-<p class="prompt">What situations, times, or triggers tend to activate this thought pattern?</p>
-
-<div class="input-group">
-<textarea id="trigger-input" placeholder="When do you notice this thought appearing? What seems to trigger it?" 
-aria-label="Describe when and how this thought typically appears"
-oninput="updateCharCount(this, 'count2'); showEncouragement(this, 'enc2')"
-onkeydown="handleKeyPress(event, 2)"></textarea>
-<div class="char-count" id="count2">0 characters</div>
-<div class="encouragement" id="enc2">Patterns often reveal themselves when we pay attention to timing and context.</div>
-<div class="typing-prompt" id="prompt2">Notice the patterns. When is your mind most vulnerable to this thought?</div>
-</div>
-
-<div class="button-group">
-<button class="button secondary" onclick="previousStep('step1')" id="back2">← Back</button>
-<button class="button" onclick="nextStep('step3')" id="next2" disabled>Next</button>
-</div>
-</div>
-
-<!-- Step 3: What does it promise? -->
-<div id="step3" class="card hidden">
-<div class="progress-indicator">Step 4 of 7</div>
-<div class="progress-bar">
-<div class="progress-fill" style="width: 43%"></div>
-</div>
-<div class="progress-dots">
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot active"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-</div>
-
-<h2>🎁 What does it promise?</h2>
-<p class="prompt">What does this thought claim it will do for you? What problem does it promise to solve?</p>
-
-<div class="input-group">
-<textarea id="promise-input" placeholder="What benefit or protection does this thought claim to offer?" 
-aria-label="Describe what this thought promises or claims to provide"
-oninput="updateCharCount(this, 'count3'); showEncouragement(this, 'enc3')"
-onkeydown="handleKeyPress(event, 3)"></textarea>
-<div class="char-count" id="count3">0 characters</div>
-<div class="encouragement" id="enc3">Even destructive thoughts often masquerade as helpers. What's this one's disguise?</div>
-<div class="typing-prompt" id="prompt3">Look beneath the surface. What is this thought trying to convince you it's doing for you?</div>
-</div>
-
-<div class="button-group">
-<button class="button secondary" onclick="previousStep('step2')" id="back3">← Back</button>
-<button class="button" onclick="nextStep('step4')" id="next3" disabled>Next</button>
-</div>
-</div>
-
-<!-- Step 4: What does it actually deliver? -->
-<div id="step4" class="card hidden">
-<div class="progress-indicator">Step 5 of 7</div>
-<div class="progress-bar">
-<div class="progress-fill" style="width: 57%"></div>
-</div>
-<div class="progress-dots">
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot active"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-</div>
-
-<h2>📦 What does it actually deliver?</h2>
-<p class="prompt">When you follow this thought, what do you actually experience? How do you feel afterward?</p>
-
-<div class="input-group">
-<textarea id="reality-input" placeholder="What's the real outcome when you engage with this thought?" 
-aria-label="Describe the actual results of engaging with this thought"
-oninput="updateCharCount(this, 'count4'); showEncouragement(this, 'enc4')"
-onkeydown="handleKeyPress(event, 4)"></textarea>
-<div class="char-count" id="count4">0 characters</div>
-<div class="encouragement" id="enc4">Truth is found in the fruit. What has this thought actually produced in your life?</div>
-<div class="typing-prompt" id="prompt4">Be honest about the gap between promise and reality.</div>
-</div>
-
-<div class="button-group">
-<button class="button secondary" onclick="previousStep('step3')" id="back4">← Back</button>
-<button class="button" onclick="nextStep('step5')" id="next4" disabled>Next</button>
-</div>
-</div>
-
-<!-- Step 5: What's truer? -->
-<div id="step5" class="card hidden">
-<div class="progress-indicator">Step 6 of 7</div>
-<div class="progress-bar">
-<div class="progress-fill" style="width: 71%"></div>
-</div>
-<div class="progress-dots">
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot active"></div>
-<div class="dot"></div>
-</div>
-
-<h2>✨ What's truer?</h2>
-<p class="prompt">What would a truer, kinder, more helpful thought sound like? What does wisdom whisper instead?</p>
-
-<div class="input-group">
-<textarea id="truth-input" placeholder="What's a more truthful or helpful way to think about this situation?" 
-aria-label="Describe a truer or more helpful thought to replace the unhelpful one"
-oninput="updateCharCount(this, 'count5'); showEncouragement(this, 'enc5')"
-onkeydown="handleKeyPress(event, 5)"></textarea>
-<div class="char-count" id="count5">0 characters</div>
-<div class="encouragement" id="enc5">Truth doesn't need to shout. It can be gentle and still be powerful.</div>
-<div class="typing-prompt" id="prompt5">What would love say instead of fear? What would wisdom say instead of worry?</div>
-</div>
-
-<div class="button-group">
-<button class="button secondary" onclick="previousStep('step4')" id="back5">← Back</button>
-<button class="button" onclick="nextStep('step6')" id="next5" disabled>Next</button>
-</div>
-</div>
-
-<!-- Step 6: How will you redirect? -->
-<div id="step6" class="card hidden">
-<div class="progress-indicator">Step 7 of 7</div>
-<div class="progress-bar">
-<div class="progress-fill" style="width: 85%"></div>
-</div>
-<div class="progress-dots">
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot completed"></div>
-<div class="dot active"></div>
-</div>
-
-<h2>🧭 How will you redirect?</h2>
-<p class="prompt">When this thought shows up again, what's your plan? How will you redirect your attention?</p>
-
-<div class="input-group">
-<textarea id="redirect-input" placeholder="What will you do next time this thought appears?" 
-aria-label="Describe your strategy for redirecting this thought pattern"
-oninput="updateCharCount(this, 'count6'); showEncouragement(this, 'enc6')"
-onkeydown="handleKeyPress(event, 6)"></textarea>
-<div class="char-count" id="count6">0 characters</div>
-<div class="encouragement" id="enc6">Having a plan makes all the difference. You're not at the mercy of every thought.</div>
-<div class="typing-prompt" id="prompt6">Simple works. What's one concrete thing you can do when this thought returns?</div>
-</div>
-
-<div class="button-group">
-<button class="button secondary" onclick="previousStep('step5')" id="back6">← Back</button>
-<button class="button" onclick="nextStep('breathing-pause')" id="next6" disabled>Complete</button>
-</div>
-</div>
-
-<!-- Breathing Pause -->
-<div id="breathing-pause" class="card hidden">
-<div class="progress-bar">
-<div class="progress-fill" style="width: 95%"></div>
-</div>
-
-<div class="icon-header">🌬️</div>
-<h2>Take a Breath</h2>
-
-<div class="body-text">
-You've done important work examining your thought patterns. Before we continue to your reflection, take a moment to breathe and let this new awareness settle.
-</div>
-
-<div class="interlude-box">
-<p style="text-align: center; font-style: italic;">
-"Finally, brothers and sisters, whatever is true, whatever is noble, whatever is right, whatever is pure, whatever is lovely, whatever is admirable—if anything is excellent or praiseworthy—think about such things." <br>
-<span style="font-size: 0.9rem; opacity: 0.8;">- Philippians 4:8</span>
-</p>
-</div>
-
-<div class="button-group">
-<button class="button secondary" onclick="previousStep('step6')">← Back</button>
-<button class="button" onclick="nextStep('final')">Continue to Reflection</button>
-</div>
-</div>
-
-<!-- Final Summary -->
-<div id="final" class="card hidden">
-<div class="progress-bar">
-<div class="progress-fill" style="width: 100%"></div>
-</div>
-
-<div class="icon-header">🌿</div>
-<h2>Thought Pattern Refined</h2>
-
-<div class="body-text">Below is a map of the thought pattern you've examined. Save or print if you wish — but more importantly, notice what feels clearer now.</div>
-
-<div class="summary-box" id="personalized-summary">
-<h3 style="color: var(--main); margin-bottom: 15px;">Your Thought Pattern Analysis</h3>
-<div id="summary-content">
-<!-- Summary will be populated by JavaScript -->
-</div>
-</div>
-
-<div class="action-buttons">
-<button onclick="downloadResults()" aria-label="Download your reflection as a text file">Download .txt</button>
-<button onclick="printResults()" aria-label="Print or save your reflection">Save/Print</button>
-<button onclick="showTrinityModal()" aria-label="Let the Trinity speak into this">✨ Trinity Speaks</button>
-<button onclick="startOver()" id="start-over-btn">Start Over</button>
-</div>
-</div>
-
-<!-- Trinity Modal -->
-<div id="trinityModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-<div class="modal-content">
-<span class="close-btn" onclick="toggleTrinityModal()" aria-label="Close modal">&times;</span>
-<h2 id="modalTitle">✨ Let the Trinity Speak Into This</h2>
-<div class="body-text">
-<p><strong>Father:</strong> "I know every thought before you think it and love you regardless. Your worth isn't determined by the thoughts that pass through your mind, but by My unchanging love for you."</p>
-
-<p><strong>Jesus:</strong> "I've given you My mind - the mind of Christ. When thoughts come that don't align with truth, remember: you have divine help in taking every thought captive. You're not fighting this battle alone."</p>
-
-<p><strong>Holy Spirit:</strong> "I am your Counselor and the Spirit of truth. When you're unsure which thoughts to follow, I will guide you. Ask Me to illuminate what's from Me and what's not. I will help you discern."</p>
-
-<div style="margin: 20px 0; padding: 15px; background: rgba(122, 148, 168, 0.1); border-radius: 8px;">
-<p style="font-style: italic; text-align: center; color: var(--main);">
-"We demolish arguments and every pretension that sets itself up against the knowledge of God, and we take captive every thought to make it obedient to Christ."<br>
-<span style="font-size: 0.9rem;">- 2 Corinthians 10:5</span>
-</p>
-</div>
-
-<p style="text-align: center; margin-top: 15px; font-style: italic;">You are not at the mercy of every thought that crosses your mind. You have divine help in choosing which thoughts deserve your attention.</p>
-</div>
-<button onclick="toggleTrinityModal()">Amen</button>
-</div>
-</div>
-
+<div id="trinityModal" class="modal">
+  <div class="modal-content">
+    <h3>✨ Let the Trinity Speak Into This</h3>
+    
+    <div class="trinity-section">
+      <div class="trinity-role">FATHER</div>
+      <p>"I know every thought before you think it and love you regardless. Your worth isn't determined by the thoughts that pass through your mind, but by My unchanging love for you."</p>
+    </div>
+    
+    <div class="trinity-section">
+      <div class="trinity-role">SON</div>
+      <p>"I've given you My mind - the mind of Christ. When thoughts come that don't align with truth, remember: you have divine help in taking every thought captive. You're not fighting this battle alone."</p>
+    </div>
+    
+    <div class="trinity-section">
+      <div class="trinity-role">HOLY SPIRIT</div>
+      <p>"I am your Counselor and the Spirit of truth. When you're unsure which thoughts to follow, I will guide you. Ask Me to illuminate what's from Me and what's not. I will help you discern."</p>
+    </div>
+    
+    <div class="scripture">
+      <p style="font-style:italic;font-weight:600;margin-bottom:8px">"We demolish arguments and every pretension that sets itself up against the knowledge of God, and we take captive every thought to make it obedient to Christ."</p>
+      <p style="font-size:0.9rem;opacity:0.8">- 2 Corinthians 10:5</p>
+    </div>
+    
+    <p style="text-align:center;margin:15px 0;font-style:italic">You are not at the mercy of every thought that crosses your mind. You have divine help in choosing which thoughts deserve your attention.</p>
+    
+    <div style="text-align:center">
+      <button class="btn btn-primary" onclick="closeTrinityModal()">Amen</button>
+    </div>
+  </div>
 </div>
 
 <script>
-let currentStep = 'intro-screen';
-let userResponses = {};
+  // --- State
+  let currentStep = 0;
+  const totalSteps = 10; // Updated: intro + 7 content steps + redirect + summary
+  const responses = {
+    thoughtCapture:'', triggers:'', promises:'', reality:'', loopPattern:'', trueThing:'', redirectPlan:''
+  };
 
-// Auto-save functionality
-function autoSave() {
-    const notification = document.getElementById('autoSaveNotification');
-    notification.classList.add('show');
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 2000);
-}
-
-// Theme toggle
-function toggleTheme() {
+  // Light / Dark toggle
+  document.getElementById('themeBtn').addEventListener('click', () => {
     const body = document.body;
-    const themeToggle = document.querySelector('.theme-toggle');
-    
+    const btn = document.getElementById('themeBtn');
     if (body.getAttribute('data-theme') === 'dark') {
-        body.setAttribute('data-theme', 'light');
-        themeToggle.textContent = '🌙';
+      body.removeAttribute('data-theme'); btn.textContent = '🌙';
     } else {
-        body.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '☀️';
+      body.setAttribute('data-theme','dark'); btn.textContent = '☀️';
     }
-}
+  });
 
-// Character count and encouragement
-function updateCharCount(textarea, countId) {
-    const count = textarea.value.length;
-    document.getElementById(countId).textContent = `${count} characters`;
+  // Perspective toggle for Sacred Gap step
+  function showPerspective(type) {
+    // Update buttons
+    document.querySelectorAll('.perspective-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[onclick="showPerspective('${type}')"]`).classList.add('active');
     
-    // Enable/disable next button based on content (only need 1 character)
-    const stepNum = countId.replace('count', '');
+    // Update content
+    document.querySelectorAll('.perspective-content').forEach(content => content.classList.remove('active'));
+    document.getElementById(type + 'Perspective').classList.add('active');
+  }
+
+  // Character count and encouragement system
+  function setupTextarea(textareaId, countId, encId, stepNum) {
+    const textarea = document.getElementById(textareaId);
+    const countEl = document.getElementById(countId);
+    const encEl = document.getElementById(encId);
     const nextBtn = document.getElementById('next' + stepNum);
-    if (nextBtn) {
-        nextBtn.disabled = count < 1;
-    }
     
-    // Auto-save simulation
-    if (count > 0) {
-        clearTimeout(window.autoSaveTimeout);
-        window.autoSaveTimeout = setTimeout(autoSave, 1000);
-    }
-}
-
-function showEncouragement(textarea, encId) {
-    const encouragement = document.getElementById(encId);
-    const prompt = document.getElementById(encId.replace('enc', 'prompt'));
+    if (!textarea || !countEl || !encEl || !nextBtn) return;
     
-    if (textarea.value.length > 20) {
-        encouragement.classList.add('show');
-        prompt.classList.add('show');
-    }
-}
-
-// Handle Enter key to move to next step
-function handleKeyPress(event, stepNum) {
-    if (event.key === 'Enter' && event.ctrlKey) {
-        const nextBtn = document.getElementById('next' + stepNum);
-        if (nextBtn && !nextBtn.disabled) {
-            nextBtn.click();
-        }
-    }
-}
-
-// Navigation functions
-function nextStep(nextStepId) {
-    // Save current responses
-    saveCurrentResponse();
+    // Set initial button state
+    updateButtonState(nextBtn, stepNum, false);
     
-    // Hide current step
-    document.getElementById(currentStep).classList.add('hidden');
-    
-    // Show next step
-    document.getElementById(nextStepId).classList.remove('hidden');
-    currentStep = nextStepId;
-    
-    // Update progress dots
-    updateProgressDots();
-    
-    // Focus on first input if it exists
-    const nextInput = document.querySelector(`#${nextStepId} textarea, #${nextStepId} input[type="text"]`);
-    if (nextInput) {
-        setTimeout(() => nextInput.focus(), 100);
-    }
-}
-
-function previousStep(prevStepId) {
-    // Save current responses
-    saveCurrentResponse();
-    
-    // Hide current step
-    document.getElementById(currentStep).classList.add('hidden');
-    
-    // Show previous step
-    document.getElementById(prevStepId).classList.remove('hidden');
-    currentStep = prevStepId;
-    
-    // Update progress dots
-    updateProgressDots();
-}
-
-function updateProgressDots() {
-    const dots = document.querySelectorAll('.dot');
-    const steps = ['intro-screen', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'breathing-pause', 'final'];
-    const currentIndex = steps.indexOf(currentStep);
-    
-    dots.forEach((dot, index) => {
-        dot.classList.remove('active', 'completed');
-        if (index < currentIndex) {
-            dot.classList.add('completed');
-        } else if (index === currentIndex) {
-            dot.classList.add('active');
-        }
+    textarea.addEventListener('input', () => {
+      const count = textarea.value.length;
+      countEl.textContent = `${count} characters`;
+      
+      // Show encouragement after 20 characters
+      if (count > 20) {
+        encEl.classList.add('show');
+      } else {
+        encEl.classList.remove('show');
+      }
+      
+      // Update button state based on content
+      const hasContent = count > 0;
+      updateButtonState(nextBtn, stepNum, hasContent);
+      
+      // Auto-save
+      saveCurrentResponse();
     });
-}
+  }
 
-function saveCurrentResponse() {
-    // Save textarea responses
-    const textarea = document.querySelector(`#${currentStep} textarea`);
-    if (textarea && textarea.value) {
-        const stepMapping = {
-            'step1': 'thought',
-            'step2': 'trigger',
-            'step3': 'promise', 
-            'step4': 'reality',
-            'step5': 'truth',
-            'step6': 'redirect'
-        };
-        
-        const responseKey = stepMapping[currentStep];
-        if (responseKey) {
-            userResponses[responseKey] = textarea.value;
+  // Toggle overflow section
+  function toggleOverflow() {
+    const section = document.getElementById('overflowSection');
+    const toggle = document.getElementById('overflowToggle');
+    
+    if (section.style.display === 'none' || section.style.display === '') {
+      section.style.display = 'block';
+      toggle.textContent = '↑';
+      // Focus on textarea after animation
+      setTimeout(() => {
+        document.getElementById('overflowDump')?.focus();
+      }, 100);
+    } else {
+      section.style.display = 'none';
+      toggle.textContent = '↓';
+    }
+  }
+
+  // Update button text and state based on step and content
+  function updateButtonState(button, stepNum, hasContent) {
+    const buttonStates = {
+      '1': {
+        disabled: 'Complete thought capture to Continue',
+        enabled: 'When Does It Show Up? →'
+      },
+      '2': {
+        disabled: 'Complete trigger analysis to Continue', 
+        enabled: 'What Does It Promise? →'
+      },
+      '3': {
+        disabled: 'Complete promise analysis to Continue',
+        enabled: 'What Does It Deliver? →'
+      },
+      '4': {
+        disabled: 'Complete reality check to Continue',
+        enabled: 'Lies on a Loop →'
+      },
+      '5': {
+        disabled: 'Complete loop recognition to Continue',
+        enabled: 'The Sacred Gap →'
+      },
+      '6': {
+        disabled: 'Complete truth selection to Continue',
+        enabled: 'Your Redirect Plan →'
+      },
+      '7': {
+        disabled: 'Complete redirect plan to Continue',
+        enabled: 'Complete Refining →'
+      }
+    };
+    
+    const state = buttonStates[stepNum];
+    if (state) {
+      if (hasContent) {
+        button.disabled = false;
+        button.textContent = state.enabled;
+      } else {
+        button.disabled = true;
+        button.textContent = state.disabled;
+      }
+    }
+  }
+
+  // Step navigation helpers
+  function showStep(i){
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    const stepEl = document.querySelector(`.step[data-step="${i}"]`);
+    if (stepEl) stepEl.classList.add('active');
+
+    document.getElementById('progressFill').style.width = ((i)/ (totalSteps-1)) * 100 + '%';
+    document.querySelectorAll('.step .dots').forEach(group => {
+      [...group.children].forEach((d, idx) => {
+        d.classList.remove('active','done');
+        if (idx < i) d.classList.add('done');
+        if (idx === i) d.classList.add('active');
+      });
+    });
+
+    requestAnimationFrame(()=>{
+      document.getElementById('pageTop').scrollIntoView({behavior:'smooth',block:'start'});
+      setTimeout(()=>{
+        if (i===1) document.getElementById('thoughtCapture')?.focus();
+        if (i===2) document.getElementById('triggers')?.focus();
+        if (i===3) document.getElementById('promises')?.focus();
+        if (i===4) document.getElementById('reality')?.focus();
+        if (i===5) document.getElementById('loopPattern')?.focus();
+        if (i===7) document.getElementById('trueThing')?.focus();
+        if (i===8) document.getElementById('redirectPlan')?.focus();
+      },100);
+    });
+
+    if (i===9) { 
+      document.getElementById('mainHeader')?.classList.add('completed'); 
+      updateSummary(); 
+    }
+  }
+
+  function nextStep(){ 
+    saveCurrentResponse(); 
+    if (currentStep < totalSteps-1){ 
+      currentStep++; 
+      showStep(currentStep); 
+    } 
+  }
+  
+  function prevStep(){ 
+    if (currentStep>0){ 
+      currentStep--; 
+      showStep(currentStep);
+    } 
+  }
+
+  // Save current response
+  function saveCurrentResponse(){
+    const fieldMap = {
+      1: 'thoughtCapture',
+      2: 'triggers', 
+      3: 'promises',
+      4: 'reality',
+      5: 'loopPattern',
+      7: 'trueThing',
+      8: 'redirectPlan'
+    };
+    
+    const fieldId = fieldMap[currentStep];
+    if (fieldId) {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        responses[fieldId] = field.value.trim();
+      }
+    }
+    
+    // Save to localStorage
+    try {
+      localStorage.setItem('thoughtRefinerResponses', JSON.stringify(responses));
+    } catch (e) {
+      console.warn('Could not save to localStorage:', e);
+    }
+  }
+
+  // Update summary
+  function updateSummary(){
+    document.getElementById('sumThought').textContent = responses.thoughtCapture || '—';
+    document.getElementById('sumTriggers').textContent = responses.triggers || '—';
+    document.getElementById('sumPromises').textContent = responses.promises || '—';
+    document.getElementById('sumReality').textContent = responses.reality || '—';
+    document.getElementById('sumLoop').textContent = responses.loopPattern || '—';
+    document.getElementById('sumTruth').textContent = responses.trueThing || '—';
+    document.getElementById('sumRedirect').textContent = responses.redirectPlan || '—';
+  }
+
+  // Start Over functionality
+  let startOverArmed = false;
+  function confirmStartOver(){
+    const btn = document.getElementById('startOverBtn');
+    if (!startOverArmed){
+      startOverArmed = true;
+      btn.classList.remove('btn-secondary'); 
+      btn.classList.add('btn-warning');
+      btn.textContent = 'Confirm Start Over';
+      setTimeout(()=>{ 
+        if(startOverArmed){
+          startOverArmed=false; 
+          btn.classList.remove('btn-warning'); 
+          btn.classList.add('btn-secondary'); 
+          btn.textContent='🔄 Start Over';
         }
+      },3000);
+    } else { 
+      restartTool(); 
     }
-}
+  }
 
-// Final summary generation
-function generateSummary() {
-    let summary = '<h4 style="color: var(--main);">Your thought pattern analysis:</h4><br>';
+  function restartTool(){
+    Object.keys(responses).forEach(k => responses[k] = '');
+    document.querySelectorAll('textarea, input[type="text"]').forEach(t => t.value='');
+    document.querySelectorAll('.char-count').forEach(el => el.textContent = '0 characters');
+    document.querySelectorAll('.encouragement').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('[id^="next"]').forEach(btn => btn.disabled = true);
     
-    if (userResponses.thought) {
-        summary += `<strong>The thought:</strong> ${userResponses.thought}<br><br>`;
+    const btn = document.getElementById('startOverBtn');
+    if (btn){ 
+      startOverArmed=false; 
+      btn.className='btn btn-secondary'; 
+      btn.textContent='🔄 Start Over'; 
     }
     
-    if (userResponses.trigger) {
-        summary += `<strong>When it shows up:</strong> ${userResponses.trigger}<br><br>`;
+    try {
+      localStorage.removeItem('thoughtRefinerResponses');
+    } catch (e) {
+      console.warn('Could not clear localStorage:', e);
     }
     
-    if (userResponses.promise) {
-        summary += `<strong>What it promises:</strong> ${userResponses.promise}<br><br>`;
-    }
-    
-    if (userResponses.reality) {
-        summary += `<strong>What it actually delivers:</strong> ${userResponses.reality}<br><br>`;
-    }
-    
-    if (userResponses.truth) {
-        summary += `<strong>What's truer:</strong> ${userResponses.truth}<br><br>`;
-    }
-    
-    if (userResponses.redirect) {
-        summary += `<strong>Your redirect plan:</strong> ${userResponses.redirect}<br><br>`;
-    }
-    
-    summary += '<p style="font-style: italic; color: var(--main); margin-top: 20px;">You now have a map of this thought pattern and a plan for redirecting it. That\'s real progress toward mental freedom.</p>';
-    
-    document.getElementById('summary-content').innerHTML = summary;
-}
+    currentStep = 0; 
+    showStep(currentStep);
+  }
 
-// Trinity modal functions
-function showTrinityModal() {
-    document.getElementById('trinityModal').classList.remove('hidden');
-}
-
-function toggleTrinityModal() {
-    document.getElementById('trinityModal').classList.toggle('hidden');
-}
-
-// Download and print functions
-function downloadResults() {
-    saveCurrentResponse();
+  // Download summary
+  function downloadSummary(){
     const timestamp = new Date().toLocaleDateString();
     let content = `Thought Pattern Analysis - ${timestamp}\n`;
     content += `Generated by Clarity Metabolics Discernment Toolkit\n\n`;
     content += `========================================\n\n`;
     
-    if (userResponses.thought) {
-        content += `THE THOUGHT:\n${userResponses.thought}\n\n`;
+    if (responses.thoughtCapture) {
+      content += `THE THOUGHT:\n${responses.thoughtCapture}\n\n`;
     }
     
-    if (userResponses.trigger) {
-        content += `WHEN IT SHOWS UP:\n${userResponses.trigger}\n\n`;
+    if (responses.triggers) {
+      content += `WHEN IT SHOWS UP:\n${responses.triggers}\n\n`;
     }
     
-    if (userResponses.promise) {
-        content += `WHAT IT PROMISES:\n${userResponses.promise}\n\n`;
+    if (responses.promises) {
+      content += `WHAT IT PROMISES:\n${responses.promises}\n\n`;
     }
     
-    if (userResponses.reality) {
-        content += `WHAT IT ACTUALLY DELIVERS:\n${userResponses.reality}\n\n`;
+    if (responses.reality) {
+      content += `WHAT IT ACTUALLY DELIVERS:\n${responses.reality}\n\n`;
     }
     
-    if (userResponses.truth) {
-        content += `WHAT'S TRUER:\n${userResponses.truth}\n\n`;
+    if (responses.loopPattern) {
+      content += `THE LOOP PATTERN:\n${responses.loopPattern}\n\n`;
     }
     
-    if (userResponses.redirect) {
-        content += `YOUR REDIRECT PLAN:\n${userResponses.redirect}\n\n`;
+    if (responses.trueThing) {
+      content += `WHAT'S TRUER:\n${responses.trueThing}\n\n`;
+    }
+    
+    if (responses.redirectPlan) {
+      content += `YOUR REDIRECT PLAN:\n${responses.redirectPlan}\n\n`;
     }
     
     content += `========================================\n\n`;
@@ -1102,95 +996,111 @@ function downloadResults() {
     a.click();
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
-}
+  }
 
-function printResults() {
-    window.print();
-}
+  // Practice modal functions
+  function openPracticeModal(){ 
+    document.getElementById('practiceModal').style.display='flex'; 
+  }
+  
+  function closePracticeModal(){ 
+    document.getElementById('practiceModal').style.display='none'; 
+  }
 
-function startOver() {
-    const startOverBtn = document.getElementById('start-over-btn');
-    
-    // Change button to red confirmation state
-    if (!startOverBtn.classList.contains('confirm-state')) {
-        startOverBtn.style.background = '#e74c3c';
-        startOverBtn.textContent = 'Click Again to Confirm';
-        startOverBtn.classList.add('confirm-state');
-        
-        // Reset after 3 seconds if not clicked
-        setTimeout(() => {
-            if (startOverBtn.classList.contains('confirm-state')) {
-                startOverBtn.style.background = '';
-                startOverBtn.textContent = 'Start Over';
-                startOverBtn.classList.remove('confirm-state');
+  // Trinity modal functions
+  function openTrinityModal(){ 
+    document.getElementById('trinityModal').style.display='flex'; 
+  }
+  
+  function closeTrinityModal(){ 
+    document.getElementById('trinityModal').style.display='none'; 
+  }
+
+  // Click outside modal to close
+  document.getElementById('trinityModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('trinityModal')) {
+      closeTrinityModal();
+    }
+  });
+
+  document.getElementById('practiceModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('practiceModal')) {
+      closePracticeModal();
+    }
+  });
+
+  // Escape key to close modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeTrinityModal();
+      closePracticeModal();
+    }
+  });
+
+  // Initialize
+  function init(){ 
+    // Load saved responses
+    try {
+      const saved = localStorage.getItem('thoughtRefinerResponses');
+      if (saved) {
+        const savedResponses = JSON.parse(saved);
+        Object.assign(responses, savedResponses);
+        // Populate form fields
+        Object.keys(savedResponses).forEach(key => {
+          const el = document.getElementById(key);
+          if (el && savedResponses[key]) {
+            el.value = savedResponses[key];
+            // Update character count
+            const stepMapping = {
+              'thoughtCapture': '1',
+              'triggers': '2', 
+              'promises': '3',
+              'reality': '4',
+              'loopPattern': '5',
+              'trueThing': '6',
+              'redirectPlan': '7'
+            };
+            const stepNum = stepMapping[key];
+            const countEl = document.getElementById('count' + stepNum);
+            if (countEl) {
+              countEl.textContent = `${savedResponses[key].length} characters`;
             }
-        }, 3000);
-        
-        return;
+            // Show encouragement if applicable
+            if (savedResponses[key].length > 20) {
+              const encEl = document.getElementById('enc' + stepNum);
+              if (encEl) encEl.classList.add('show');
+            }
+            // Update button text and state if applicable
+            const nextBtn = document.getElementById('next' + stepNum);
+            if (nextBtn && savedResponses[key].length > 0) {
+              updateButtonState(nextBtn, stepNum, true);
+            }
+          }
+        });
+      }
+    } catch (e) {
+      console.warn('Could not load from localStorage:', e);
     }
     
-    // Actually start over
-    userResponses = {};
+    showStep(0);
     
-    // Reset all form inputs
-    document.querySelectorAll('textarea').forEach(ta => ta.value = '');
-    document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-    
-    // Reset character counts
-    document.querySelectorAll('.char-count').forEach(count => count.textContent = '0 characters');
-    
-    // Hide encouragements
-    document.querySelectorAll('.encouragement').forEach(enc => enc.classList.remove('show'));
-    document.querySelectorAll('.typing-prompt').forEach(prompt => prompt.classList.remove('show'));
-    
-    // Disable all next buttons
-    document.querySelectorAll('[id^="next"]').forEach(btn => btn.disabled = true);
-    
-    // Reset button state
-    startOverBtn.style.background = '';
-    startOverBtn.textContent = 'Start Over';
-    startOverBtn.classList.remove('confirm-state');
-    
-    // Go back to intro
-    document.getElementById(currentStep).classList.add('hidden');
-    document.getElementById('intro-screen').classList.remove('hidden');
-    currentStep = 'intro-screen';
-    
-    updateProgressDots();
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    updateProgressDots();
-    
-    // Update breathing pause to go to final
-    const breathingContinue = document.querySelector('#breathing-pause .button:not(.secondary)');
-    if (breathingContinue) {
-        breathingContinue.onclick = function() { 
-            saveCurrentResponse();
-            generateSummary();
-            nextStep('final');
-        };
-    }
-});
-
-// Close modal when clicking outside
-document.addEventListener('click', function(event) {
-    const modal = document.getElementById('trinityModal');
-    if (event.target === modal) {
-        toggleTrinityModal();
-    }
-});
-
-// Escape key to close modal
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        const modal = document.getElementById('trinityModal');
-        if (!modal.classList.contains('hidden')) {
-            toggleTrinityModal();
-        }
-    }
-});
+    // Setup textareas
+    setTimeout(() => {
+      setupTextarea('thoughtCapture', 'count1', 'enc1', '1');
+      setupTextarea('triggers', 'count2', 'enc2', '2');
+      setupTextarea('promises', 'count3', 'enc3', '3');
+      setupTextarea('reality', 'count4', 'enc4', '4');
+      setupTextarea('loopPattern', 'count5', 'enc5', '5');
+      setupTextarea('trueThing', 'count6', 'enc6', '6');
+      setupTextarea('redirectPlan', 'count7', 'enc7', '7');
+    }, 100);
+  }
+  
+  if (document.readyState === 'loading'){ 
+    document.addEventListener('DOMContentLoaded', init); 
+  } else { 
+    init(); 
+  }
 </script>
 </body>
 </html>
