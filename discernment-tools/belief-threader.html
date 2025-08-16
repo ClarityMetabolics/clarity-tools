@@ -1,932 +1,946 @@
-<!DOCTYPE html>
 <!--
-Belief Threader v1.0.0
-Release Date: August 5, 2025
-Author: Clarity Metabolics
-Part of: Discernment Toolkit Series
-Features: 6-step belief examination, Trinity integration, pause step, reflection summary, dark/light modes
+  ============================================================
+  Clarity Metabolics - Belief Threader: From Autopilot to Intentional Living
+  Interactive Web Tool for Examining Crystallized Thoughts and Beliefs
+  ============================================================
+  
+  Version: 2.2.1 (Step Counter Correction)
+  Created: August 2025
+  Author: Clarity Metabolics
+  
+  Key Updates:
+  - Fixed step counters to show correct "X of 7" progression
+  - Professional, solution-focused language throughout
+  - Consistent 4-part framework: Lead/Label/Helper/Clue
+  - Fixed button functionality for Step 6
+  - Belief Insights modal with educational content
+  
+  ============================================================
 -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Belief Threader | Discernment Toolkit by Clarity Metabolics</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --main: #7A94A8;
-            --accent: #E7EEF1;
-            --contrast: #4A5A6A;
-            --bg-primary: #fff;
-            --bg-secondary: #E7EEF1;
-            --text-primary: #4A5A6A;
-            --text-secondary: #888;
-        }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🧵 Belief Threader — From Autopilot to Intentional Living</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --main-color:#7A94A8;      /* discernment blue-gray */
+    --accent-color:#E7EEF1;    /* soft panels */
+    --contrast-color:#4A5A6A;  /* deep accent text/borders */
+    --text-color:#333;
+    --bg-color:#fff;
+    --border-color:#d9d6cf;
+    --shadow:0 2px 12px rgba(0,0,0,.08);
+    --success-color:#5a7c41;   /* progress dots done */
+    --warning-color:#dc3545;   /* Start Over confirm */
+    --green-panel:#E5EBDD;
+    --yellow-panel:#FFF8CC;
+    --red-panel:#F5E6E6;
+  }
+  [data-theme="dark"]{
+    --text-color:#e6e6e6;
+    --bg-color:#1c1c1c;
+    --border-color:#3b3a36;
+    --accent-color:#2a2825;
+    --shadow:0 2px 14px rgba(0,0,0,.35);
+    --green-panel:#2d352a;
+    --yellow-panel:#3a3620;
+    --red-panel:#3a2828;
+  }
 
-        [data-theme="dark"] {
-            --main: #9BB4C8;
-            --accent: #2A3441;
-            --contrast: #E8EDF2;
-            --bg-primary: #1A2028;
-            --bg-secondary: #2A3441;
-            --text-primary: #E8EDF2;
-            --text-secondary: #B0B8C0;
-        }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Open Sans',sans-serif;
+    color:var(--text-color);
+    background:var(--bg-color);
+    line-height:1.6;
+  }
+  .container{max-width:780px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  /* Header */
+  .header{
+    color:#fff;
+    background:linear-gradient(135deg,var(--main-color),var(--contrast-color));
+    padding:22px 18px 18px;
+    position:relative;
+    transition: box-shadow .5s ease;
+  }
+  .header.completed{ box-shadow:0 0 18px rgba(122,148,168,.55); }
+  .header h1{
+    font-family:'Libre Baskerville',serif;
+    font-size:2rem;
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .subtitle{ text-align:center; font-style:italic; opacity:.95; }
 
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: var(--accent);
-            color: var(--text-primary);
-            line-height: 1.6;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+  .header-controls{ position:absolute; top:10px; right:10px; display:flex; gap:8px }
+  .header-btn{
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.3);
+    color:#fff;
+    padding:.35rem .6rem;border-radius:18px;cursor:pointer;
+    font-size:.8rem;transition:all .2s ease;
+  }
+  .header-btn:hover{background:rgba(255,255,255,.25)}
 
-        .container {
-            max-width: 700px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: var(--bg-primary);
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
+  .progress-bar{height:4px;background:rgba(255,255,255,.28);border-radius:3px;margin-top:14px;overflow:hidden}
+  .progress-fill{height:100%;background:#fff;width:0%;transition:width .6s ease}
 
-        .theme-toggle {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            background-color: var(--bg-secondary);
-            transition: background-color 0.3s ease;
-        }
+  /* Content & steps */
+  main.content{flex:1;padding:22px}
+  .step{display:none;animation:fade .25s ease}
+  .step.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-        .theme-toggle:hover {
-            background-color: var(--accent);
-        }
+  .step-indicator{ text-align:center; margin:10px 0 18px }
+  .step-counter{font-weight:700;color:#ffffff; background:var(--contrast-color); display:inline-block; padding:4px 10px; border-radius:12px }
+  .dots{display:flex;justify-content:center;gap:8px;margin-top:10px}
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--border-color)}
+  .dot.active{background:var(--main-color)}
+  .dot.done{background:var(--success-color)}
 
-        .icon-header {
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 0.5rem;
-        }
+  h2{font-family:'Libre Baskerville',serif;color:var(--main-color);font-size:1.7rem;margin:14px 0 10px}
+  h2 .subtitle{font-weight:400;font-style:italic;opacity:0.7;font-size:1.1rem}
+  p.lead{opacity:.95;margin-bottom:10px}
 
-        h1, h2 {
-            font-family: 'Libre Baskerville', serif;
-            color: var(--main);
-        }
+  .tip{
+    background:linear-gradient(135deg, rgba(122,148,168,.12), rgba(74,90,106,.06));
+    border-left:4px solid var(--main-color);
+    padding:12px;border-radius:0 8px 8px 0;margin:14px 0;font-style:italic
+  }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2.2rem;
-            font-weight: 700;
-        }
+  .form-group{margin:16px 0}
+  label{display:block;font-weight:700;color:var(--contrast-color);margin-bottom:6px}
+  textarea, input[type="text"]{
+    width:100%;min-height:110px;resize:vertical;border:2px solid var(--border-color);
+    border-radius:10px;padding:12px;font:inherit;color:inherit;background:var(--bg-color);
+    transition:all .2s ease;
+  }
+  input[type="text"]{ min-height:auto; }
+  textarea:focus, input[type="text"]:focus{
+    outline:none;border-color:var(--main-color);box-shadow:0 0 0 3px rgba(122,148,168,.18)
+  }
 
-        h2 {
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
+  /* Enhanced Character Count */
+  .char-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 0.85rem;
+  }
+  
+  .char-count {
+    color: var(--text-color);
+    opacity: 0.7;
+  }
+  
+  .encouragement {
+    color: var(--main-color);
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .encouragement.show {
+    opacity: 1;
+  }
 
-        .container p {
-            line-height: 1.75;
-            margin-bottom: 1rem;
-        }
+  /* Buttons */
+  .nav-row{display:flex;gap:12px;align-items:center;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-color)}
+  .nav-row .btn{flex:1}
+  .btn{
+    border:none;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;
+    transition:transform .1s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary{background:var(--main-color);color:#fff}
+  .btn-primary:hover{background:var(--contrast-color);box-shadow:var(--shadow);transform:translateY(-1px)}
+  .btn-secondary{background:var(--accent-color);color:var(--contrast-color);border:1px solid var(--border-color)}
+  .btn-secondary:hover{background:var(--border-color)}
+  .btn-warning{background:var(--warning-color);color:#fff}
+  .btn-warning:hover{background:#c82333}
+  .btn:disabled{background:var(--border-color);color:var(--text-color);opacity:0.6;cursor:not-allowed;transform:none}
 
-        .question, .reflection, .final-screen, .pause-screen, .summary-screen {
-            margin-bottom: 2rem;
-        }
+  .micro{ text-align:center; margin-top:6px; font-style:italic; color:var(--contrast-color); opacity:.85 }
 
-        .question {
-            opacity: 1;
-            transition: opacity 0.3s ease-in-out;
-        }
+  /* Final actions */
+  .final-actions{
+    display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;
+  }
+  .final-actions .btn{ display:block; width:100%; max-width:280px; min-height:50px; text-align:center; }
 
-        .fade-out { 
-            opacity: 0; 
-        }
+  /* Trinity Modal Styles */
+  .modal{
+    position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000;
+  }
+  .modal-content{
+    background:var(--bg-color);color:var(--text-color);max-width:600px;width:100%;max-height:90vh;
+    border-radius:12px;box-shadow:var(--shadow);padding:24px;overflow-y:auto;
+  }
+  .modal h3{
+    font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:16px;font-size:1.4rem;
+  }
+  .trinity-section{
+    margin-bottom:20px;padding:16px;background:var(--accent-color);border-radius:8px;
+  }
+  .trinity-role{
+    font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px;
+  }
+  .scripture{
+    font-style:italic;background:var(--accent-color);padding:16px;border-left:4px solid var(--main-color);
+    border-radius:8px;margin:16px 0;text-align:center;
+  }
 
-        .fade-in {
-            opacity: 0;
-            animation: fadeIn 0.4s ease-in-out forwards;
-        }
+  /* Branding */
+  .branding{ text-align:center; padding:18px; font-size:.85rem; color:var(--text-color); opacity:.75; border-top:1px solid var(--border-color) }
+  .branding a{ color:var(--contrast-color); text-decoration:none }
+  .branding a:hover{ text-decoration:underline }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
+  @media (max-width:640px){
+    .nav-row{flex-direction:column}
+    .btn{width:100%}
+    .header h1{font-size:1.7rem}
+  }
 
-        .progress-indicator {
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .progress-dots {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: var(--accent);
-            transition: background-color 0.3s ease;
-        }
-
-        .dot.active {
-            background-color: var(--main);
-        }
-
-        textarea {
-            width: 100%;
-            padding: 1rem;
-            border-radius: 8px;
-            border: 2px solid var(--accent);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 1rem;
-            font-family: 'Open Sans', sans-serif;
-            min-height: 120px;
-            resize: vertical;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--main);
-        }
-
-        .char-count {
-            text-align: right;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
-            margin-bottom: 1rem;
-        }
-
-        .encouragement {
-            color: var(--main);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .encouragement.show {
-            opacity: 1;
-        }
-
-        .typing-prompt {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-style: italic;
-            margin-top: 0.5rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .typing-prompt.show {
-            opacity: 1;
-        }
-
-        button {
-            background-color: var(--main);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-            margin: 0.5rem 0.5rem 0.5rem 0;
-        }
-
-        button:hover:not(:disabled) {
-            background-color: var(--contrast);
-        }
-
-        button:disabled {
-            background-color: var(--text-secondary);
-            cursor: not-allowed;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        blockquote {
-            font-style: italic;
-            color: var(--main);
-            text-align: center;
-            margin: 2rem 0;
-            font-size: 1.1rem;
-        }
-
-        .summary-card {
-            background-color: var(--accent);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1.5rem 0;
-        }
-
-        .summary-card p {
-            margin: 0.8rem 0;
-            line-height: 1.6;
-        }
-
-        .light-italic {
-            color: var(--text-secondary);
-            font-style: italic;
-            margin-top: 1.5rem;
-            text-align: center;
-        }
-
-        .button-group {
-            text-align: center;
-            margin-top: 2rem;
-        }
-
-        .button-group button {
-            margin: 0.5rem 0.25rem;
-        }
-
-        /* Modal System */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(20, 20, 20, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal.hidden {
-            display: none;
-        }
-
-        .modal-content {
-            background-color: var(--bg-primary);
-            padding: 2rem;
-            border-radius: 10px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            color: var(--text-primary);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            position: relative;
-            text-align: left;
-            animation: fadeInModal 0.3s ease-out forwards;
-        }
-
-        .modal-content h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-content p {
-            margin-bottom: 1rem;
-        }
-
-        .modal-content em {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 0.7rem;
-            right: 1rem;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-primary);
-        }
-
-        @keyframes fadeInModal {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                margin: 1rem;
-                padding: 1.5rem;
-            }
-
-            textarea {
-                font-size: 16px;
-                padding: 0.8rem;
-                resize: none;
-            }
-
-            .icon-header {
-                font-size: 1.6rem;
-                margin-bottom: 0.4em;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            .button-group button {
-                margin: 0.25rem;
-                font-size: 0.9rem;
-                padding: 0.6rem 1rem;
-            }
-        }
-    </style>
+  @media (prefers-reduced-motion: reduce) {
+    .step { animation: none; }
+    .progress-fill { transition: none; }
+    .btn { transition: none; }
+  }
+</style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">🌙</button>
+<div id="pageTop" style="position:absolute;top:0"></div>
+<div class="container">
+
+  <header class="header" id="mainHeader">
+    <div class="header-controls">
+      <button class="header-btn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">🌙</button>
+    </div>
+    <h1>🧵 Belief Threader — From Autopilot to Intentional Living</h1>
+    <p class="subtitle">You don't have to carry beliefs that weren't meant for you.</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
+
+  <main class="content">
+    <!-- STEP 0: Welcome -->
+    <section class="step active" data-step="0">
+      <div class="step-indicator">
+        <div class="step-counter">Step 1 of 7</div>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🧵 Why Examine Your Beliefs?</h2>
+      
+      <p style="margin: 16px 0; line-height: 1.7;">Beliefs can feel all interconnected and garbled - like they're tied in knots. It's hard to see where one ends and another begins. But here's what helps: following just one thread. When you gently follow one belief thread, you can start to untangle the mess without pulling everything apart at once.</p>
+      
+      <div class="tip">
+        <strong>How this works:</strong> We'll follow one belief thread that doesn't feel quite right. We'll trace where it came from, learn why you might have needed it at the time, see how it affects you now, and discover what feels more aligned with truth.
+      </div>
+      
+      <p style="margin: 20px 0; line-height: 1.7;">Like going through your closet with a friend, deciding what still fits and what you've outgrown. So take a deep, full breath to settle in, and when you're ready, let's begin.</p>
+      
+      <p style="font-style: italic; color: var(--main-color); font-weight: 500; text-align: center; margin: 20px 0;">What belief thread feels tangled or doesn't quite fit anymore?</p>
+      
+      <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin Examination →</button></div>
+      <div class="micro">This is your journey toward intentional belief.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- STEP 1: What belief feels off? -->
+    <section class="step" data-step="1">
+      <div class="step-indicator">
+        <div class="step-counter">Step 2 of 7</div>
+        <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🎯 What Belief Feels Off? <span class="subtitle">— When something doesn't align with truth</span></h2>
+      <p class="lead">There's probably a belief you hold that sounds reasonable when you say it, but something about it doesn't align with what you know to be true. Maybe it creates pressure you can't name, or limits you in ways that feel smaller than what God intended for your life.</p>
+
+      <!-- Optional Overflow Section for Crisis Moments -->
+      <div style="margin: 20px 0; padding: 16px; background: rgba(122,148,168,0.05); border-radius: 10px; border-left: 3px solid var(--main-color);">
+        <div style="cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 12px;" onclick="toggleOverflow()">
+          <span style="font-weight: 600; color: var(--main-color);">Feeling overwhelmed about your beliefs? Start here</span>
+          <span id="overflowToggle" style="color: var(--main-color); font-size: 1.2rem;">↓</span>
+        </div>
+        <div id="overflowSection" style="display: none;">
+          <p style="font-size: 0.9rem; font-style: italic; color: var(--contrast-color); margin-bottom: 12px;">If examining beliefs feels overwhelming right now - like maybe everything you've believed is tangled - use this space to get that out. We're just looking at one thread, not pulling apart your whole foundation. This won't appear in your summary.</p>
+          <textarea id="overflowDump" placeholder="If you're feeling like your whole belief system is a mess, write about that here. Get it out so you can focus on just one thread..." style="width:100%; min-height:120px; resize:vertical; border:2px solid var(--border-color); border-radius:10px; padding:12px; font:inherit; color:inherit; background:var(--bg-color); transition:all .2s ease; opacity: 0.8;"></textarea>
+          <p style="font-size: 0.8rem; color: var(--text-color); opacity: 0.6; margin-top: 8px; text-align: center;">When you're ready, continue below to follow just one belief thread.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="beliefFeelsOff">What specific belief keeps coming to mind - one that doesn't seem to align with what you sense is true?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Look for beliefs that create "shoulds," pressure, or seem to contradict God's character of love and freedom</p>
+        <textarea id="beliefFeelsOff" placeholder="Write about the belief that doesn't feel aligned with truth - even if you think you 'should' believe it..."></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count1">0 characters</div>
+          <div class="encouragement" id="enc1">Sometimes what sounds right doesn't align with truth.</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clue:</strong> Often these are beliefs we inherited from family, absorbed from culture or tradition, or picked up from media and education.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next1" disabled>Share your observations to continue</button>
+      </div>
+      <div class="micro">Sometimes the most obvious beliefs are the hardest to see clearly.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 2: Where did it come from? -->
+    <section class="step" data-step="2">
+      <div class="step-indicator">
+        <div class="step-counter">Step 3 of 7</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🌱 Where Did It Come From? <span class="subtitle">— Every story has a beginning</span></h2>
+      <p class="lead">Some beliefs feel so natural we forget they were ever learned. But every automatic thought pattern has a history - specific moments when it first made sense to think this way. Tracing that history helps you see whether this belief still fits your current reality or if it's operating on outdated information.</p>
+
+      <div class="form-group">
+        <label for="beliefOrigins">Can you trace this belief back to its source? When did this way of thinking first become necessary or logical?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Look for specific moments, repeated messages, or gradually absorbed assumptions</p>
+        <textarea id="beliefOrigins" placeholder="Trace the origins of this belief - where and how did it first take root?"></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count2">0 characters</div>
+          <div class="encouragement" id="enc2">Context reveals whether old logic still applies to your current life.</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clue:</strong> Look for patterns - Whose voices do you hear when this belief speaks? What circumstances or emotions might have made this belief feel necessary or safe to adopt?</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next2" disabled>Complete the origin analysis to continue</button>
+      </div>
+      <div class="micro">What made sense then might not serve you now.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 3: What does it protect? -->
+    <section class="step" data-step="3">
+      <div class="step-indicator">
+        <div class="step-counter">Step 4 of 7</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🛡️ What Does It Protect? <span class="subtitle">— Understanding the purpose behind beliefs</span></h2>
+      <p class="lead">Beliefs that limit us today often started as solutions to yesterday's problems. Every restrictive thought pattern usually has a protective job - even if that job is outdated. To understand why this belief has staying power, you need to identify what it's been hired to do.</p>
+
+      <div class="form-group">
+        <label for="beliefProtects">What job has this belief been doing for you? What would feel risky or dangerous if you stopped thinking this way?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Look for what this belief prevents, avoids, or keeps at bay</p>
+        <textarea id="beliefProtects" placeholder="What has this belief been shielding you from experiencing or risking?"></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count3">0 characters</div>
+          <div class="encouragement" id="enc3">Understanding the protective function helps clarify its purpose.</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clue:</strong> Listen for the belief's job description - does it manage expectations, control risks, avoid judgment, prevent failure, or maintain safety? Notice what it's trying to spare you from experiencing.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next3" disabled>Complete the protection analysis to continue</button>
+      </div>
+      <div class="micro">Protection can become limitation when circumstances change.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 4: How does it limit you? -->
+    <section class="step" data-step="4">
+      <div class="step-indicator">
+        <div class="step-counter">Step 5 of 7</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🚧 How Does It Limit You? <span class="subtitle">— When protection becomes restriction</span></h2>
+      <p class="lead">Now that you know what job this belief was hired to do, it's time to evaluate its current performance. Sometimes beliefs keep doing their protective job even when the original threat is gone - creating roadblocks where you need open roads.</p>
+
+      <div class="form-group">
+        <label for="beliefDistorts">Where has this belief become a roadblock rather than protection? What opportunities, growth, or authentic expression does it prevent?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Look for areas where the belief creates 'no' when you might want 'yes' or 'maybe'</p>
+        <textarea id="beliefDistorts" placeholder="How does this belief limit or restrict you now, even if it once served a purpose?"></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count4">0 characters</div>
+          <div class="encouragement" id="enc4">Recognizing limitations is the first step toward greater freedom.</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clue:</strong> Notice where the belief acts like an overprotective security guard - blocking healthy risks, shrinking your capabilities, avoiding growth opportunities, or keeping your self-image smaller than reality.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next4" disabled>Complete the limitation analysis to continue</button>
+      </div>
+      <div class="micro">What once protected can sometimes restrict when circumstances change.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 5: Alternative Perspective -->
+    <section class="step" data-step="5">
+      <div class="step-indicator">
+        <div class="step-counter">Step 6 of 7</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+      </div>
+      <h2>✨ Alternative Perspective <span class="subtitle">— What would you choose from truth rather than fear?</span></h2>
+      <p class="lead">Now that you've reviewed this belief's job performance, it's time to consider what you'd hire instead. This isn't about forcing change, but about consciously choosing what thoughts you want working for you going forward - beliefs hired for growth rather than just protection.</p>
+
+      <div class="form-group">
+        <label for="trueBelief">If you were hiring a new belief for this area of your life, what qualities would you want? What would you choose if you prioritized growth over safety?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Look for beliefs that create possibility rather than restriction, expansion rather than contraction</p>
+        <textarea id="trueBelief" placeholder="What alternative belief or perspective feels more true and life-giving?"></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count5">0 characters</div>
+          <div class="encouragement" id="enc5">Truth-based beliefs create space for growth and possibility.</div>
+        </div>
+      </div>
+
+      <div class="tip"><strong>Clue:</strong> Listen for beliefs that sound like a good coach rather than an overprotective parent - ones that encourage healthy risks, expand your capabilities, and trust your potential for growth.</div>
+
+      <div style="text-align:center;margin:20px 0;">
+        <button class="btn btn-primary" onclick="openExaminationModal()" style="box-shadow: 0 0 20px rgba(122,148,168,0.5), 0 4px 15px rgba(122,148,168,0.3);">Belief Insights</button>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next5" disabled>Consider alternatives to continue</button>
+      </div>
+      <div class="micro">Choosing beliefs consciously is different from inheriting them unconsciously.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 6: Summary & Integration -->
+    <section class="step" data-step="6">
+      <div class="step-indicator">
+        <div class="step-counter">Step 7 of 7</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
+      </div>
+      <h2>🧵 Examination Complete</h2>
+      <p class="lead">You've completed a thorough examination of a belief that was operating on autopilot in your life. You've traced its origins, understood its protective purpose, identified its limitations, and considered alternatives. Below is a summary of your belief examination process.</p>
+
+      <div style="background:var(--accent-color);padding:20px;border-radius:10px;margin:20px 0">
+        <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-bottom:15px">Your Belief Examination Summary</h3>
+        
+        <div style="margin-bottom:15px">
+          <strong style="color:var(--main-color)">The Belief Examined:</strong>
+          <p id="sumBeliefOff" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+        
+        <div style="margin-bottom:15px">
+          <strong style="color:var(--main-color)">Origins:</strong>
+          <p id="sumOrigins" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+        
+        <div style="margin-bottom:15px">
+          <strong style="color:var(--main-color)">Protective Purpose:</strong>
+          <p id="sumProtects" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+        
+        <div style="margin-bottom:15px">
+          <strong style="color:var(--main-color)">Current Limitations:</strong>
+          <p id="sumDistorts" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+        
+        <div>
+          <strong style="color:var(--main-color)">Alternative Perspective:</strong>
+          <p id="sumTrueBelief" style="margin:5px 0 0 15px;font-style:italic">—</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="finalReflection">What insights emerged from this examination? How do you want to apply this understanding?</label>
+        <textarea id="finalReflection" placeholder="My key insights and next steps..." style="margin-top: 1rem;"></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count6">0 characters</div>
+          <div class="encouragement" id="enc6">Integration and application are where real change happens.</div>
+        </div>
+      </div>
+
+      <div class="final-actions">
+        <button class="btn btn-primary" onclick="downloadSummary()">📄 Download Summary</button>
+        <button class="btn btn-secondary" onclick="openTrinityModal()">✨ Spiritual Perspective</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;">
+        <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">← Back</button>
+        <button class="btn btn-secondary" id="startOverBtn" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="confirmStartOver()">🔄 Start Over</button>
+      </div>
+
+      <div style="text-align:center;margin:20px 0;padding:16px;background:rgba(122,148,168,0.08);border-radius:8px;border:1px solid rgba(122,148,168,0.15);">
+        <h3 style="color:var(--main-color);margin-bottom:8px;font-family:'Libre Baskerville',serif;">🧵 Belief Threader</h3>
+        <p style="margin:0;font-size:0.9rem;line-height:1.5;color:var(--text-color);opacity:0.9;">
+          Part of the comprehensive Five Anchors and Discernment Tools designed to help you find stability and clarity in overwhelming times.
+        </p>
+      </div>
+
+      <div class="branding">
+        <div><strong>Created by Clarity Metabolics</strong></div>
+        <div style="font-style:italic;margin-top:4px">Finding balance in a chaotic world.</div>
+        
+        <div style="margin:16px 0;padding:16px;background:rgba(122,148,168,0.08);border-radius:8px;border:1px solid rgba(122,148,168,0.15);">
+          <p style="margin:0;font-size:0.9rem;line-height:1.5;color:var(--text-color);opacity:0.9;">
+            For the complete toolkit that addresses every aspect of human experience, visit <strong><a href="https://claritymetabolics.com" target="_blank" style="color:var(--main-color);text-decoration:none;">claritymetabolics.com</a></strong>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Belief Insights Modal -->
+<div id="examinationModal" class="modal">
+  <div class="modal-content">
+    <h3>Belief Insights</h3>
     
-    <div class="container">
-        <div class="icon-header">🧵</div>
-        <h1>Belief Threader</h1>
-
-        <div class="progress-indicator">Step <span id="currentStep">1</span> of 8</div>
-        <div class="progress-dots">
-            <div class="dot active" id="dot1"></div>
-            <div class="dot" id="dot2"></div>
-            <div class="dot" id="dot3"></div>
-            <div class="dot" id="dot4"></div>
-            <div class="dot" id="dot5"></div>
-            <div class="dot" id="dot6"></div>
-            <div class="dot" id="dot7"></div>
-            <div class="dot" id="dot8"></div>
-        </div>
-
-        <!-- Step 1: What belief feels off? -->
-        <div class="question" id="step1">
-            <h2>Step 1: What belief feels off?</h2>
-            <p>Describe the belief that keeps circling your mind. It might sound right... but something about it doesn't sit well.</p>
-            
-            <textarea id="belief1" placeholder="Write about the belief that doesn't feel quite right..."
-                aria-label="Describe the belief that feels off"
-                oninput="updateCharCount(this, 'count1'); showEncouragement(this, 'enc1')"
-                onkeydown="handleKeyPress(event, 1)"></textarea>
-            
-            <div class="char-count" id="count1">0 characters</div>
-            <div class="encouragement" id="enc1">Trust that inner knowing...</div>
-            <div class="typing-prompt" id="prompt1">What's been bothering you about this belief?</div>
-            
-            <button onclick="nextStep(1)" aria-label="Proceed to step 2" id="next1" disabled>Next</button>
-        </div>
-
-        <!-- Step 2: Where did it come from? -->
-        <div class="question hidden" id="step2">
-            <h2>Step 2: Where did it come from?</h2>
-            <p>Trace it back — was it taught to you, absorbed through culture, or tied to an experience?</p>
-            
-            <textarea id="belief2" placeholder="Explore the origins of this belief..."
-                aria-label="Describe where this belief came from"
-                oninput="updateCharCount(this, 'count2'); showEncouragement(this, 'enc2')"
-                onkeydown="handleKeyPress(event, 2)"></textarea>
-            
-            <div class="char-count" id="count2">0 characters</div>
-            <div class="encouragement" id="enc2">You're tracing important roots...</div>
-            <div class="typing-prompt" id="prompt2">Who or what first planted this idea?</div>
-            
-            <button onclick="prevStep(2)" aria-label="Go back to previous step" id="back2">Back</button>
-            <button onclick="nextStep(2)" aria-label="Proceed to step 3" id="next2" disabled>Next</button>
-        </div>
-
-        <!-- Step 3: What does it protect? -->
-        <div class="question hidden" id="step3">
-            <h2>Step 3: What does it protect?</h2>
-            <p>Sometimes even false beliefs shield us. What does holding this belief keep you from facing, losing, or risking?</p>
-            
-            <textarea id="belief3" placeholder="Consider what this belief protects or shields..."
-                aria-label="Describe what this belief protects"
-                oninput="updateCharCount(this, 'count3'); showEncouragement(this, 'enc3')"
-                onkeydown="handleKeyPress(event, 3)"></textarea>
-            
-            <div class="char-count" id="count3">0 characters</div>
-            <div class="encouragement" id="enc3">This takes courage to explore...</div>
-            <div class="typing-prompt" id="prompt3">What might you lose if you let this belief go?</div>
-            
-            <button onclick="prevStep(3)" aria-label="Go back to previous step" id="back3">Back</button>
-            <button onclick="nextStep(3)" aria-label="Proceed to step 4" id="next3" disabled>Next</button>
-        </div>
-
-        <!-- Step 4: How does it distort truth? -->
-        <div class="question hidden" id="step4">
-            <h2>Step 4: How does it distort truth?</h2>
-            <p>Even if it feels helpful, how might this belief be warping your view of reality, God, or self?</p>
-            
-            <textarea id="belief4" placeholder="Reflect on how this belief might distort your perspective..."
-                aria-label="Describe how this belief distorts truth"
-                oninput="updateCharCount(this, 'count4'); showEncouragement(this, 'enc4')"
-                onkeydown="handleKeyPress(event, 4)"></textarea>
-            
-            <div class="char-count" id="count4">0 characters</div>
-            <div class="encouragement" id="enc4">You're seeing with clearer eyes...</div>
-            <div class="typing-prompt" id="prompt4">Where might this belief be creating blind spots?</div>
-            
-            <button onclick="prevStep(4)" aria-label="Go back to previous step" id="back4">Back</button>
-            <button onclick="nextStep(4)" aria-label="Proceed to step 5" id="next4" disabled>Next</button>
-        </div>
-
-        <!-- Step 5: What's the truer truth? -->
-        <div class="question hidden" id="step5">
-            <h2>Step 5: What's the truer truth?</h2>
-            <p>Is there a deeper truth your spirit is pointing toward — even if it's hard to live out?</p>
-            
-            <textarea id="belief5" placeholder="Listen for the deeper truth your spirit recognizes..."
-                aria-label="Describe the truer truth"
-                oninput="updateCharCount(this, 'count5'); showEncouragement(this, 'enc5')"
-                onkeydown="handleKeyPress(event, 5)"></textarea>
-            
-            <div class="char-count" id="count5">0 characters</div>
-            <div class="encouragement" id="enc5">Your spirit knows truth when it encounters it...</div>
-            <div class="typing-prompt" id="prompt5">What truth is trying to emerge?</div>
-            
-            <button onclick="prevStep(5)" aria-label="Go back to previous step" id="back5">Back</button>
-            <button onclick="nextStep(5)" aria-label="Proceed to step 6" id="next5" disabled>Next</button>
-        </div>
-
-        <!-- Step 6: What happens if you let go? -->
-        <div class="question hidden" id="step6">
-            <h2>Step 6: What happens if you let go?</h2>
-            <p>Without the old belief... what becomes possible? What new courage, clarity, or peace might emerge?</p>
-            
-            <textarea id="belief6" placeholder="Imagine the freedom that comes from letting this go..."
-                aria-label="Describe what becomes possible"
-                oninput="updateCharCount(this, 'count6'); showEncouragement(this, 'enc6')"
-                onkeydown="handleKeyPress(event, 6)"></textarea>
-            
-            <div class="char-count" id="count6">0 characters</div>
-            <div class="encouragement" id="enc6">You're glimpsing the freedom ahead...</div>
-            <div class="typing-prompt" id="prompt6">What new life wants to emerge?</div>
-            
-            <button onclick="prevStep(6)" aria-label="Go back to previous step" id="back6">Back</button>
-            <button onclick="showPauseScreen()" aria-label="Continue to pause" id="next6" disabled>Continue</button>
-        </div>
-
-        <!-- Pause Screen -->
-        <div class="pause-screen hidden" id="pauseScreen">
-            <div class="icon-header">
-                <img src="needle-icon.png" alt="Needle and thread" width="60" height="60" style="opacity: 0.8;">
-            </div>
-            <h2>Take a Breath</h2>
-            <p>You've done beautiful, courageous work. Before we thread it all together, take a moment. Let what you've discovered settle.</p>
-            <blockquote><em>"Be still and know that I am God." — Psalm 46:10</em></blockquote>
-            
-            <button onclick="prevStep(7)" aria-label="Go back to previous step" id="back7">Back</button>
-            <button onclick="showSummaryScreen()">Continue to Reflection</button>
-        </div>
-
-        <!-- Summary Screen -->
-        <div class="summary-screen hidden" id="summaryScreen">
-            <h2>You've Done Holy Work</h2>
-            <p>More than a thought exercise — this is a journey through your mind, memory, and spirit. You faced distortion. You honored truth. You let go.</p>
-            
-            <div class="summary-card" id="summaryCard">
-                <!-- Summary will be populated here -->
-            </div>
-
-            <textarea id="finalReflection" placeholder="I see now…"
-                aria-label="Write your final reflection"
-                oninput="updateCharCount(this, 'count8')"
-                style="margin-top: 1rem;"></textarea>
-            
-            <div class="char-count" id="count8">0 characters</div>
-
-            <p class="light-italic">You've done the work of noticing, tracing, and releasing. That's sacred movement toward clarity.</p>
-
-            <div class="button-group">
-                <button onclick="prevStep(8)" aria-label="Go back to pause screen">Back</button>
-                <button onclick="downloadResults()">Download .txt</button>
-                <button onclick="printResults()">Save/Print</button>
-                <button onclick="toggleTrinityModal()">✨ Trinity Speaks</button>
-                <button id="start-over-btn">Start Over</button>
-            </div>
-        </div>
+    <p style="margin-bottom:20px;">Understanding how beliefs work can help you approach them with greater wisdom and freedom.</p>
+    
+    <div style="background:var(--accent-color);padding:20px;border-radius:8px;margin:20px 0;">
+      <h4 style="color:var(--main-color);margin-bottom:12px;">How Beliefs Form</h4>
+      <p style="margin-bottom:12px;">Most beliefs were formed before age 7, when your brain was in a highly suggestible state.</p>
+      <p>Your brain treats imagined experiences the same as real ones when forming beliefs - so dream big.</p>
     </div>
-
-    <!-- Trinity Modal -->
-    <div id="trinityModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <div class="modal-content">
-            <span class="close-btn" onclick="toggleTrinityModal()" aria-label="Close modal">&times;</span>
-            <h2 id="modalTitle">✨ Let the Trinity Speak Into This</h2>
-            <p>
-                <strong>The Father restores what was lost.</strong> <em>"I will restore to you the years that the swarming locust has eaten..."</em> — Joel 2:25
-            </p>
-            <p>
-                <strong>The Son breaks the illusion, carries the weight, and welcomes you back into truth.</strong> <em>"Come to me, all you who are weary and burdened, and I will give you rest... For my yoke is easy and my burden is light."</em> — Matthew 11:28–30
-            </p>
-            <p>
-                <strong>The Spirit fills the cleared space with clarity, courage, and holy remembering.</strong> <em>"May the God of hope fill you with all joy and peace as you trust in him... by the power of the Holy Spirit."</em> — Romans 15:13
-            </p>
-            <p style="margin-top: 1.5rem;">
-                You were never meant to walk in distortion.<br>
-                You were meant to walk in truth.
-            </p>
-            <p style="margin-top: 1rem;">
-                <em>Three voices, one God. One truth that's now yours.</em>
-            </p>
-            <button onclick="toggleTrinityModal()" aria-label="Close modal">Amen</button>
-        </div>
+    
+    <div style="background:var(--accent-color);padding:20px;border-radius:8px;margin:20px 0;">
+      <h4 style="color:var(--main-color);margin-bottom:12px;">How Beliefs Function</h4>
+      <p style="margin-bottom:12px;">You can hold a belief and still question whether it supports you.</p>
+      <p>Confirmation bias means your brain looks for evidence that supports existing beliefs.</p>
     </div>
+    
+    <div style="background:var(--accent-color);padding:20px;border-radius:8px;margin:20px 0;">
+      <h4 style="color:var(--main-color);margin-bottom:12px;">Your Power</h4>
+      <p>You have the ability to consciously choose which beliefs to keep, modify, or release. This examination process is part of that conscious choice.</p>
+    </div>
+    
+    <div style="text-align:center">
+      <button class="btn btn-primary" onclick="closeExaminationModal()">Continue Examination</button>
+    </div>
+  </div>
+</div>
 
-    <script>
-        let typingTimers = {};
+<!-- Trinity Modal -->
+<div id="trinityModal" class="modal">
+  <div class="modal-content">
+    <h3>✨ Spiritual Perspective on Belief Examination</h3>
+    
+    <div class="trinity-section">
+      <div class="trinity-role">FATHER</div>
+      <p>"I am the source of all truth. Every belief you hold can be examined in My light without fear. I gave you a mind capable of discernment - use it with confidence. What beliefs reflect My character of love, truth, and freedom rather than fear and limitation?"</p>
+    </div>
+    
+    <div class="trinity-section">
+      <div class="trinity-role">SON</div>
+      <p>"I came to set you free from beliefs that bind you unnecessarily. Look at how I lived - I questioned religious traditions that limited people and embraced truth that brought life. Follow My example in examining what serves growth and authentic living."</p>
+    </div>
+    
+    <div class="trinity-section">
+      <div class="trinity-role">HOLY SPIRIT</div>
+      <p>"I am your teacher and guide to all truth. When you're uncertain whether a belief serves you well, ask Me for wisdom. I will help you discern what builds up versus what tears down, what brings life versus what brings spiritual death."</p>
+    </div>
+    
+    <div class="scripture">
+      <p style="font-style:italic;font-weight:600;margin-bottom:8px">"Then you will know the truth, and the truth will set you free."</p>
+      <p style="font-size:0.9rem;opacity:0.8">- John 8:32</p>
+    </div>
+    
+    <p style="text-align:center;margin:15px 0;font-style:italic">You were meant to live from truth you've chosen consciously, not beliefs you've inherited unconsciously. This examination process is part of growing into spiritual maturity and authentic faith.</p>
+    
+    <div style="text-align:center">
+      <button class="btn btn-primary" onclick="closeTrinityModal()">Continue in Truth</button>
+    </div>
+  </div>
+</div>
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            const themeToggle = document.querySelector('.theme-toggle');
-            
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.removeAttribute('data-theme');
-                themeToggle.textContent = '🌙';
-                themeToggle.setAttribute('aria-label', 'Toggle dark mode');
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                themeToggle.textContent = '☀️';
-                themeToggle.setAttribute('aria-label', 'Toggle light mode');
+<script>
+  // --- State
+  let currentStep = 0;
+  const totalSteps = 7;
+  const responses = {
+    beliefFeelsOff:'', beliefOrigins:'', beliefProtects:'', beliefDistorts:'', trueBelief:'', finalReflection:''
+  };
+
+  // Light / Dark toggle
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const body = document.body;
+    const btn = document.getElementById('themeBtn');
+    if (body.getAttribute('data-theme') === 'dark') {
+      body.removeAttribute('data-theme'); btn.textContent = '🌙';
+    } else {
+      body.setAttribute('data-theme','dark'); btn.textContent = '☀️';
+    }
+  });
+
+  // Character count and encouragement system
+  function setupTextarea(textareaId, countId, encId, stepNum) {
+    const textarea = document.getElementById(textareaId);
+    const countEl = document.getElementById(countId);
+    const encEl = document.getElementById(encId);
+    const nextBtn = document.getElementById('next' + stepNum);
+    
+    if (!textarea || !countEl || !encEl) return;
+    
+    // Set initial button state
+    if (nextBtn) updateButtonState(nextBtn, stepNum, false);
+    
+    textarea.addEventListener('input', () => {
+      const count = textarea.value.length;
+      countEl.textContent = `${count} characters`;
+      
+      // Show encouragement after 20 characters
+      if (count > 20) {
+        encEl.classList.add('show');
+      } else {
+        encEl.classList.remove('show');
+      }
+      
+      // Update button state based on content
+      if (nextBtn) {
+        const hasContent = count > 0;
+        updateButtonState(nextBtn, stepNum, hasContent);
+      }
+      
+      // Auto-save
+      saveCurrentResponse();
+    });
+  }
+
+  // Toggle overflow section
+  function toggleOverflow() {
+    const section = document.getElementById('overflowSection');
+    const toggle = document.getElementById('overflowToggle');
+    
+    if (section.style.display === 'none' || section.style.display === '') {
+      section.style.display = 'block';
+      toggle.textContent = '↑';
+      // Focus on textarea after animation
+      setTimeout(() => {
+        document.getElementById('overflowDump')?.focus();
+      }, 100);
+    } else {
+      section.style.display = 'none';
+      toggle.textContent = '↓';
+    }
+  }
+
+  // Update button text and state based on step and content
+  function updateButtonState(button, stepNum, hasContent) {
+    const buttonStates = {
+      '1': {
+        disabled: 'Share your observations to continue',
+        enabled: "Explore the origins →"
+      },
+      '2': {
+        disabled: 'Complete the origin analysis to continue', 
+        enabled: "Examine the protective purpose →"
+      },
+      '3': {
+        disabled: 'Complete the protection analysis to continue',
+        enabled: "Identify current limitations →"
+      },
+      '4': {
+        disabled: 'Complete the limitation analysis to continue',
+        enabled: "Consider alternatives →"
+      },
+      '5': {
+        disabled: 'Consider alternatives to continue',
+        enabled: "Complete your examination →"
+      }
+    };
+    
+    const state = buttonStates[stepNum];
+    if (state) {
+      if (hasContent) {
+        button.disabled = false;
+        button.textContent = state.enabled;
+      } else {
+        button.disabled = true;
+        button.textContent = state.disabled;
+      }
+    }
+  }
+
+  // Step navigation helpers
+  function showStep(i){
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    const stepEl = document.querySelector(`.step[data-step="${i}"]`);
+    if (stepEl) stepEl.classList.add('active');
+
+    document.getElementById('progressFill').style.width = ((i)/ (totalSteps-1)) * 100 + '%';
+    document.querySelectorAll('.step .dots').forEach(group => {
+      [...group.children].forEach((d, idx) => {
+        d.classList.remove('active','done');
+        if (idx < i) d.classList.add('done');
+        if (idx === i) d.classList.add('active');
+      });
+    });
+
+    requestAnimationFrame(()=>{
+      document.getElementById('pageTop').scrollIntoView({behavior:'smooth',block:'start'});
+      setTimeout(()=>{
+        if (i===1) document.getElementById('beliefFeelsOff')?.focus();
+        if (i===2) document.getElementById('beliefOrigins')?.focus();
+        if (i===3) document.getElementById('beliefProtects')?.focus();
+        if (i===4) document.getElementById('beliefDistorts')?.focus();
+        if (i===5) document.getElementById('trueBelief')?.focus();
+        if (i===6) document.getElementById('finalReflection')?.focus();
+      },100);
+    });
+
+    if (i===6) { 
+      document.getElementById('mainHeader')?.classList.add('completed'); 
+      updateSummary(); 
+    }
+  }
+
+  function nextStep(){ 
+    saveCurrentResponse(); 
+    if (currentStep < totalSteps-1){ 
+      currentStep++; 
+      showStep(currentStep); 
+    } 
+  }
+  
+  function prevStep(){ 
+    if (currentStep>0){ 
+      currentStep--; 
+      showStep(currentStep);
+    } 
+  }
+
+  // Save current response
+  function saveCurrentResponse(){
+    const fieldMap = {
+      1: 'beliefFeelsOff',
+      2: 'beliefOrigins', 
+      3: 'beliefProtects',
+      4: 'beliefDistorts',
+      5: 'trueBelief',
+      6: 'finalReflection'
+    };
+    
+    const fieldId = fieldMap[currentStep];
+    if (fieldId) {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        responses[fieldId] = field.value.trim();
+      }
+    }
+    
+    // Save to localStorage
+    try {
+      localStorage.setItem('beliefThreaderResponses', JSON.stringify(responses));
+    } catch (e) {
+      console.warn('Could not save to localStorage:', e);
+    }
+  }
+
+  // Update summary
+  function updateSummary(){
+    document.getElementById('sumBeliefOff').textContent = responses.beliefFeelsOff || '—';
+    document.getElementById('sumOrigins').textContent = responses.beliefOrigins || '—';
+    document.getElementById('sumProtects').textContent = responses.beliefProtects || '—';
+    document.getElementById('sumDistorts').textContent = responses.beliefDistorts || '—';
+    document.getElementById('sumTrueBelief').textContent = responses.trueBelief || '—';
+  }
+
+  // Start Over functionality
+  let startOverArmed = false;
+  function confirmStartOver(){
+    const btn = document.getElementById('startOverBtn');
+    if (!startOverArmed){
+      startOverArmed = true;
+      btn.classList.remove('btn-secondary'); 
+      btn.classList.add('btn-warning');
+      btn.textContent = 'Confirm Start Over';
+      setTimeout(()=>{ 
+        if(startOverArmed){
+          startOverArmed=false; 
+          btn.classList.remove('btn-warning'); 
+          btn.classList.add('btn-secondary'); 
+          btn.textContent='🔄 Start Over';
+        }
+      },3000);
+    } else { 
+      restartTool(); 
+    }
+  }
+
+  function restartTool(){
+    Object.keys(responses).forEach(k => responses[k] = '');
+    document.querySelectorAll('textarea, input[type="text"]').forEach(t => t.value='');
+    document.querySelectorAll('.char-count').forEach(el => el.textContent = '0 characters');
+    document.querySelectorAll('.encouragement').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('[id^="next"]').forEach(btn => btn.disabled = true);
+    
+    const btn = document.getElementById('startOverBtn');
+    if (btn){ 
+      startOverArmed=false; 
+      btn.className='btn btn-secondary'; 
+      btn.textContent='🔄 Start Over'; 
+    }
+    
+    try {
+      localStorage.removeItem('beliefThreaderResponses');
+    } catch (e) {
+      console.warn('Could not clear localStorage:', e);
+    }
+    
+    currentStep = 0; 
+    showStep(currentStep);
+  }
+
+  // Download summary
+  function downloadSummary(){
+    const timestamp = new Date().toLocaleDateString();
+    let content = `Belief Examination Journey - ${timestamp}\n`;
+    content += `Generated by Clarity Metabolics Discernment Toolkit\n\n`;
+    content += `========================================\n\n`;
+    
+    if (responses.beliefFeelsOff) {
+      content += `THE BELIEF EXAMINED:\n${responses.beliefFeelsOff}\n\n`;
+    }
+    
+    if (responses.beliefOrigins) {
+      content += `ORIGINS:\n${responses.beliefOrigins}\n\n`;
+    }
+    
+    if (responses.beliefProtects) {
+      content += `PROTECTIVE PURPOSE:\n${responses.beliefProtects}\n\n`;
+    }
+    
+    if (responses.beliefDistorts) {
+      content += `CURRENT LIMITATIONS:\n${responses.beliefDistorts}\n\n`;
+    }
+    
+    if (responses.trueBelief) {
+      content += `ALTERNATIVE PERSPECTIVE:\n${responses.trueBelief}\n\n`;
+    }
+    
+    if (responses.finalReflection) {
+      content += `INSIGHTS AND NEXT STEPS:\n${responses.finalReflection}\n\n`;
+    }
+    
+    content += `========================================\n\n`;
+    content += `SPIRITUAL PERSPECTIVE:\n\n`;
+    content += `Father: "I am the source of all truth. Every belief you hold can be examined in My light without fear. I gave you a mind capable of discernment - use it with confidence. What beliefs reflect My character of love, truth, and freedom rather than fear and limitation?"\n\n`;
+    content += `Son: "I came to set you free from beliefs that bind you unnecessarily. Look at how I lived - I questioned religious traditions that limited people and embraced truth that brought life. Follow My example in examining what serves growth and authentic living."\n\n`;
+    content += `Holy Spirit: "I am your teacher and guide to all truth. When you're uncertain whether a belief serves you well, ask Me for wisdom. I will help you discern what builds up versus what tears down, what brings life versus what brings spiritual death."\n\n`;
+    content += `"Then you will know the truth, and the truth will set you free." - John 8:32\n\n`;
+    content += `You were meant to live from truth you've chosen consciously, not beliefs you've inherited unconsciously. This examination process is part of growing into spiritual maturity and authentic faith.\n\n`;
+    content += `For more tools and support: claritymetabolics.github.io/clarity-tools`;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `belief-examination-${timestamp.replace(/\//g, '-')}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
+
+  // Modal functions
+  function openExaminationModal(){ 
+    document.getElementById('examinationModal').style.display='flex'; 
+  }
+  
+  function closeExaminationModal(){ 
+    document.getElementById('examinationModal').style.display='none'; 
+  }
+
+  function openTrinityModal(){ 
+    document.getElementById('trinityModal').style.display='flex'; 
+  }
+  
+  function closeTrinityModal(){ 
+    document.getElementById('trinityModal').style.display='none'; 
+  }
+
+  // Click outside modal to close
+  document.getElementById('trinityModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('trinityModal')) {
+      closeTrinityModal();
+    }
+  });
+
+  document.getElementById('examinationModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('examinationModal')) {
+      closeExaminationModal();
+    }
+  });
+
+  // Escape key to close modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeTrinityModal();
+      closeExaminationModal();
+    }
+  });
+
+  // Initialize
+  function init(){ 
+    // Load saved responses
+    try {
+      const saved = localStorage.getItem('beliefThreaderResponses');
+      if (saved) {
+        const savedResponses = JSON.parse(saved);
+        Object.assign(responses, savedResponses);
+        // Populate form fields
+        Object.keys(savedResponses).forEach(key => {
+          const el = document.getElementById(key);
+          if (el && savedResponses[key]) {
+            el.value = savedResponses[key];
+            // Update character count
+            const stepMapping = {
+              'beliefFeelsOff': '1',
+              'beliefOrigins': '2', 
+              'beliefProtects': '3',
+              'beliefDistorts': '4',
+              'trueBelief': '5',
+              'finalReflection': '6'
+            };
+            const stepNum = stepMapping[key];
+            const countEl = document.getElementById('count' + stepNum);
+            if (countEl) {
+              countEl.textContent = `${savedResponses[key].length} characters`;
             }
-        }
-
-        function handleKeyPress(event, step) {
-            // Ctrl+Enter to advance
-            if (event.key === 'Enter' && event.ctrlKey) {
-                const nextButton = document.getElementById(`next${step}`);
-                if (nextButton && !nextButton.disabled) {
-                    event.preventDefault();
-                    if (step < 6) {
-                        nextStep(step);
-                    } else {
-                        showPauseScreen();
-                    }
-                }
+            // Show encouragement if applicable
+            if (savedResponses[key].length > 20) {
+              const encEl = document.getElementById('enc' + stepNum);
+              if (encEl) encEl.classList.add('show');
             }
-
-            // Typing prompt logic
-            const promptId = `prompt${step}`;
-            const promptElement = document.getElementById(promptId);
-            if (promptElement) {
-                clearTimeout(typingTimers[promptId]);
-                promptElement.classList.remove('show');
-                
-                typingTimers[promptId] = setTimeout(() => {
-                    if (document.activeElement.id === event.target.id) {
-                        promptElement.classList.add('show');
-                    }
-                }, 10000);
+            // Update button text and state if applicable
+            const nextBtn = document.getElementById('next' + stepNum);
+            if (nextBtn && savedResponses[key].length > 0) {
+              updateButtonState(nextBtn, stepNum, true);
             }
-        }
-
-        function updateCharCount(textarea, countId) {
-            const count = textarea.value.length;
-            const countElement = document.getElementById(countId);
-            if (countElement) {
-                countElement.textContent = `${count} characters`;
-            }
-
-            // Enable/disable next button
-            const stepNum = countId.replace('count', '');
-            const nextButton = document.getElementById(`next${stepNum}`);
-            if (nextButton) {
-                nextButton.disabled = count < 1;
-            }
-        }
-
-        function showEncouragement(textarea, encId) {
-            const encouragement = document.getElementById(encId);
-            if (encouragement) {
-                if (textarea.value.length > 20) {
-                    encouragement.classList.add('show');
-                } else {
-                    encouragement.classList.remove('show');
-                }
-            }
-        }
-
-        function nextStep(currentStep) {
-            const current = document.getElementById(`step${currentStep}`);
-            const next = document.getElementById(`step${currentStep + 1}`);
-            const currentDot = document.getElementById(`dot${currentStep}`);
-            const nextDot = document.getElementById(`dot${currentStep + 1}`);
-            const stepIndicator = document.getElementById('currentStep');
-
-            // Fade out current step
-            current.classList.add('fade-out');
-            
-            setTimeout(() => {
-                current.classList.add('hidden');
-                current.classList.remove('fade-out');
-                
-                // Show next step
-                if (next) {
-                    next.classList.remove('hidden');
-                    next.classList.add('fade-in');
-                    
-                    // Update progress
-                    currentDot.classList.remove('active');
-                    nextDot.classList.add('active');
-                    stepIndicator.textContent = currentStep + 1;
-                    
-                    // Focus on next textarea
-                    setTimeout(() => {
-                        next.querySelector('textarea')?.focus();
-                    }, 200);
-                }
-            }, 300);
-        }
-
-        function prevStep(currentStep) {
-            let current, prev;
-            
-            if (currentStep === 7) {
-                current = document.getElementById('pauseScreen');
-                prev = document.getElementById('step6');
-            } else if (currentStep === 8) {
-                current = document.getElementById('summaryScreen');
-                prev = document.getElementById('pauseScreen');
-            } else {
-                current = document.getElementById(`step${currentStep}`);
-                prev = document.getElementById(`step${currentStep - 1}`);
-            }
-
-            const currentDot = document.getElementById(`dot${currentStep}`);
-            const prevDot = document.getElementById(`dot${currentStep - 1}`);
-            const stepIndicator = document.getElementById('currentStep');
-
-            if (!prev) return; // Don't go back from step 1
-
-            // Fade out current step
-            current.classList.add('fade-out');
-            
-            setTimeout(() => {
-                current.classList.add('hidden');
-                current.classList.remove('fade-out');
-                
-                // Show previous step
-                prev.classList.remove('hidden');
-                prev.classList.add('fade-in');
-                
-                // Update progress
-                currentDot.classList.remove('active');
-                prevDot.classList.add('active');
-                stepIndicator.textContent = currentStep - 1;
-                
-                // Focus on previous textarea
-                setTimeout(() => {
-                    prev.querySelector('textarea')?.focus();
-                }, 200);
-            }, 300);
-        }
-
-        function showPauseScreen() {
-            const step6 = document.getElementById('step6');
-            const pauseScreen = document.getElementById('pauseScreen');
-            const currentDot = document.getElementById('dot6');
-            const nextDot = document.getElementById('dot7');
-            const stepIndicator = document.getElementById('currentStep');
-
-            // Fade out current step
-            step6.classList.add('fade-out');
-            
-            setTimeout(() => {
-                step6.classList.add('hidden');
-                step6.classList.remove('fade-out');
-                
-                // Show pause screen
-                pauseScreen.classList.remove('hidden');
-                pauseScreen.classList.add('fade-in');
-                
-                // Update progress
-                currentDot.classList.remove('active');
-                nextDot.classList.add('active');
-                stepIndicator.textContent = '7';
-            }, 300);
-        }
-
-        function showSummaryScreen() {
-            const pauseScreen = document.getElementById('pauseScreen');
-            const summaryScreen = document.getElementById('summaryScreen');
-            const summaryCard = document.getElementById('summaryCard');
-            const currentDot = document.getElementById('dot7');
-            const nextDot = document.getElementById('dot8');
-            const stepIndicator = document.getElementById('currentStep');
-
-            // Collect all responses
-            const belief1 = document.getElementById('belief1').value || 'Not provided';
-            const belief2 = document.getElementById('belief2').value || 'Not provided';
-            const belief3 = document.getElementById('belief3').value || 'Not provided';
-            const belief4 = document.getElementById('belief4').value || 'Not provided';
-            const belief5 = document.getElementById('belief5').value || 'Not provided';
-            const belief6 = document.getElementById('belief6').value || 'Not provided';
-
-            // Populate summary card
-            summaryCard.innerHTML = `
-                <p><strong>The belief that felt off:</strong> ${belief1}</p>
-                <p><strong>Where it came from:</strong> ${belief2}</p>
-                <p><strong>What it protected:</strong> ${belief3}</p>
-                <p><strong>How it distorted truth:</strong> ${belief4}</p>
-                <p><strong>The truer truth:</strong> ${belief5}</p>
-                <p><strong>What becomes possible:</strong> ${belief6}</p>
-            `;
-
-            // Fade out pause screen
-            pauseScreen.classList.add('fade-out');
-            
-            setTimeout(() => {
-                pauseScreen.classList.add('hidden');
-                pauseScreen.classList.remove('fade-out');
-                
-                // Show summary screen
-                summaryScreen.classList.remove('hidden');
-                summaryScreen.classList.add('fade-in');
-                
-                // Update progress
-                currentDot.classList.remove('active');
-                nextDot.classList.add('active');
-                stepIndicator.textContent = '8';
-                
-                // Focus on final reflection textarea
-                setTimeout(() => {
-                    document.getElementById('finalReflection')?.focus();
-                }, 200);
-            }, 300);
-        }
-
-        function resetTool() {
-            // Clear all inputs
-            ['belief1', 'belief2', 'belief3', 'belief4', 'belief5', 'belief6', 'finalReflection'].forEach(id => {
-                const element = document.getElementById(id);
-                if (element) element.value = '';
-            });
-
-            // Reset character counts
-            ['count1', 'count2', 'count3', 'count4', 'count5', 'count6', 'count8'].forEach(id => {
-                const element = document.getElementById(id);
-                if (element) element.textContent = '0 characters';
-            });
-
-            // Disable all next buttons
-            ['next1', 'next2', 'next3', 'next4', 'next5', 'next6'].forEach(id => {
-                const element = document.getElementById(id);
-                if (element) element.disabled = true;
-            });
-
-            // Hide all steps except first
-            ['step2', 'step3', 'step4', 'step5', 'step6', 'pauseScreen', 'summaryScreen'].forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.classList.add('hidden');
-                    element.classList.remove('fade-in', 'fade-out');
-                }
-            });
-
-            // Show first step
-            document.getElementById('step1').classList.remove('hidden', 'fade-out');
-
-            // Reset progress indicators
-            ['dot1', 'dot2', 'dot3', 'dot4', 'dot5', 'dot6', 'dot7', 'dot8'].forEach(id => {
-                const element = document.getElementById(id);
-                if (element) element.classList.remove('active');
-            });
-            document.getElementById('dot1').classList.add('active');
-            document.getElementById('currentStep').textContent = '1';
-
-            // Focus on first textarea
-            document.getElementById('belief1').focus();
-        }
-
-        function printResults() {
-            try {
-                const button = event.target;
-                const originalText = button.textContent;
-                button.textContent = 'Opening print...';
-                button.disabled = true;
-
-                setTimeout(() => {
-                    window.print();
-                    setTimeout(() => {
-                        button.textContent = originalText;
-                        button.disabled = false;
-                    }, 1000);
-                }, 100);
-            } catch (error) {
-                console.error('Print error:', error);
-                alert('Print function encountered an error. Please use the Download .txt option instead.');
-            }
-        }
-
-        function downloadResults() {
-            const belief1 = document.getElementById('belief1').value || 'Not provided';
-            const belief2 = document.getElementById('belief2').value || 'Not provided';
-            const belief3 = document.getElementById('belief3').value || 'Not provided';
-            const belief4 = document.getElementById('belief4').value || 'Not provided';
-            const belief5 = document.getElementById('belief5').value || 'Not provided';
-            const belief6 = document.getElementById('belief6').value || 'Not provided';
-            const finalReflection = document.getElementById('finalReflection').value || 'Not provided';
-
-            const content = `BELIEF THREADER REFLECTION
-==========================
-
-🎯 THE BELIEF THAT FELT OFF
-${belief1}
-
-🌱 WHERE IT CAME FROM  
-${belief2}
-
-🛡️ WHAT IT PROTECTED
-${belief3}
-
-🌫️ HOW IT DISTORTED TRUTH
-${belief4}
-
-✨ THE TRUER TRUTH
-${belief5}
-
-🕊️ WHAT BECOMES POSSIBLE
-${belief6}
-
-💭 FINAL REFLECTION - "I SEE NOW..."
-${finalReflection}
-
----
-
-Truth is quiet. Still. Gentle.
-And it is yours.
-Keep returning to it.
-You're not broken. You're becoming clear.
-
--- Clarity Metabolics
-
-Date: ${new Date().toLocaleDateString()}`;
-
-            // Create and download file
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'belief-threader-reflection.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }
-
-        function toggleTrinityModal() {
-            const modal = document.getElementById('trinityModal');
-            modal.classList.toggle('hidden');
-            document.body.style.overflow = modal.classList.contains('hidden') ? 'auto' : 'hidden';
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('belief1').focus();
+          }
         });
-    </script>
-
-    <script>
-        let confirmReset = false;
-        const startOverBtn = document.getElementById('start-over-btn');
-        startOverBtn.addEventListener('click', function () {
-            if (!confirmReset) {
-                startOverBtn.textContent = 'Click again to confirm';
-                startOverBtn.style.backgroundColor = '#cc3b3b'; // red tone
-                confirmReset = true;
-            } else {
-                // Clear all form data before reload to prevent browser restoration
-                document.querySelectorAll('textarea, input').forEach(element => {
-                    element.value = '';
-                    if (element.type === 'checkbox') {
-                        element.checked = false;
-                    }
-                });
-                
-                // Force a hard reload
-                window.location.reload(true);
-            }
-        });
-    </script>
+      }
+    } catch (e) {
+      console.warn('Could not load from localStorage:', e);
+    }
+    
+    showStep(0);
+    
+    // Setup textareas
+    setTimeout(() => {
+      setupTextarea('beliefFeelsOff', 'count1', 'enc1', '1');
+      setupTextarea('beliefOrigins', 'count2', 'enc2', '2');
+      setupTextarea('beliefProtects', 'count3', 'enc3', '3');
+      setupTextarea('beliefDistorts', 'count4', 'enc4', '4');
+      setupTextarea('trueBelief', 'count5', 'enc5', '5');
+      setupTextarea('finalReflection', 'count6', 'enc6', '6');
+    }, 100);
+  }
+  
+  if (document.readyState === 'loading'){ 
+    document.addEventListener('DOMContentLoaded', init); 
+  } else { 
+    init(); 
+  }
+</script>
 </body>
 </html>
