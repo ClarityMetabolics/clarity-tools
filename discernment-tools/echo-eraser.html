@@ -1,1 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Echo Eraser — Clarity Metabolics</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --main-color:#7A94A8;      /* discernment blue-gray */
+    --accent-color:#E7EEF1;    /* soft panels */
+    --contrast-color:#4A5A6A;  /* deep accent text/borders */
+    --text-color:#333;
+    --bg-color:#fff;
+    --border-color:#d9d6cf;
+    --shadow:0 2px 12px rgba(0,0,0,.08);
+    --success-color:#5a7c41;   /* progress dots done */
+    --warning-color:#dc3545;   /* Start Over confirm */
+    --green-panel:#E5EBDD;
+    --yellow-panel:#FFF8CC;
+    --red-panel:#F5E6E6;
+  }
+  [data-theme="dark"]{
+    --text-color:#e6e6e6;
+    --bg-color:#1c1c1c;
+    --border-color:#3b3a36;
+    --accent-color:#2a2825;
+    --shadow:0 2px 14px rgba(0,0,0,.35);
+    --green-panel:#2d352a;
+    --yellow-panel:#3a3620;
+    --red-panel:#3a2828;
+  }
 
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Open Sans',sans-serif;
+    color:var(--text-color);
+    background:var(--bg-color);
+    line-height:1.6;
+  }
+  .container{max-width:780px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+  /* Header */
+  .header{
+    color:#fff;
+    background:linear-gradient(135deg,var(--main-color),var(--contrast-color));
+    padding:22px 18px 18px;
+    position:relative;
+    transition: box-shadow .5s ease;
+  }
+  .header.completed{ box-shadow:0 0 18px rgba(122,148,168,.55); }
+  .header h1{
+    font-family:'Libre Baskerville',serif;
+    font-size:2rem;
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .subtitle{ text-align:center; font-style:italic; opacity:.95; }
+
+  .header-controls{ position:absolute; top:10px; right:10px; display:flex; gap:8px }
+  .header-btn{
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.3);
+    color:#fff;
+    padding:.35rem .6rem;border-radius:18px;cursor:pointer;
+    font-size:.8rem;transition:all .2s ease;
+  }
+  .header-btn:hover{background:rgba(255,255,255,.25)}
+
+  .progress-bar{height:4px;background:rgba(255,255,255,.28);border-radius:3px;margin-top:14px;overflow:hidden}
+  .progress-fill{height:100%;background:#fff;width:0%;transition:width .6s ease}
+
+  /* Content & steps */
+  main.content{flex:1;padding:22px}
+  .step{display:none;animation:fade .25s ease}
+  .step.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .step-indicator{ text-align:center; margin:10px 0 18px }
+  .step-counter{font-weight:700;color:#ffffff; background:var(--contrast-color); display:inline-block; padding:4px 10px; border-radius:12px }
+  .dots{display:flex;justify-content:center;gap:8px;margin-top:10px}
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--border-color)}
+  .dot.active{background:var(--main-color)}
+  .dot.done{background:var(--success-color)}
+
+  h2{font-family:'Libre Baskerville',serif;color:var(--main-color);font-size:1.7rem;margin:14px 0 10px}
+  h2 .subtitle{font-weight:400;font-style:italic;opacity:0.7;font-size:1.1rem}
+  p.lead{opacity:.95;margin-bottom:10px}
+
+  .tip{
+    background:linear-gradient(135deg, rgba(122,148,168,.12), rgba(74,90,106,.06));
+    border-left:4px solid var(--main-color);
+    padding:12px;border-radius:0 8px 8px 0;margin:14px 0;font-style:italic
+  }
+
+  .form-group{margin:16px 0}
+  label{display:block;font-weight:700;color:var(--contrast-color);margin-bottom:6px}
+  textarea, input[type="text"]{
+    width:100%;min-height:110px;resize:vertical;border:2px solid var(--border-color);
+    border-radius:10px;padding:12px;font:inherit;color:inherit;background:var(--bg-color);
+    transition:all .2s ease;
+  }
+  input[type="text"]{ min-height:auto; }
+  textarea:focus, input[type="text"]:focus{
+    outline:none;border-color:var(--main-color);box-shadow:0 0 0 3px rgba(122,148,168,.18)
+  }
+
+  /* Enhanced Character Count */
+  .char-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 0.85rem;
+  }
+  
+  .char-count {
+    color: var(--text-color);
+    opacity: 0.7;
+  }
+  
+  .encouragement {
+    color: var(--main-color);
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .encouragement.show {
+    opacity: 1;
+  }
+
+  /* Buttons */
+  .nav-row{display:flex;gap:12px;align-items:center;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-color)}
+  .nav-row .btn{flex:1}
+  .btn{
+    border:none;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;
+    transition:transform .1s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary{background:var(--main-color);color:#fff}
+  .btn-primary:hover:not(:disabled){background:var(--contrast-color);box-shadow:var(--shadow);transform:translateY(-1px)}
+  .btn-secondary{background:var(--accent-color);color:var(--contrast-color);border:1px solid var(--border-color)}
+  .btn-secondary:hover{background:var(--border-color)}
+  .btn-warning{background:var(--warning-color);color:#fff}
+  .btn-warning:hover{background:#c82333}
+  .btn:disabled{background:var(--border-color);color:var(--text-color);opacity:0.6;cursor:not-allowed;transform:none}
+
+  .micro{ text-align:center; margin-top:6px; font-style:italic; color:var(--contrast-color); opacity:.85 }
+
+  /* Branding */
+  .branding{ text-align:center; padding:18px; font-size:.85rem; color:var(--text-color); opacity:.75; border-top:1px solid var(--border-color) }
+  .branding a{ color:var(--contrast-color); text-decoration:none }
+  .branding a:hover{ text-decoration:underline }
+
+  @media (max-width:640px){
+    .nav-row{flex-direction:column}
+    .btn{width:100%}
+    .header h1{font-size:1.7rem}
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step { animation: none; }
+    .progress-fill { transition: none; }
+    .btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div id="pageTop" style="position:absolute;top:0"></div>
+<div class="container">
+
+  <header class="header" id="mainHeader">
+    <div class="header-controls">
+      <button class="header-btn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">🌙</button>
+    </div>
+    <h1>🌊 Echo Eraser</h1>
+    <p class="subtitle">Advanced integration for when belief work leaves an echo</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
+
+  <main class="content">
+    <!-- STEP 0: The Journey So Far -->
+    <section class="step active" data-step="0">
+      <div class="step-indicator">
+        <div class="step-counter">Step 1 of 8</div>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🌊 The Journey So Far</h2>
+      
+      <!-- For newcomers -->
+      <div style="background: rgba(122,148,168,0.05); padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid var(--main-color);">
+        <p style="margin: 0 0 12px 0; font-size: 0.95rem; line-height: 1.5;"><strong>New to this work?</strong> This tool is designed for after you've examined and shifted an original thought or belief. If you haven't done that deeper work yet, start here:</p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="#" onclick="alert('This would link to Thought Refiner')" style="background: var(--main-color); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease;">🔍 Thought Refiner</a>
+          <a href="#" onclick="alert('This would link to Belief Threader')" style="background: var(--main-color); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease;">🧵 Belief Threader</a>
+        </div>
+      </div>
+
+      <!-- Focus Setting -->
+      <div style="background: rgba(90,124,65,0.08); padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid var(--success-color);">
+        <p style="margin: 0 0 12px 0; font-size: 0.95rem; line-height: 1.5;"><strong>Before we begin,</strong> bring to mind one specific thought or belief you've already transformed using these tools. Having a clear focus will make your echo integration much more effective.</p>
+        <div class="form-group" style="margin: 12px 0 0 0;">
+          <label for="focusBelief" style="font-size: 0.9rem; margin-bottom: 6px;">Which thought or belief are you working with today?</label>
+          <input type="text" id="focusBelief" placeholder="I used to believe... / The thought I transformed was..." style="min-height: 40px; font-size: 0.9rem;">
+          <div class="char-info">
+            <div class="char-count" id="countFocus">0 characters</div>
+            <div class="encouragement" id="encFocus">Naming your focus creates clarity for the entire process.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The key distinction -->
+      <div style="background: var(--accent-color); padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid var(--main-color);">
+        <h3 style="color: var(--main-color); margin-bottom: 12px; font-size: 1.1rem;">🔄 Understanding Residue vs. Echo</h3>
+        <p style="margin: 0 0 16px 0; font-size: 1.05rem; line-height: 1.6;">You've done the hard work of letting go of old thoughts and beliefs. You've chosen better ones. So why doesn't it feel completely settled yet?</p>
+        <div style="background: rgba(122,148,168,0.08); padding: 16px; border-radius: 8px; margin-top: 12px;">
+          <p style="margin: 0; font-size: 1rem; line-height: 1.6;"><strong>Residue</strong> is what you lived inside when the old belief was active - the sticky interference that clouded your perception. <strong>Echo</strong> is what remains after that residue is cleared - a reverberation that's painful but almost in a good way, like looking back at a difficult time and feeling both the ache and the growth.</p>
+          <p style="margin: 12px 0 0 0; font-style: italic; color: var(--main-color);"><strong>Residue binds. Echo reminds.</strong></p>
+        </div>
+      </div>
+
+      <!-- Memory analogy -->
+      <div style="margin: 24px 0;">
+        <h4 style="color: var(--main-color); margin-bottom: 12px; font-size: 1rem;">💭 Think of it like this:</h4>
+        <p style="margin-bottom: 16px; opacity: 0.9;">Remember a time you had to work really hard to get out of a difficult situation. At the time it felt awful, but when you look back now, you might see how it was actually a rite of passage. You might even remember moments around that time that were really great - like meeting a friend who helped you through it.</p>
+        <p style="margin: 0; font-style: italic;">The echo is that bittersweet feeling when you remember - it still reverberates, but it's no longer the same thing as the original pain.</p>
+      </div>
+
+      <!-- Purpose statement -->
+      <div style="text-align: center; background: rgba(122,148,168,0.08); padding: 16px; border-radius: 8px; margin: 20px 0;">
+        <p style="margin: 0; font-style: italic; color: var(--contrast-color);">We do this work to walk closer to what is real and True.</p>
+      </div>
+      
+      <div class="nav-row"><button class="btn btn-primary" onclick="nextStep()">Begin Echo Integration →</button></div>
+      <div class="micro">The echo is not your enemy - it's a doorway to deeper freedom.</div>
+      <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+    </section>
+
+    <!-- STEP 1: Name Your Echo -->
+    <section class="step" data-step="1">
+      <div class="step-indicator">
+        <div class="step-counter">Step 2 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🏷️ Name Your Echo <span class="subtitle">— What's still reverberating?</span></h2>
+      
+      <p style="margin-bottom: 20px; font-size: 1.05rem; line-height: 1.6;">You've cleared the residue, but something still hums in the background. This echo has a different quality - it's not the sticky interference anymore, but the memory of what was carried and what was released.</p>
+
+      <div style="background: rgba(90,124,65,0.08); padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid var(--success-color);">
+        <p style="margin: 0; color: var(--contrast-color);">This echo often carries meaning alongside the ache. It reminds you of what was lost, but also of what was gained. Unlike residue, it doesn't block your clarity - but it can still stir emotions and sensations.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="nameEcho">What does this echo feel like when it shows up?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Describe the quality of this reverberation - is it bittersweet? Nostalgic? A gentle ache? What does it remind you of?</p>
+        <textarea id="nameEcho" placeholder="This echo feels like... / It reminds me of... / There's this bittersweet sense that..."></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count1">0 characters</div>
+          <div class="encouragement" id="enc1">You're not the echo - you're the one wise enough to notice its message.</div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <div style="font-weight: 600; color: var(--main-color); margin-bottom: 8px; font-size: 0.9rem;">💡 Integration Insight</div>
+        Remember: Echoes often have a haunting but meaningful quality. They're not trying to trap you - they're completing something that needed to be acknowledged.
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next1" disabled>Trace its origins →</button>
+      </div>
+      <div class="micro">Recognition is the first step toward integration.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 2: Where It Came From -->
+    <section class="step" data-step="2">
+      <div class="step-indicator">
+        <div class="step-counter">Step 3 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🌱 Where It Came From <span class="subtitle">— What belief left this echo?</span></h2>
+      
+      <p style="margin-bottom: 20px; font-size: 1.05rem; line-height: 1.6;">This echo didn't appear from nowhere. It's the reverberation of a belief you once carried - something that shaped how you saw yourself or the world. Understanding its origins helps you see why it still resonates.</p>
+
+      <div class="form-group">
+        <label for="echoOrigins">What belief or experience left this echo behind?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">What was the original story or belief that you've since released? What did you once think was true that you no longer believe?</p>
+        <textarea id="echoOrigins" placeholder="The belief that left this echo was... / I used to think... / The original story was..."></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count2">0 characters</div>
+          <div class="encouragement" id="enc2">Understanding the source helps you see the echo clearly.</div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <div style="font-weight: 600; color: var(--main-color); margin-bottom: 8px; font-size: 0.9rem;">💡 Integration Insight</div>
+        Often the beliefs that leave the strongest echoes are ones that once protected us or helped us make sense of difficult experiences. There's usually wisdom in why they existed.
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next2" disabled>Contrast with new truth →</button>
+      </div>
+      <div class="micro">Every echo has a story worth understanding.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 3: Contrast with New Truth -->
+    <section class="step" data-step="3">
+      <div class="step-indicator">
+        <div class="step-counter">Step 4 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>✨ Contrast with New Truth <span class="subtitle">— Recognizing your growth</span></h2>
+      
+      <p style="margin-bottom: 20px; font-size: 1.05rem; line-height: 1.6;">You've traced the echo back to its source. Now let's honor the distance you've traveled. What truth do you carry now that you didn't have before? This contrast helps you see both why the echo persists and why it no longer defines you.</p>
+
+      <div style="background: rgba(90,124,65,0.08); padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid var(--success-color);">
+        <p style="margin: 0; color: var(--contrast-color);">Sometimes we're so focused on what's still reverberating that we forget to appreciate how far we've come. The echo exists in contrast to your new truth - and that contrast is actually a testament to your growth.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="newTruth">What truth do you carry now that you didn't have before?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">How do you see yourself, God, or the world differently now? What understanding has replaced the old belief?</p>
+        <textarea id="newTruth" placeholder="Now I know that... / I've learned... / The truth I carry is..."></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count3">0 characters</div>
+          <div class="encouragement" id="enc3">Recognizing your growth illuminates how far truth has brought you.</div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <div style="font-weight: 600; color: var(--main-color); margin-bottom: 8px; font-size: 0.9rem;">💡 Integration Insight</div>
+        Growth often feels bittersweet because it requires letting go of what was once, but that no longer supports you.
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next3" disabled>Prepare for sitting →</button>
+      </div>
+      <div class="micro">Growth often feels bittersweet because it requires letting go of what no longer supports you.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 4: Prepare for Sitting -->
+    <section class="step" data-step="4">
+      <div class="step-indicator">
+        <div class="step-counter">Step 5 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🫖 Prepare for Sitting <span class="subtitle">— Creating space for what wants to be felt</span></h2>
+      
+      <p style="margin-bottom: 20px; font-size: 1.05rem; line-height: 1.6;">You've named the echo, understood its origins, and seen the contrast with your new truth. Now we shift from understanding to simply being - sitting with the echo without trying to fix, analyze, or push it away.</p>
+
+      <div style="background: var(--accent-color); padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid var(--main-color);">
+        <h3 style="color: var(--main-color); margin-bottom: 12px; font-size: 1.1rem;">🌊 Why Sitting Works</h3>
+        <p style="margin: 0; font-size: 1.05rem; line-height: 1.6;">Most people try to escape discomfort the moment they feel it. But echoes aren't emergencies - they're invitations to complete something that healing started. When you sit with an echo calmly, you teach your whole being that this feeling won't undo you. Often, the echo you stop fighting begins to transform on its own.</p>
+      </div>
+
+      <div style="margin: 24px 0;">
+        <h4 style="color: var(--main-color); margin-bottom: 12px; font-size: 1rem;">🎯 What You're About to Experience</h4>
+        <div style="background: rgba(122,148,168,0.05); padding: 16px; border-radius: 8px;">
+          <p style="margin: 0 0 12px 0;">In the guided practice, you'll:</p>
+          <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+            <li>Settle into a quiet, grounded state</li>
+            <li>Gently invite the echo to be present</li>
+            <li>Sit with it without trying to change it</li>
+            <li>Allow Truth to speak into that space</li>
+            <li>Notice what wants to shift or be acknowledged</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="background: rgba(90,124,65,0.08); padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid var(--success-color);">
+        <p style="margin: 0; color: var(--contrast-color);"><strong>Remember:</strong> This isn't about making the echo disappear. It's about meeting it with the truth you now carry. Some echoes fade, some shift quality, some simply need acknowledgment. Any response is valid - trust what emerges.</p>
+      </div>
+
+      <div style="text-align: center; margin: 20px 0;">
+        <button class="btn btn-primary" onclick="openSittingModal()" style="box-shadow: 0 0 20px rgba(122,148,168,0.3), 0 4px 15px rgba(122,148,168,0.2); font-size: 1.1rem; padding: 16px 24px;">🫖 Begin Sitting Practice</button>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" id="next4" disabled onclick="nextStep()">Complete sitting practice first</button>
+      </div>
+      <div class="micro">Transformation often happens in the spaces between effort and surrender.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 5: Integration -->
+    <section class="step" data-step="5">
+      <div class="step-indicator">
+        <div class="step-counter">Step 6 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <h2>🌱 Integration <span class="subtitle">— What happened during the sitting practice?</span></h2>
+      
+      <p style="margin-bottom: 20px; font-size: 1.05rem; line-height: 1.6;">You've just moved through a profound practice - noticing the echo, creating space to settle together, bringing in your new understanding, and asking what Truth reveals. Whatever happened was exactly what needed to happen.</p>
+
+      <div style="background: var(--accent-color); padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid var(--main-color);">
+        <h3 style="color: var(--main-color); margin-bottom: 12px; font-size: 1.1rem;">🔄 The Four Elements</h3>
+        <p style="margin: 0; font-size: 1.05rem; line-height: 1.6;">You held space for yourself, the echo, your new understanding, and Truth itself. This isn't about getting it right - it's about creating space for what wants to emerge.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="sittingReflection">What did you notice as you moved through the sitting practice?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">How did the echo feel? What happened when you brought in your new understanding? Did Truth reveal anything to you in that space?</p>
+        <textarea id="sittingReflection" placeholder="During the sitting, I noticed... / The echo felt... / When I brought in my new understanding... / Truth revealed..."></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count5">0 characters</div>
+          <div class="encouragement" id="enc5">Each sitting practice teaches you something about how transformation works.</div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <div style="font-weight: 600; color: var(--main-color); margin-bottom: 8px; font-size: 0.9rem;">💡 Integration Insight</div>
+        Remember: Integration isn't always dramatic. Sometimes it's as simple as the echo feeling less important, or you feeling more spacious around it. Small shifts are still real transformation.
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next5" disabled>Continue integration →</button>
+      </div>
+      <div class="micro">What we meet with patience often reveals its gift.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 6: Truth Speaking -->
+    <section class="step" data-step="6">
+      <div class="step-indicator">
+        <div class="step-counter">Step 7 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+      </div>
+      <h2>✨ Truth Speaking <span class="subtitle">— Filling sacred space with divine reality</span></h2>
+      
+      <p style="margin-bottom: 20px; font-size: 1.05rem; line-height: 1.6;">You've walked through deep transformation. In the Thought Refiner, distorted patterns of thinking were clarified and reshaped. Through the Belief Threader, hardened falsehoods lost their grip and dissolved. And in the stillness of sitting practice, the echo that once lingered has been faced, processed, and is now beginning to fade.</p>
+
+      <div style="background: var(--accent-color); padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid var(--main-color);">
+        <h3 style="color: var(--main-color); margin-bottom: 12px; font-size: 1.1rem;">🏠 The Vacuum Principle</h3>
+        <p style="margin: 0 0 12px 0; font-size: 1.05rem; line-height: 1.6;">As the echo dissolves or fades, a space is left behind. That space will not remain empty. For true healing, it must be filled with Truth. If it isn't, it will be taken up by something else—usually whatever is loudest, easiest, or most familiar.</p>
+        <p style="margin: 0; font-style: italic; color: var(--contrast-color);">This is not just psychological wisdom. It is a safeguard for the soul.</p>
+      </div>
+
+      <div style="background: rgba(90,124,65,0.08); padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid var(--success-color);">
+        <h4 style="color: var(--success-color); margin-bottom: 8px; font-size: 1rem;">🌱 What Truth Wants to Take Root</h4>
+        <p style="margin: 0; font-size: 0.95rem; line-height: 1.5;">This is your opportunity to plant Truth where the old pattern once lived. What do you sense God wants to take root and grow in this newly cleared ground? What does He want you to know, carry, and walk in as you move forward? What Truth is meant to fill this meaningful space?</p>
+      </div>
+
+      <div class="form-group">
+        <label for="truthSpeaking">What Truth wants to fill this sacred space?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Speak the Truth that God wants to take root where the old pattern lived. What does He want you to know, carry, and walk in as you move forward?</p>
+        <textarea id="truthSpeaking" placeholder="In this space, God wants me to know... / The Truth taking root is... / He is planting this reality..."></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count6">0 characters</div>
+          <div class="encouragement" id="enc6">Truth planted in sacred space becomes unshakeable foundation.</div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <div style="font-weight: 600; color: var(--main-color); margin-bottom: 8px; font-size: 0.9rem;">🛡️ Spiritual Protection</div>
+        When we intentionally fill cleared spaces with God's Truth, we prevent old patterns from returning and protect against spiritual re-occupation of the old thoughts and beliefs that don't belong to us anymore. This is the only Truth and returning to it time and again, with each thought and belief, builds your spiritual foundation.
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="next6" disabled>Complete the journey →</button>
+      </div>
+      <div class="micro">Truth planted in sacred space becomes unshakeable foundation.</div>
+      <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+    </section>
+
+    <!-- STEP 7: Living with New Freedom -->
+    <section class="step" data-step="7">
+      <div class="step-indicator">
+        <div class="step-counter">Step 8 of 8</div>
+        <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div></div>
+      </div>
+      <h2>🌿 Living with New Freedom</h2>
+      
+      <p style="margin-bottom: 20px; font-size: 1.05rem; line-height: 1.6;">You've completed profound work. You've named the echo, understood its origins, contrasted it with truth, sat with it patiently, and filled the sacred space with God's Truth. The echo may not be completely gone - and that's perfectly normal.</p>
+
+      <!-- Summary of their journey -->
+      <div style="background: var(--accent-color); padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid var(--main-color);">
+        <h3 style="color: var(--main-color); margin-bottom: 12px; font-size: 1.1rem;">🎯 Your Integration Journey</h3>
+        <div style="font-size: 0.95rem; line-height: 1.5;">
+          <div style="margin-bottom: 12px;"><strong>Echo noticed:</strong> <span id="summaryEcho" style="font-style: italic;">—</span></div>
+          <div style="margin-bottom: 12px;"><strong>Origins understood:</strong> <span id="summaryOrigins" style="font-style: italic;">—</span></div>
+          <div style="margin-bottom: 12px;"><strong>New truth embraced:</strong> <span id="summaryTruth" style="font-style: italic;">—</span></div>
+          <div style="margin-bottom: 12px;"><strong>Sitting revealed:</strong> <span id="summarySitting" style="font-style: italic;">—</span></div>
+          <div><strong>Truth planted:</strong> <span id="summaryTruthSpeaking" style="font-style: italic;">—</span></div>
+        </div>
+      </div>
+
+      <!-- The Vacuum Principle Integration -->
+      <div style="background: rgba(90,124,65,0.08); padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid var(--success-color);">
+        <h4 style="color: var(--success-color); margin-bottom: 8px; font-size: 1rem;">🌱 What Truth Wants to Take Root</h4>
+        <p style="margin: 0 0 12px 0; font-size: 0.95rem; line-height: 1.5;">This is your opportunity to plant Truth where the old pattern once lived. What do you sense God wants to take root and grow in this newly cleared ground? What does He want you to know, carry, and walk in as you move forward? What Truth is meant to fill this meaningful space?</p>
+        
+        <h4 style="color: var(--success-color); margin: 16px 0 8px 0; font-size: 1rem;">🛡️ Spiritual Protection</h4>
+        <p style="margin: 0; font-size: 0.95rem; line-height: 1.5;">When we intentionally fill cleared spaces with God's Truth, we prevent old patterns from returning and protect against spiritual re-occupation of the old thoughts and beliefs that don't belong to us anymore. This is the only Truth and returning to it time and again, with each thought and belief, builds your spiritual foundation.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="finalReflection">What do you understand now about echoes and freedom?</label>
+        <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">What has this process taught you about transformation, truth, and walking in freedom?</p>
+        <textarea id="finalReflection" placeholder="I understand now that... / This process has shown me... / About freedom, I've learned..."></textarea>
+        <div class="char-info">
+          <div class="char-count" id="count7">0 characters</div>
+          <div class="encouragement" id="enc7">Wisdom emerges when we reflect on the journey we've taken.</div>
+        </div>
+      </div>
+
+      <!-- What happens when echoes return -->
+      <div style="background: rgba(90,124,65,0.08); padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid var(--success-color);">
+        <h4 style="color: var(--success-color); margin-bottom: 8px;">🔄 When Echoes Return</h4>
+        <p style="margin: 0; font-size: 0.95rem; line-height: 1.5;">The echo may visit again - that's part of how deep change integrates. When it does, you can return to sitting, speaking truth, or simply acknowledging it with the understanding you now have. Each time, it has less power and you have more freedom.</p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; margin: 30px 0;">
+        <button class="btn btn-primary" onclick="downloadSummary()" style="width: 300px;">📄 Download Your Journey</button>
+        <button class="btn btn-primary" onclick="openTrinityModal()" style="width: 300px;">✨ Final Blessing</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:30px 0; width:100%;">
+        <button class="btn btn-secondary" onclick="prevStep()" style="width: 300px;">← Back</button>
+        <button class="btn btn-secondary" id="startOverBtn" onclick="confirmStartOver()" style="width: 300px;">🔄 Start Over</button>
+      </div>
+
+      <div style="text-align: center; margin: 30px 0; padding: 20px; background: rgba(122,148,168,0.12); border-radius: 8px; border: 1px solid rgba(122,148,168,0.2); border-left: 4px solid var(--main-color);">
+        <h4 style="color: var(--main-color); margin-bottom: 12px; font-size: 1.2rem;">🌊 Echo Eraser</h4>
+        <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Part of the comprehensive Five Anchors and Discernment Tools designed to help you find stability and clarity in overwhelming times.</p>
+      </div>
+
+      <div class="branding">
+        <div><strong>Created by Clarity Metabolics</strong></div>
+        <div style="font-style:italic;margin-top:4px">Finding balance in a chaotic world.</div>
+        
+        <div style="margin:16px 0;padding:16px;background:rgba(122,148,168,0.08);border-radius:8px;border:1px solid rgba(122,148,168,0.15);">
+          <p style="margin:0;font-size:0.9rem;line-height:1.5;color:var(--text-color);opacity:0.9;">
+            For the complete toolkit that addresses every aspect of human experience, visit <strong><a href="https://claritymetabolics.com" target="_blank" style="color:var(--main-color);text-decoration:none;">claritymetabolics.com</a></strong>
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Sitting Practice Modal -->
+<div id="sittingModal" class="modal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000;">
+  <div style="background:var(--bg-color);color:var(--text-color);max-width:600px;width:100%;max-height:90vh;border-radius:12px;box-shadow:var(--shadow);padding:24px;overflow-y:auto;position:relative;">
+    <button onclick="closeSittingModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-color);font-size:1.5rem;cursor:pointer;opacity:0.7;transition:opacity 0.3s ease;width:32px;height:32px;display:flex;align-items:center;justify-content:center;" title="Close and return to Prepare for Sitting">×</button>
+    <h3 style="font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:16px;font-size:1.4rem;">🫖 Guided Sitting Practice</h3>
+    
+    <!-- Sitting Step 1: Settle -->
+    <div class="sitting-step active" data-sitting-step="0" style="margin: 20px 0;">
+      <h4 style="color: var(--main-color); margin-bottom: 12px;">Settle Into Stillness</h4>
+      <p style="margin-bottom: 12px;">Find a comfortable position where you can sit quietly for the next few minutes. Close your eyes if that feels right, or soften your gaze downward.</p>
+      <p style="margin-bottom: 12px;">Take three slow, deep breaths. Let yourself settle more and more with each exhale.</p>
+      <p style="margin: 0; font-style: italic;">When you feel ready, let your breathing return to its natural rhythm. There's no hurry here.</p>
+    </div>
+
+    <!-- Sitting Step 2: Become Aware of the Echo -->
+    <div class="sitting-step" data-sitting-step="1" style="margin: 20px 0; display: none;">
+      <h4 style="color: var(--main-color); margin-bottom: 12px;">Become Aware of the Echo</h4>
+      <p style="margin-bottom: 12px;">Begin noticing the echo - the sensation of what once was. Don't chase it or manufacture it - simply make space for whatever shows up.</p>
+      <p style="margin-bottom: 12px;">Notice where you feel it. Is it in your chest? Your throat? Your stomach? Just observe without trying to change anything.</p>
+      <p style="margin: 0; font-style: italic;">You're not trying to solve or fix anything. You're simply being present with whatever it is you're sensing.</p>
+    </div>
+
+    <!-- Sitting Step 3: Rest in Its Presence -->
+    <div class="sitting-step" data-sitting-step="2" style="margin: 20px 0; display: none;">
+      <h4 style="color: var(--main-color); margin-bottom: 12px;">Rest in Its Presence</h4>
+      <p style="margin-bottom: 12px;">Continue sitting with whatever you're experiencing. If the echo feels intense, breathe gently. If it feels distant, that's fine too.</p>
+      <p style="margin-bottom: 12px;">Remember: you are not the echo. You are simply creating a bit of room around it, for both you and the echo to just settle.</p>
+      <p style="margin: 0; font-style: italic;">Keep your breath smooth and stay here as long as feels right. There's no rushing this process.</p>
+    </div>
+
+    <!-- Sitting Step 4: Invite Truth -->
+    <div class="sitting-step" data-sitting-step="3" style="margin: 20px 0; display: none;">
+      <h4 style="color: var(--main-color); margin-bottom: 12px;">Let Truth Enter</h4>
+      <p style="margin-bottom: 12px;">Now, bring to mind the new thought or belief you formed. Not as a weapon against the echo, but as a light that can shine alongside it.</p>
+      <p style="margin-bottom: 12px;">Hold both - the echo of what was, and the understanding of what now is. Notice what happens when they meet in your awareness.</p>
+      <p style="margin: 0; font-style: italic;">In this space with the echo and your new understanding, what does Truth reveal? What do you notice that's simply True?</p>
+    </div>
+
+    <!-- Sitting Step 5: Complete -->
+    <div class="sitting-step" data-sitting-step="4" style="margin: 20px 0; display: none;">
+      <h4 style="color: var(--main-color); margin-bottom: 12px;">Gentle Completion</h4>
+      <p style="margin-bottom: 12px;">Take a moment to appreciate what you've just done. You've sat with discomfort without trying to escape it. You've invited truth into a tender space.</p>
+      <p style="margin-bottom: 12px;">When you're ready, take a few deeper breaths and gently return your attention to the room around you.</p>
+      <p style="margin: 0; font-weight: 600;">Whatever happened - or didn't happen - was exactly right. Trust the process of your own unfolding.</p>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; margin-top: 20px; gap: 12px;">
+      <button style="background:var(--accent-color);color:var(--contrast-color);border:1px solid var(--border-color);padding:12px 18px;border-radius:8px;cursor:pointer;display:none;" id="sittingPrev" onclick="prevSittingStep()">← Previous</button>
+      <button style="background:var(--main-color);color:#fff;border:none;padding:12px 18px;border-radius:8px;cursor:pointer;flex:1;" id="sittingNext" onclick="nextSittingStep()">Continue →</button>
+      <button style="background:var(--main-color);color:#fff;border:none;padding:12px 18px;border-radius:8px;cursor:pointer;flex:1;display:none;" id="sittingComplete" onclick="completeSittingPractice()">Complete Practice</button>
+    </div>
+  </div>
+</div>
+
+<!-- Trinity Modal -->
+<div id="trinityModal" class="modal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000;">
+  <div style="background:var(--bg-color);color:var(--text-color);max-width:600px;width:100%;max-height:90vh;border-radius:12px;box-shadow:var(--shadow);padding:24px;overflow-y:auto;">
+    <h3 style="font-family:'Libre Baskerville',serif;color:var(--main-color);margin-bottom:16px;font-size:1.4rem;">✨ A Final Blessing</h3>
+    
+    <div style="margin-bottom:20px;padding:16px;background:var(--accent-color);border-radius:8px;">
+      <div style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px;">FATHER</div>
+      <p style="margin:0;">"You are deeply loved, even in the echoes. What you've experienced today is part of a larger healing I'm working in you. Trust the process, trust the timing, and know that every step toward truth is a step toward Me."</p>
+    </div>
+    
+    <div style="margin-bottom:20px;padding:16px;background:var(--accent-color);border-radius:8px;">
+      <div style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px;">SON</div>
+      <p style="margin:0;">"I understand echoes - even after My resurrection, the scars remained. But they became reminders of transformation, not shame. Let your echoes become testimonies of how far truth has brought you."</p>
+    </div>
+    
+    <div style="margin-bottom:20px;padding:16px;background:var(--accent-color);border-radius:8px;">
+      <div style="font-size:1.1rem;font-weight:700;color:var(--main-color);margin-bottom:8px;">HOLY SPIRIT</div>
+      <p style="margin:0;">"I am the One who helps truth settle into every part of you - mind, body, and spirit. When echoes arise, I can help you respond with wisdom rather than react with fear. The work continues, and I am with you in it."</p>
+    </div>
+    
+    <div style="font-style:italic;background:var(--accent-color);padding:16px;border-left:4px solid var(--main-color);border-radius:8px;margin:16px 0;text-align:center;">
+      <p style="font-style:italic;font-weight:600;margin-bottom:8px">"He heals the brokenhearted and binds up their wounds."</p>
+      <p style="font-size:0.9rem;opacity:0.8;margin:0;">— Psalm 147:3</p>
+    </div>
+    
+    <div style="text-align:center">
+      <button style="background:var(--main-color);color:#fff;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;" onclick="closeTrinityModal()">Amen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- State
+  let currentStep = 0;
+  const totalSteps = 8;
+  let sittingCurrentStep = 0;
+  const totalSittingSteps = 5;
+  let sittingCompleted = false;
+  
+  const responses = {
+    focusBelief:'', nameEcho:'', echoOrigins:'', newTruth:'', sittingReflection:'', truthSpeaking:'', finalReflection:''
+  };
+
+  // Light / Dark toggle
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const body = document.body;
+    const btn = document.getElementById('themeBtn');
+    if (body.getAttribute('data-theme') === 'dark') {
+      body.removeAttribute('data-theme'); btn.textContent = '🌙';
+    } else {
+      body.setAttribute('data-theme','dark'); btn.textContent = '☀️';
+    }
+  });
+
+  // Character count and encouragement system
+  function setupTextarea(textareaId, countId, encId, stepNum) {
+    const textarea = document.getElementById(textareaId);
+    const countEl = document.getElementById(countId);
+    const encEl = document.getElementById(encId);
+    const nextBtn = document.getElementById('next' + stepNum);
+    
+    if (!textarea || !countEl || !encEl) return;
+    
+    textarea.addEventListener('input', () => {
+      const count = textarea.value.length;
+      countEl.textContent = `${count} characters`;
+      
+      if (count > 20) {
+        encEl.classList.add('show');
+      } else {
+        encEl.classList.remove('show');
+      }
+      
+      if (nextBtn) {
+        nextBtn.disabled = count === 0;
+      }
+      
+      saveCurrentResponse();
+    });
+  }
+
+  // Step navigation
+  function showStep(i){
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    const stepEl = document.querySelector(`.step[data-step="${i}"]`);
+    if (stepEl) stepEl.classList.add('active');
+
+    document.getElementById('progressFill').style.width = ((i+1)/totalSteps) * 100 + '%';
+    document.querySelectorAll('.step .dots').forEach(group => {
+      [...group.children].forEach((d, idx) => {
+        d.classList.remove('active','done');
+        if (idx < i) d.classList.add('done');
+        if (idx === i) d.classList.add('active');
+      });
+    });
+
+    requestAnimationFrame(()=>{
+      document.getElementById('pageTop').scrollIntoView({behavior:'smooth',block:'start'});
+      setTimeout(()=>{
+        if (i===1) document.getElementById('nameEcho')?.focus();
+        if (i===2) document.getElementById('echoOrigins')?.focus();
+        if (i===3) document.getElementById('newTruth')?.focus();
+        if (i===5) document.getElementById('sittingReflection')?.focus();
+        if (i===6) document.getElementById('truthSpeaking')?.focus();
+        if (i===7) document.getElementById('finalReflection')?.focus();
+      },100);
+    });
+
+    if (i===7) { 
+      document.getElementById('mainHeader')?.classList.add('completed'); 
+      updateSummary(); 
+    }
+  }
+
+  function nextStep(){ 
+    saveCurrentResponse(); 
+    if (currentStep < totalSteps-1){ 
+      currentStep++; 
+      showStep(currentStep); 
+    } 
+  }
+  
+  function prevStep(){ 
+    if (currentStep>0){ 
+      currentStep--; 
+      showStep(currentStep);
+    } 
+  }
+
+  // Save responses
+  function saveCurrentResponse(){
+    const fieldMap = {
+      1: 'nameEcho',
+      2: 'echoOrigins', 
+      3: 'newTruth',
+      5: 'sittingReflection',
+      6: 'truthSpeaking',
+      7: 'finalReflection'
+    };
+    
+    const fieldId = fieldMap[currentStep];
+    if (fieldId) {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        responses[fieldId] = field.value.trim();
+      }
+    }
+    
+    try {
+      localStorage.setItem('echoEraserResponses', JSON.stringify(responses));
+      localStorage.setItem('echoEraserSittingCompleted', sittingCompleted.toString());
+    } catch (e) {
+      console.warn('Could not save to localStorage:', e);
+    }
+  }
+
+  // Sitting Practice Modal Functions
+  function openSittingModal() {
+    document.getElementById('sittingModal').style.display = 'flex';
+    sittingCurrentStep = 0;
+    showSittingStep(0);
+  }
+
+  function closeSittingModal() {
+    document.getElementById('sittingModal').style.display = 'none';
+    // Don't mark as completed when using X button
+  }
+
+  function showSittingStep(step) {
+    document.querySelectorAll('.sitting-step').forEach(s => s.style.display = 'none');
+    const targetStep = document.querySelector(`.sitting-step[data-sitting-step="${step}"]`);
+    if (targetStep) targetStep.style.display = 'block';
+    
+    const prevBtn = document.getElementById('sittingPrev');
+    const nextBtn = document.getElementById('sittingNext');
+    const completeBtn = document.getElementById('sittingComplete');
+    
+    // Update button visibility
+    if (prevBtn) prevBtn.style.display = step > 0 ? 'block' : 'none';
+    
+    if (step < totalSittingSteps - 1) {
+      if (nextBtn) nextBtn.style.display = 'block';
+      if (completeBtn) completeBtn.style.display = 'none';
+    } else {
+      if (nextBtn) nextBtn.style.display = 'none';
+      if (completeBtn) completeBtn.style.display = 'block';
+    }
+    
+    sittingCurrentStep = step;
+  }
+
+  function nextSittingStep() {
+    if (sittingCurrentStep < totalSittingSteps - 1) {
+      showSittingStep(sittingCurrentStep + 1);
+    }
+  }
+
+  function prevSittingStep() {
+    if (sittingCurrentStep > 0) {
+      showSittingStep(sittingCurrentStep - 1);
+    }
+  }
+
+  function completeSittingPractice() {
+    sittingCompleted = true;
+    document.getElementById('sittingModal').style.display = 'none';
+    
+    // Enable the next button on step 4
+    const nextBtn = document.getElementById('next4');
+    if (nextBtn) {
+      nextBtn.disabled = false;
+      nextBtn.textContent = 'Reflect on sitting →';
+    }
+    
+    saveCurrentResponse();
+  }
+
+  // Trinity Modal Functions
+  function openTrinityModal() {
+    const modal = document.getElementById('trinityModal');
+    if (modal) modal.style.display = 'flex';
+  }
+
+  function closeTrinityModal() {
+    const modal = document.getElementById('trinityModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  // Click outside modal to close
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal')) {
+      e.target.style.display = 'none';
+    }
+  });
+
+  // Escape key to close modals
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal').forEach(modal => {
+        modal.style.display = 'none';
+      });
+    }
+  });
+
+  // Update summary
+  function updateSummary(){
+    const summaryEcho = document.getElementById('summaryEcho');
+    const summaryOrigins = document.getElementById('summaryOrigins');
+    const summaryTruth = document.getElementById('summaryTruth');
+    const summarySitting = document.getElementById('summarySitting');
+    const summaryTruthSpeaking = document.getElementById('summaryTruthSpeaking');
+    
+    if (summaryEcho) summaryEcho.textContent = responses.nameEcho || '—';
+    if (summaryOrigins) summaryOrigins.textContent = responses.echoOrigins || '—';
+    if (summaryTruth) summaryTruth.textContent = responses.newTruth || '—';
+    if (summarySitting) summarySitting.textContent = responses.sittingReflection || '—';
+    if (summaryTruthSpeaking) summaryTruthSpeaking.textContent = responses.truthSpeaking || '—';
+  }
+
+  // Start Over functionality
+  let startOverArmed = false;
+  function confirmStartOver(){
+    const btn = document.getElementById('startOverBtn');
+    if (!startOverArmed){
+      startOverArmed = true;
+      if (btn) {
+        btn.style.background = 'var(--warning-color)';
+        btn.textContent = 'Confirm Start Over';
+      }
+      setTimeout(()=>{ 
+        if(startOverArmed){
+          startOverArmed=false; 
+          if (btn) {
+            btn.style.background = 'var(--accent-color)';
+            btn.textContent='🔄 Start Over';
+          }
+        }
+      },3000);
+    } else { 
+      restartTool(); 
+    }
+  }
+
+  function restartTool(){
+    Object.keys(responses).forEach(k => responses[k] = '');
+    document.querySelectorAll('textarea, input[type="text"]').forEach(t => t.value='');
+    document.querySelectorAll('.char-count').forEach(el => el.textContent = '0 characters');
+    document.querySelectorAll('.encouragement').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('[id^="next"]').forEach(btn => btn.disabled = true);
+    
+    sittingCompleted = false;
+    const nextBtn4 = document.getElementById('next4');
+    if (nextBtn4) {
+      nextBtn4.disabled = true;
+      nextBtn4.textContent = 'Complete sitting practice first';
+    }
+    
+    const btn = document.getElementById('startOverBtn');
+    if (btn){ 
+      startOverArmed=false; 
+      btn.style.background = 'var(--accent-color)';
+      btn.textContent='🔄 Start Over'; 
+    }
+    
+    try {
+      localStorage.removeItem('echoEraserResponses');
+      localStorage.removeItem('echoEraserSittingCompleted');
+    } catch (e) {
+      console.warn('Could not clear localStorage:', e);
+    }
+    
+    currentStep = 0; 
+    showStep(currentStep);
+  }
+
+  // Download summary
+  function downloadSummary(){
+    const timestamp = new Date().toLocaleDateString();
+    let content = `Echo Integration Journey - ${timestamp}\n`;
+    content += `Generated by Clarity Metabolics Discernment Toolkit\n\n`;
+    content += `========================================\n\n`;
+    
+    if (responses.focusBelief) {
+      content += `FOCUS BELIEF:\n${responses.focusBelief}\n\n`;
+    }
+    
+    if (responses.nameEcho) {
+      content += `THE ECHO:\n${responses.nameEcho}\n\n`;
+    }
+    
+    if (responses.echoOrigins) {
+      content += `WHERE IT CAME FROM:\n${responses.echoOrigins}\n\n`;
+    }
+    
+    if (responses.newTruth) {
+      content += `NEW TRUTH EMBRACED:\n${responses.newTruth}\n\n`;
+    }
+    
+    if (responses.sittingReflection) {
+      content += `SITTING PRACTICE REFLECTION:\n${responses.sittingReflection}\n\n`;
+    }
+    
+    if (responses.truthSpeaking) {
+      content += `TRUTH PLANTED IN SACRED SPACE:\n${responses.truthSpeaking}\n\n`;
+    }
+    
+    if (responses.finalReflection) {
+      content += `FINAL UNDERSTANDING:\n${responses.finalReflection}\n\n`;
+    }
+    
+    content += `========================================\n\n`;
+    content += `THE SACRED VACUUM PRINCIPLE:\n`;
+    content += `As the echo transmutes or fades, something must take its place. For true healing, we must make room for Truth. If we don't intentionally fill this space with divine reality, it will be filled with something else.\n\n`;
+    content += `FINAL BLESSING:\n\n`;
+    content += `Father: "You are deeply loved, even in the echoes. What you've experienced today is part of a larger healing I'm working in you. Trust the process, trust the timing, and know that every step toward truth is a step toward Me."\n\n`;
+    content += `Son: "I understand echoes - even after My resurrection, the scars remained. But they became reminders of transformation, not shame. Let your echoes become testimonies of how far truth has brought you."\n\n`;
+    content += `Holy Spirit: "I am the One who helps truth settle into every part of you - mind, body, and spirit. When echoes arise, I can help you respond with wisdom rather than react with fear. The work continues, and I am with you in it."\n\n`;
+    content += `"He heals the brokenhearted and binds up their wounds." - Psalm 147:3\n\n`;
+    content += `You are walking closer to what is real and True.\n\n`;
+    content += `For more tools and support: claritymetabolics.com`;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `echo-integration-journey-${timestamp.replace(/\//g, '-')}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
+
+  // Initialize
+  function init(){ 
+    try {
+      const saved = localStorage.getItem('echoEraserResponses');
+      const sittingCompletedSaved = localStorage.getItem('echoEraserSittingCompleted');
+      
+      if (saved) {
+        const savedResponses = JSON.parse(saved);
+        Object.assign(responses, savedResponses);
+        Object.keys(savedResponses).forEach(key => {
+          const el = document.getElementById(key);
+          if (el && savedResponses[key]) {
+            el.value = savedResponses[key];
+            const stepMapping = {
+              'focusBelief': 'Focus',
+              'nameEcho': '1',
+              'echoOrigins': '2', 
+              'newTruth': '3',
+              'sittingReflection': '5',
+              'truthSpeaking': '6',
+              'finalReflection': '7'
+            };
+            const stepNum = stepMapping[key];
+            const countEl = document.getElementById('count' + stepNum);
+            if (countEl) {
+              countEl.textContent = `${savedResponses[key].length} characters`;
+            }
+            if (savedResponses[key].length > 20) {
+              const encEl = document.getElementById('enc' + stepNum);
+              if (encEl) encEl.classList.add('show');
+            }
+            const nextBtn = document.getElementById('next' + stepNum);
+            if (nextBtn && savedResponses[key].length > 0) {
+              nextBtn.disabled = false;
+            }
+          }
+        });
+      }
+      
+      if (sittingCompletedSaved === 'true') {
+        sittingCompleted = true;
+        const nextBtn = document.getElementById('next4');
+        if (nextBtn) {
+          nextBtn.disabled = false;
+          nextBtn.textContent = 'Reflect on sitting →';
+        }
+      }
+    } catch (e) {
+      console.warn('Could not load from localStorage:', e);
+    }
+    
+    showStep(0);
+    
+    setTimeout(() => {
+      setupTextarea('focusBelief', 'countFocus', 'encFocus', 'Focus');
+      setupTextarea('nameEcho', 'count1', 'enc1', '1');
+      setupTextarea('echoOrigins', 'count2', 'enc2', '2');
+      setupTextarea('newTruth', 'count3', 'enc3', '3');
+      setupTextarea('sittingReflection', 'count5', 'enc5', '5');
+      setupTextarea('truthSpeaking', 'count6', 'enc6', '6');
+      setupTextarea('finalReflection', 'count7', 'enc7', '7');
+    }, 100);
+  }
+  
+  if (document.readyState === 'loading'){ 
+    document.addEventListener('DOMContentLoaded', init); 
+  } else { 
+    init(); 
+  }
+
+  // Auto-save on page unload
+  window.addEventListener('beforeunload', () => {
+    saveCurrentResponse();
+  });
+</script>
+</body>
+</html>
