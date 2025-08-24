@@ -1,1 +1,1090 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connection Calibrator — Finding Your Relational Balance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-color: #7A94A8;      /* discernment blue-gray */
+            --accent-color: #E7EEF1;    /* soft panels */
+            --contrast-color: #4A5A6A;  /* deep accent text/borders */
+            --text-color: #333;
+            --bg-color: #fff;
+            --border-color: #d9d6cf;
+            --shadow: 0 2px 12px rgba(0,0,0,.08);
+            --success-color: #5a7c41;   /* progress dots done */
+            --warning-color: #dc3545;   /* Start Over confirm */
+        }
+
+        [data-theme="dark"] {
+            --text-color: #e6e6e6;
+            --bg-color: #1c1c1c;
+            --border-color: #3b3a36;
+            --accent-color: #2a2825;
+            --shadow: 0 2px 14px rgba(0,0,0,.35);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color);
+            background: var(--bg-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            color: #fff;
+            background: linear-gradient(135deg, var(--main-color), var(--contrast-color));
+            padding: 22px 18px 18px;
+            position: relative;
+            transition: box-shadow .5s ease;
+        }
+        
+        .header.completed { 
+            box-shadow: 0 0 18px rgba(122,148,168,.55); 
+        }
+        
+        .header h1 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle { 
+            text-align: center; 
+            font-style: italic; 
+            opacity: .95; 
+        }
+
+        .header-controls { 
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            display: flex; 
+            gap: 8px;
+        }
+        
+        .header-btn {
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.3);
+            color: #fff;
+            padding: .35rem .6rem;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: .8rem;
+            transition: all .2s ease;
+        }
+        
+        .header-btn:hover { 
+            background: rgba(255,255,255,.25); 
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,.28);
+            border-radius: 3px;
+            margin-top: 14px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #fff;
+            width: 0%;
+            transition: width .6s ease;
+        }
+
+        /* Content & steps */
+        main.content {
+            flex: 1;
+            padding: 22px;
+        }
+        
+        .step {
+            display: none;
+            animation: fade .25s ease;
+        }
+        
+        .step.active { 
+            display: block; 
+        }
+        
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: none; }
+        }
+
+        .step-indicator { 
+            text-align: center; 
+            margin: 10px 0 18px; 
+        }
+        
+        .step-counter {
+            font-weight: 700;
+            color: #ffffff; 
+            background: var(--contrast-color); 
+            display: inline-block; 
+            padding: 4px 10px; 
+            border-radius: 12px;
+        }
+        
+        .dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+        }
+        
+        .dot.active { 
+            background: var(--main-color); 
+        }
+        
+        .dot.done { 
+            background: var(--success-color); 
+        }
+
+        h2 {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--main-color);
+            font-size: 1.7rem;
+            margin: 14px 0 10px;
+        }
+        
+        h2 .subtitle {
+            font-weight: 400;
+            font-style: italic;
+            opacity: 0.7;
+            font-size: 1.1rem;
+        }
+        
+        h3 {
+            color: var(--main-color);
+            margin: 20px 0 10px;
+            font-size: 1.2rem;
+        }
+        
+        p.lead {
+            opacity: .95;
+            margin-bottom: 10px;
+        }
+
+        .tip {
+            background: linear-gradient(135deg, rgba(122,148,168,.12), rgba(74,90,106,.06));
+            border-left: 4px solid var(--main-color);
+            padding: 12px;
+            border-radius: 0 8px 8px 0;
+            margin: 14px 0;
+            font-style: italic;
+        }
+        
+        .tip strong {
+            font-style: normal;
+        }
+
+        .form-group {
+            margin: 16px 0;
+        }
+        
+        label {
+            display: block;
+            font-weight: 700;
+            color: var(--contrast-color);
+            margin-bottom: 6px;
+        }
+        
+        textarea, input[type="text"] {
+            width: 100%;
+            min-height: 110px;
+            resize: vertical;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            font: inherit;
+            color: inherit;
+            background: var(--bg-color);
+            transition: all .2s ease;
+        }
+        
+        input[type="text"] { 
+            min-height: 60px; 
+        }
+        
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--main-color);
+            box-shadow: 0 0 0 3px rgba(122,148,168,.18);
+        }
+
+        /* Character Count */
+        .char-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .char-count {
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        .encouragement {
+            color: var(--main-color);
+            font-style: italic;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .encouragement.show {
+            opacity: 1;
+        }
+
+        /* Buttons */
+        .nav-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .nav-row .btn { 
+            flex: 1; 
+        }
+        
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .1s ease, background .2s ease, box-shadow .2s ease;
+        }
+        
+        .btn-primary {
+            background: var(--main-color);
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background: var(--contrast-color);
+            box-shadow: var(--shadow);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--accent-color);
+            color: var(--contrast-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+        
+        .btn-warning {
+            background: var(--warning-color);
+            color: #fff;
+        }
+        
+        .btn-warning:hover {
+            background: #c82333;
+        }
+        
+        .btn:disabled {
+            background: var(--border-color);
+            color: var(--text-color);
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .micro { 
+            text-align: center; 
+            margin-top: 6px; 
+            font-style: italic; 
+            color: var(--contrast-color); 
+            opacity: .85; 
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: var(--accent-color);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid rgba(122,148,168,0.15);
+            box-shadow: 0 0 8px rgba(122,148,168,0.2);
+        }
+        
+        .summary-title {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--contrast-color);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .summary-item {
+            margin-bottom: 15px;
+        }
+        
+        .summary-label {
+            color: var(--main-color);
+            font-weight: 600;
+        }
+        
+        .summary-content {
+            margin: 5px 0 0 15px;
+            font-style: italic;
+        }
+
+        /* Sacred Content */
+        .sacred-content {
+            background: var(--accent-color);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid var(--main-color);
+            border: 2px solid rgba(122,148,168,0.15);
+            box-shadow: 0 0 8px rgba(122,148,168,0.2);
+        }
+        
+        .sacred-quote {
+            font-style: italic;
+            text-align: center;
+            color: var(--contrast-color);
+            line-height: 1.7;
+            font-size: 1.05rem;
+            margin: 16px 0;
+        }
+
+        /* Key Insights - Enhanced with Blue Glow Treatment */
+        .key-insight {
+            text-align: center;
+            font-weight: 700;
+            color: var(--contrast-color);
+            margin: 24px 0;
+            font-size: 1.2rem;
+            padding: 18px 20px;
+            background: linear-gradient(135deg, rgba(122,148,168,0.12), rgba(122,148,168,0.08));
+            border-radius: 10px;
+            border: 2px solid rgba(122,148,168,0.25);
+            box-shadow: 0 0 12px rgba(122,148,168,0.3), 0 4px 15px rgba(122,148,168,0.15);
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .key-insight::before {
+            content: "🔑 ";
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+        
+        .key-insight:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 16px rgba(122,148,168,0.4), 0 6px 20px rgba(122,148,168,0.2);
+            border-color: rgba(122,148,168,0.35);
+        }
+
+        /* Final Actions */
+        .final-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin: 18px 0;
+            width: 100%;
+        }
+        
+        .final-actions .btn {
+            display: block;
+            width: 100%;
+            max-width: 280px;
+            min-height: 50px;
+            text-align: center;
+        }
+
+        /* Tool Description */
+        .tool-description {
+            text-align: center;
+            margin: 20px 0;
+            padding: 16px;
+            background: rgba(122,148,168,0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(122,148,168,0.15);
+        }
+        
+        .tool-description h3 {
+            color: var(--main-color);
+            margin-bottom: 8px;
+            font-family: 'Libre Baskerville', serif;
+        }
+        
+        .tool-description p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-color);
+            opacity: 0.9;
+        }
+
+        /* Expanded Branding */
+        .expanded-branding {
+            text-align: center;
+            padding: 18px;
+            font-size: .85rem;
+            color: var(--text-color);
+            opacity: .75;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .expanded-branding .brand-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .expanded-branding .brand-tagline {
+            font-style: italic;
+            margin-bottom: 16px;
+        }
+        
+        .expanded-branding .brand-box {
+            margin: 16px 0;
+            padding: 16px;
+            background: rgba(122,148,168,0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(122,148,168,0.15);
+        }
+        
+        .expanded-branding .brand-box p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-color);
+            opacity: 0.9;
+        }
+        
+        .expanded-branding .brand-box a {
+            color: var(--main-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .expanded-branding .brand-box a:hover {
+            text-decoration: underline;
+        }
+        
+        .expanded-branding .brand-copyright {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        /* Branding */
+        .branding { 
+            text-align: center; 
+            padding: 18px; 
+            font-size: .85rem; 
+            color: var(--text-color); 
+            opacity: .75; 
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .branding a { 
+            color: var(--contrast-color); 
+            text-decoration: none;
+        }
+        
+        .branding a:hover { 
+            text-decoration: underline;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: var(--bg-color);
+            color: var(--text-color);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 24px;
+            overflow-y: auto;
+        }
+        
+        .modal h3 {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--main-color);
+            margin-bottom: 16px;
+            font-size: 1.4rem;
+        }
+
+        /* Trinity Blessing Styles */
+        .trinity-section {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: var(--accent-color);
+            border-radius: 8px;
+        }
+        
+        .trinity-role {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--main-color);
+            margin-bottom: 8px;
+        }
+        
+        .scripture {
+            font-style: italic;
+            background: var(--accent-color);
+            padding: 16px;
+            border-left: 4px solid var(--main-color);
+            border-radius: 8px;
+            margin: 16px 0;
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .nav-row { flex-direction: column; }
+            .btn { width: 100%; }
+            .header h1 { font-size: 1.7rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .step { animation: none; }
+            .progress-fill { transition: none; }
+            .btn { transition: none; }
+        }
+    </style>
+</head>
+<body>
+    <div id="pageTop" style="position:absolute;top:0"></div>
+    <div class="container">
+
+        <header class="header" id="mainHeader">
+            <div class="header-controls">
+                <button class="header-btn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">🌙</button>
+            </div>
+            <h1>🌍 Connection Calibrator — Finding Your Relational Balance</h1>
+            <p class="subtitle">The art of moving with others without losing yourself</p>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </header>
+
+        <main class="content">
+            <!-- STEP 6: Summary -->
+            <section class="step active" data-step="6">
+                <div class="step-indicator">
+                    <div class="step-counter">Step 7 of 8</div>
+                    <div class="dots">
+                        <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div>
+                        <div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div>
+                    </div>
+                </div>
+                <h2>📋 Your Calibration Summary <span class="subtitle">Look at your relationship map</span></h2>
+                
+                <p class="lead">You've done important work here. You identified a relationship that was pulling you off balance, mapped where it sits on the connection spectrum, envisioned a healthier dynamic, and chosen a specific step to create change.</p>
+
+                <p>This isn't just relationship advice—this is taking responsibility for your relational health and creating the connections you actually want.</p>
+
+                <div class="summary-box">
+                    <h3 class="summary-title">Your Calibration Journey</h3>
+                    
+                    <div class="summary-item">
+                        <strong class="summary-label">The Connection You Identified:</strong>
+                        <p class="summary-content" id="sumConnection">—</p>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <strong class="summary-label">How It Affects You:</strong>
+                        <p class="summary-content" id="sumForce">—</p>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <strong class="summary-label">Where It Sits on the Spectrum:</strong>
+                        <p class="summary-content" id="sumSpectrum">—</p>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <strong class="summary-label">Your Vision for Healthier Balance:</strong>
+                        <p class="summary-content" id="sumAdjustment">—</p>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <strong class="summary-label">Your Calibration Step:</strong>
+                        <p class="summary-content" id="sumCalibration">—</p>
+                    </div>
+                </div>
+
+                <div class="sacred-content">
+                    <h3 style="color:var(--main-color);margin-bottom:12px">A Word for Your Journey</h3>
+                    <p style="margin:0">"Healthy relationships aren't about perfection—they're about balance. You've identified what's off and chosen to do something about it. That's wisdom in action."</p>
+                </div>
+
+                <div class="nav-row">
+                    <button class="btn btn-secondary" onclick="goToPart2()">← Back</button>
+                    <button class="btn btn-primary" onclick="nextStep()">Walking in Balance →</button>
+                </div>
+                <div class="micro">Relational health starts with knowing where you stand and being willing to adjust.</div>
+                <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+            </section>
+
+            <!-- STEP 7: Walking in Balance -->
+            <section class="step" data-step="7">
+                <div class="step-indicator">
+                    <div class="step-counter">Step 8 of 8</div>
+                    <div class="dots">
+                        <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div>
+                        <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div>
+                    </div>
+                </div>
+                <h2>✨ Walking in Balance</h2>
+                
+                <p class="lead">You've calibrated your approach to a challenging relationship. You've moved from unconscious reaction to conscious choice about how you want to show up in your connections.</p>
+
+                <div class="sacred-content">
+                    <h3 style="color:var(--main-color);margin-bottom:12px">The Heart of Connection</h3>
+                    <p style="margin:0">The healthiest relationships happen when two centered people choose to connect. You can't control their center, but you can maintain yours. The boundaries you set and the adjustments you make create space for real intimacy to grow.</p>
+                </div>
+
+                <div class="key-insight">
+                    Connection Truth: Moving with others without losing yourself is both an art and a skill that gets better with practice.
+                </div>
+
+                <p>Every relationship is a dance of connection and autonomy, closeness and space, giving and receiving. When you know your steps and honor your boundaries, you invite others into a healthier rhythm too.</p>
+
+                <div class="final-actions">
+                    <button class="btn btn-primary" onclick="downloadCalibration()">📄 Download Your Calibration</button>
+                    <button class="btn btn-secondary" onclick="openTrinityModal()">✨ Trinity Speaks</button>
+                </div>
+
+                <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:18px 0; width:100%;">
+                    <button class="btn btn-secondary" onclick="prevStep()" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;">← Back</button>
+                    <button class="btn btn-secondary" id="startOverBtn" onclick="confirmStartOver()" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;">🔄 Start Over</button>
+                </div>
+
+                <div class="tool-description">
+                    <h3>🌍 Connection Calibrator</h3>
+                    <p>Part of the comprehensive Five Anchors and Discernment Tools designed to help you find stability and clarity in overwhelming times through healthy relational balance.</p>
+                </div>
+
+                <div class="expanded-branding">
+                    <div class="brand-title">Created by Clarity Metabolics</div>
+                    <div class="brand-tagline">Finding balance in a chaotic world.</div>
+                    
+                    <div class="brand-box">
+                        <p>For the complete toolkit that addresses every aspect of human experience, visit <strong><a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></strong></p>
+                    </div>
+                    
+                    <div class="brand-copyright">© 2025 Clarity Metabolics | claritymetabolics.com</div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Trinity Speaks Modal -->
+    <div id="trinityModal" class="modal">
+        <div class="modal-content">
+            <h3>✨ Trinity Speaks</h3>
+            
+            <div class="trinity-section">
+                <div class="trinity-role">TO THE FATHER</div>
+                <p>"Father, help me find the courage to set healthy boundaries and the wisdom to know when connection serves love and when it doesn't. Teach me to trust Your design for relationship."</p>
+            </div>
+            
+            <div class="trinity-section">
+                <div class="trinity-role">TO THE SON</div>
+                <p>"Jesus, You loved perfectly without losing Yourself. Show me how to love with both grace and truth, how to give without enabling, and how to receive without losing my center."</p>
+            </div>
+            
+            <div class="trinity-section">
+                <div class="trinity-role">TO THE HOLY SPIRIT</div>
+                <p>"Holy Spirit, guide my heart in every relationship. Help me discern when to draw closer, when to step back, and how to calibrate my connections from wisdom rather than fear."</p>
+            </div>
+            
+            <div class="scripture">
+                <p style="font-style:italic;font-weight:600;margin-bottom:8px">"As iron sharpens iron, so one person sharpens another."</p>
+                <p style="font-size:0.9rem;opacity:0.8">- Proverbs 27:17</p>
+            </div>
+            
+            <p style="text-align:center;margin-top:16px;font-style:italic">Healthy relationships sharpen both people involved, creating growth through love, truth, and mutual respect.</p>
+            
+            <div style="text-align:center;margin-top:20px">
+                <button class="btn btn-primary" onclick="closeTrinityModal()">Amen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONNECTION CALIBRATOR PART 3 JAVASCRIPT =====
+        
+        // State Management
+        let currentStep = 6; // Start at global step 6 (Step 7 of 8)
+        const totalSteps = 8;
+        const responses = {
+            connectionIdentified: '',
+            forceNoticed: '',
+            spectrumPosition: 50,
+            adjustmentVision: '',
+            calibrationStep: '',
+            summaryReflection: ''
+        };
+
+        // Start Over functionality
+        let startOverArmed = false;
+
+        // ===== INITIALIZATION =====
+        function init() {
+            loadSavedData();
+            loadTheme();
+            loadCurrentStep();
+            showStep(currentStep);
+            updateSummary();
+        }
+
+        // ===== THEME TOGGLE =====
+        function initTheme() {
+            const themeBtn = document.getElementById('themeBtn');
+            if (!themeBtn) return;
+            
+            themeBtn.addEventListener('click', () => {
+                const body = document.body;
+                const btn = document.getElementById('themeBtn');
+                if (body.getAttribute('data-theme') === 'dark') {
+                    body.removeAttribute('data-theme');
+                    btn.textContent = '🌙';
+                    localStorage.setItem('connectionCalibratorTheme', 'light');
+                } else {
+                    body.setAttribute('data-theme', 'dark');
+                    btn.textContent = '☀️';
+                    localStorage.setItem('connectionCalibratorTheme', 'dark');
+                }
+            });
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('connectionCalibratorTheme');
+            const themeBtn = document.getElementById('themeBtn');
+            
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = '☀️';
+            } else {
+                themeBtn.textContent = '🌙';
+            }
+        }
+
+        // ===== STEP NAVIGATION =====
+        function showStep(stepIndex) {
+            // Hide all steps
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            
+            // Show target step
+            const stepEl = document.querySelector(`.step[data-step="${stepIndex}"]`);
+            if (stepEl) stepEl.classList.add('active');
+
+            // Update progress bar - global position out of 8 total steps
+            const globalProgress = (stepIndex / (totalSteps - 1)) * 100;
+            document.getElementById('progressFill').style.width = globalProgress + '%';
+            
+            // Update progress dots - show global position (CRITICAL FIX)
+            document.querySelectorAll('.step .dots').forEach(dotsContainer => {
+                const dots = [...dotsContainer.children];
+                dots.forEach((dot, idx) => {
+                    dot.classList.remove('active', 'done');
+                    if (idx < stepIndex) {
+                        dot.classList.add('done');
+                    } else if (idx === stepIndex) {
+                        dot.classList.add('active');
+                    }
+                });
+            });
+
+            // Smooth scroll to top
+            requestAnimationFrame(() => {
+                document.getElementById('pageTop').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+
+            // Special handling for final step
+            if (stepIndex === 7) {
+                document.getElementById('mainHeader')?.classList.add('completed');
+            }
+
+            // Save current step globally
+            saveCurrentStep();
+        }
+
+        function nextStep() {
+            if (currentStep < 7) { // Only steps 6-7 in Part 3
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 6) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function goToPart2() {
+            // For testing purposes, show alert
+            alert("⬅️ Going back to Part 2\n\nIn deployment, this would navigate back to Part 2");
+        }
+
+        // ===== DATA PERSISTENCE =====
+        function saveAllData() {
+            try {
+                localStorage.setItem('connectionCalibratorData', JSON.stringify(responses));
+            } catch (e) {
+                console.warn('Could not save to localStorage');
+            }
+        }
+
+        function loadCurrentStep() {
+            try {
+                const saved = localStorage.getItem('connectionCalibratorCurrentStep');
+                if (saved) {
+                    const step = parseInt(saved);
+                    if (step >= 6 && step <= 7) { // Only steps 6-7 available in Part 3
+                        currentStep = step;
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not load current step');
+            }
+        }
+
+        function saveCurrentStep() {
+            try {
+                localStorage.setItem('connectionCalibratorCurrentStep', currentStep.toString());
+            } catch (e) {
+                console.warn('Could not save current step');
+            }
+        }
+
+        function loadSavedData() {
+            try {
+                const saved = localStorage.getItem('connectionCalibratorData');
+                if (saved) {
+                    const savedData = JSON.parse(saved);
+                    Object.assign(responses, savedData);
+                }
+            } catch (e) {
+                console.warn('Could not load saved data');
+            }
+        }
+
+        // ===== SUMMARY UPDATE =====
+        function updateSummary() {
+            const summaryFields = {
+                'sumConnection': responses.connectionIdentified,
+                'sumForce': responses.forceNoticed,
+                'sumSpectrum': getSpectrumDescription(),
+                'sumAdjustment': responses.adjustmentVision,
+                'sumCalibration': responses.calibrationStep
+            };
+
+            Object.keys(summaryFields).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.textContent = summaryFields[id] || '—';
+                }
+            });
+        }
+
+        function getSpectrumDescription() {
+            const position = responses.spectrumPosition || 50;
+            let zone = '';
+            
+            if (position <= 35) {
+                zone = `Dependence Zone (${position}/100) - Losing yourself in this relationship`;
+            } else if (position >= 65) {
+                zone = `Independence Zone (${position}/100) - Isolated and disconnected`;
+            } else {
+                zone = `Interdependence Zone (${position}/100) - Healthy connection with boundaries`;
+            }
+            
+            return zone;
+        }
+
+        // ===== TRINITY MODAL =====
+        function openTrinityModal() {
+            const modal = document.getElementById('trinityModal');
+            if (modal) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                modal.style.display = 'flex';
+                
+                setTimeout(() => {
+                    const firstButton = modal.querySelector('.btn');
+                    if (firstButton) {
+                        firstButton.focus();
+                        modal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 200);
+            }
+        }
+
+        function closeTrinityModal() {
+            const modal = document.getElementById('trinityModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // ===== DOWNLOAD FUNCTIONALITY =====
+        function downloadCalibration() {
+            const timestamp = new Date().toLocaleDateString();
+            let content = `Connection Calibration - ${timestamp}\n`;
+            content += `Generated by Clarity Metabolics Discernment Toolkit\n\n`;
+            content += `========================================\n\n`;
+            
+            // Add user responses
+            if (responses.connectionIdentified) {
+                content += `THE CONNECTION I IDENTIFIED:\n${responses.connectionIdentified}\n\n`;
+            }
+            
+            if (responses.forceNoticed) {
+                content += `HOW IT AFFECTS ME:\n${responses.forceNoticed}\n\n`;
+            }
+            
+            content += `SPECTRUM PLACEMENT:\n${getSpectrumDescription()}\n\n`;
+            
+            if (responses.adjustmentVision) {
+                content += `MY VISION FOR HEALTHIER BALANCE:\n${responses.adjustmentVision}\n\n`;
+            }
+            
+            if (responses.calibrationStep) {
+                content += `MY CALIBRATION STEP:\n${responses.calibrationStep}\n\n`;
+            }
+            
+            // Add Trinity Blessing content
+            content += `========================================\n\n`;
+            content += `TRINITY SPEAKS INTO YOUR CONNECTIONS:\n\n`;
+            content += `Father: "My child, I designed you for relationship—with Me and with others. Healthy boundaries aren't walls; they're the framework that makes true intimacy possible."\n\n`;
+            content += `Son: "I lived in perfect relationship—connected but not enmeshed, loving but not enabling. Follow My example of love with boundaries, grace with truth."\n\n`;
+            content += `Holy Spirit: "I will guide you in wisdom for each relationship. Trust Me to show you when to draw closer, when to step back, and how to love well from your center."\n\n`;
+            content += `"As iron sharpens iron, so one person sharpens another." - Proverbs 27:17\n\n`;
+            content += `Healthy relationships sharpen both people involved, creating growth through love, truth, and mutual respect.\n\n`;
+            content += `For more tools: claritymetabolics.com`;
+            
+            // Create and trigger download
+            try {
+                const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `connection-calibration-${timestamp.replace(/\//g, '-')}.txt`;
+                
+                document.body.appendChild(a);
+                a.click();
+                
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (error) {
+                const newWindow = window.open('', '_blank');
+                if (newWindow) {
+                    newWindow.document.write(`<pre>${content}</pre>`);
+                    newWindow.document.title = 'Connection Calibration Journey';
+                } else {
+                    alert('Download failed. Please ensure pop-ups are allowed and try again.');
+                }
+            }
+        }
+
+        // ===== START OVER FUNCTIONALITY =====
+        function confirmStartOver() {
+            const btn = document.getElementById('startOverBtn');
+            if (!startOverArmed) {
+                startOverArmed = true;
+                btn.classList.remove('btn-secondary');
+                btn.classList.add('btn-warning');
+                btn.textContent = 'Confirm Start Over';
+                setTimeout(() => {
+                    if (startOverArmed) {
+                        startOverArmed = false;
+                        btn.classList.remove('btn-warning');
+                        btn.classList.add('btn-secondary');
+                        btn.textContent = '🔄 Start Over';
+                    }
+                }, 3000);
+            } else {
+                restartTool();
+            }
+        }
+
+        function restartTool() {
+            // For testing, show alert instead of actual restart
+            alert("🔄 Start Over Confirmed\n\nIn deployment, this would clear all data and return to Part 1");
+        }
+
+        // ===== MODAL EVENT HANDLERS =====
+        function setupModalEvents() {
+            const trinityModal = document.getElementById('trinityModal');
+            if (trinityModal) {
+                // Click outside to close
+                trinityModal.addEventListener('click', (e) => {
+                    if (e.target === trinityModal) {
+                        closeTrinityModal();
+                    }
+                });
+                
+                // Escape key to close
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        closeTrinityModal();
+                    }
+                });
+            }
+        }
+
+        // ===== AUTO-INITIALIZATION =====
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                init();
+                initTheme();
+                setupModalEvents();
+            });
+        } else {
+            init();
+            initTheme();
+            setupModalEvents();
+        }
+    </script>
+</body>
+</html>
