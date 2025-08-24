@@ -1,1 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connection Calibrator — Finding Your Relational Balance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-color: #7A94A8;      /* discernment blue-gray */
+            --accent-color: #E7EEF1;    /* soft panels */
+            --contrast-color: #4A5A6A;  /* deep accent text/borders */
+            --text-color: #333;
+            --bg-color: #fff;
+            --border-color: #d9d6cf;
+            --shadow: 0 2px 12px rgba(0,0,0,.08);
+            --success-color: #5a7c41;   /* progress dots done */
+            --warning-color: #dc3545;   /* Start Over confirm */
+        }
 
+        [data-theme="dark"] {
+            --text-color: #e6e6e6;
+            --bg-color: #1c1c1c;
+            --border-color: #3b3a36;
+            --accent-color: #2a2825;
+            --shadow: 0 2px 14px rgba(0,0,0,.35);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color);
+            background: var(--bg-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            color: #fff;
+            background: linear-gradient(135deg, var(--main-color), var(--contrast-color));
+            padding: 22px 18px 18px;
+            position: relative;
+            transition: box-shadow .5s ease;
+        }
+        
+        .header.completed { 
+            box-shadow: 0 0 18px rgba(122,148,168,.55); 
+        }
+        
+        .header h1 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle { 
+            text-align: center; 
+            font-style: italic; 
+            opacity: .95; 
+        }
+
+        .header-controls { 
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            display: flex; 
+            gap: 8px;
+        }
+        
+        .header-btn {
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.3);
+            color: #fff;
+            padding: .35rem .6rem;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: .8rem;
+            transition: all .2s ease;
+        }
+        
+        .header-btn:hover { 
+            background: rgba(255,255,255,.25); 
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,.28);
+            border-radius: 3px;
+            margin-top: 14px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #fff;
+            width: 0%;
+            transition: width .6s ease;
+        }
+
+        /* Content & steps */
+        main.content {
+            flex: 1;
+            padding: 22px;
+        }
+        
+        .step {
+            display: none;
+            animation: fade .25s ease;
+        }
+        
+        .step.active { 
+            display: block; 
+        }
+        
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: none; }
+        }
+
+        .step-indicator { 
+            text-align: center; 
+            margin: 10px 0 18px; 
+        }
+        
+        .step-counter {
+            font-weight: 700;
+            color: #ffffff; 
+            background: var(--contrast-color); 
+            display: inline-block; 
+            padding: 4px 10px; 
+            border-radius: 12px;
+        }
+        
+        .dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+        }
+        
+        .dot.active { 
+            background: var(--main-color); 
+        }
+        
+        .dot.done { 
+            background: var(--success-color); 
+        }
+
+        h2 {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--main-color);
+            font-size: 1.7rem;
+            margin: 14px 0 10px;
+        }
+        
+        h2 .subtitle {
+            font-weight: 400;
+            font-style: italic;
+            opacity: 0.7;
+            font-size: 1.1rem;
+        }
+        
+        h3 {
+            color: var(--main-color);
+            margin: 20px 0 10px;
+            font-size: 1.2rem;
+        }
+        
+        p.lead {
+            opacity: .95;
+            margin-bottom: 10px;
+        }
+
+        .tip {
+            background: linear-gradient(135deg, rgba(122,148,168,.12), rgba(74,90,106,.06));
+            border-left: 4px solid var(--main-color);
+            padding: 12px;
+            border-radius: 0 8px 8px 0;
+            margin: 14px 0;
+            font-style: italic;
+        }
+
+        .form-group {
+            margin: 16px 0;
+        }
+        
+        label {
+            display: block;
+            font-weight: 700;
+            color: var(--contrast-color);
+            margin-bottom: 6px;
+        }
+        
+        textarea, input[type="text"] {
+            width: 100%;
+            min-height: 110px;
+            resize: vertical;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            font: inherit;
+            color: inherit;
+            background: var(--bg-color);
+            transition: all .2s ease;
+        }
+        
+        input[type="text"] { 
+            min-height: 60px; 
+        }
+        
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--main-color);
+            box-shadow: 0 0 0 3px rgba(122,148,168,.18);
+        }
+
+        /* Character Count */
+        .char-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .char-count {
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        .encouragement {
+            color: var(--main-color);
+            font-style: italic;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .encouragement.show {
+            opacity: 1;
+        }
+
+        /* Buttons */
+        .nav-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .nav-row .btn { 
+            flex: 1; 
+        }
+        
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .1s ease, background .2s ease, box-shadow .2s ease;
+        }
+        
+        .btn-primary {
+            background: var(--main-color);
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background: var(--contrast-color);
+            box-shadow: var(--shadow);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--accent-color);
+            color: var(--contrast-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+        
+        .btn:disabled {
+            background: var(--border-color);
+            color: var(--text-color);
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .micro { 
+            text-align: center; 
+            margin-top: 6px; 
+            font-style: italic; 
+            color: var(--contrast-color); 
+            opacity: .85; 
+        }
+
+        /* Key Insights - Enhanced with Blue Glow Treatment */
+        .key-insight {
+            text-align: center;
+            font-weight: 700;
+            color: var(--contrast-color);
+            margin: 24px 0;
+            font-size: 1.2rem;
+            padding: 18px 20px;
+            background: linear-gradient(135deg, rgba(122,148,168,0.12), rgba(122,148,168,0.08));
+            border-radius: 10px;
+            border: 2px solid rgba(122,148,168,0.25);
+            box-shadow: 0 0 12px rgba(122,148,168,0.3), 0 4px 15px rgba(122,148,168,0.15);
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .key-insight::before {
+            content: "🔑";
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .key-insight:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 16px rgba(122,148,168,0.4), 0 6px 20px rgba(122,148,168,0.2);
+            border-color: rgba(122,148,168,0.35);
+        }
+
+        /* Gravity Visual - Vertical Layout */
+        .gravity-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 16px;
+            background: var(--accent-color);
+            border-radius: 10px;
+        }
+        
+        .gravity-element {
+            text-align: center;
+            padding: 16px;
+            border: 2px solid var(--main-color);
+            border-radius: 10px;
+            background: #fafafa;
+            min-width: 200px;
+            box-shadow: 0 0 8px rgba(122,148,168,0.3);
+        }
+        
+        .gravity-element-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .gravity-element-title {
+            font-weight: 600;
+            color: var(--contrast-color);
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        
+        .gravity-element-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        .gravity-connector {
+            text-align: center;
+            font-weight: 600;
+            color: var(--main-color);
+            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+
+        /* Relationship Types */
+        .relationship-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+        
+        .relationship-type {
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .relationship-type:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        /* Too Close - Red Traffic Light */
+        .relationship-type:nth-child(1) {
+            background: linear-gradient(135deg, #ffebee, #fde7e7);
+            border-color: #e57373;
+            color: #c62828;
+        }
+        
+        .relationship-type:nth-child(1) .type-label {
+            color: #c62828;
+            font-weight: 700;
+        }
+        
+        /* Just Right - Green Traffic Light */
+        .relationship-type:nth-child(2) {
+            background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+            border-color: #81c784;
+            color: #2e7d32;
+        }
+        
+        .relationship-type:nth-child(2) .type-label {
+            color: #2e7d32;
+            font-weight: 700;
+        }
+        
+        /* Too Far - Yellow Traffic Light */
+        .relationship-type:nth-child(3) {
+            background: linear-gradient(135deg, #fffde7, #fff9c4);
+            border-color: #ffb74d;
+            color: #e65100;
+        }
+        
+        .relationship-type:nth-child(3) .type-label {
+            color: #e65100;
+            font-weight: 700;
+        }
+        
+        .type-label {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        /* Branding */
+        .branding { 
+            text-align: center; 
+            padding: 18px; 
+            font-size: .85rem; 
+            color: var(--text-color); 
+            opacity: .75; 
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .branding a { 
+            color: var(--contrast-color); 
+            text-decoration: none;
+        }
+        
+        .branding a:hover { 
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .nav-row { flex-direction: column; }
+            .btn { width: 100%; }
+            .header h1 { font-size: 1.7rem; }
+            .gravity-visual { flex-direction: column; gap: 10px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .step { animation: none; }
+            .progress-fill { transition: none; }
+            .btn { transition: none; }
+        }
+    </style>
+</head>
+<body>
+    <div id="pageTop" style="position:absolute;top:0"></div>
+    <div class="container">
+
+        <header class="header" id="mainHeader">
+            <div class="header-controls">
+                <button class="header-btn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">🌙</button>
+            </div>
+            <h1>🌍 Connection Calibrator — Finding Your Relational Balance</h1>
+            <p class="subtitle">The art of moving with others without losing yourself</p>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </header>
+
+        <main class="content">
+            <!-- STEP 0: The Art of Relational Balance -->
+            <section class="step active" data-step="0">
+                <div class="step-indicator">
+                    <div class="step-counter">Step 1 of 8</div>
+                    <div class="dots">
+                        <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                    </div>
+                </div>
+                <h2>🌍 The Art of Relational Balance</h2>
+                
+                <p class="lead">Relationships have gravity. Some pull you closer, some push you away, some orbit at just the right distance. The goal isn't to escape every orbit—it's to calibrate so you're not swallowed up or floating alone.</p>
+
+                <div class="gravity-visual">
+                    <div class="gravity-element">
+                        <div class="gravity-element-icon">🪐</div>
+                        <div class="gravity-element-title">OTHER PERSON</div>
+                        <div class="gravity-element-subtitle">(Their Pull)</div>
+                    </div>
+                    <div class="gravity-connector">
+                        ↑<br>AFFECT<br>↓
+                    </div>
+                    <div class="gravity-element">
+                        <div class="gravity-element-icon">🌎</div>
+                        <div class="gravity-element-title">YOU</div>
+                        <div class="gravity-element-subtitle">(Your Center)</div>
+                    </div>
+                </div>
+
+                <div class="relationship-types">
+                    <div class="relationship-type">
+                        <div class="type-label">Too Close</div>
+                        <div>Losing yourself</div>
+                    </div>
+                    <div class="relationship-type">
+                        <div class="type-label">Just Right</div>
+                        <div>Connected & centered</div>
+                    </div>
+                    <div class="relationship-type">
+                        <div class="type-label">Too Far</div>
+                        <div>Isolated & alone</div>
+                    </div>
+                </div>
+
+                <div class="key-insight">
+                    Key Truth: Interdependence is the sweet spot — moving with others without losing yourself.
+                </div>
+
+                <h3>How This Tool Works</h3>
+                <p>This tool helps you identify which relationships are pulling or pushing you off balance and find small adjustments that bring you back to your center while staying meaningfully connected.</p>
+
+                <p style="margin: 16px 0;">We'll identify a specific relationship that's pulling at your balance, map where it sits on the connection spectrum, and find small adjustments to bring more harmony.</p>
+
+                <div class="tip">
+                    <strong>Remember:</strong> This isn't about cutting off relationships, but finding the healthiest way to engage while maintaining your center. From there, you have the clarity to decide what's best in the relationship.
+                </div>
+
+                <div class="nav-row">
+                    <button class="btn btn-primary" onclick="nextStep()">Identify the Connection →</button>
+                </div>
+                <div class="micro">Awareness is the beginning of balance.</div>
+                <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+            </section>
+
+            <!-- STEP 1: Identify the Connection -->
+            <section class="step" data-step="1">
+                <div class="step-indicator">
+                    <div class="step-counter">Step 2 of 8</div>
+                    <div class="dots">
+                        <div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+                        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                    </div>
+                </div>
+                <h2>🎯 Identify the Connection <span class="subtitle">Which relationship needs calibrating?</span></h2>
+                
+                <p class="lead">Think about the relationships in your life right now. Which one feels like it's knocking you off balance? It might be someone who drains your energy, someone you feel overly responsible for, or someone you've been avoiding.</p>
+
+                <p>This could be a family member, friend, coworker, romantic partner, or even a situation that involves multiple people.</p>
+
+                <div class="form-group">
+                    <label for="connectionIdentified">Which person, place, or situation affects your balance right now?</label>
+                    <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Name the relationship or situation that feels most out of balance or draining.</p>
+                    <input type="text" id="connectionIdentified" placeholder="The relationship that feels off-balance is... / The person who pulls at my energy is... / The situation that affects my center is..."/>
+                    <div class="char-info">
+                        <div class="char-count" id="count1">0 characters</div>
+                        <div class="encouragement" id="enc1">Naming what's off-balance is the first step toward finding harmony.</div>
+                    </div>
+                </div>
+
+                <div class="tip">
+                    <strong>The goal isn't to cut off relationships,</strong> but to find the healthiest way to engage while maintaining your center. From there, you have the clarity to decide what's best in the relationship.
+                </div>
+
+                <div class="nav-row">
+                    <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+                    <button class="btn btn-primary" id="next1" disabled onclick="nextStep()">Complete identification to Continue</button>
+                </div>
+                <div class="micro">Awareness is the beginning of balance.</div>
+                <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+            </section>
+
+            <!-- STEP 2: Notice the Force -->
+            <section class="step" data-step="2">
+                <div class="step-indicator">
+                    <div class="step-counter">Step 3 of 8</div>
+                    <div class="dots">
+                        <div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div>
+                        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                    </div>
+                </div>
+                <h2>🌪️ Notice Its Force <span class="subtitle">How does this affect your balance?</span></h2>
+                
+                <p class="lead">Every relationship has a gravitational effect. Some pull you so close you lose yourself. Others push you so far away you feel isolated. Some make you feel responsible for things that aren't yours to carry.</p>
+
+                <div class="gravity-visual">
+                    <div class="gravity-element">
+                        <div class="gravity-element-icon">⚡</div>
+                        <div class="gravity-element-title">THEIR ENERGY</div>
+                        <div class="gravity-element-subtitle">(The Push/Pull Force)</div>
+                    </div>
+                    <div class="gravity-connector">
+                        ↑<br>AFFECT<br>↓
+                    </div>
+                    <div class="gravity-element">
+                        <div class="gravity-element-icon">🎭</div>
+                        <div class="gravity-element-title">YOUR ENERGY</div>
+                        <div class="gravity-element-subtitle">(The Response)</div>
+                    </div>
+                </div>
+
+                <p>Notice what happens to your energy, your peace, your sense of self when you're around this person or in this situation.</p>
+
+                <div class="form-group">
+                    <label for="forceNoticed">How does this connection affect you — do you feel drained, over-responsible, withdrawn, or pulled off-center?</label>
+                    <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">Think about the physical, emotional, and mental effects this relationship has on you.</p>
+                    <textarea id="forceNoticed" placeholder="When I'm around them, I feel... / This relationship makes me... / I notice I become..."></textarea>
+                    <div class="char-info">
+                        <div class="char-count" id="count2">0 characters</div>
+                        <div class="encouragement" id="enc2">Understanding the force helps you see where you need better boundaries.</div>
+                    </div>
+                </div>
+
+                <div class="tip">
+                    <strong>Two-Way Dynamic:</strong> Every relationship has TWO gravitational fields. While we'll focus on how their energy affects you, it's worth asking: What force are you bringing to this dynamic? Also ask yourself if your five anchors are in balance.
+                </div>
+
+                <div class="key-insight">
+                    Truth Check: How you feel around someone is information about the relationship dynamic, not a judgment about either person.
+                </div>
+
+                <div class="nav-row">
+                    <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+                    <button class="btn btn-primary" id="next2" disabled onclick="goToPart2()">Complete force analysis to Continue</button>
+                </div>
+                <div class="micro">Your energy is valuable data about relationship health.</div>
+                <div class="branding">© 2025 Clarity Metabolics | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // ===== CONNECTION CALIBRATOR PART 1 JAVASCRIPT =====
+        
+        // State Management
+        let currentStep = 0;
+        const totalSteps = 8;
+        const responses = {
+            connectionIdentified: '',
+            forceNoticed: '',
+            spectrumPosition: 50,
+            adjustmentVision: '',
+            calibrationStep: '',
+            summaryReflection: ''
+        };
+
+        // ===== INITIALIZATION =====
+        function init() {
+            loadSavedData();
+            loadTheme();
+            loadCurrentStep();
+            setupTextareas();
+            showStep(currentStep);
+        }
+
+        // ===== THEME TOGGLE =====
+        function initTheme() {
+            const themeBtn = document.getElementById('themeBtn');
+            if (!themeBtn) return;
+            
+            themeBtn.addEventListener('click', () => {
+                const body = document.body;
+                const btn = document.getElementById('themeBtn');
+                if (body.getAttribute('data-theme') === 'dark') {
+                    body.removeAttribute('data-theme');
+                    btn.textContent = '🌙';
+                } else {
+                    body.setAttribute('data-theme', 'dark');
+                    btn.textContent = '☀️';
+                }
+            });
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('connectionCalibratorTheme');
+            const themeBtn = document.getElementById('themeBtn');
+            
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = '☀️';
+            } else {
+                themeBtn.textContent = '🌙';
+            }
+        }
+
+        // ===== STEP NAVIGATION =====
+        function showStep(stepIndex) {
+            // Hide all steps
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            
+            // Show target step
+            const stepEl = document.querySelector(`.step[data-step="${stepIndex}"]`);
+            if (stepEl) stepEl.classList.add('active');
+
+            // Update progress bar - global position out of 8 total steps
+            const globalProgress = (stepIndex / (totalSteps - 1)) * 100;
+            document.getElementById('progressFill').style.width = globalProgress + '%';
+            
+            // Update progress dots - show global position
+            document.querySelectorAll('.step .dots').forEach(dotsContainer => {
+                const dots = [...dotsContainer.children];
+                dots.forEach((dot, idx) => {
+                    dot.classList.remove('active', 'done');
+                    if (idx < stepIndex) {
+                        dot.classList.add('done');
+                    } else if (idx === stepIndex) {
+                        dot.classList.add('active');
+                    }
+                });
+            });
+
+            // Smooth scroll to top and focus
+            requestAnimationFrame(() => {
+                document.getElementById('pageTop').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                setTimeout(() => {
+                    if (stepIndex === 1) document.getElementById('connectionIdentified')?.focus();
+                    if (stepIndex === 2) document.getElementById('forceNoticed')?.focus();
+                }, 100);
+            });
+
+            // Save current step globally
+            saveCurrentStep();
+        }
+
+        function nextStep() {
+            saveCurrentResponse();
+            if (currentStep < 2) { // Only steps 0-2 in Part 1
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function goToPart2() {
+            saveCurrentResponse();
+            currentStep = 3; // Global step 3 is first step of Part 2
+            saveCurrentStep();
+            saveAllData();
+            window.location.href = 'connection-calibrator-part2.html';
+        }
+
+        // ===== DATA PERSISTENCE =====
+        function saveCurrentResponse() {
+            const fieldMap = {
+                1: 'connectionIdentified',
+                2: 'forceNoticed'
+            };
+            
+            const fieldId = fieldMap[currentStep];
+            if (fieldId) {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    responses[fieldId] = field.value.trim();
+                }
+            }
+            saveAllData();
+        }
+
+        function saveAllData() {
+            try {
+                localStorage.setItem('connectionCalibratorData', JSON.stringify(responses));
+            } catch (e) {
+                console.warn('Could not save to localStorage');
+            }
+        }
+
+        function saveCurrentStep() {
+            try {
+                localStorage.setItem('connectionCalibratorCurrentStep', currentStep.toString());
+            } catch (e) {
+                console.warn('Could not save current step');
+            }
+        }
+
+        function loadCurrentStep() {
+            try {
+                const saved = localStorage.getItem('connectionCalibratorCurrentStep');
+                if (saved) {
+                    const step = parseInt(saved);
+                    if (step >= 0 && step <= 2) { // Only steps 0-2 available in Part 1
+                        currentStep = step;
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not load current step');
+            }
+        }
+
+        function loadSavedData() {
+            try {
+                const saved = localStorage.getItem('connectionCalibratorData');
+                if (saved) {
+                    const savedData = JSON.parse(saved);
+                    Object.assign(responses, savedData);
+                    
+                    // Populate form fields
+                    Object.keys(savedData).forEach(key => {
+                        const el = document.getElementById(key);
+                        if (el && savedData[key]) {
+                            el.value = savedData[key];
+                            
+                            // Update character count
+                            const stepMapping = {
+                                'connectionIdentified': '1',
+                                'forceNoticed': '2'
+                            };
+                            
+                            const stepNum = stepMapping[key];
+                            if (stepNum) {
+                                updateCharacterCount(key, stepNum);
+                                
+                                // Update button if has content
+                                const nextBtn = document.getElementById('next' + stepNum);
+                                if (nextBtn && savedData[key].length > 0) {
+                                    updateButtonState(nextBtn, stepNum, true);
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn('Could not load saved data');
+            }
+        }
+
+        // ===== CHARACTER COUNT & BUTTON MANAGEMENT =====
+        function setupTextareas() {
+            setupTextarea('connectionIdentified', '1');
+            setupTextarea('forceNoticed', '2');
+            initTheme();
+        }
+
+        function setupTextarea(textareaId, stepNum) {
+            const textarea = document.getElementById(textareaId);
+            const nextBtn = document.getElementById('next' + stepNum);
+            
+            if (!textarea) return;
+            
+            // Set initial button state
+            if (nextBtn) updateButtonState(nextBtn, stepNum, false);
+            
+            textarea.addEventListener('input', () => {
+                updateCharacterCount(textareaId, stepNum);
+                
+                // Update button state
+                if (nextBtn) {
+                    const hasContent = textarea.value.trim().length > 0;
+                    updateButtonState(nextBtn, stepNum, hasContent);
+                }
+                
+                // Auto-save
+                saveCurrentResponse();
+            });
+        }
+
+        function updateCharacterCount(textareaId, stepNum) {
+            const textarea = document.getElementById(textareaId);
+            const countEl = document.getElementById('count' + stepNum);
+            const encEl = document.getElementById('enc' + stepNum);
+            
+            if (!textarea || !countEl || !encEl) return;
+            
+            const count = textarea.value.length;
+            countEl.textContent = `${count} characters`;
+            
+            // Show encouragement after 20 characters
+            if (count > 20) {
+                encEl.classList.add('show');
+            } else {
+                encEl.classList.remove('show');
+            }
+        }
+
+        function updateButtonState(button, stepNum, hasContent) {
+            const buttonStates = {
+                '1': {
+                    disabled: 'Complete identification to Continue',
+                    enabled: 'Notice Its Force →'
+                },
+                '2': {
+                    disabled: 'Complete force analysis to Continue',
+                    enabled: 'Map the Spectrum →'
+                }
+            };
+            
+            const state = buttonStates[stepNum];
+            if (state) {
+                if (hasContent) {
+                    button.disabled = false;
+                    button.textContent = state.enabled;
+                } else {
+                    button.disabled = true;
+                    button.textContent = state.disabled;
+                }
+            }
+        }
+
+        // ===== AUTO-INITIALIZATION =====
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
