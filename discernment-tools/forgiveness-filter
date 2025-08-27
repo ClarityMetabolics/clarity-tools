@@ -354,13 +354,24 @@
     <div class="header-controls">
       <button class="header-btn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">🌙</button>
     </div>
-    <h1>🕊️ Forgiveness Filter — The Gentle Path to Spiritual Freedom</h1>
+    <h1>
+  <img src="assets/forgiveness-filter-chain.png"
+       alt="Forgiveness Filter Chain"
+       style="height:36px;vertical-align:middle;margin-right:8px;">
+  Forgiveness Filter — The Gentle Path to Spiritual Freedom
+</h1>
     <p class="subtitle">Forgiveness is freedom, not agreement</p>
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   </header>
 
   <main class="content">
-    <!-- STEP 0: Introduction -->
+    <!-- STEP 0: Introduction --><h1>
+  <img src="assets/forgiveness-filter-chain.png"
+       alt="Forgiveness Filter Chain"
+       style="height:36px;vertical-align:middle;margin-right:8px;">
+  Forgiveness Filter — The Gentle Path to Spiritual Freedom
+</h1>
+
     <section class="step active" data-step="0">
       <div class="step-indicator">
         <div class="step-counter">Step 1 of 8</div>
