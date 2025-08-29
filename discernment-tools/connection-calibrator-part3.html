@@ -840,7 +840,7 @@
             });
 
             // Special handling for final step
-            if (stepIndex === 7) {
+            if (stepIndex === 7) {currentStep = 5; saveCurrentStep(); saveAllData(); window.location.href = 'connection-calibrator-part2.html';
                 document.getElementById('mainHeader')?.classList.add('completed');
             }
 
@@ -864,7 +864,7 @@
 
         function goToPart2() {
             // For testing purposes, show alert
-            alert("⬅️ Going back to Part 2\n\nIn deployment, this would navigate back to Part 2");
+            currentStep = 5; saveCurrentStep(); saveAllData(); window.location.href = 'connection-calibrator-part2.html';
         }
 
         // ===== DATA PERSISTENCE =====
@@ -1050,7 +1050,7 @@
 
         function restartTool() {
             // For testing, show alert instead of actual restart
-            alert("🔄 Start Over Confirmed\n\nIn deployment, this would clear all data and return to Part 1");
+            Object.keys(responses).forEach(key => responses[key] = key === 'spectrumPosition' ? 50 : ''); try { localStorage.removeItem('connectionCalibratorData'); localStorage.removeItem('connectionCalibratorCurrentStep'); } catch (e) {} window.location.href = 'connection-calibrator-part1.html';
         }
 
         // ===== MODAL EVENT HANDLERS =====
