@@ -840,7 +840,7 @@
             });
 
             // Special handling for final step
-            if (stepIndex === 7) {currentStep = 5; saveCurrentStep(); saveAllData(); window.location.href = 'connection-calibrator-part2.html';
+            if (stepIndex === 7) {
                 document.getElementById('mainHeader')?.classList.add('completed');
             }
 
@@ -849,7 +849,7 @@
         }
 
         function nextStep() {
-            if (currentStep < 7) { // Only steps 6-7 in Part 3
+            if (currentStep <= 7) { // Only steps 6-7 in Part 3
                 currentStep++;
                 showStep(currentStep);
             }
