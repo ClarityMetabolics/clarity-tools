@@ -28,9 +28,14 @@
 
     <div class="actions">
       <button class="btn btn-primary" id="markComplete">✅ Mark Physical Guide Complete</button>
-      <a class="btn btn-secondary" href="../assets/pdfs/anchor/physical-anchor-guide.pdf" target="_blank" rel="noopener">🧭 Open / Download PDF</a>
+      <a class="btn btn-secondary" href="../assets/pdfs/anchor/physical-anchor-guide.pdf"
+   target="_blank" rel="noopener" download>🧭 Open / Download PDF</a>
+
     </div>
-    <p id="savedNote" class="note">Saved. Physical Guide marked complete.</p>
+    <p id="savedNote" class="note" role="status" aria-live="polite">
+  Saved. Physical Guide marked complete.
+</p>
+
 
     <object class="pdf-frame"
             data="../assets/pdfs/anchor/physical-anchor-guide.pdf#toolbar=1&view=FitH"
@@ -45,17 +50,31 @@
   </div>
 
   <script>
-    // Mark Complete → localStorage
-    document.getElementById('markComplete')?.addEventListener('click', () => {
-      const KEY='cm_progress_v1';
-      const data = JSON.parse(localStorage.getItem(KEY) || '{}');
-      data.physical_guide = true;  // <-- unique key for this guide
-      localStorage.setItem(KEY, JSON.stringify(data));
-      if (typeof window.applyLocks === 'function') window.applyLocks();
-      const btn=document.getElementById('markComplete');
-      const note=document.getElementById('savedNote');
-      btn.textContent='Marked ✓'; btn.disabled=true; if(note) note.style.display='block';
-    });
-  </script>
+  // show "Marked ✓" if already completed
+  (function(){
+    const KEY = 'cm_progress_v1';
+    const p = JSON.parse(localStorage.getItem(KEY) || '{}');
+    if (p.physical_guide) {
+      const btn  = document.getElementById('markComplete');
+      const note = document.getElementById('savedNote');
+      if (btn)  { btn.textContent = 'Marked ✓'; btn.disabled = true; }
+      if (note) { note.style.display = 'block'; }
+    }
+  })();
+
+  // Mark Complete → localStorage
+  document.getElementById('markComplete')?.addEventListener('click', () => {
+    const KEY  = 'cm_progress_v1';
+    const data = JSON.parse(localStorage.getItem(KEY) || '{}');
+    data.physical_guide = true;
+    localStorage.setItem(KEY, JSON.stringify(data));
+    if (typeof window.applyLocks === 'function') window.applyLocks();
+    const btn  = document.getElementById('markComplete');
+    const note = document.getElementById('savedNote');
+    btn.textContent = 'Marked ✓'; btn.disabled = true;
+    if (note) note.style.display = 'block';
+  });
+</script>
+
 </body>
 </html>
