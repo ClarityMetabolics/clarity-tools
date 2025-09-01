@@ -1935,7 +1935,7 @@
             const lowestRating = Math.min(...Object.values(ratings));
             const needsAttention = Object.entries(ratings)
                 .filter(([anchor, rating]) => rating === lowestRating)
-                .map(([anchor, rating]) => anchor);
+                .map(([anchor]) => anchor);
             
             let recommendations = [];
             
@@ -2034,7 +2034,6 @@
             }
         }
 
-        // Get encouragement messages
         // Get encouragement messages
         function getEncouragementMessage(anchor) {
             const dayOfWeek = new Date().getDay();
@@ -2256,11 +2255,73 @@ Website: https://claritymetabolics.com`;
             }, 3000);
         }
 
+        // --- Anchor Guide Gating (Self-Paced flow) ---
+        function setupAnchorGating() {
+          const KEY = 'cm_progress_v1';
+          const progress = JSON.parse(localStorage.getItem(KEY) || '{}');
+
+          // Guide wrapper pages (adjust paths if your wrappers live elsewhere)
+          const guidePage = {
+            physical:   '../five-anchors/physical-anchor-guide.html',
+            mental:     '../five-anchors/mental-anchor-guide.html',
+            emotional:  '../five-anchors/emotional-anchor-guide.html',
+            spiritual:  '../five-anchors/spiritual-anchor-guide.html',
+            relational: '../five-anchors/relational-anchor-guide.html',
+          };
+
+          // Default tier to self-paced unless set elsewhere
+          const tier = localStorage.getItem('userTier') || 'self';
+
+          document.querySelectorAll('.tool-card[data-anchor]').forEach(card => {
+            const anchor = card.dataset.anchor;
+            const btn = card.querySelector('.tool-button');
+            if (!btn) return;
+
+            btn.addEventListener('click', (e) => {
+              // Enforce "Physical first" for self tier
+              if (tier === 'self' && anchor !== 'physical' && progress.physical_guide !== true) {
+                e.preventDefault();
+                promptGuide('Physical', guidePage.physical, 'Start with the Physical Guide first, then come back to run this tool.');
+                return;
+              }
+
+              // Require the matching guide for each anchor
+              const flag = `${anchor}_guide`;
+              if (progress[flag] !== true) {
+                e.preventDefault();
+                const title = anchor.charAt(0).toUpperCase() + anchor.slice(1);
+                promptGuide(title, guidePage[anchor], `Please open the ${title} Guide (PDF), mark it complete, and then return here.`);
+              }
+            });
+          });
+
+          function promptGuide(title, url, msg) {
+            const modal = document.createElement('div');
+            modal.className = 'about-modal';
+            modal.innerHTML = `
+              <div class="about-content" style="max-width:560px">
+                <h3 class="about-title">Begin with the ${title} Guide</h3>
+                <p class="about-text">${msg}</p>
+                <div style="display:flex;gap:.75rem;justify-content:center;margin-top:1rem;">
+                  <a class="about-close" href="${url}" target="_blank" rel="noopener">Open Guide</a>
+                  <button class="about-close" onclick="this.closest('.about-modal').remove()">Close</button>
+                </div>
+              </div>
+            `;
+            document.body.appendChild(modal);
+            modal.addEventListener('click', (evt) => { if (evt.target === modal) modal.remove(); });
+          }
+        }
+
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // set default tier if not set
+            if (!localStorage.getItem('userTier')) localStorage.setItem('userTier','self');
+
             loadTheme();
             loadSection();
             initializeDashboard();
+            setupAnchorGating(); // <-- gating hook
         });
 
         // Handle browser back/forward
@@ -2269,4 +2330,4 @@ Website: https://claritymetabolics.com`;
         });
     </script>
 </body>
-</html
+</html>
