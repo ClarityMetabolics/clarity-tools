@@ -1,0 +1,143 @@
+:root {
+  /* Mental */
+  --color-mental-main: #B7AFA3;
+  --color-mental-accent: #EFEDE7;
+  --color-mental-contrast: #6A655B;
+
+  /* Physical */
+  --color-physical-main: #7C8B60;
+  --color-physical-accent: #E5EBDD;
+  --color-physical-contrast: #3D472C;
+
+  /* Emotional */
+  --color-emotional-main: #C97D7D;
+  --color-emotional-accent: #F5EAE6;
+  --color-emotional-contrast: #5A3E3E;
+
+  /* Spiritual */
+  --color-spiritual-main: #B6B0C3;
+  --color-spiritual-accent: #EEEAF3;
+  --color-spiritual-contrast: #4F4A60;
+
+  /* Relational — updated */
+  --color-relational-main: #E8934A;
+  --color-relational-accent: #FEF6F0;
+  --color-relational-contrast: #B5621F;
+
+  /* Neutrals */
+  --color-bg: #FAFAFA;
+  --color-text: #333333;
+  --color-title: #2C3E50;
+  --color-border: #DDDDDD;
+  --color-border-strong: #999999;
+  --color-bg-hover: #F5F5F5;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.dashboard-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+.dashboard-header { text-align: center; margin-bottom: 2rem; }
+.dashboard-header h1 { color: var(--color-title); margin-bottom: 0.5rem; }
+
+.dashboard-main { display: grid; gap: 2rem; margin-bottom: 2rem; }
+
+.anchor-section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.anchor-header h2 { margin: 0 0 1rem 0; font-size: 1.4rem; }
+
+/* Anchor accents */
+.mental-anchor { border-left: 4px solid var(--color-mental-main); }
+.mental-anchor .anchor-header h2 { color: var(--color-mental-contrast); }
+.physical-anchor { border-left: 4px solid var(--color-physical-main); }
+.physical-anchor .anchor-header h2 { color: var(--color-physical-contrast); }
+.emotional-anchor { border-left: 4px solid var(--color-emotional-main); }
+.emotional-anchor .anchor-header h2 { color: var(--color-emotional-contrast); }
+.spiritual-anchor { border-left: 4px solid var(--color-spiritual-main); }
+.spiritual-anchor .anchor-header h2 { color: var(--color-spiritual-contrast); }
+.relational-anchor { border-left: 4px solid var(--color-relational-main); }
+.relational-anchor .anchor-header h2 { color: var(--color-relational-contrast); }
+
+/* Trendline */
+.trendline-container { margin-bottom: 1rem; }
+.trendline-chart {
+  background: var(--color-mental-accent);
+  border-radius: 4px;
+  padding: 1rem;
+  min-height: 120px;
+  display: flex; align-items: center; justify-content: center;
+}
+.trendline-loading { color: var(--color-mental-contrast); font-style: italic; }
+.trendline-svg { width: 100%; height: auto; }
+
+.trendline-legend { display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.9rem; }
+.legend-item { display: flex; align-items: center; gap: 0.3rem; color: var(--color-mental-contrast); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.legend-dot.has-data { background: var(--color-mental-main); border: 2px solid var(--color-mental-contrast); }
+.legend-dot.no-data { background: var(--color-mental-accent); border: 1px solid var(--color-mental-main); opacity: 0.5; }
+
+.key-truth {
+  background: var(--color-mental-accent);
+  padding: 0.75rem; border-radius: 4px;
+  border-left: 3px solid var(--color-mental-main);
+  font-size: 0.9rem; color: var(--color-mental-contrast);
+}
+
+/* Journal form */
+.journal-form { display: grid; gap: 0.75rem; }
+.form-row { display: flex; flex-direction: column; gap: 0.25rem; }
+.form-row input, .form-row select, .form-row textarea {
+  border: 1px solid var(--color-border);
+  border-radius: 4px; padding: 0.5rem; font: inherit; color: var(--color-text); background: #fff;
+}
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+  outline: 2px solid var(--color-mental-main); outline-offset: 1px;
+}
+.form-actions { display: flex; gap: 0.75rem; align-items: center; }
+.status-msg { color: var(--color-mental-contrast); font-size: 0.9rem; }
+/* screen-reader only */
+.sr-only { position: absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip: rect(0 0 0 0); white-space: nowrap; border:0; }
+
+/* Calendar list */
+.calendar-section .calendar-list { list-style: none; margin: 0; padding: 0; }
+.calendar-section .calendar-item { display: flex; justify-content: space-between; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--color-border); }
+.calendar-section .calendar-item:last-child { border-bottom: none; }
+.calendar-section .calendar-date { color: var(--color-title); margin-bottom: 0.25rem; }
+.calendar-section .calendar-meta { color: var(--color-text); font-size: 0.9rem; margin-bottom: 0.25rem; }
+.calendar-section .badge {
+  display:inline-block; padding:0.1rem 0.5rem; border-radius:10px;
+  background: var(--color-mental-accent); color: var(--color-mental-contrast);
+  border:1px solid var(--color-mental-main);
+}
+.calendar-section .calendar-reflection { color: var(--color-text); opacity: 0.9; }
+
+/* Nav */
+.dashboard-nav { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.nav-item {
+  padding: 0.75rem 1.5rem; background: #fff; border: 2px solid var(--color-border);
+  border-radius: 4px; text-decoration: none; color: var(--color-text); font-weight: 500;
+  transition: all 0.2s ease; cursor: pointer;
+}
+.nav-item:hover { background: var(--color-bg-hover); border-color: var(--color-border-strong); }
+.nav-item.button { background: var(--color-mental-main); color: #fff; border-color: var(--color-mental-main); }
+.nav-item.button:hover { background: var(--color-mental-contrast); border-color: var(--color-mental-contrast); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-container { padding: 1rem; }
+  .anchor-section { padding: 1rem; }
+  .dashboard-nav { flex-direction: column; align-items: center; }
+  .nav-item { width: 100%; max-width: 300px; text-align: center; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) { .nav-item { transition: none; } }
