@@ -759,7 +759,7 @@
                 targetSection.classList.add('active');
             }
             
-            const activeNavItem = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            const activeNavItem = document.querySelector("[onclick=\"showSection('" + sectionName + "')\"]");
             if (activeNavItem) {
                 activeNavItem.classList.add('active');
             }
@@ -769,12 +769,17 @@
         function loadClients() {
             const clientsList = document.getElementById('clients-list');
             
+            if (!clientsList) {
+                console.error('clients-list element not found');
+                return;
+            }
+            
             if (sampleClients.length === 0) {
                 clientsList.innerHTML = '<p style="text-align: center; opacity: 0.7; grid-column: 1/-1;">No clients found. Client data will appear here as they join your practice.</p>';
                 return;
             }
 
-            clientsList.innerHTML = sampleClients.map(client => {
+            const clientCards = sampleClients.map(client => {
                 const latestCheckIn = getLatestCheckIn(client);
                 const status = getClientStatus(client, latestCheckIn);
                 const anchorSummary = getAnchorSummary(latestCheckIn);
@@ -807,6 +812,7 @@
                 `;
             }).join('');
 
+            clientsList.innerHTML = clientCards;
             updateStatistics();
             generateAlerts();
         }
@@ -821,11 +827,8 @@
                 return { class: 'status-inactive', text: 'No Data' };
             }
 
-            const today = new Date().toISOString().split('T')[0];
             const lastActivity = new Date(client.lastActivity);
             const daysSinceActivity = Math.floor((new Date() - lastActivity) / (1000 * 60 * 60 * 24));
-
-            // Check for low anchor ratings (1-2 on any anchor)
             const hasLowRatings = Object.values(latestCheckIn.ratings).some(rating => rating <= 2);
             
             if (hasLowRatings) {
@@ -845,11 +848,11 @@
             }
 
             const anchors = [
-                { key: 'physical', icon: '🧭', class: 'physical' },
-                { key: 'mental', icon: '👓', class: 'mental' },
-                { key: 'emotional', icon: '🪣', class: 'emotional' },
-                { key: 'spiritual', icon: '🕊️', class: 'spiritual' },
-                { key: 'relational', icon: '🌐', class: 'relational' }
+                { key: 'physical', class: 'physical' },
+                { key: 'mental', class: 'mental' },
+                { key: 'emotional', class: 'emotional' },
+                { key: 'spiritual', class: 'spiritual' },
+                { key: 'relational', class: 'relational' }
             ];
 
             return anchors.map(anchor => {
@@ -877,21 +880,16 @@
         function updateStatistics() {
             document.getElementById('total-clients').textContent = sampleClients.length;
             
-            // Count active today (checked in today)
             const today = new Date().toISOString().split('T')[0];
-            const activeToday = sampleClients.filter(client => 
-                client.checkIns[today]
-            ).length;
+            const activeToday = sampleClients.filter(client => client.checkIns[today]).length;
             document.getElementById('active-today').textContent = activeToday;
             
-            // Count clients needing attention (any anchor <= 2)
             const needAttention = sampleClients.filter(client => {
                 const latest = getLatestCheckIn(client);
                 return latest && Object.values(latest.ratings).some(rating => rating <= 2);
             }).length;
             document.getElementById('low-anchors').textContent = needAttention;
             
-            // Calculate average wellness across all clients
             let totalRatings = 0;
             let ratingCount = 0;
             
@@ -917,7 +915,6 @@
                 const latest = getLatestCheckIn(client);
                 if (!latest) return;
 
-                // Check for critically low ratings (1-2)
                 Object.entries(latest.ratings).forEach(([anchor, rating]) => {
                     if (rating <= 2) {
                         alerts.push({
@@ -930,7 +927,6 @@
                     }
                 });
 
-                // Check for concerning notes
                 if (latest.notes) {
                     Object.entries(latest.notes).forEach(([anchor, note]) => {
                         const concerningWords = ['overwhelm', 'stress', 'conflict', 'tired', 'exhausted', 'anxiety', 'depressed'];
@@ -951,13 +947,12 @@
                 alertsContainer.innerHTML = `
                     <div class="card">
                         <h3>No Active Alerts</h3>
-                        <p>All clients are currently showing stable anchor ratings. Great work!</p>
+                        <p>All clients are currently showing stable anchor ratings.</p>
                     </div>
                 `;
                 return;
             }
 
-            // Sort alerts by priority
             alerts.sort((a, b) => {
                 const priorityOrder = { high: 3, medium: 2, low: 1 };
                 return priorityOrder[b.priority] - priorityOrder[a.priority];
@@ -989,12 +984,104 @@
             const modal = document.createElement('div');
             modal.className = 'client-modal';
             
-            // Prepare check-in history (sorted by date, newest first)
             const checkInDates = Object.keys(client.checkIns).sort().reverse();
             const checkInHistory = checkInDates.map(date => {
                 const checkIn = client.checkIns[date];
                 const formattedDate = new Date(date).toLocaleDateString('en-US', {
                     weekday: 'long',
+                    year: 'numeric',
+                    month: 'long', 
+                    day: 'numeric'
+                });
+
+                const ratingsHtml = Object.entries(checkIn.ratings).map(([anchor, rating]) => {
+                    const icons = {
+                        physical: '🧭',
+                        mental: '👓', 
+                        emotional: '🪣',
+                        spiritual: '🕊️',
+                        relational: '🌐'
+                    };
+                    
+                    return `
+                        <div class="rating-item">
+                            <div class="rating-icon">${icons[anchor]}</div>
+                            <div class="rating-value" style="color: ${rating <= 2 ? 'var(--alert-low)' : 'inherit'}">${rating}/5</div>
+                            <div class="rating-label">${anchor}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                const notesHtml = checkIn.notes && Object.keys(checkIn.notes).length > 0 ? 
+                    Object.entries(checkIn.notes).map(([anchor, note]) => `
+                        <div class="note-item">
+                            <div class="note-label">${anchor.charAt(0).toUpperCase() + anchor.slice(1)}:</div>
+                            <div class="note-text">${note}</div>
+                        </div>
+                    `).join('') : 
+                    '<div style="opacity: 0.7; font-style: italic;">No notes for this check-in</div>';
+
+                return `
+                    <div class="checkin-entry">
+                        <div class="checkin-date">${formattedDate}</div>
+                        <div class="checkin-ratings">${ratingsHtml}</div>
+                        <div class="checkin-notes">
+                            <strong>Notes:</strong>
+                            ${notesHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            modal.innerHTML = `
+                <div class="client-modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">${client.name}</h2>
+                        <button class="modal-close" onclick="closeClientModal()">&times;</button>
+                    </div>
+                    
+                    <div class="checkin-history">
+                        <h3>Recent Check-ins</h3>
+                        ${checkInHistory.length > 0 ? checkInHistory : '<p style="opacity: 0.7;">No check-ins recorded yet.</p>'}
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeClientModal();
+                }
+            });
+        }
+
+        function closeClientModal() {
+            const modal = document.querySelector('.client-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function messageClient(clientId) {
+            const client = sampleClients.find(c => c.id === clientId);
+            if (!client) return;
+            
+            alert(`Messaging feature coming in P2! Would open message thread with ${client.name}.`);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            loadClients();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeClientModal();
+            }
+        });
+    </script>    weekday: 'long',
                     year: 'numeric',
                     month: 'long', 
                     day: 'numeric'
