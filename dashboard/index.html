@@ -1600,6 +1600,430 @@
             </div>
             
             <div class="card">
+                <h3>Private Journal</h3>
+    <!-- Replace the "Private Journal" placeholder in your Reflect & Reset section with this: -->
+
+<div class="card">
+    <p style="margin-bottom: 1.5rem; opacity: 0.8;">Reflect on your thoughts, patterns, and growth. These entries are private and never shared with coaches.</p>
+    
+    <!-- Journal Entry Form -->
+    <div class="journal-form">
+        <div class="form-group">
+            <label for="journal-date">Date:</label>
+            <input type="date" id="journal-date" class="journal-input">
+        </div>
+        
+        <div class="form-group">
+            <label for="overall-feeling">How are you feeling overall today? (1-5)</label>
+            <div class="rating-scale">
+                <button class="rating-btn journal-rating" data-value="1">1</button>
+                <button class="rating-btn journal-rating" data-value="2">2</button>
+                <button class="rating-btn journal-rating" data-value="3">3</button>
+                <button class="rating-btn journal-rating" data-value="4">4</button>
+                <button class="rating-btn journal-rating" data-value="5">5</button>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="thought-pattern">Primary thought pattern today:</label>
+            <select id="thought-pattern" class="journal-input">
+                <option value="">Select a pattern...</option>
+                <option value="grateful">Grateful and positive</option>
+                <option value="worried">Worried or anxious</option>
+                <option value="overwhelmed">Overwhelmed</option>
+                <option value="peaceful">Peaceful and centered</option>
+                <option value="restless">Restless or unsettled</option>
+                <option value="hopeful">Hopeful about the future</option>
+                <option value="confused">Confused or uncertain</option>
+                <option value="focused">Clear and focused</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="practice-used">What practice or tool helped you today?</label>
+            <select id="practice-used" class="journal-input">
+                <option value="">Select a practice...</option>
+                <option value="prayer">Prayer or meditation</option>
+                <option value="breathing">Breathing exercises</option>
+                <option value="physical">Physical movement/exercise</option>
+                <option value="anchor-tool">Used an anchor tool</option>
+                <option value="discernment-tool">Used a discernment tool</option>
+                <option value="boundaries">Set healthy boundaries</option>
+                <option value="rest">Rest and self-care</option>
+                <option value="connection">Connected with others</option>
+                <option value="nature">Time in nature</option>
+                <option value="none">Nothing specific today</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="reflection-text">Your reflection:</label>
+            <textarea id="reflection-text" class="journal-textarea" 
+                      placeholder="What's on your heart today? What patterns do you notice? What are you learning about yourself?"></textarea>
+        </div>
+        
+        <div class="journal-actions">
+            <button class="save-journal-btn">Save Journal Entry</button>
+            <button class="clear-journal-btn">Clear Form</button>
+        </div>
+    </div>
+    
+    <!-- Recent Entries -->
+    <div class="recent-entries" style="margin-top: 2rem;">
+        <h4>Recent Entries</h4>
+        <div id="journal-entries-list">
+            <p class="focus-message">Your recent journal entries will appear here.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Journal-specific styles */
+.journal-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.journal-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: inherit;
+}
+
+.journal-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.journal-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 0.75rem;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: inherit;
+    resize: vertical;
+}
+
+.journal-textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.journal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.save-journal-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.save-journal-btn:hover {
+    background: var(--physical-color);
+    transform: translateY(-2px);
+}
+
+.clear-journal-btn {
+    background: transparent;
+    color: var(--text-color);
+    border: 2px solid var(--card-border);
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clear-journal-btn:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.journal-entry {
+    background: var(--nav-hover);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--accent-color);
+}
+
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.entry-date {
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.entry-rating {
+    background: var(--accent-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+.entry-meta {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 0.75rem;
+}
+
+.entry-reflection {
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .journal-actions {
+        flex-direction: column;
+    }
+    
+    .save-journal-btn,
+    .clear-journal-btn {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+// Journal functionality
+class JournalManager {
+    constructor() {
+        this.storageKey = 'cm_journal_v1';
+        this.entries = this.loadEntries();
+        this.init();
+    }
+    
+    init() {
+        this.setupEventListeners();
+        this.setDefaultDate();
+        this.renderRecentEntries();
+    }
+    
+    setupEventListeners() {
+        // Save button
+        const saveBtn = document.querySelector('.save-journal-btn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => this.saveEntry());
+        }
+        
+        // Clear button
+        const clearBtn = document.querySelector('.clear-journal-btn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => this.clearForm());
+        }
+        
+        // Rating buttons
+        const ratingBtns = document.querySelectorAll('.journal-rating');
+        ratingBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Remove selected from siblings
+                ratingBtns.forEach(b => b.classList.remove('selected'));
+                // Add selected to clicked
+                e.target.classList.add('selected');
+            });
+        });
+    }
+    
+    setDefaultDate() {
+        const dateInput = document.getElementById('journal-date');
+        if (dateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+        }
+    }
+    
+    saveEntry() {
+        const dateInput = document.getElementById('journal-date');
+        const selectedRating = document.querySelector('.journal-rating.selected');
+        const thoughtPattern = document.getElementById('thought-pattern');
+        const practiceUsed = document.getElementById('practice-used');
+        const reflectionText = document.getElementById('reflection-text');
+        
+        // Validation
+        if (!dateInput.value) {
+            this.showNotification('Please select a date', 'error');
+            return;
+        }
+        
+        if (!selectedRating) {
+            this.showNotification('Please rate your overall feeling', 'error');
+            return;
+        }
+        
+        if (!reflectionText.value.trim()) {
+            this.showNotification('Please write a reflection', 'error');
+            return;
+        }
+        
+        // Create entry
+        const entry = {
+            dateISO: dateInput.value,
+            rating: parseInt(selectedRating.dataset.value),
+            primaryThoughtPattern: thoughtPattern.value,
+            practiceUsed: practiceUsed.value,
+            reflection: reflectionText.value.trim(),
+            timestamp: new Date().toISOString()
+        };
+        
+        // Add to entries
+        this.entries.unshift(entry); // Add to beginning
+        
+        // Keep only last 30 entries
+        if (this.entries.length > 30) {
+            this.entries = this.entries.slice(0, 30);
+        }
+        
+        // Save to localStorage
+        this.saveEntries();
+        
+        // Show success
+        this.showNotification('Journal entry saved successfully!', 'success');
+        
+        // Clear form
+        this.clearForm();
+        
+        // Refresh display
+        this.renderRecentEntries();
+    }
+    
+    clearForm() {
+        // Reset rating buttons
+        document.querySelectorAll('.journal-rating').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        
+        // Reset dropdowns
+        document.getElementById('thought-pattern').value = '';
+        document.getElementById('practice-used').value = '';
+        
+        // Clear textarea
+        document.getElementById('reflection-text').value = '';
+        
+        // Reset date to today
+        this.setDefaultDate();
+    }
+    
+    loadEntries() {
+        const stored = localStorage.getItem(this.storageKey);
+        return stored ? JSON.parse(stored) : [];
+    }
+    
+    saveEntries() {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.entries));
+    }
+    
+    renderRecentEntries() {
+        const container = document.getElementById('journal-entries-list');
+        if (!container) return;
+        
+        if (this.entries.length === 0) {
+            container.innerHTML = '<p class="focus-message">Your recent journal entries will appear here.</p>';
+            return;
+        }
+        
+        const recentEntries = this.entries.slice(0, 5); // Show last 5
+        
+        container.innerHTML = recentEntries.map(entry => {
+            const date = new Date(entry.dateISO).toLocaleDateString();
+            const thoughtPattern = entry.primaryThoughtPattern || 'Not specified';
+            const practice = entry.practiceUsed || 'None specified';
+            
+            return `
+                <div class="journal-entry">
+                    <div class="entry-header">
+                        <span class="entry-date">${date}</span>
+                        <span class="entry-rating">${entry.rating}/5</span>
+                    </div>
+                    <div class="entry-meta">
+                        <strong>Pattern:</strong> ${thoughtPattern} | <strong>Practice:</strong> ${practice}
+                    </div>
+                    <div class="entry-reflection">${entry.reflection}</div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+}
+
+// Initialize journal when section becomes active
+document.addEventListener('sectionChanged', (e) => {
+    if (e.detail.sectionName === 'reflect') {
+        if (!window.journalManager) {
+            window.journalManager = new JournalManager();
+        }
+    }
+});
+
+// Initialize immediately if we're already on reflect section
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        const reflectSection = document.getElementById('reflect');
+        if (reflectSection && reflectSection.classList.contains('active')) {
+            if (!window.journalManager) {
+                window.journalManager = new JournalManager();
+            }
+        }
+    }, 500);
+});
+</script>
+</div>
+            <div class="card">
                 <h3>Prayer & Meditation</h3>
                 <div class="placeholder">
                     <h3>Guided Reflection</h3>
