@@ -1,26 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" sizes="32x32" href="/clarity-tools/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/clarity-tools/favicon-16.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coach Dashboard - Five Anchors Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Color System */
             --physical-color: #7C8B60;
             --mental-color: #B7AFA3;
             --emotional-color: #C97D7D;
             --spiritual-color: #B6B0C3;
             --relational-color: #E8934A;
-            --discernment-color: #7A94A8;
-            
-            /* Theme Variables - Light Mode */
             --bg-color: #FEFEFE;
             --text-color: #2C2C2C;
-            --header-bg: #F8F8F8;
             --nav-bg: #FFFFFF;
             --nav-border: #E5E5E5;
             --nav-hover: #F0F0F0;
@@ -29,54 +22,26 @@
             --shadow: rgba(0, 0, 0, 0.1);
             --accent-color: #5A6C57;
             --alert-low: #f44336;
-            --alert-medium: #ff9800;
             --success-color: #4CAF50;
         }
 
-        [data-theme="dark"] {
-            --bg-color: #1A1A1A;
-            --text-color: #E5E5E5;
-            --header-bg: #2A2A2A;
-            --nav-bg: #2A2A2A;
-            --nav-border: #404040;
-            --nav-hover: #3A3A3A;
-            --card-bg: #2A2A2A;
-            --card-border: #404040;
-            --shadow: rgba(0, 0, 0, 0.3);
-            --accent-color: #8A9C87;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Open Sans', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Header */
         .header {
             background: linear-gradient(135deg, 
                 rgba(124, 139, 96, 0.7) 0%, 
                 rgba(183, 175, 163, 0.7) 25%, 
                 rgba(201, 125, 125, 0.7) 50%, 
                 rgba(182, 176, 195, 0.7) 75%, 
-                rgba(232, 147, 74, 0.7) 100%),
-                linear-gradient(45deg, 
-                rgba(255, 255, 255, 0.1) 0%, 
-                rgba(255, 255, 255, 0.05) 100%);
-            border-bottom: 2px solid var(--nav-border);
+                rgba(232, 147, 74, 0.7) 100%);
             padding: 1.5rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
         }
 
         .header-content {
@@ -93,40 +58,11 @@
             font-size: 1.5rem;
             font-weight: 700;
             color: white;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
         }
 
-        .header-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: white;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-        }
-
-        .theme-toggle {
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.25);
-            border-radius: 50px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            font-size: 1rem;
-            color: white;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(15px);
-        }
-
-        .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        /* Navigation */
         .main-nav {
             background: var(--nav-bg);
             border-bottom: 1px solid var(--nav-border);
-            position: sticky;
-            top: 73px;
-            z-index: 99;
         }
 
         .nav-content {
@@ -138,57 +74,34 @@
         .nav-menu {
             display: flex;
             overflow-x: auto;
-            scrollbar-width: none;
-        }
-
-        .nav-menu::-webkit-scrollbar {
-            display: none;
         }
 
         .nav-item {
-            flex: 0 0 auto;
             padding: 1rem 1.5rem;
             cursor: pointer;
             border-bottom: 3px solid transparent;
             transition: all 0.3s ease;
-            white-space: nowrap;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            white-space: nowrap;
         }
 
-        .nav-item:hover {
-            background: var(--nav-hover);
+        .nav-item:hover { background: var(--nav-hover); }
+        .nav-item.active { 
+            border-bottom-color: var(--accent-color); 
+            background: var(--nav-hover); 
         }
 
-        .nav-item.active {
-            border-bottom-color: var(--accent-color);
-            background: var(--nav-hover);
-        }
-
-        /* Main Content */
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem 1rem;
-            min-height: calc(100vh - 250px);
         }
 
-        .section {
-            display: none;
-        }
+        .section { display: none; }
+        .section.active { display: block; }
 
-        .section.active {
-            display: block;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Section Headers */
         .section-header {
             margin-bottom: 2rem;
             text-align: center;
@@ -197,8 +110,8 @@
         .section-title {
             font-family: 'Libre Baskerville', serif;
             font-size: 2rem;
-            margin-bottom: 0.5rem;
             color: var(--accent-color);
+            margin-bottom: 0.5rem;
         }
 
         .section-subtitle {
@@ -206,7 +119,6 @@
             opacity: 0.8;
         }
 
-        /* Cards */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -222,7 +134,31 @@
             color: var(--accent-color);
         }
 
-        /* Client List Styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--nav-hover);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
         .clients-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -236,7 +172,6 @@
             padding: 1.5rem;
             transition: all 0.3s ease;
             cursor: pointer;
-            position: relative;
         }
 
         .client-card:hover {
@@ -247,7 +182,6 @@
         .client-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
             margin-bottom: 1rem;
         }
 
@@ -270,34 +204,9 @@
             font-weight: 600;
         }
 
-        .status-active {
-            background: var(--success-color);
-            color: white;
-        }
-
-        .status-inactive {
-            background: var(--alert-medium);
-            color: white;
-        }
-
-        .status-concern {
-            background: var(--alert-low);
-            color: white;
-        }
-
-        .client-activity {
-            margin-bottom: 1rem;
-        }
-
-        .activity-label {
-            font-size: 0.85rem;
-            opacity: 0.7;
-            margin-bottom: 0.25rem;
-        }
-
-        .activity-time {
-            font-weight: 600;
-        }
+        .status-active { background: var(--success-color); color: white; }
+        .status-concern { background: var(--alert-low); color: white; }
+        .status-inactive { background: var(--nav-border); color: var(--text-color); }
 
         .anchor-summary {
             display: flex;
@@ -341,14 +250,14 @@
 
         .client-btn {
             flex: 1;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0.8rem;
             border: 1px solid var(--accent-color);
             background: transparent;
             color: var(--accent-color);
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .client-btn:hover {
@@ -361,158 +270,6 @@
             color: white;
         }
 
-        .client-btn.primary:hover {
-            opacity: 0.9;
-        }
-
-        /* Client Detail Modal */
-        .client-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .client-modal-content {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            max-width: 800px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px var(--shadow);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--card-border);
-            padding-bottom: 1rem;
-        }
-
-        .modal-title {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 1.5rem;
-            color: var(--accent-color);
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-color);
-            opacity: 0.7;
-        }
-
-        .modal-close:hover {
-            opacity: 1;
-        }
-
-        /* Check-in History */
-        .checkin-history {
-            margin-bottom: 2rem;
-        }
-
-        .checkin-entry {
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .checkin-date {
-            font-weight: 600;
-            color: var(--accent-color);
-            margin-bottom: 0.75rem;
-        }
-
-        .checkin-ratings {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .rating-item {
-            text-align: center;
-        }
-
-        .rating-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .rating-value {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .rating-label {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .checkin-notes {
-            margin-top: 1rem;
-        }
-
-        .note-item {
-            margin-bottom: 0.5rem;
-            padding: 0.5rem;
-            background: var(--nav-hover);
-            border-radius: 6px;
-        }
-
-        .note-label {
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 0.25rem;
-            opacity: 0.8;
-        }
-
-        .note-text {
-            font-size: 0.9rem;
-        }
-
-        /* Statistics */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--nav-hover);
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        /* Alerts */
         .alert-banner {
             background: var(--alert-low);
             color: white;
@@ -526,44 +283,31 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            .clients-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .client-modal-content {
-                padding: 1rem;
-                width: 95%;
-            }
-            
-            .checkin-ratings {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .clients-grid { grid-template-columns: 1fr; }
+            .client-actions { flex-wrap: wrap; }
+            .client-btn { font-size: 0.7rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-content">
             <div class="logo">Coach Dashboard - Five Anchors</div>
-            <div class="header-info">
-                <span id="coach-name">Coach Portal</span>
-            </div>
-            <button class="theme-toggle" onclick="toggleTheme()">
-                <span id="theme-icon">🌙</span>
-            </button>
+            <div style="color: white;">Coach Portal</div>
         </div>
     </header>
 
-    <!-- Navigation -->
     <nav class="main-nav">
         <div class="nav-content">
             <div class="nav-menu">
                 <div class="nav-item active" onclick="showSection('clients')">
                     <span>👥</span>
                     <span>My Clients</span>
+                </div>
+                <div class="nav-item" onclick="showSection('sessions')">
+                    <span>📅</span>
+                    <span>Sessions</span>
                 </div>
                 <div class="nav-item" onclick="showSection('insights')">
                     <span>📊</span>
@@ -581,7 +325,6 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="main-content">
         
         <!-- My Clients Section -->
@@ -591,48 +334,68 @@
                 <p class="section-subtitle">Monitor client progress and engagement</p>
             </div>
 
-            <!-- Client Statistics -->
             <div class="card">
                 <h3>Overview</h3>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-value" id="total-clients">0</div>
+                        <div class="stat-value" id="total-clients">3</div>
                         <div class="stat-label">Total Clients</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="active-today">0</div>
+                        <div class="stat-value" id="active-today">2</div>
                         <div class="stat-label">Active Today</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="low-anchors">0</div>
+                        <div class="stat-value" id="low-anchors">1</div>
                         <div class="stat-label">Need Attention</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="avg-wellness">-</div>
+                        <div class="stat-value" id="avg-wellness">3.2</div>
                         <div class="stat-label">Avg Wellness</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Client List -->
             <div class="card">
                 <h3>Client Dashboard</h3>
                 <div class="clients-grid" id="clients-list">
-                    <!-- Sample clients will be loaded here -->
+                    <!-- Clients loaded by JavaScript -->
                 </div>
+            </div>
+        </section>
+
+        <!-- Sessions Section -->
+        <section id="sessions" class="section">
+            <div class="section-header">
+                <h1 class="section-title">Sessions & Appointments</h1>
+                <p class="section-subtitle">Manage client appointments and session notes</p>
+            </div>
+
+            <div class="card">
+                <h3>Quick Actions</h3>
+                <div class="client-actions" style="max-width: 600px;">
+                    <button class="client-btn primary">📅 Schedule New Session</button>
+                    <button class="client-btn">📋 Today's Sessions</button>
+                    <button class="client-btn">⏰ Upcoming Sessions</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Today's Schedule</h3>
+                <p>Session management features coming soon with full appointment scheduling, note-taking, and tool assignment tracking.</p>
             </div>
         </section>
 
         <!-- Insights Section -->
         <section id="insights" class="section">
             <div class="section-header">
-                <h1 class="section-title">Client Insights</h1>
-                <p class="section-subtitle">Patterns and trends across your practice</p>
+                <h1 class="section-title">Practice Insights</h1>
+                <p class="section-subtitle">Patterns and trends across your client base</p>
             </div>
             
             <div class="card">
-                <h3>Coming Soon</h3>
-                <p>Advanced analytics and trend insights for your client base.</p>
+                <h3>Analytics</h3>
+                <p>Advanced analytics and trend insights for your client base coming soon.</p>
             </div>
         </section>
 
@@ -644,7 +407,7 @@
             </div>
             
             <div id="alerts-container">
-                <!-- Alerts will be generated here -->
+                <!-- Generated by JavaScript -->
             </div>
         </section>
 
@@ -658,14 +421,13 @@
             <div class="card">
                 <h3>Module Management</h3>
                 <p>Release and track Five Anchors and Discernment Tools for individual clients.</p>
-                <p><em>Coming in P2 development phase</em></p>
             </div>
         </section>
 
     </main>
 
     <script>
-        // Sample client data - In production, this would come from your backend
+        // Sample client data
         const sampleClients = [
             {
                 id: 'client001',
@@ -674,110 +436,56 @@
                 lastActivity: '2025-01-08T10:30:00Z',
                 checkIns: {
                     '2025-01-08': {
-                        date: '2025-01-08',
                         ratings: { physical: 4, mental: 3, emotional: 2, spiritual: 4, relational: 3 },
-                        notes: { 
-                            emotional: 'Feeling overwhelmed with work deadlines',
-                            mental: 'Hard to focus today, lots on my mind'
-                        }
-                    },
-                    '2025-01-07': {
-                        date: '2025-01-07',
-                        ratings: { physical: 3, mental: 4, emotional: 3, spiritual: 5, relational: 4 },
-                        notes: {}
+                        notes: { emotional: 'Feeling overwhelmed with work deadlines' }
                     }
                 }
             },
             {
-                id: 'client002',
+                id: 'client002', 
                 name: 'Michael Chen',
                 email: 'mchen@email.com',
                 lastActivity: '2025-01-07T16:45:00Z',
                 checkIns: {
                     '2025-01-07': {
-                        date: '2025-01-07',
                         ratings: { physical: 2, mental: 2, emotional: 1, spiritual: 3, relational: 2 },
                         notes: { 
-                            physical: 'Not sleeping well, very tired',
                             emotional: 'Relationship stress affecting everything',
-                            relational: 'Major conflict with partner yesterday'
+                            physical: 'Not sleeping well, very tired'
                         }
                     }
                 }
             },
             {
                 id: 'client003',
-                name: 'Emma Rodriguez',
+                name: 'Emma Rodriguez', 
                 email: 'emma.r@email.com',
                 lastActivity: '2025-01-08T08:15:00Z',
                 checkIns: {
                     '2025-01-08': {
-                        date: '2025-01-08',
                         ratings: { physical: 5, mental: 4, emotional: 4, spiritual: 5, relational: 4 },
-                        notes: { 
-                            spiritual: 'Amazing prayer time this morning - feeling very connected',
-                            physical: 'Great workout, body feels strong'
-                        }
+                        notes: { spiritual: 'Amazing prayer time this morning' }
                     }
                 }
             }
         ];
 
-        // Theme Management
-        function toggleTheme() {
-            const body = document.body;
-            const themeIcon = document.getElementById('theme-icon');
-            
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.removeAttribute('data-theme');
-                themeIcon.textContent = '🌙';
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                themeIcon.textContent = '☀️';
-                localStorage.setItem('theme', 'dark');
-            }
-        }
-
-        function loadTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            const themeIcon = document.getElementById('theme-icon');
-            
-            if (savedTheme === 'dark') {
-                document.body.setAttribute('data-theme', 'dark');
-                themeIcon.textContent = '☀️';
-            }
-        }
-
         // Navigation
         function showSection(sectionName) {
-            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             
-            const targetSection = document.getElementById(sectionName);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
+            const section = document.getElementById(sectionName);
+            const navItem = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
             
-            const activeNavItem = document.querySelector("[onclick=\"showSection('" + sectionName + "')\"]");
-            if (activeNavItem) {
-                activeNavItem.classList.add('active');
-            }
+            if (section) section.classList.add('active');
+            if (navItem) navItem.classList.add('active');
         }
 
         // Client Management
         function loadClients() {
             const clientsList = document.getElementById('clients-list');
-            
-            if (!clientsList) {
-                console.error('clients-list element not found');
-                return;
-            }
-            
-            if (sampleClients.length === 0) {
-                clientsList.innerHTML = '<p style="text-align: center; opacity: 0.7; grid-column: 1/-1;">No clients found. Client data will appear here as they join your practice.</p>';
-                return;
-            }
+            if (!clientsList) return;
 
             const clientCards = sampleClients.map(client => {
                 const latestCheckIn = getLatestCheckIn(client);
@@ -786,7 +494,7 @@
                 const lastActivityText = getLastActivityText(client.lastActivity);
 
                 return `
-                    <div class="client-card" onclick="showClientDetail('${client.id}')">
+                    <div class="client-card">
                         <div class="client-header">
                             <div>
                                 <div class="client-name">${client.name}</div>
@@ -795,9 +503,9 @@
                             <div class="client-status ${status.class}">${status.text}</div>
                         </div>
                         
-                        <div class="client-activity">
-                            <div class="activity-label">Last Activity</div>
-                            <div class="activity-time">${lastActivityText}</div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-size: 0.85rem; opacity: 0.7;">Last Activity</div>
+                            <div style="font-weight: 600;">${lastActivityText}</div>
                         </div>
                         
                         <div class="anchor-summary">
@@ -805,15 +513,15 @@
                         </div>
                         
                         <div class="client-actions">
-                            <button class="client-btn primary" onclick="event.stopPropagation(); showClientDetail('${client.id}')">View Progress</button>
-                            <button class="client-btn" onclick="event.stopPropagation(); messageClient('${client.id}')">Message</button>
+                            <button class="client-btn primary">View Progress</button>
+                            <button class="client-btn">Sessions</button>
+                            <button class="client-btn">Message</button>
                         </div>
                     </div>
                 `;
             }).join('');
 
             clientsList.innerHTML = clientCards;
-            updateStatistics();
             generateAlerts();
         }
 
@@ -823,33 +531,22 @@
         }
 
         function getClientStatus(client, latestCheckIn) {
-            if (!latestCheckIn) {
-                return { class: 'status-inactive', text: 'No Data' };
-            }
-
-            const lastActivity = new Date(client.lastActivity);
-            const daysSinceActivity = Math.floor((new Date() - lastActivity) / (1000 * 60 * 60 * 24));
-            const hasLowRatings = Object.values(latestCheckIn.ratings).some(rating => rating <= 2);
+            if (!latestCheckIn) return { class: 'status-inactive', text: 'No Data' };
             
-            if (hasLowRatings) {
-                return { class: 'status-concern', text: 'Needs Attention' };
-            } else if (daysSinceActivity === 0) {
-                return { class: 'status-active', text: 'Active Today' };
-            } else if (daysSinceActivity <= 3) {
-                return { class: 'status-active', text: 'Recent' };
-            } else {
-                return { class: 'status-inactive', text: 'Inactive' };
-            }
+            const hasLowRatings = Object.values(latestCheckIn.ratings).some(rating => rating <= 2);
+            return hasLowRatings ? 
+                { class: 'status-concern', text: 'Needs Attention' } :
+                { class: 'status-active', text: 'Active Today' };
         }
 
         function getAnchorSummary(checkIn) {
             if (!checkIn || !checkIn.ratings) {
-                return '<span style="opacity: 0.5; font-size: 0.9rem;">No recent check-ins</span>';
+                return '<span style="opacity: 0.5;">No recent check-ins</span>';
             }
 
             const anchors = [
                 { key: 'physical', class: 'physical' },
-                { key: 'mental', class: 'mental' },
+                { key: 'mental', class: 'mental' }, 
                 { key: 'emotional', class: 'emotional' },
                 { key: 'spiritual', class: 'spiritual' },
                 { key: 'relational', class: 'relational' }
@@ -867,76 +564,42 @@
             const now = new Date();
             const diffHours = Math.floor((now - lastDate) / (1000 * 60 * 60));
             
-            if (diffHours < 1) {
-                return 'Just now';
-            } else if (diffHours < 24) {
-                return `${diffHours} hours ago`;
-            } else {
-                const diffDays = Math.floor(diffHours / 24);
-                return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
-            }
-        }
-
-        function updateStatistics() {
-            document.getElementById('total-clients').textContent = sampleClients.length;
+            if (diffHours < 1) return 'Just now';
+            if (diffHours < 24) return `${diffHours} hours ago`;
             
-            const today = new Date().toISOString().split('T')[0];
-            const activeToday = sampleClients.filter(client => client.checkIns[today]).length;
-            document.getElementById('active-today').textContent = activeToday;
-            
-            const needAttention = sampleClients.filter(client => {
-                const latest = getLatestCheckIn(client);
-                return latest && Object.values(latest.ratings).some(rating => rating <= 2);
-            }).length;
-            document.getElementById('low-anchors').textContent = needAttention;
-            
-            let totalRatings = 0;
-            let ratingCount = 0;
-            
-            sampleClients.forEach(client => {
-                const latest = getLatestCheckIn(client);
-                if (latest && latest.ratings) {
-                    Object.values(latest.ratings).forEach(rating => {
-                        totalRatings += rating;
-                        ratingCount++;
-                    });
-                }
-            });
-            
-            const avgWellness = ratingCount > 0 ? (totalRatings / ratingCount).toFixed(1) : '-';
-            document.getElementById('avg-wellness').textContent = avgWellness;
+            const diffDays = Math.floor(diffHours / 24);
+            return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
         }
 
         function generateAlerts() {
             const alertsContainer = document.getElementById('alerts-container');
-            const alerts = [];
+            if (!alertsContainer) return;
 
+            const alerts = [];
             sampleClients.forEach(client => {
                 const latest = getLatestCheckIn(client);
                 if (!latest) return;
 
+                // Check for low ratings
                 Object.entries(latest.ratings).forEach(([anchor, rating]) => {
                     if (rating <= 2) {
                         alerts.push({
-                            type: 'low-anchor',
-                            client: client,
-                            anchor: anchor,
-                            rating: rating,
-                            priority: rating === 1 ? 'high' : 'medium'
+                            client: client.name,
+                            type: 'Low Anchor Rating',
+                            details: `${anchor.charAt(0).toUpperCase() + anchor.slice(1)}: ${rating}/5`
                         });
                     }
                 });
 
+                // Check for concerning notes
                 if (latest.notes) {
                     Object.entries(latest.notes).forEach(([anchor, note]) => {
-                        const concerningWords = ['overwhelm', 'stress', 'conflict', 'tired', 'exhausted', 'anxiety', 'depressed'];
+                        const concerningWords = ['overwhelm', 'stress', 'relationship stress', 'not sleeping'];
                         if (concerningWords.some(word => note.toLowerCase().includes(word))) {
                             alerts.push({
-                                type: 'concerning-note',
-                                client: client,
-                                anchor: anchor,
-                                note: note,
-                                priority: 'medium'
+                                client: client.name,
+                                type: 'Concerning Note',
+                                details: `${anchor}: "${note}"`
                             });
                         }
                     });
@@ -944,236 +607,20 @@
             });
 
             if (alerts.length === 0) {
-                alertsContainer.innerHTML = `
-                    <div class="card">
-                        <h3>No Active Alerts</h3>
-                        <p>All clients are currently showing stable anchor ratings.</p>
-                    </div>
-                `;
+                alertsContainer.innerHTML = '<div class="card"><h3>No Active Alerts</h3><p>All clients showing stable patterns.</p></div>';
                 return;
             }
 
-            alerts.sort((a, b) => {
-                const priorityOrder = { high: 3, medium: 2, low: 1 };
-                return priorityOrder[b.priority] - priorityOrder[a.priority];
-            });
-
-            alertsContainer.innerHTML = alerts.map(alert => {
-                if (alert.type === 'low-anchor') {
-                    return `
-                        <div class="alert-banner">
-                            <div class="alert-title">${alert.client.name} - Low ${alert.anchor.charAt(0).toUpperCase() + alert.anchor.slice(1)} Anchor</div>
-                            <div>Rating: ${alert.rating}/5 - Consider reaching out for support</div>
-                        </div>
-                    `;
-                } else if (alert.type === 'concerning-note') {
-                    return `
-                        <div class="alert-banner">
-                            <div class="alert-title">${alert.client.name} - Concerning Note</div>
-                            <div>${alert.anchor.charAt(0).toUpperCase() + alert.anchor.slice(1)}: "${alert.note}"</div>
-                        </div>
-                    `;
-                }
-            }).join('');
-        }
-
-        function showClientDetail(clientId) {
-            const client = sampleClients.find(c => c.id === clientId);
-            if (!client) return;
-
-            const modal = document.createElement('div');
-            modal.className = 'client-modal';
-            
-            const checkInDates = Object.keys(client.checkIns).sort().reverse();
-            const checkInHistory = checkInDates.map(date => {
-                const checkIn = client.checkIns[date];
-                const formattedDate = new Date(date).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long', 
-                    day: 'numeric'
-                });
-
-                const ratingsHtml = Object.entries(checkIn.ratings).map(([anchor, rating]) => {
-                    const icons = {
-                        physical: '🧭',
-                        mental: '👓', 
-                        emotional: '🪣',
-                        spiritual: '🕊️',
-                        relational: '🌐'
-                    };
-                    
-                    return `
-                        <div class="rating-item">
-                            <div class="rating-icon">${icons[anchor]}</div>
-                            <div class="rating-value" style="color: ${rating <= 2 ? 'var(--alert-low)' : 'inherit'}">${rating}/5</div>
-                            <div class="rating-label">${anchor}</div>
-                        </div>
-                    `;
-                }).join('');
-
-                const notesHtml = checkIn.notes && Object.keys(checkIn.notes).length > 0 ? 
-                    Object.entries(checkIn.notes).map(([anchor, note]) => `
-                        <div class="note-item">
-                            <div class="note-label">${anchor.charAt(0).toUpperCase() + anchor.slice(1)}:</div>
-                            <div class="note-text">${note}</div>
-                        </div>
-                    `).join('') : 
-                    '<div style="opacity: 0.7; font-style: italic;">No notes for this check-in</div>';
-
-                return `
-                    <div class="checkin-entry">
-                        <div class="checkin-date">${formattedDate}</div>
-                        <div class="checkin-ratings">${ratingsHtml}</div>
-                        <div class="checkin-notes">
-                            <strong>Notes:</strong>
-                            ${notesHtml}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            modal.innerHTML = `
-                <div class="client-modal-content">
-                    <div class="modal-header">
-                        <h2 class="modal-title">${client.name}</h2>
-                        <button class="modal-close" onclick="closeClientModal()">&times;</button>
-                    </div>
-                    
-                    <div class="checkin-history">
-                        <h3>Recent Check-ins</h3>
-                        ${checkInHistory.length > 0 ? checkInHistory : '<p style="opacity: 0.7;">No check-ins recorded yet.</p>'}
-                    </div>
+            alertsContainer.innerHTML = alerts.map(alert => `
+                <div class="alert-banner">
+                    <div class="alert-title">${alert.client} - ${alert.type}</div>
+                    <div>${alert.details}</div>
                 </div>
-            `;
-
-            document.body.appendChild(modal);
-            
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeClientModal();
-                }
-            });
-        }
-
-        function closeClientModal() {
-            const modal = document.querySelector('.client-modal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        function messageClient(clientId) {
-            const client = sampleClients.find(c => c.id === clientId);
-            if (!client) return;
-            
-            alert(`Messaging feature coming in P2! Would open message thread with ${client.name}.`);
+            `).join('');
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            loadTheme();
-            loadClients();
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeClientModal();
-            }
-        });
-    </script>    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long', 
-                    day: 'numeric'
-                });
-
-                const ratingsHtml = Object.entries(checkIn.ratings).map(([anchor, rating]) => {
-                    const icons = {
-                        physical: '🧭',
-                        mental: '👓', 
-                        emotional: '🪣',
-                        spiritual: '🕊️',
-                        relational: '🌐'
-                    };
-                    
-                    return `
-                        <div class="rating-item">
-                            <div class="rating-icon">${icons[anchor]}</div>
-                            <div class="rating-value" style="color: ${rating <= 2 ? 'var(--alert-low)' : 'inherit'}">${rating}/5</div>
-                            <div class="rating-label">${anchor}</div>
-                        </div>
-                    `;
-                }).join('');
-
-                const notesHtml = checkIn.notes && Object.keys(checkIn.notes).length > 0 ? 
-                    Object.entries(checkIn.notes).map(([anchor, note]) => `
-                        <div class="note-item">
-                            <div class="note-label">${anchor.charAt(0).toUpperCase() + anchor.slice(1)}:</div>
-                            <div class="note-text">${note}</div>
-                        </div>
-                    `).join('') : 
-                    '<div style="opacity: 0.7; font-style: italic;">No notes for this check-in</div>';
-
-                return `
-                    <div class="checkin-entry">
-                        <div class="checkin-date">${formattedDate}</div>
-                        <div class="checkin-ratings">${ratingsHtml}</div>
-                        <div class="checkin-notes">
-                            <strong>Notes:</strong>
-                            ${notesHtml}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            modal.innerHTML = `
-                <div class="client-modal-content">
-                    <div class="modal-header">
-                        <h2 class="modal-title">${client.name}</h2>
-                        <button class="modal-close" onclick="closeClientModal()">&times;</button>
-                    </div>
-                    
-                    <div class="checkin-history">
-                        <h3>Recent Check-ins</h3>
-                        ${checkInHistory.length > 0 ? checkInHistory : '<p style="opacity: 0.7;">No check-ins recorded yet.</p>'}
-                    </div>
-                </div>
-            `;
-
-            document.body.appendChild(modal);
-            
-            // Close modal when clicking outside
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeClientModal();
-                }
-            });
-        }
-
-        function closeClientModal() {
-            const modal = document.querySelector('.client-modal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        function messageClient(clientId) {
-            const client = sampleClients.find(c => c.id === clientId);
-            if (!client) return;
-            
-            // Placeholder for messaging functionality
-            alert(`Messaging feature coming in P2! Would open message thread with ${client.name}.`);
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loadTheme();
-            loadClients();
-        });
-
-        // Handle ESC key to close modals
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeClientModal();
-            }
-        });
+        document.addEventListener('DOMContentLoaded', loadClients);
+    </script>
+</body>
+</html>
