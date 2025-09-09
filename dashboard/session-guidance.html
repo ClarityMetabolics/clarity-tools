@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Guidance Templates - Five Anchors Coach Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --physical-color: #7C8B60;
+            --mental-color: #B7AFA3;
+            --emotional-color: #C97D7D;
+            --spiritual-color: #B6B0C3;
+            --relational-color: #E8934A;
+            --bg-color: #FEFEFE;
+            --text-color: #2C2C2C;
+            --nav-bg: #FFFFFF;
+            --nav-border: #E5E5E5;
+            --nav-hover: #F0F0F0;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E5E5;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --accent-color: #5A6C57;
+            --alert-low: #f44336;
+            --success-color: #4CAF50;
+            --warning-color: #ff9800;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .session-guidance-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .guidance-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .guidance-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .guidance-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .client-selector {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin: 0 auto 2rem auto;
+            max-width: 500px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .client-selector label {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .client-selector select {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            background: var(--bg-color);
+            font-family: inherit;
+        }
+
+        .guidance-tabs {
+            display: flex;
+            background: var(--nav-bg);
+            border: 1px solid var(--nav-border);
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .guidance-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            border-right: 1px solid var(--nav-border);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .guidance-tab:last-child {
+            border-right: none;
+        }
+
+        .guidance-tab:hover {
+            background: var(--nav-hover);
+        }
+
+        .guidance-tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .card h3 {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .card h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Pre-Session Review Styles */
+        .client-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .overview-section {
+            background: var(--nav-hover);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .anchor-status-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .anchor-status {
+            text-align: center;
+            padding: 0.75rem 0.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .anchor-status.physical { background: var(--physical-color); }
+        .anchor-status.mental { background: var(--mental-color); }
+        .anchor-status.emotional { background: var(--emotional-color); }
+        .anchor-status.spiritual { background: var(--spiritual-color); }
+        .anchor-status.relational { background: var(--relational-color); }
+
+        .anchor-status.low {
+            box-shadow: 0 0 12px var(--alert-low);
+            animation: urgentPulse 2s infinite;
+        }
+
+        @keyframes urgentPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .alert-item {
+            background: var(--alert-low);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Session Flow Styles */
+        .session-phase {
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .phase-header {
+            background: var(--accent-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .phase-header h4 {
+            margin: 0;
+            color: white;
+        }
+
+        .phase-duration {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .phase-content {
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .phase-content.active {
+            display: block;
+        }
+
+        .phase-checklist {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .phase-checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--nav-hover);
+            border-radius: 6px;
+        }
+
+        .phase-checklist input[type="checkbox"] {
+            margin-top: 0.25rem;
+            transform: scale(1.2);
+        }
+
+        .phase-checklist li.completed {
+            opacity: 0.7;
+            text-decoration: line-through;
+        }
+
+        .session-notes {
+            margin-top: 1.5rem;
+        }
+
+        .session-notes textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 1rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--bg-color);
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        /* Tool Assignment Styles */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tool-assignment {
+            border: 2px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .tool-assignment:hover {
+            border-color: var(--accent-color);
+        }
+
+        .tool-assignment.assigned {
+            border-color: var(--success-color);
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-icon {
+            font-size: 1.5rem;
+        }
+
+        .tool-name {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .tool-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tool-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent-color);
+            background: transparent;
+            color: var(--accent-color);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .tool-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tool-btn.assigned {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        /* Post-Session Styles */
+        .progress-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-items {
+            background: var(--warning-color);
+            color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .action-items h4 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .action-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .action-input input {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .add-action-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .session-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .session-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .session-btn.primary {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .session-btn.secondary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .session-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .experience-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .toggle-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .toggle-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--accent-color);
+            background: transparent;
+            color: var(--accent-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .client-overview {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .anchor-status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .progress-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .session-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="session-guidance-container">
+        <div class="guidance-header">
+            <h1 class="guidance-title">Session Guidance System</h1>
+            <p class="guidance-subtitle">Structured Five Anchors coaching sessions with professional guidance templates</p>
+        </div>
+
+        <div class="client-selector">
+            <label for="client-select">Select Client:</label>
+            <select id="client-select">
+                <option value="">Choose a client...</option>
+                <option value="client001">Sarah Johnson</option>
+                <option value="client002">Michael Chen</option>
+                <option value="client003">Emma Rodriguez</option>
+            </select>
+        </div>
+
+        <div class="experience-toggle">
+            <p><strong>Coach Experience Level:</strong> Choose your guidance preference</p>
+            <div class="toggle-buttons">
+                <button class="toggle-btn active" data-level="new">New Coach (Full Guidance)</button>
+                <button class="toggle-btn" data-level="experienced">Experienced (Minimal Guidance)</button>
+            </div>
+        </div>
+
+        <div class="guidance-tabs">
+            <div class="guidance-tab active" data-tab="pre-session">Pre-Session Review</div>
+            <div class="guidance-tab" data-tab="session-flow">Guided Session Flow</div>
+            <div class="guidance-tab" data-tab="post-session">Post-Session</div>
+        </div>
+
+        <!-- Pre-Session Review Tab -->
+        <div class="tab-content active" id="pre-session">
+            <div class="card">
+                <h3>Client Preparation Overview</h3>
+                <div class="client-overview">
+                    <div class="overview-section">
+                        <h4>Recent Anchor Ratings</h4>
+                        <div class="anchor-status-grid">
+                            <div class="anchor-status physical">
+                                <div>Physical</div>
+                                <div id="physical-rating">4/5</div>
+                            </div>
+                            <div class="anchor-status mental">
+                                <div>Mental</div>
+                                <div id="mental-rating">3/5</div>
+                            </div>
+                            <div class="anchor-status emotional low">
+                                <div>Emotional</div>
+                                <div id="emotional-rating">2/5</div>
+                            </div>
+                            <div class="anchor-status spiritual">
+                                <div>Spiritual</div>
+                                <div id="spiritual-rating">4/5</div>
+                            </div>
+                            <div class="anchor-status relational">
+                                <div>Relational</div>
+                                <div id="relational-rating">3/5</div>
+                            </div>
+                        </div>
+                        <p><strong>Last Check-in:</strong> <span id="last-checkin">Today, 10:30 AM</span></p>
+                    </div>
+
+                    <div class="overview-section">
+                        <h4>Active Alerts & Concerns</h4>
+                        <div id="client-alerts">
+                            <div class="alert-item">
+                                <span>⚠️</span>
+                                <span>Emotional anchor at 2/5 - needs attention</span>
+                            </div>
+                            <div class="alert-item">
+                                <span>💬</span>
+                                <span>Note: "Feeling overwhelmed with work deadlines"</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Last Session Summary</h3>
+                <div class="overview-section">
+                    <h4>Previous Session Notes</h4>
+                    <p><strong>Date:</strong> January 5, 2025</p>
+                    <p><strong>Focus:</strong> Emotional anchor work - workplace stress management</p>
+                    <p><strong>Tools Assigned:</strong> Emotional Anchor guide, breathing exercises</p>
+                    <p><strong>Action Items:</strong></p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>Practice 5-minute morning breathing routine</li>
+                        <li>Complete Emotional Anchor tool by next session</li>
+                        <li>Journal about work stress patterns</li>
+                    </ul>
+                    <p><strong>Next Steps:</strong> Follow up on emotional regulation progress, assess workplace boundary needs</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Session Flow Tab -->
+        <div class="tab-content" id="session-flow">
+            <div class="card">
+                <h3>60-Minute Five Anchors Session Template</h3>
+
+                <div class="session-phase">
+                    <div class="phase-header" onclick="togglePhase('opening')">
+                        <h4>Opening Check-in</h4>
+                        <span class="phase-duration">5 minutes</span>
+                    </div>
+                    <div class="phase-content" id="opening-content">
+                        <ul class="phase-checklist">
+                            <li>
+                                <input type="checkbox" id="check-1">
+                                <label for="check-1">Welcome and grounding moment (30 seconds)</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-2">
+                                <label for="check-2">Ask: "How are you arriving today?" - let them share freely</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-3">
+                                <label for="check-3">Review any urgent concerns or changes since last session</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-4">
+                                <label for="check-4">Set intention for today's session together</label>
+                            </li>
+                        </ul>
+                        <div class="session-notes">
+                            <label><strong>Opening Notes:</strong></label>
+                            <textarea placeholder="Note client's energy, immediate concerns, and session intention..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-phase">
+                    <div class="phase-header" onclick="togglePhase('anchor-review')">
+                        <h4>Anchor Status Review</h4>
+                        <span class="phase-duration">10 minutes</span>
+                    </div>
+                    <div class="phase-content" id="anchor-review-content">
+                        <ul class="phase-checklist">
+                            <li>
+                                <input type="checkbox" id="check-5">
+                                <label for="check-5">Review recent daily check-ins and patterns</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-6">
+                                <label for="check-6">Focus on lowest-rated anchor: "Tell me about your [emotional] anchor this week"</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-7">
+                                <label for="check-7">Ask: "Which anchor needs the most attention today?"</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-8">
+                                <label for="check-8">Identify any patterns or triggers affecting multiple anchors</label>
+                            </li>
+                        </ul>
+                        <div class="session-notes">
+                            <label><strong>Anchor Assessment Notes:</strong></label>
+                            <textarea placeholder="Document which anchors need attention and why..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-phase">
+                    <div class="phase-header" onclick="togglePhase('tool-work')">
+                        <h4>Tool Work & Processing</h4>
+                        <span class="phase-duration">30 minutes</span>
+                    </div>
+                    <div class="phase-content" id="tool-work-content">
+                        <ul class="phase-checklist">
+                            <li>
+                                <input type="checkbox" id="check-9">
+                                <label for="check-9">Choose appropriate tool based on anchor assessment</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-10">
+                                <label for="check-10">Guide client through tool process (or review if completed)</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-11">
+                                <label for="check-11">Process insights: "What are you noticing?" and "What feels true?"</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-12">
+                                <label for="check-12">Connect tool insights to daily life: "How does this apply to your week?"</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-13">
+                                <label for="check-13">Address any resistance or stuck points with compassion</label>
+                            </li>
+                        </ul>
+                        <div class="session-notes">
+                            <label><strong>Tool Work Notes:</strong></label>
+                            <textarea placeholder="Document tool used, client insights, breakthroughs, and any resistance..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-phase">
+                    <div class="phase-header" onclick="togglePhase('action-planning')">
+                        <h4>Action Items & Integration</h4>
+                        <span class="phase-duration">10 minutes</span>
+                    </div>
+                    <div class="phase-content" id="action-planning-content">
+                        <ul class="phase-checklist">
+                            <li>
+                                <input type="checkbox" id="check-14">
+                                <label for="check-14">Ask client: "What's one small step you can take this week?"</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-15">
+                                <label for="check-15">Create specific, measurable action items (max 2-3)</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-16">
+                                <label for="check-16">Assign or review completion of specific tools/guides</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-17">
+                                <label for="check-17">Schedule daily check-in accountability or practice</label>
+                            </li>
+                        </ul>
+                        <div class="session-notes">
+                            <label><strong>Action Planning Notes:</strong></label>
+                            <textarea placeholder="Document specific action items and client commitment level..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-phase">
+                    <div class="phase-header" onclick="togglePhase('closing')">
+                        <h4>Closing & Next Session</h4>
+                        <span class="phase-duration">5 minutes</span>
+                    </div>
+                    <div class="phase-content" id="closing-content">
+                        <ul class="phase-checklist">
+                            <li>
+                                <input type="checkbox" id="check-18">
+                                <label for="check-18">Ask: "What's your biggest takeaway from today?"</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-19">
+                                <label for="check-19">Confirm action items and tool assignments</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-20">
+                                <label for="check-20">Schedule next session and set preliminary focus</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="check-21">
+                                <label for="check-21">End with grounding word or prayer if appropriate</label>
+                            </li>
+                        </ul>
+                        <div class="session-notes">
+                            <label><strong>Closing Notes:</strong></label>
+                            <textarea placeholder="Client takeaways, next session focus, and final observations..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Post-Session Tab -->
+        <div class="tab-content" id="post-session">
+            <div class="card">
+                <h3>Session Documentation</h3>
+                <div class="progress-summary">
+                    <div class="overview-section">
+                        <h4>Progress Observations by Anchor</h4>
+                        <div style="margin-bottom: 1rem;">
+                            <label><strong>Physical Anchor Progress:</strong></label>
+                            <textarea style="width: 100%; height: 60px; margin-top: 0.5rem;" placeholder="Physical grounding, body awareness, regulation..."></textarea>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label><strong>Mental Anchor Progress:</strong></label>
+                            <textarea style="width: 100%; height: 60px; margin-top: 0.5rem;" placeholder="Clarity, thought patterns, mental filtering..."></textarea>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label><strong>Emotional Anchor Progress:</strong></label>
+                            <textarea style="width: 100%; height: 60px; margin-top: 0.5rem;" placeholder="Emotional stability, regulation, processing..."></textarea>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label><strong>Spiritual Anchor Progress:</strong></label>
+                            <textarea style="width: 100%; height: 60px; margin-top: 0.5rem;" placeholder="Spiritual grounding, connection, calling..."></textarea>
+                        </div>
+                        <div>
+                            <label><strong>Relational Anchor Progress:</strong></label>
+                            <textarea style="width: 100%; height: 60px; margin-top: 0.5rem;" placeholder="Relationships, boundaries, community..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="action-items">
+                        <h4>Action Items for Client</h4>
+                        <div id="action-items-list">
+                            <div class="action-input">
+                                <input type="text" placeholder="Enter action item..." id="action-1">
+                                <button class="add-action-btn" onclick="addActionItem()">Add</button>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <h4>Tools Assigned This Session</h4>
+                            <div id="assigned-tools-summary">
+                                <p>Tools will appear here based on assignments made during session.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Tool Assignment Center</h3>
+                <p style="margin-bottom: 1.5rem;">Assign Five Anchors guides and Discernment Tools based on client needs identified in session.</p>
+                
+                <div class="tools-grid">
+                    <!-- Five Anchors Tools -->
+                    <div class="tool-assignment" data-tool="physical-anchor">
+                        <div class="tool-header">
+                            <span class="tool-icon">🧭</span>
+                            <span class="tool-name">Physical Anchor</span>
+                        </div>
+                        <p>Body awareness and nervous system regulation</p>
+                        <div class="tool-actions">
+                            <button class="tool-btn" onclick="assignTool('physical-anchor')">Assign</button>
+                            <button class="tool-btn" onclick="markReviewed('physical-anchor')">Mark Reviewed</button>
+                        </div>
+                    </div>
+
+                    <div class="tool-assignment" data-tool="mental-anchor">
+                        <div class="tool-header">
+                            <span class="tool-icon">👓</span>
+                            <span class="tool-name">Mental Anchor</span>
+                        </div>
+                        <p>Mental filtering and clarity development</p>
+                        <div class="tool-actions">
+                            <button class="tool-btn" onclick="assignTool('mental-anchor')">Assign</button>
+                            <button class="tool-btn" onclick="markReviewed('mental-anchor')">Mark Reviewed</button>
+                        </div>
+                    </div>
+
+                    <div class="tool-assignment" data-tool="emotional-anchor">
+                        <div class="tool-header">
+                            <span class="tool-icon">🪣</span>
+                            <span class="tool-name">Emotional Anchor</span>
+                        </div>
+                        <p>Emotional processing and stability development</p>
+                        <div class="tool-actions">
+                            <button class="tool-btn" onclick="assignTool('emotional-anchor')">Assign</button>
+                            <button class="tool-btn" onclick="markReviewed('emotional-anchor')">Mark Reviewed</button>
+                        </div>
+                    </div>
+
+                    <div class="tool-assignment" data-tool="spiritual-anchor">
+                        <div class="tool-header">
+                            <span class="tool-icon">🕊️</span>
+                            <span class="tool-name">Spiritual Anchor</span>
+                        </div>
+                        <p>Spiritual grounding and divine connection</p>
+                        <div class="tool-actions">
+                            <button class="tool-btn" onclick="assignTool('spiritual-anchor')">Assign</button>
+                            <button class="tool-btn" onclick="markReviewed('spiritual-anchor')">Mark Reviewed</button>
+                        </div>
+                    </div>
+
+                    <div class="tool-assignment" data-tool="relational-anchor">
+                        <div class="tool-header">
+                            <span class="tool-icon">🌐</span>
+                            <span class="tool-name">Relational Anchor</span>
+                        </div>
+                        <p>Relationship building and boundary setting</p>
+                        <div class="tool-actions">
+                            <button class="tool-btn" onclick="assignTool('relational-anchor')">Assign</button>
+                            <button class="tool-btn" onclick="markReviewed('relational-anchor')">Mark Reviewed</button>
+                        </div>
+                    </div>
+
+                    <!-- Discernment Tools -->
+                    <div class="tool-assignment" data-tool="thought-refiner">
+                        <div class="tool-header">
+                            <span class="tool-icon">📻</span>
+                            <span class="tool-name">Thought Refiner</span>
+                        </div>
+                        <p>Advanced mental filtering and thought purification</p>
+                        <div class="tool-actions">
+                            <button class="tool-btn" onclick="assignTool('thought-refiner')">Assign</button>
+                            <button class="tool-btn" onclick="markReviewed('thought-refiner')">Mark Reviewed</button>
+                        </div>
+                    </div>
+
+                    <div class="tool-assignment" data-tool="belief-threader">
+                        <div class="tool-header">
+                            <span class="tool-icon">🧵</span>
+                            <span class="tool-name">Belief Threader</span>
+                        </div>
+                        <p>Crystallized thought pattern examination</p>
+                        <div class="tool-actions">
+                            <button class="tool-btn" onclick="assignTool('belief-threader')">Assign</button>
+                            <button class="tool-btn" onclick="markReviewed('belief-threader')">Mark Reviewed</button>
+                        </div>
+                    </div>
+
+                    <div class="tool-assignment" data-tool="echo-eraser">
+                        <div class="tool-header">
+                            <span class="tool-icon">🌊</span>
+                            <span class="tool-name">Echo Eraser</span>
+                        </div>
+                        <p>Energetic residue clearing and integration</p>
+                        <div class="tool-actions">
+                            <button class="tool-btn" onclick="assignTool('echo-eraser')">Assign</button>
+                            <button class="tool-btn" onclick="markReviewed('echo-eraser')">Mark Reviewed</button>
+                        </div>
+                    </div>
+
+                    <div class="tool-assignment" data-tool="forgiveness-filter">
+                        <div class="tool-header">
+                            <span class="tool-icon">🪶</span>
+                            <span class="tool-name">Forgiveness Filter</span>
+                        </div>
+                        <p>Burden release and authentic forgiveness</p>
+                        <div class="tool-actions">
+                            <button class="tool-btn" onclick="assignTool('forgiveness-filter')">Assign</button>
+                            <button class="tool-btn" onclick="markReviewed('forgiveness-filter')">Mark Reviewed</button>
+                        </div>
+                    </div>
+
+                    <div class="tool-assignment" data-tool="connection-calibrator">
+                        <div class="tool-header">
+                            <span class="tool-icon">🌍</span>
+                            <span class="tool-name">Connection Calibrator</span>
+                        </div>
+                        <p>Relationship dynamics balancing</p>
+                        <div class="tool-actions">
+                            <button class="tool-btn" onclick="assignTool('connection-calibrator')">Assign</button>
+                            <button class="tool-btn" onclick="markReviewed('connection-calibrator')">Mark Reviewed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-actions">
+                <button class="session-btn primary" onclick="completeSession()">Complete Session & Save</button>
+                <button class="session-btn secondary" onclick="saveProgress()">Save Progress</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Session Guidance System JavaScript
+        class SessionGuidanceSystem {
+            constructor() {
+                this.currentClient = null;
+                this.experienceLevel = 'new';
+                this.sessionData = {
+                    clientId: null,
+                    sessionType: 'regular',
+                    startTime: new Date(),
+                    phases: {},
+                    toolsAssigned: [],
+                    actionItems: [],
+                    notes: {}
+                };
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadClientData();
+                this.setupPhaseToggling();
+                this.updateExperienceLevel();
+            }
+
+            setupEventListeners() {
+                // Tab switching
+                document.querySelectorAll('.guidance-tab').forEach(tab => {
+                    tab.addEventListener('click', () => this.switchTab(tab.dataset.tab));
+                });
+
+                // Client selector
+                const clientSelect = document.getElementById('client-select');
+                clientSelect.addEventListener('change', (e) => {
+                    this.currentClient = e.target.value;
+                    this.loadClientData();
+                });
+
+                // Experience level toggle
+                document.querySelectorAll('.toggle-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.experienceLevel = e.target.dataset.level;
+                        this.updateExperienceLevel();
+                    });
+                });
+
+                // Checklist interactions
+                document.querySelectorAll('.phase-checklist input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.addEventListener('change', (e) => {
+                        const listItem = e.target.closest('li');
+                        if (e.target.checked) {
+                            listItem.classList.add('completed');
+                        } else {
+                            listItem.classList.remove('completed');
+                        }
+                        this.savePhaseProgress();
+                    });
+                });
+            }
+
+            switchTab(tabName) {
+                // Update tab buttons
+                document.querySelectorAll('.guidance-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+                // Update content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabName).classList.add('active');
+
+                // Custom event for tab change
+                document.dispatchEvent(new CustomEvent('tabChanged', { detail: { tab: tabName } }));
+            }
+
+            setupPhaseToggling() {
+                document.querySelectorAll('.phase-header').forEach(header => {
+                    header.addEventListener('click', function() {
+                        const phaseContent = this.nextElementSibling;
+                        const isActive = phaseContent.classList.contains('active');
+                        
+                        // Close all phases if experienced user
+                        if (this.closest('.session-guidance-container').querySelector('.toggle-btn[data-level="experienced"]').classList.contains('active')) {
+                            document.querySelectorAll('.phase-content').forEach(content => {
+                                content.classList.remove('active');
+                            });
+                        }
+                        
+                        // Toggle current phase
+                        if (!isActive) {
+                            phaseContent.classList.add('active');
+                        } else {
+                            phaseContent.classList.remove('active');
+                        }
+                    });
+                });
+            }
+
+            updateExperienceLevel() {
+                const phases = document.querySelectorAll('.phase-content');
+                
+                if (this.experienceLevel === 'new') {
+                    // Show all phases for new coaches
+                    phases.forEach(phase => phase.classList.add('active'));
+                } else {
+                    // Collapse all for experienced coaches
+                    phases.forEach(phase => phase.classList.remove('active'));
+                }
+            }
+
+            loadClientData() {
+                if (!this.currentClient) return;
+
+                // Sample client data - in production, this would come from your database
+                const clientData = this.getSampleClientData(this.currentClient);
+                this.updateClientDisplay(clientData);
+                this.sessionData.clientId = this.currentClient;
+            }
+
+            getSampleClientData(clientId) {
+                const sampleData = {
+                    'client001': {
+                        name: 'Sarah Johnson',
+                        ratings: { physical: 4, mental: 3, emotional: 2, spiritual: 4, relational: 3 },
+                        lastCheckin: 'Today, 10:30 AM',
+                        alerts: [
+                            { type: 'warning', message: 'Emotional anchor at 2/5 - needs attention' },
+                            { type: 'note', message: 'Note: "Feeling overwhelmed with work deadlines"' }
+                        ],
+                        lastSession: {
+                            date: 'January 5, 2025',
+                            focus: 'Emotional anchor work - workplace stress management',
+                            toolsAssigned: ['Emotional Anchor guide', 'breathing exercises'],
+                            actionItems: [
+                                'Practice 5-minute morning breathing routine',
+                                'Complete Emotional Anchor tool by next session',
+                                'Journal about work stress patterns'
+                            ],
+                            nextSteps: 'Follow up on emotional regulation progress, assess workplace boundary needs'
+                        }
+                    },
+                    'client002': {
+                        name: 'Michael Chen',
+                        ratings: { physical: 2, mental: 2, emotional: 1, spiritual: 3, relational: 2 },
+                        lastCheckin: 'Yesterday, 4:45 PM',
+                        alerts: [
+                            { type: 'urgent', message: 'Multiple low anchor ratings - crisis protocol may be needed' },
+                            { type: 'note', message: 'Note: "Relationship stress affecting everything"' },
+                            { type: 'note', message: 'Note: "Not sleeping well, very tired"' }
+                        ],
+                        lastSession: {
+                            date: 'January 3, 2025',
+                            focus: 'Crisis stabilization - relationship conflict',
+                            toolsAssigned: ['Physical Anchor guide', 'crisis grounding techniques'],
+                            actionItems: [
+                                'Use grounding exercises when overwhelmed',
+                                'Limit conflict discussions to 20 minutes max',
+                                'Check in daily with physical anchor'
+                            ],
+                            nextSteps: 'Assess crisis level, consider increased session frequency'
+                        }
+                    },
+                    'client003': {
+                        name: 'Emma Rodriguez',
+                        ratings: { physical: 5, mental: 4, emotional: 4, spiritual: 5, relational: 4 },
+                        lastCheckin: 'Today, 8:15 AM',
+                        alerts: [
+                            { type: 'positive', message: 'All anchors showing strong ratings' },
+                            { type: 'note', message: 'Note: "Amazing prayer time this morning"' }
+                        ],
+                        lastSession: {
+                            date: 'January 4, 2025',
+                            focus: 'Advanced discernment tools - spiritual maturity',
+                            toolsAssigned: ['Thought Refiner', 'Belief Threader'],
+                            actionItems: [
+                                'Complete Thought Refiner process',
+                                'Practice daily discernment in decisions',
+                                'Mentor newer client if willing'
+                            ],
+                            nextSteps: 'Continue advanced tools, explore leadership opportunities'
+                        }
+                    }
+                };
+
+                return sampleData[clientId] || null;
+            }
+
+            updateClientDisplay(clientData) {
+                if (!clientData) return;
+
+                // Update anchor ratings display
+                Object.entries(clientData.ratings).forEach(([anchor, rating]) => {
+                    const element = document.getElementById(`${anchor}-rating`);
+                    if (element) {
+                        element.textContent = `${rating}/5`;
+                        const anchorStatus = element.closest('.anchor-status');
+                        if (rating <= 2) {
+                            anchorStatus.classList.add('low');
+                        } else {
+                            anchorStatus.classList.remove('low');
+                        }
+                    }
+                });
+
+                // Update last check-in
+                const lastCheckinElement = document.getElementById('last-checkin');
+                if (lastCheckinElement) {
+                    lastCheckinElement.textContent = clientData.lastCheckin;
+                }
+
+                // Update alerts
+                const alertsContainer = document.getElementById('client-alerts');
+                if (alertsContainer && clientData.alerts) {
+                    alertsContainer.innerHTML = clientData.alerts.map(alert => `
+                        <div class="alert-item">
+                            <span>${alert.type === 'urgent' ? '🚨' : alert.type === 'warning' ? '⚠️' : alert.type === 'positive' ? '✅' : '💬'}</span>
+                            <span>${alert.message}</span>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            savePhaseProgress() {
+                // Save session phase completion status
+                const phases = ['opening', 'anchor-review', 'tool-work', 'action-planning', 'closing'];
+                phases.forEach(phase => {
+                    const checkboxes = document.querySelectorAll(`#${phase}-content input[type="checkbox"]`);
+                    const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+                    const total = checkboxes.length;
+                    
+                    this.sessionData.phases[phase] = {
+                        completed: completed,
+                        total: total,
+                        percentage: Math.round((completed / total) * 100)
+                    };
+                });
+
+                // Save to localStorage (in production, save to database)
+                localStorage.setItem('currentSessionProgress', JSON.stringify(this.sessionData));
+            }
+
+            assignTool(toolId) {
+                const toolCard = document.querySelector(`[data-tool="${toolId}"]`);
+                const toolName = toolCard.querySelector('.tool-name').textContent;
+                
+                // Mark as assigned
+                toolCard.classList.add('assigned');
+                const assignBtn = toolCard.querySelector('.tool-btn');
+                assignBtn.textContent = 'Assigned';
+                assignBtn.classList.add('assigned');
+
+                // Add to session data
+                if (!this.sessionData.toolsAssigned.includes(toolId)) {
+                    this.sessionData.toolsAssigned.push(toolId);
+                }
+
+                // Update assigned tools summary
+                this.updateAssignedToolsSummary();
+
+                this.showNotification(`${toolName} assigned to client`, 'success');
+            }
+
+            markReviewed(toolId) {
+                const toolCard = document.querySelector(`[data-tool="${toolId}"]`);
+                const toolName = toolCard.querySelector('.tool-name').textContent;
+                
+                // Mark as reviewed
+                const reviewBtn = toolCard.querySelectorAll('.tool-btn')[1];
+                reviewBtn.textContent = 'Reviewed';
+                reviewBtn.style.background = '#4CAF50';
+                reviewBtn.style.color = 'white';
+                reviewBtn.style.borderColor = '#4CAF50';
+
+                this.showNotification(`${toolName} marked as reviewed`, 'info');
+            }
+
+            updateAssignedToolsSummary() {
+                const summaryContainer = document.getElementById('assigned-tools-summary');
+                if (this.sessionData.toolsAssigned.length === 0) {
+                    summaryContainer.innerHTML = '<p>No tools assigned this session.</p>';
+                    return;
+                }
+
+                const toolNames = this.sessionData.toolsAssigned.map(toolId => {
+                    const toolCard = document.querySelector(`[data-tool="${toolId}"]`);
+                    return toolCard ? toolCard.querySelector('.tool-name').textContent : toolId;
+                });
+
+                summaryContainer.innerHTML = `
+                    <ul style="margin-left: 1.5rem;">
+                        ${toolNames.map(name => `<li>${name}</li>`).join('')}
+                    </ul>
+                `;
+            }
+
+            addActionItem() {
+                const input = document.getElementById('action-1');
+                const actionText = input.value.trim();
+                
+                if (!actionText) return;
+
+                // Add to session data
+                this.sessionData.actionItems.push(actionText);
+
+                // Add to display
+                const actionsList = document.getElementById('action-items-list');
+                const newAction = document.createElement('div');
+                newAction.innerHTML = `
+                    <div style="background: rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 4px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span>${actionText}</span>
+                        <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer;">✕</button>
+                    </div>
+                `;
+                actionsList.insertBefore(newAction, actionsList.firstChild);
+
+                // Clear input
+                input.value = '';
+
+                this.showNotification('Action item added', 'success');
+            }
+
+            completeSession() {
+                // Validate session completion
+                const requiredFields = this.validateSessionCompletion();
+                
+                if (requiredFields.length > 0) {
+                    this.showNotification(`Please complete: ${requiredFields.join(', ')}`, 'warning');
+                    return;
+                }
+
+                // Save complete session data
+                this.sessionData.endTime = new Date();
+                this.sessionData.duration = Math.round((this.sessionData.endTime - this.sessionData.startTime) / 60000); // minutes
+
+                // In production, save to database
+                const sessions = JSON.parse(localStorage.getItem('cm_coach_sessions') || '[]');
+                sessions.push({
+                    id: Date.now().toString(),
+                    ...this.sessionData,
+                    status: 'completed'
+                });
+                localStorage.setItem('cm_coach_sessions', JSON.stringify(sessions));
+
+                this.showNotification('Session completed and saved successfully!', 'success');
+                
+                // Reset for next session
+                setTimeout(() => {
+                    if (confirm('Session saved! Start a new session?')) {
+                        this.resetSession();
+                    }
+                }, 2000);
+            }
+
+            saveProgress() {
+                this.savePhaseProgress();
+                this.showNotification('Session progress saved', 'info');
+            }
+
+            validateSessionCompletion() {
+                const missing = [];
+                
+                // Check if client is selected
+                if (!this.currentClient) missing.push('Client selection');
+                
+                // Check if at least one phase has notes
+                const hasNotes = document.querySelectorAll('.session-notes textarea').some(textarea => textarea.value.trim());
+                if (!hasNotes) missing.push('Session notes');
+
+                return missing;
+            }
+
+            resetSession() {
+                // Clear all checkboxes
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                    cb.checked = false;
+                    cb.closest('li').classList.remove('completed');
+                });
+
+                // Clear all textareas
+                document.querySelectorAll('textarea').forEach(textarea => {
+                    textarea.value = '';
+                });
+
+                // Reset tool assignments
+                document.querySelectorAll('.tool-assignment').forEach(tool => {
+                    tool.classList.remove('assigned');
+                    const assignBtn = tool.querySelector('.tool-btn');
+                    assignBtn.textContent = 'Assign';
+                    assignBtn.classList.remove('assigned');
+                });
+
+                // Reset session data
+                this.sessionData = {
+                    clientId: null,
+                    sessionType: 'regular',
+                    startTime: new Date(),
+                    phases: {},
+                    toolsAssigned: [],
+                    actionItems: [],
+                    notes: {}
+                };
+
+                // Clear client selection
+                document.getElementById('client-select').value = '';
+                this.currentClient = null;
+
+                this.showNotification('Ready for new session', 'info');
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${type === 'success' ? '#4CAF50' : type === 'warning' ? '#ff9800' : '#2196F3'};
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 6px;
+                    z-index: 1001;
+                    animation: slideIn 0.3s ease;
+                `;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+        }
+
+        // Global functions for onclick events
+        function togglePhase(phaseId) {
+            const content = document.getElementById(`${phaseId}-content`);
+            content.classList.toggle('active');
+        }
+
+        function assignTool(toolId) {
+            if (window.sessionGuidance) {
+                window.sessionGuidance.assignTool(toolId);
+            }
+        }
+
+        function markReviewed(toolId) {
+            if (window.sessionGuidance) {
+                window.sessionGuidance.markReviewed(toolId);
+            }
+        }
+
+        function addActionItem() {
+            if (window.sessionGuidance) {
+                window.sessionGuidance.addActionItem();
+            }
+        }
+
+        function completeSession() {
+            if (window.sessionGuidance) {
+                window.sessionGuidance.completeSession();
+            }
+        }
+
+        function saveProgress() {
+            if (window.sessionGuidance) {
+                window.sessionGuidance.saveProgress();
+            }
+        }
+
+        // Add keyframe animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            window.sessionGuidance = new SessionGuidanceSystem();
+        });
+    </script>
+</body>
+</html>
