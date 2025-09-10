@@ -60,6 +60,21 @@
             color: white;
         }
 
+        .coach-info {
+            color: white;
+            text-align: right;
+        }
+
+        .coach-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .coach-role {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
         .main-nav {
             background: var(--nav-bg);
             border-bottom: 1px solid var(--nav-border);
@@ -134,6 +149,56 @@
             color: var(--accent-color);
         }
 
+        .coach-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .coach-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .coach-selector select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            min-width: 200px;
+        }
+
+        .supervisor-toggle {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .supervisor-toggle:hover {
+            opacity: 0.9;
+        }
+
+        .supervisor-toggle.active {
+            background: var(--physical-color);
+        }
+
+        .view-indicator {
+            padding: 0.5rem 1rem;
+            background: var(--nav-hover);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -171,7 +236,6 @@
             border-radius: 12px;
             padding: 1.5rem;
             transition: all 0.3s ease;
-            cursor: pointer;
         }
 
         .client-card:hover {
@@ -197,11 +261,14 @@
             opacity: 0.7;
         }
 
+        /* FIXED: Compact status badges with even padding */
         .client-status {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
             font-weight: 600;
+            line-height: 1.1;
+            display: inline-block;
         }
 
         .status-active { background: var(--success-color); color: white; }
@@ -270,6 +337,16 @@
             color: white;
         }
 
+        .client-btn.transfer {
+            border-color: var(--relational-color);
+            color: var(--relational-color);
+        }
+
+        .client-btn.transfer:hover {
+            background: var(--relational-color);
+            color: white;
+        }
+
         .alert-banner {
             background: var(--alert-low);
             color: white;
@@ -287,6 +364,7 @@
             .clients-grid { grid-template-columns: 1fr; }
             .client-actions { flex-wrap: wrap; }
             .client-btn { font-size: 0.7rem; }
+            .coach-controls { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -294,30 +372,33 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">Coach Dashboard - Five Anchors</div>
-            <div style="color: white;">Coach Portal</div>
+            <div class="coach-info">
+                <div class="coach-name">Lesley Turner</div>
+                <div class="coach-role">Lead Coach</div>
+            </div>
         </div>
     </header>
 
     <nav class="main-nav">
         <div class="nav-content">
             <div class="nav-menu">
-                <div class="nav-item active" onclick="showSection('clients')">
+                <div class="nav-item active" data-section="clients">
                     <span>👥</span>
                     <span>My Clients</span>
                 </div>
-                <div class="nav-item" onclick="showSection('sessions')">
+                <div class="nav-item" data-section="sessions">
                     <span>📅</span>
                     <span>Sessions</span>
                 </div>
-                <div class="nav-item" onclick="showSection('insights')">
+                <div class="nav-item" data-section="insights">
                     <span>📊</span>
                     <span>Insights</span>
                 </div>
-                <div class="nav-item" onclick="showSection('alerts')">
+                <div class="nav-item" data-section="alerts">
                     <span>⚠️</span>
                     <span>Alerts</span>
                 </div>
-                <div class="nav-item" onclick="showSection('tools')">
+                <div class="nav-item" data-section="tools">
                     <span>🔧</span>
                     <span>Tools</span>
                 </div>
@@ -327,11 +408,31 @@
 
     <main class="main-content">
         
-        <!-- My Clients Section -->
         <section id="clients" class="section active">
             <div class="section-header">
                 <h1 class="section-title">My Clients</h1>
                 <p class="section-subtitle">Monitor client progress and engagement</p>
+            </div>
+
+            <div class="coach-controls">
+                <div class="coach-selector">
+                    <label for="coach-filter">View clients for:</label>
+                    <select id="coach-filter">
+                        <option value="current">My Clients Only (Lesley)</option>
+                        <option value="all">All Clients (Supervisor View)</option>
+                        <option value="coach_lesley">Lesley Turner - Individual</option>
+                        <option value="coach_sarah">Sarah Johnson - Individual</option>
+                        <option value="coach_mike">Mike Chen - Individual</option>
+                    </select>
+                </div>
+                
+                <button class="supervisor-toggle" id="supervisor-mode">
+                    Enable Supervisor View
+                </button>
+                
+                <div class="view-indicator" id="view-indicator">
+                    Individual Coach View
+                </div>
             </div>
 
             <div class="card">
@@ -364,7 +465,6 @@
             </div>
         </section>
 
-        <!-- Sessions Section -->
         <section id="sessions" class="section">
             <div class="section-header">
                 <h1 class="section-title">Sessions & Appointments</h1>
@@ -377,17 +477,16 @@
                     <button class="client-btn primary">📅 Schedule New Session</button>
                     <button class="client-btn">📋 Today's Sessions</button>
                     <button class="client-btn">⏰ Upcoming Sessions</button>
-                    <button class="client-btn primary" onclick="window.open('session-guidance.html', '_blank')">📋 Start Guided Session</button>
+                    <button class="client-btn primary">📋 Start Guided Session</button>
                 </div>
             </div>
 
             <div class="card">
                 <h3>Today's Schedule</h3>
-                <p>Session management features coming soon with full appointment scheduling, note-taking, and tool assignment tracking.</p>
+                <p>Session management features coming soon.</p>
             </div>
         </section>
 
-        <!-- Insights Section -->
         <section id="insights" class="section">
             <div class="section-header">
                 <h1 class="section-title">Practice Insights</h1>
@@ -396,11 +495,10 @@
             
             <div class="card">
                 <h3>Analytics</h3>
-                <p>Advanced analytics and trend insights for your client base coming soon.</p>
+                <p>Advanced analytics coming soon.</p>
             </div>
         </section>
 
-        <!-- Alerts Section -->
         <section id="alerts" class="section">
             <div class="section-header">
                 <h1 class="section-title">Client Alerts</h1>
@@ -412,7 +510,6 @@
             </div>
         </section>
 
-        <!-- Tools Section -->
         <section id="tools" class="section">
             <div class="section-header">
                 <h1 class="section-title">Coach Tools</h1>
@@ -428,12 +525,12 @@
     </main>
 
     <script>
-        // Sample client data
         const sampleClients = [
             {
                 id: 'client001',
                 name: 'Sarah Johnson',
                 email: 'sarah.j@email.com',
+                assignedCoachId: 'coach_lesley',
                 lastActivity: '2025-01-08T10:30:00Z',
                 checkIns: {
                     '2025-01-08': {
@@ -446,6 +543,7 @@
                 id: 'client002', 
                 name: 'Michael Chen',
                 email: 'mchen@email.com',
+                assignedCoachId: 'coach_lesley',
                 lastActivity: '2025-01-07T16:45:00Z',
                 checkIns: {
                     '2025-01-07': {
@@ -461,6 +559,7 @@
                 id: 'client003',
                 name: 'Emma Rodriguez', 
                 email: 'emma.r@email.com',
+                assignedCoachId: 'coach_lesley',
                 lastActivity: '2025-01-08T08:15:00Z',
                 checkIns: {
                     '2025-01-08': {
@@ -468,31 +567,106 @@
                         notes: { spiritual: 'Amazing prayer time this morning' }
                     }
                 }
+            },
+            {
+                id: 'client004',
+                name: 'David Park',
+                email: 'david.p@email.com',
+                assignedCoachId: 'coach_sarah',
+                lastActivity: '2025-01-08T14:20:00Z',
+                checkIns: {
+                    '2025-01-08': {
+                        ratings: { physical: 3, mental: 4, emotional: 3, spiritual: 3, relational: 2 },
+                        notes: { relational: 'Struggling with team dynamics at work' }
+                    }
+                }
+            },
+            {
+                id: 'client005',
+                name: 'Lisa Thompson',
+                email: 'lisa.t@email.com',
+                assignedCoachId: 'coach_mike',
+                lastActivity: '2025-01-07T09:30:00Z',
+                checkIns: {
+                    '2025-01-07': {
+                        ratings: { physical: 4, mental: 5, emotional: 4, spiritual: 4, relational: 5 },
+                        notes: { mental: 'Great week of focused work and clarity' }
+                    }
+                }
             }
         ];
 
-        // Navigation
+        const availableCoaches = [
+            { id: 'coach_lesley', name: 'Lesley Turner', role: 'Lead Coach' },
+            { id: 'coach_sarah', name: 'Sarah Johnson', role: 'Associate Coach' },
+            { id: 'coach_mike', name: 'Mike Chen', role: 'Associate Coach' }
+        ];
+
+        let currentCoachId = 'coach_lesley';
+        let supervisorMode = false;
+
         function showSection(sectionName) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             
             const section = document.getElementById(sectionName);
-            const navItem = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            const navItem = document.querySelector(`[data-section="${sectionName}"]`);
             
             if (section) section.classList.add('active');
             if (navItem) navItem.classList.add('active');
         }
 
-        // Client Management
+        function filterClientsByCoach() {
+            const filterValue = document.getElementById('coach-filter').value;
+            const viewIndicator = document.getElementById('view-indicator');
+            const supervisorToggle = document.getElementById('supervisor-mode');
+            
+            if (filterValue === 'all') {
+                supervisorMode = true;
+                viewIndicator.textContent = 'Supervisor View - All Coaches';
+                supervisorToggle.classList.add('active');
+                supervisorToggle.textContent = 'Disable Supervisor View';
+            } else if (filterValue === 'current') {
+                supervisorMode = false;
+                viewIndicator.textContent = 'Individual Coach View';
+                supervisorToggle.classList.remove('active');
+                supervisorToggle.textContent = 'Enable Supervisor View';
+            } else {
+                supervisorMode = true;
+                const selectedCoach = availableCoaches.find(coach => coach.id === filterValue);
+                viewIndicator.textContent = `Viewing: ${selectedCoach?.name || 'Unknown Coach'}`;
+                supervisorToggle.classList.add('active');
+                supervisorToggle.textContent = 'Disable Supervisor View';
+            }
+            
+            loadClients();
+        }
+
+        function getFilteredClients() {
+            const filterValue = document.getElementById('coach-filter').value;
+            
+            if (filterValue === 'all') {
+                return sampleClients;
+            } else if (filterValue === 'current') {
+                return sampleClients.filter(client => client.assignedCoachId === currentCoachId);
+            } else {
+                return sampleClients.filter(client => client.assignedCoachId === filterValue);
+            }
+        }
+
         function loadClients() {
             const clientsList = document.getElementById('clients-list');
             if (!clientsList) return;
 
-            const clientCards = sampleClients.map(client => {
+            const filteredClients = getFilteredClients();
+            
+            const clientCards = filteredClients.map(client => {
                 const latestCheckIn = getLatestCheckIn(client);
                 const status = getClientStatus(client, latestCheckIn);
                 const anchorSummary = getAnchorSummary(latestCheckIn);
                 const lastActivityText = getLastActivityText(client.lastActivity);
+                const assignedCoach = availableCoaches.find(coach => coach.id === client.assignedCoachId);
+                const coachName = assignedCoach ? assignedCoach.name : 'Unassigned';
 
                 return `
                     <div class="client-card">
@@ -500,6 +674,7 @@
                             <div>
                                 <div class="client-name">${client.name}</div>
                                 <div class="client-email">${client.email}</div>
+                                ${supervisorMode ? `<div style="font-size: 0.8rem; color: var(--accent-color); margin-top: 0.25rem;">Coach: ${coachName}</div>` : ''}
                             </div>
                             <div class="client-status ${status.class}">${status.text}</div>
                         </div>
@@ -516,6 +691,7 @@
                         <div class="client-actions">
                             <button class="client-btn primary">View Progress</button>
                             <button class="client-btn">Sessions</button>
+                            ${supervisorMode ? `<button class="client-btn transfer">Transfer</button>` : ''}
                             <button class="client-btn">Message</button>
                         </div>
                     </div>
@@ -523,7 +699,39 @@
             }).join('');
 
             clientsList.innerHTML = clientCards;
-            generateAlerts();
+            updateStats(filteredClients);
+            generateAlerts(filteredClients);
+        }
+
+        function updateStats(clients) {
+            const totalClients = clients.length;
+            const activeToday = clients.filter(client => {
+                const lastActivity = new Date(client.lastActivity);
+                const today = new Date();
+                return lastActivity.toDateString() === today.toDateString();
+            }).length;
+            
+            let lowAnchorsCount = 0;
+            let totalRatings = 0;
+            let ratingCount = 0;
+            
+            clients.forEach(client => {
+                const latest = getLatestCheckIn(client);
+                if (latest && latest.ratings) {
+                    Object.values(latest.ratings).forEach(rating => {
+                        if (rating <= 2) lowAnchorsCount++;
+                        totalRatings += rating;
+                        ratingCount++;
+                    });
+                }
+            });
+            
+            const avgWellness = ratingCount > 0 ? (totalRatings / ratingCount).toFixed(1) : 0;
+            
+            document.getElementById('total-clients').textContent = totalClients;
+            document.getElementById('active-today').textContent = activeToday;
+            document.getElementById('low-anchors').textContent = Math.ceil(lowAnchorsCount / 5);
+            document.getElementById('avg-wellness').textContent = avgWellness;
         }
 
         function getLatestCheckIn(client) {
@@ -572,39 +780,26 @@
             return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
         }
 
-        function generateAlerts() {
+        function generateAlerts(clients) {
             const alertsContainer = document.getElementById('alerts-container');
             if (!alertsContainer) return;
 
             const alerts = [];
-            sampleClients.forEach(client => {
+            clients.forEach(client => {
                 const latest = getLatestCheckIn(client);
                 if (!latest) return;
 
-                // Check for low ratings
                 Object.entries(latest.ratings).forEach(([anchor, rating]) => {
                     if (rating <= 2) {
+                        const assignedCoach = availableCoaches.find(coach => coach.id === client.assignedCoachId);
                         alerts.push({
                             client: client.name,
+                            coach: assignedCoach?.name || 'Unassigned',
                             type: 'Low Anchor Rating',
                             details: `${anchor.charAt(0).toUpperCase() + anchor.slice(1)}: ${rating}/5`
                         });
                     }
                 });
-
-                // Check for concerning notes
-                if (latest.notes) {
-                    Object.entries(latest.notes).forEach(([anchor, note]) => {
-                        const concerningWords = ['overwhelm', 'stress', 'relationship stress', 'not sleeping'];
-                        if (concerningWords.some(word => note.toLowerCase().includes(word))) {
-                            alerts.push({
-                                client: client.name,
-                                type: 'Concerning Note',
-                                details: `${anchor}: "${note}"`
-                            });
-                        }
-                    });
-                }
             });
 
             if (alerts.length === 0) {
@@ -614,14 +809,56 @@
 
             alertsContainer.innerHTML = alerts.map(alert => `
                 <div class="alert-banner">
-                    <div class="alert-title">${alert.client} - ${alert.type}</div>
+                    <div class="alert-title">${alert.client}${supervisorMode ? ` (Coach: ${alert.coach})` : ''} - ${alert.type}</div>
                     <div>${alert.details}</div>
                 </div>
             `).join('');
         }
 
+        function toggleSupervisorMode() {
+            const coachFilter = document.getElementById('coach-filter');
+            
+            if (supervisorMode) {
+                coachFilter.value = 'current';
+            } else {
+                coachFilter.value = 'all';
+            }
+            
+            filterClientsByCoach();
+        }
+
+        function initializeNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const sectionName = this.getAttribute('data-section');
+                    if (sectionName) {
+                        showSection(sectionName);
+                    }
+                });
+            });
+        }
+
+        function initializeCoachControls() {
+            const coachFilter = document.getElementById('coach-filter');
+            const supervisorToggle = document.getElementById('supervisor-mode');
+            
+            if (coachFilter) {
+                coachFilter.addEventListener('change', filterClientsByCoach);
+            }
+            
+            if (supervisorToggle) {
+                supervisorToggle.addEventListener('click', toggleSupervisorMode);
+            }
+        }
+
         // Initialize
-        document.addEventListener('DOMContentLoaded', loadClients);
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeNavigation();
+            initializeCoachControls();
+            loadClients();
+        });
     </script>
 </body>
 </html>
