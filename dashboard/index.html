@@ -2738,15 +2738,32 @@ Website: https://claritymetabolics.com`;
         }
 
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // set default tier if not set
-            if (!localStorage.getItem('userTier')) localStorage.setItem('userTier','self');
+        // Authentication check before loading dashboard
+import('./js/supabase-config.js').then(({ authManager }) => {
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Check if user is authenticated
+        const { session } = await authManager.getSession();
+        
+        if (!session) {
+            // Not logged in - redirect to auth page
+            window.location.href = './auth.html';
+            return;
+        }
+        
+        // User is authenticated - continue with existing initialization
+        // set default tier if not set
+        if (!localStorage.getItem('userTier')) localStorage.setItem('userTier','self');
 
-            loadTheme();
-            loadSection();
-            initializeDashboard();
-            setupAnchorGating(); // <-- gating hook
-        });
+        loadTheme();
+        loadSection();
+        initializeDashboard();
+        setupAnchorGating();
+    });
+}).catch(error => {
+    console.error('Error loading authentication:', error);
+    // Fallback to auth page if there's an error
+    window.location.href = './auth.html';
+});
 
         // Handle browser back/forward
         window.addEventListener('popstate', function() {
