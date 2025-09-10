@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Intake - Five Anchors Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --physical-color: #7C8B60;
+            --mental-color: #B7AFA3;
+            --emotional-color: #C97D7D;
+            --spiritual-color: #B6B0C3;
+            --relational-color: #E8934A;
+            --bg-color: #FEFEFE;
+            --text-color: #2C2C2C;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E5E5;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --accent-color: #5A6C57;
+            --success-color: #4CAF50;
+            --error-color: #f44336;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, 
+                rgba(124, 139, 96, 0.1) 0%, 
+                rgba(232, 147, 74, 0.1) 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, 
+                rgba(124, 139, 96, 0.7) 0%, 
+                rgba(183, 175, 163, 0.7) 25%, 
+                rgba(201, 125, 125, 0.7) 50%, 
+                rgba(182, 176, 195, 0.7) 75%, 
+                rgba(232, 147, 74, 0.7) 100%);
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .logo {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: white;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            max-width: 800px;
+            margin: -2rem auto 2rem;
+            padding: 0 1rem;
+        }
+
+        .intake-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px var(--shadow);
+            border: 1px solid var(--card-border);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--card-border);
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            background: var(--accent-color);
+            transform: scale(1.2);
+        }
+
+        .step-dot.completed {
+            background: var(--success-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--card-border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg-color);
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(90, 108, 87, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-input {
+            width: auto;
+            margin: 0;
+        }
+
+        .checkbox-label {
+            margin-bottom: 0;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .anchor-assessment {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .anchor-item {
+            background: var(--bg-color);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .anchor-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .anchor-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .anchor-icon.physical { background: var(--physical-color); }
+        .anchor-icon.mental { background: var(--mental-color); }
+        .anchor-icon.emotional { background: var(--emotional-color); }
+        .anchor-icon.spiritual { background: var(--spiritual-color); }
+        .anchor-icon.relational { background: var(--relational-color); }
+
+        .anchor-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .rating-scale {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            justify-content: center;
+        }
+
+        .rating-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--card-border);
+            border-radius: 50%;
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .rating-btn:hover {
+            border-color: var(--accent-color);
+            background: rgba(90, 108, 87, 0.1);
+        }
+
+        .rating-btn.selected {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .coach-matching {
+            background: rgba(90, 108, 87, 0.05);
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .coach-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .coach-card:hover {
+            box-shadow: 0 4px 16px var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .coach-card.selected {
+            border-color: var(--accent-color);
+            background: rgba(90, 108, 87, 0.05);
+        }
+
+        .coach-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .coach-name {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .coach-credentials {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .match-score {
+            background: var(--success-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .coach-specializations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .specialization-tag {
+            background: var(--nav-hover);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--physical-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .validation-message {
+            background: var(--error-color);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: var(--success-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box {
+            background: rgba(90, 108, 87, 0.1);
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-indicator {
+            background: var(--card-border);
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--accent-color);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .intake-card {
+                padding: 1.5rem;
+                margin: -1rem 1rem 2rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .rating-scale {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">Five Anchors Platform</div>
+        <div class="subtitle">Begin your journey to grounded living</div>
+    </header>
+
+    <div class="main-container">
+        <div class="intake-card">
+            <div class="card-header">
+                <h1 class="card-title">Welcome to Five Anchors</h1>
+                <p class="card-subtitle">Let's find you the right coach and create your personalized path to stability</p>
+            </div>
+
+            <div class="progress-indicator">
+                <div class="progress-fill" id="progress-fill" style="width: 25%"></div>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <form id="client-intake-form">
+                <!-- Step 1: Basic Information -->
+                <div class="form-step active" data-step="1">
+                    <h3>Step 1: Getting to Know You</h3>
+                    
+                    <div class="form-group">
+                        <label for="full-name">Full Name *</label>
+                        <input type="text" id="full-name" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age-range">Age Range *</label>
+                        <select id="age-range" class="form-select" required>
+                            <option value="">Select age range...</option>
+                            <option value="18-25">18-25</option>
+                            <option value="26-35">26-35</option>
+                            <option value="36-45">36-45</option>
+                            <option value="46-55">46-55</option>
+                            <option value="56-65">56-65</option>
+                            <option value="65+">65+</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timezone">Timezone *</label>
+                        <select id="timezone" class="form-select" required>
+                            <option value="">Select your timezone...</option>
+                            <option value="America/Los_Angeles">Pacific Time</option>
+                            <option value="America/Denver">Mountain Time</option>
+                            <option value="America/Chicago">Central Time</option>
+                            <option value="America/New_York">Eastern Time</option>
+                            <option value="UTC">UTC</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="referral-source">How did you hear about Five Anchors?</label>
+                        <select id="referral-source" class="form-select">
+                            <option value="">Select source...</option>
+                            <option value="search">Google/Web Search</option>
+                            <option value="social-media">Social Media</option>
+                            <option value="friend-referral">Friend/Family Referral</option>
+                            <option value="therapist-referral">Therapist/Counselor Referral</option>
+                            <option value="website">Clarity Metabolics Website</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 2: Current Situation & Goals -->
+                <div class="form-step" data-step="2">
+                    <h3>Step 2: Your Current Situation</h3>
+                    
+                    <div class="form-group">
+                        <label for="current-challenges">What challenges are you currently facing? *</label>
+                        <textarea id="current-challenges" class="form-textarea" required
+                                  placeholder="Describe what brought you to seek coaching support. What areas of your life feel overwhelming or unstable?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="primary-goals">What are your primary goals for coaching? *</label>
+                        <textarea id="primary-goals" class="form-textarea" required
+                                  placeholder="What changes do you hope to see? What would success look like for you?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="previous-therapy">Previous therapy or coaching experience</label>
+                        <select id="previous-therapy" class="form-select">
+                            <option value="">Select experience level...</option>
+                            <option value="none">No previous experience</option>
+                            <option value="some-therapy">Some therapy experience</option>
+                            <option value="extensive-therapy">Extensive therapy experience</option>
+                            <option value="some-coaching">Some coaching experience</option>
+                            <option value="both">Both therapy and coaching</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="crisis-support">Are you currently in crisis or having thoughts of self-harm?</label>
+                        <select id="crisis-support" class="form-select">
+                            <option value="no">No, I am safe</option>
+                            <option value="mild-distress">Some distress but manageable</option>
+                            <option value="need-support">I could use immediate support</option>
+                        </select>
+                        <small style="opacity: 0.7; font-size: 0.9rem;">
+                            If you're in immediate danger, please contact 988 (Suicide & Crisis Lifeline) or your local emergency services.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="availability">Preferred session frequency</label>
+                        <select id="availability" class="form-select">
+                            <option value="">Select frequency...</option>
+                            <option value="weekly">Weekly sessions</option>
+                            <option value="bi-weekly">Every two weeks</option>
+                            <option value="monthly">Monthly sessions</option>
+                            <option value="as-needed">As needed basis</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 3: Five Anchors Assessment -->
+                <div class="form-step" data-step="3">
+                    <h3>Step 3: Five Anchors Assessment</h3>
+                    
+                    <div class="info-box">
+                        <h4>About the Five Anchors</h4>
+                        <p>Rate how stable you currently feel in each of these five foundational areas of life. This helps us understand your starting point and match you with the right coach.</p>
+                    </div>
+
+                    <div class="anchor-assessment">
+                        <div class="anchor-item">
+                            <div class="anchor-header">
+                                <div class="anchor-icon physical">🧭</div>
+                                <div>
+                                    <div class="anchor-title">Physical Anchor</div>
+                                    <small>Body awareness, health, energy, grounding</small>
+                                </div>
+                            </div>
+                            <p style="margin-bottom: 1rem; font-size: 0.9rem;">How connected and stable do you feel in your physical body?</p>
+                            <div class="rating-scale">
+                                <button type="button" class="rating-btn" data-anchor="physical" data-value="1">1</button>
+                                <button type="button" class="rating-btn" data-anchor="physical" data-value="2">2</button>
+                                <button type="button" class="rating-btn" data-anchor="physical" data-value="3">3</button>
+                                <button type="button" class="rating-btn" data-anchor="physical" data-value="4">4</button>
+                                <button type="button" class="rating-btn" data-anchor="physical" data-value="5">5</button>
+                            </div>
+                            <small style="opacity: 0.7;">1 = Very unstable/disconnected, 5 = Very stable/connected</small>
+                        </div>
+
+                        <div class="anchor-item">
+                            <div class="anchor-header">
+                                <div class="anchor-icon mental">👓</div>
+                                <div>
+                                    <div class="anchor-title">Mental Anchor</div>
+                                    <small>Clarity, focus, mental organization, decision-making</small>
+                                </div>
+                            </div>
+                            <p style="margin-bottom: 1rem; font-size: 0.9rem;">How clear and organized does your thinking feel?</p>
+                            <div class="rating-scale">
+                                <button type="button" class="rating-btn" data-anchor="mental" data-value="1">1</button>
+                                <button type="button" class="rating-btn" data-anchor="mental" data-value="2">2</button>
+                                <button type="button" class="rating-btn" data-anchor="mental" data-value="3">3</button>
+                                <button type="button" class="rating-btn" data-anchor="mental" data-value="4">4</button>
+                                <button type="button" class="rating-btn" data-anchor="mental" data-value="5">5</button>
+                            </div>
+                            <small style="opacity: 0.7;">1 = Very foggy/chaotic, 5 = Very clear/organized</small>
+                        </div>
+
+                        <div class="anchor-item">
+                            <div class="anchor-header">
+                                <div class="anchor-icon emotional">🪣</div>
+                                <div>
+                                    <div class="anchor-title">Emotional Anchor</div>
+                                    <small>Emotional regulation, stability, resilience</small>
+                                </div>
+                            </div>
+                            <p style="margin-bottom: 1rem; font-size: 0.9rem;">How well do you handle and process your emotions?</p>
+                            <div class="rating-scale">
+                                <button type="button" class="rating-btn" data-anchor="emotional" data-value="1">1</button>
+                                <button type="button" class="rating-btn" data-anchor="emotional" data-value="2">2</button>
+                                <button type="button" class="rating-btn" data-anchor="emotional" data-value="3">3</button>
+                                <button type="button" class="rating-btn" data-anchor="emotional" data-value="4">4</button>
+                                <button type="button" class="rating-btn" data-anchor="emotional" data-value="5">5</button>
+                            </div>
+                            <small style="opacity: 0.7;">1 = Very reactive/unstable, 5 = Very stable/regulated</small>
+                        </div>
+
+                        <div class="anchor-item">
+                            <div class="anchor-header">
+                                <div class="anchor-icon spiritual">🕊️</div>
+                                <div>
+                                    <div class="anchor-title">Spiritual Anchor</div>
+                                    <small>Purpose, meaning, connection to the divine</small>
+                                </div>
+                            </div>
+                            <p style="margin-bottom: 1rem; font-size: 0.9rem;">How connected do you feel to your spiritual foundation and life purpose?</p>
+                            <div class="rating-scale">
+                                <button type="button" class="rating-btn" data-anchor="spiritual" data-value="1">1</button>
+                                <button type="button" class="rating-btn" data-anchor="spiritual" data-value="2">2</button>
+                                <button type="button" class="rating-btn" data-anchor="spiritual" data-value="3">3</button>
+                                <button type="button" class="rating-btn" data-anchor="spiritual" data-value="4">4</button>
+                                <button type="button" class="rating-btn" data-anchor="spiritual" data-value="5">5</button>
+                            </div>
+                            <small style="opacity: 0.7;">1 = Very disconnected/lost, 5 = Very connected/purposeful</small>
+                        </div>
+
+                        <div class="anchor-item">
+                            <div class="anchor-header">
+                                <div class="anchor-icon relational">🌐</div>
+                                <div>
+                                    <div class="anchor-title">Relational Anchor</div>
+                                    <small>Relationships, boundaries, community, connection</small>
+                                </div>
+                            </div>
+                            <p style="margin-bottom: 1rem; font-size: 0.9rem;">How healthy and fulfilling are your relationships?</p>
+                            <div class="rating-scale">
+                                <button type="button" class="rating-btn" data-anchor="relational" data-value="1">1</button>
+                                <button type="button" class="rating-btn" data-anchor="relational" data-value="2">2</button>
+                                <button type="button" class="rating-btn" data-anchor="relational" data-value="3">3</button>
+                                <button type="button" class="rating-btn" data-anchor="relational" data-value="4">4</button>
+                                <button type="button" class="rating-btn" data-anchor="relational" data-value="5">5</button>
+                            </div>
+                            <small style="opacity: 0.7;">1 = Very isolated/conflicted, 5 = Very connected/harmonious</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Coach Matching -->
+                <div class="form-step" data-step="4">
+                    <h3>Step 4: Your Recommended Coaches</h3>
+                    
+                    <div class="coach-matching">
+                        <h4 style="color: var(--accent-color); margin-bottom: 1rem;">Based on your assessment, we recommend these coaches:</h4>
+                        <p style="margin-bottom: 1.5rem; opacity: 0.8;">These coaches are selected based on your anchor ratings, goals, and specialized training areas.</p>
+                        
+                        <div id="recommended-coaches">
+                            <!-- Coaches loaded by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="coach-preferences">Any specific preferences for your coach?</label>
+                        <textarea id="coach-preferences" class="form-textarea" 
+                                  placeholder="Gender preference, communication style, specific experience, etc."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="session-format">Preferred session format</label>
+                        <select id="session-format" class="form-select">
+                            <option value="video">Video sessions</option>
+                            <option value="phone">Phone sessions</option>
+                            <option value="in-person">In-person (if available)</option>
+                            <option value="flexible">Flexible/Mixed</option>
+                        </select>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms-agreement" class="checkbox-input" required>
+                        <label for="terms-agreement" class="checkbox-label">
+                            I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a> for the Five Anchors platform.
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="coach-contact" class="checkbox-input" required>
+                        <label for="coach-contact" class="checkbox-label">
+                            I consent to being contacted by my assigned coach to schedule an initial session.
+                        </label>
+                    </div>
+                </div>
+
+                <div id="validation-messages"></div>
+
+                <div class="form-actions">
+                    <button type="button" id="prev-btn" class="btn btn-secondary" disabled>
+                        ← Previous
+                    </button>
+                    <button type="button" id="next-btn" class="btn btn-primary">
+                        Next →
+                    </button>
+                    <button type="submit" id="submit-btn" class="btn btn-primary" style="display: none;">
+                        Complete Intake
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class ClientIntake {
+            constructor() {
+                this.currentStep = 1;
+                this.totalSteps = 4;
+                this.formData = {};
+                this.anchorRatings = {};
+                this.selectedCoach = null;
+                this.availableCoaches = this.getAvailableCoaches();
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.updateProgress();
+            }
+
+            setupEventListeners() {
+                // Navigation buttons
+                document.getElementById('next-btn').addEventListener('click', () => this.nextStep());
+                document.getElementById('prev-btn').addEventListener('click', () => this.prevStep());
+                document.getElementById('submit-btn').addEventListener('click', (e) => this.submitForm(e));
+
+                // Anchor rating buttons
+                document.querySelectorAll('.rating-btn').forEach(btn => {
+                    btn.addEventListener('click', () => this.selectRating(btn));
+                });
+
+                // Form inputs for real-time validation
+                document.querySelectorAll('.form-input, .form-textarea, .form-select').forEach(input => {
+                    input.addEventListener('blur', () => this.validateField(input));
+                });
+
+                // Crisis support monitoring
+                document.getElementById('crisis-support').addEventListener('change', (e) => {
+                    this.handleCrisisResponse(e.target.value);
+                });
+            }
+
+            selectRating(btn) {
+                const anchor = btn.dataset.anchor;
+                const value = parseInt(btn.dataset.value);
+                
+                // Remove selected from siblings
+                document.querySelectorAll(`[data-anchor="${anchor}"]`).forEach(b => {
+                    b.classList.remove('selected');
+                });
+                
+                // Add selected to clicked button
+                btn.classList.add('selected');
+                
+                // Store rating
+                this.anchorRatings[anchor] = value;
+                
+                console.log('Anchor ratings:', this.anchorRatings);
+            }
+
+            handleCrisisResponse(value) {
+                if (value === 'need-support') {
+                    const modal = document.createElement('div');
+                    modal.className = 'crisis-modal';
+                    modal.style.cssText = `
+                        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                        background: rgba(0,0,0,0.8); display: flex; align-items: center;
+                        justify-content: center; z-index: 1000;
+                    `;
+                    
+                    modal.innerHTML = `
+                        <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 500px; text-align: center;">
+                            <h3 style="color: var(--error-color); margin-bottom: 1rem;">Immediate Support Available</h3>
+                            <p style="margin-bottom: 1.5rem;">If you're having thoughts of self-harm or are in immediate danger, please reach out for support right now:</p>
+                            <div style="margin-bottom: 1.5rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Crisis Resources:</div>
+                                <div>🇺🇸 988 Suicide & Crisis Lifeline: <strong>988</strong></div>
+                                <div>📱 Crisis Text Line: Text HOME to <strong>741741</strong></div>
+                                <div>🚨 Emergency Services: <strong>911</strong></div>
+                            </div>
+                            <button onclick="this.closest('.crisis-modal').remove()" 
+                                    style="background: var(--accent-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer;">
+                                I understand, continue with intake
+                            </button>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(modal);
+                }
+            }
+
+            validateField(field) {
+                const value = field.value.trim();
+                const isRequired = field.hasAttribute('required');
+                
+                if (isRequired && !value) {
+                    field.style.borderColor = 'var(--error-color)';
+                    return false;
+                } else {
+                    field.style.borderColor = 'var(--card-border)';
+                    return true;
+                }
+            }
+
+            validateStep(step) {
+                const stepElement = document.querySelector(`[data-step="${step}"]`);
+                const requiredFields = stepElement.querySelectorAll('[required]');
+                let valid = true;
+                const errors = [];
+
+                requiredFields.forEach(field => {
+                    if (!this.validateField(field)) {
+                        valid = false;
+                        const label = stepElement.querySelector(`label[for="${field.id}"]`);
+                        if (label) {
+                            errors.push(`${label.textContent.replace(' *', '')} is required`);
+                        }
+                    }
+                });
+
+                // Step-specific validation
+                if (step === 3) {
+                    const requiredAnchors = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
+                    const missingRatings = requiredAnchors.filter(anchor => !this.anchorRatings[anchor]);
+                    
+                    if (missingRatings.length > 0) {
+                        valid = false;
+                        errors.push('Please rate all five anchors');
+                    }
+                }
+
+                if (step === 4 && !this.selectedCoach) {
+                    valid = false;
+                    errors.push('Please select a coach');
+                }
+
+                this.displayValidationMessages(errors);
+                return valid;
+            }
+
+            displayValidationMessages(errors) {
+                const container = document.getElementById('validation-messages');
+                
+                if (errors.length === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="validation-message">
+                        <strong>Please correct the following:</strong>
+                        <ul style="margin: 0.5rem 0 0 1rem;">
+                            ${errors.map(error => `<li>${error}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            nextStep() {
+                if (this.validateStep(this.currentStep)) {
+                    this.collectStepData();
+                    
+                    if (this.currentStep === 3) {
+                        // Generate coach recommendations before showing step 4
+                        this.generateCoachRecommendations();
+                    }
+                    
+                    if (this.currentStep < this.totalSteps) {
+                        this.currentStep++;
+                        this.showStep();
+                        this.updateProgress();
+                    }
+                }
+            }
+
+            prevStep() {
+                if (this.currentStep > 1) {
+                    this.currentStep--;
+                    this.showStep();
+                    this.updateProgress();
+                }
+            }
+
+            showStep() {
+                // Hide all steps
+                document.querySelectorAll('.form-step').forEach(step => {
+                    step.classList.remove('active');
+                });
+
+                // Show current step
+                document.querySelector(`[data-step="${this.currentStep}"]`).classList.add('active');
+
+                // Update navigation buttons
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                const submitBtn = document.getElementById('submit-btn');
+
+                prevBtn.disabled = this.currentStep === 1;
+                
+                if (this.currentStep === this.totalSteps) {
+                    nextBtn.style.display = 'none';
+                    submitBtn.style.display = 'block';
+                } else {
+                    nextBtn.style.display = 'block';
+                    submitBtn.style.display = 'none';
+                }
+
+                // Clear validation messages when moving between steps
+                document.getElementById('validation-messages').innerHTML = '';
+            }
+
+            updateProgress() {
+                const progressPercent = (this.currentStep / this.totalSteps) * 100;
+                document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+
+                // Update step dots
+                document.querySelectorAll('.step-dot').forEach((dot, index) => {
+                    dot.classList.remove('active', 'completed');
+                    
+                    if (index + 1 < this.currentStep) {
+                        dot.classList.add('completed');
+                    } else if (index + 1 === this.currentStep) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+
+            collectStepData() {
+                const currentStepElement = document.querySelector(`[data-step="${this.currentStep}"]`);
+                const inputs = currentStepElement.querySelectorAll('input, textarea, select');
+                
+                inputs.forEach(input => {
+                    if (input.type === 'checkbox') {
+                        this.formData[input.id] = input.checked;
+                    } else {
+                        this.formData[input.id] = input.value;
+                    }
+                });
+
+                // Store anchor ratings
+                if (Object.keys(this.anchorRatings).length > 0) {
+                    this.formData.anchorRatings = { ...this.anchorRatings };
+                }
+            }
+
+            getAvailableCoaches() {
+                // Sample coach data - in production, this would come from your coach database
+                return [
+                    {
+                        id: 'coach_001',
+                        name: 'Dr. Sarah Mitchell',
+                        credentials: 'Licensed Professional Counselor, Certified Five Anchors Coach',
+                        specializations: ['anxiety', 'spiritual-direction', 'life-transitions'],
+                        experience: '8 years',
+                        approach: 'Integrative approach combining cognitive-behavioral techniques with spiritual grounding practices',
+                        anchorStrengths: ['spiritual', 'emotional', 'mental'],
+                        sessionFormat: ['video', 'phone'],
+                        availability: 'immediate'
+                    },
+                    {
+                        id: 'coach_002', 
+                        name: 'Michael Rodriguez',
+                        credentials: 'Certified Life Coach, Trauma-Informed Care Specialist',
+                        specializations: ['trauma-recovery', 'relationships', 'workplace-wellness'],
+                        experience: '5 years',
+                        approach: 'Body-based healing combined with practical life skills development',
+                        anchorStrengths: ['physical', 'relational', 'emotional'],
+                        sessionFormat: ['video', 'in-person'],
+                        availability: 'immediate'
+                    },
+                    {
+                        id: 'coach_003',
+                        name: 'Jennifer Chen',
+                        credentials: 'Master of Counseling Psychology, Five Anchors Methodology Trainer',
+                        specializations: ['depression', 'anxiety', 'spiritual-direction'],
+                        experience: '12 years',
+                        approach: 'Holistic wellness approach integrating mind, body, and spirit for lasting transformation',
+                        anchorStrengths: ['mental', 'spiritual', 'physical'],
+                        sessionFormat: ['video', 'phone', 'in-person'],
+                        availability: '2-4-weeks'
+                    }
+                ];
+            }
+
+            generateCoachRecommendations() {
+                const container = document.getElementById('recommended-coaches');
+                
+                // Calculate match scores based on anchor ratings and coach strengths
+                const scoredCoaches = this.availableCoaches.map(coach => {
+                    let matchScore = this.calculateCoachMatch(coach);
+                    return { ...coach, matchScore };
+                }).sort((a, b) => b.matchScore - a.matchScore);
+
+                // Display top 3 coaches
+                const topCoaches = scoredCoaches.slice(0, 3);
+                
+                container.innerHTML = topCoaches.map(coach => `
+                    <div class="coach-card" data-coach-id="${coach.id}" onclick="clientIntake.selectCoach('${coach.id}')">
+                        <div class="coach-header">
+                            <div>
+                                <div class="coach-name">${coach.name}</div>
+                                <div class="coach-credentials">${coach.credentials}</div>
+                            </div>
+                            <div class="match-score">${coach.matchScore}% Match</div>
+                        </div>
+                        
+                        <div class="coach-specializations">
+                            ${coach.specializations.map(spec => 
+                                `<span class="specialization-tag">${this.formatSpecialization(spec)}</span>`
+                            ).join('')}
+                        </div>
+                        
+                        <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 1rem;">${coach.approach}</p>
+                        
+                        <div style="font-size: 0.85rem; opacity: 0.7;">
+                            <div><strong>Experience:</strong> ${coach.experience}</div>
+                            <div><strong>Availability:</strong> ${this.formatAvailability(coach.availability)}</div>
+                            <div><strong>Formats:</strong> ${coach.sessionFormat.join(', ')}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            calculateCoachMatch(coach) {
+                let score = 50; // Base score
+                
+                // Match based on anchor strengths vs client needs
+                const lowAnchors = Object.entries(this.anchorRatings)
+                    .filter(([anchor, rating]) => rating <= 2)
+                    .map(([anchor]) => anchor);
+                
+                // Bonus for coaches strong in client's weak areas
+                lowAnchors.forEach(anchor => {
+                    if (coach.anchorStrengths.includes(anchor)) {
+                        score += 15;
+                    }
+                });
+
+                // Bonus for immediate availability if client has crisis indicators
+                const hasCrisisIndicators = Object.values(this.anchorRatings).some(rating => rating <= 1);
+                if (hasCrisisIndicators && coach.availability === 'immediate') {
+                    score += 10;
+                }
+
+                // Random variation to prevent identical scores
+                score += Math.floor(Math.random() * 10);
+                
+                return Math.min(score, 98); // Cap at 98%
+            }
+
+            formatSpecialization(spec) {
+                const labels = {
+                    'anxiety': 'Anxiety & Stress',
+                    'depression': 'Depression',
+                    'relationships': 'Relationships',
+                    'spiritual-direction': 'Spiritual Direction',
+                    'trauma-recovery': 'Trauma Recovery',
+                    'life-transitions': 'Life Transitions',
+                    'workplace-wellness': 'Workplace Wellness'
+                };
+                return labels[spec] || spec;
+            }
+
+            formatAvailability(availability) {
+                const labels = {
+                    'immediate': 'Available immediately',
+                    '2-4-weeks': 'Available in 2-4 weeks',
+                    '1-2-months': 'Available in 1-2 months'
+                };
+                return labels[availability] || availability;
+            }
+
+            selectCoach(coachId) {
+                // Remove selection from all coaches
+                document.querySelectorAll('.coach-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                // Add selection to clicked coach
+                const selectedCard = document.querySelector(`[data-coach-id="${coachId}"]`);
+                selectedCard.classList.add('selected');
+                
+                this.selectedCoach = coachId;
+                console.log('Selected coach:', coachId);
+            }
+
+            async submitForm(e) {
+                e.preventDefault();
+                
+                if (!this.validateStep(this.currentStep)) {
+                    return;
+                }
+
+                this.collectStepData();
+
+                // Show loading state
+                const submitBtn = document.getElementById('submit-btn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = 'Creating your account...';
+                submitBtn.disabled = true;
+
+                try {
+                    await this.processIntake();
+                    this.showSuccessMessage();
+                    
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    this.displayValidationMessages(['Submission failed. Please try again.']);
+                } finally {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            }
+
+            async processIntake() {
+                // Create client record with assigned coach
+                const clientData = {
+                    ...this.formData,
+                    assignedCoachId: this.selectedCoach,
+                    anchorRatings: this.anchorRatings,
+                    submittedAt: new Date().toISOString(),
+                    status: 'active',
+                    clientId: 'CLIENT_' + Date.now()
+                };
+
+                // Save to localStorage for now (replace with actual API call)
+                localStorage.setItem('clientIntake', JSON.stringify(clientData));
+                
+                // Update coach's client list
+                this.assignClientToCoach(clientData);
+                
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                console.log('Client intake completed:', clientData);
+            }
+
+            assignClientToCoach(clientData) {
+                // Get existing coach clients or create new list
+                const coachClients = JSON.parse(localStorage.getItem('cm_coach_clients') || '[]');
+                
+                // Add this client to the coach's list
+                coachClients.push({
+                    id: clientData.clientId,
+                    name: clientData['full-name'],
+                    email: clientData.email,
+                    assignedCoachId: clientData.assignedCoachId,
+                    lastActivity: new Date().toISOString(),
+                    checkIns: {
+                        [new Date().toISOString().split('T')[0]]: {
+                            ratings: clientData.anchorRatings,
+                            notes: {
+                                intake: `Initial assessment completed. Goals: ${clientData['primary-goals']}`
+                            }
+                        }
+                    },
+                    goals: clientData['primary-goals'],
+                    challenges: clientData['current-challenges']
+                });
+                
+                localStorage.setItem('cm_coach_clients', JSON.stringify(coachClients));
+            }
+
+            showSuccessMessage() {
+                const form = document.getElementById('client-intake-form');
+                const selectedCoach = this.availableCoaches.find(c => c.id === this.selectedCoach);
+                
+                form.innerHTML = `
+                    <div class="success-message">
+                        <h3>Welcome to Five Anchors!</h3>
+                        <p>Your intake is complete and you've been matched with your coach.</p>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h4>Your Coach: ${selectedCoach.name}</h4>
+                        <p>${selectedCoach.credentials}</p>
+                        <p style="margin-top: 0.5rem;"><strong>Next Steps:</strong></p>
+                        <p>• Your coach will contact you within 24 hours to schedule your first session</p>
+                        <p>• You'll receive login credentials to access your personal dashboard</p>
+                        <p>• Begin tracking your progress with daily check-ins</p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="../dashboard/index.html" class="btn btn-primary">
+                            Access Your Dashboard
+                        </a>
+                        <a href="mailto:support@claritymetabolics.com" class="btn btn-secondary">
+                            Questions? Contact Support
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize the intake system
+        let clientIntake;
+        document.addEventListener('DOMContentLoaded', function() {
+            clientIntake = new ClientIntake();
+        });
+    </script>
+</body>
+</html>
