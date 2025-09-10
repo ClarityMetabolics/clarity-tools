@@ -26,6 +26,8 @@
             --card-border: #E5E5E5;
             --shadow: rgba(0, 0, 0, 0.1);
             --accent-color: #5A6C57;
+            --locked-color: #999;
+            --warning-color: #FF9800;
         }
 
         [data-theme="dark"] {
@@ -136,155 +138,6 @@
             background: rgba(255, 255, 255, 0.25);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Settings Menu */
-        .settings-toggle {
-            position: absolute;
-            top: 0;
-            right: 70px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.25);
-            border-radius: 50px;
-            padding: 0.5rem;
-            cursor: pointer;
-            font-size: 1rem;
-            color: white;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .settings-toggle:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .settings-menu {
-            position: absolute;
-            top: 50px;
-            right: 0;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 0.5rem;
-            min-width: 200px;
-            box-shadow: 0 10px 30px var(--shadow);
-            z-index: 1001;
-            display: none;
-        }
-
-        .settings-menu.show {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .settings-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            color: var(--text-color);
-            text-decoration: none;
-        }
-
-        .settings-item:hover {
-            background: var(--nav-hover);
-        }
-
-        .settings-icon {
-            font-size: 1.1rem;
-            width: 20px;
-            text-align: center;
-        }
-
-        /* About Modal */
-        .about-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .about-content {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 10px 30px var(--shadow);
-        }
-
-        .about-title {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--accent-color);
-        }
-
-        .about-text {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .about-close {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .about-close:hover {
-            opacity: 0.9;
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--card-bg);
-            border-top: 1px solid var(--card-border);
-            padding: 1rem 0;
-            text-align: center;
-            color: var(--text-color);
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-top: 2rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        .footer a {
-            color: var(--accent-color);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .footer a:hover {
-            color: var(--physical-color);
         }
 
         /* Main Navigation */
@@ -613,78 +466,6 @@
             border-color: var(--accent-color);
         }
 
-        /* Encouragement Button */
-        .encouragement-btn {
-            width: 100%;
-            margin-top: 0.75rem;
-            padding: 0.5rem 1rem;
-            background: transparent;
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .encouragement-btn:hover {
-            background: var(--accent-color);
-            color: white;
-            transform: translateY(-1px);
-        }
-
-        /* Encouragement Modal */
-        .encouragement-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .encouragement-content {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 10px 30px var(--shadow);
-        }
-
-        .encouragement-title {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--accent-color);
-        }
-
-        .encouragement-message {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .encouragement-close {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .encouragement-close:hover {
-            opacity: 0.9;
-        }
-
         /* Check-in Actions */
         .check-in-actions {
             display: flex;
@@ -793,11 +574,47 @@
             padding: 1.5rem;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px var(--shadow);
+            position: relative;
         }
 
         .tool-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 16px var(--shadow);
+        }
+
+        .tool-card.locked {
+            opacity: 0.6;
+            background: var(--nav-hover);
+        }
+
+        .tool-card.locked:hover {
+            transform: none;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .lock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(153, 153, 153, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+        }
+
+        .lock-message {
+            background: var(--card-bg);
+            border: 1px solid var(--locked-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            color: var(--locked-color);
+            font-weight: 600;
+            max-width: 250px;
         }
 
         .tool-header {
@@ -864,12 +681,25 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: none;
+            cursor: pointer;
         }
 
         .tool-button:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             opacity: 0.9;
+        }
+
+        .tool-button.locked {
+            background: var(--locked-color);
+            cursor: not-allowed;
+        }
+
+        .tool-button.locked:hover {
+            transform: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            opacity: 0.6;
         }
 
         .button-arrow {
@@ -881,38 +711,33 @@
             transform: translateX(4px);
         }
 
-        /* Usage Tips */
-        .usage-tips {
-            background: var(--nav-hover);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-top: 2rem;
+        .tool-button.locked:hover .button-arrow {
+            transform: none;
         }
 
-        .usage-tips h4 {
+        .access-indicator {
             margin-bottom: 1rem;
-            color: var(--accent-color);
-            font-family: 'Libre Baskerville', serif;
-        }
-
-        .tips-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-
-        .tip {
-            background: var(--card-bg);
-            padding: 1rem;
+            padding: 0.5rem;
             border-radius: 6px;
             font-size: 0.9rem;
-            line-height: 1.5;
         }
 
-        .tip strong {
-            color: var(--accent-color);
-            display: block;
-            margin-bottom: 0.5rem;
+        .access-unlocked {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+
+        .access-partial {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
+        }
+
+        .access-locked {
+            background: rgba(153, 153, 153, 0.1);
+            color: var(--locked-color);
+            border: 1px solid var(--locked-color);
         }
 
         /* Responsive Design */
@@ -974,10 +799,6 @@
                 grid-template-columns: 1fr;
             }
             
-            .tips-grid {
-                grid-template-columns: 1fr;
-            }
-            
             .tool-card {
                 padding: 1rem;
             }
@@ -997,15 +818,140 @@
             }
         }
 
-        /* Notification Animations */
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        /* Journal Styles */
+        .journal-form {
+            max-width: 600px;
+            margin: 0 auto;
         }
-        
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .journal-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: inherit;
+        }
+
+        .journal-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .journal-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.75rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .journal-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .journal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .save-journal-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .save-journal-btn:hover {
+            background: var(--physical-color);
+            transform: translateY(-2px);
+        }
+
+        .clear-journal-btn {
+            background: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--card-border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-journal-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .journal-entry {
+            background: var(--nav-hover);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .entry-date {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .entry-rating {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .entry-meta {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 0.75rem;
+        }
+
+        .entry-reflection {
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .journal-actions {
+                flex-direction: column;
+            }
+            
+            .save-journal-btn,
+            .clear-journal-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -1017,35 +963,6 @@
             <div class="subtitle-container">
                 <span class="subtitle-icon">⚓</span>
                 <span class="subtitle-text">Your Stability Center — navigate life from a grounded, conscious place</span>
-            </div>
-            <button class="settings-toggle" onclick="toggleSettings()">
-                <span>⚙️</span>
-            </button>
-            <div class="settings-menu" id="settings-menu">
-                <div class="settings-item" onclick="showAbout()">
-                    <span class="settings-icon">📖</span>
-                    <span>About Five Anchors</span>
-                </div>
-                <a class="settings-item" href="https://claritymetabolics.com/coaching" target="_blank">
-                    <span class="settings-icon">💬</span>
-                    <span>Get Coaching</span>
-                </a>
-                <div class="settings-item" onclick="exportData()">
-                    <span class="settings-icon">📊</span>
-                    <span>Export My Data</span>
-                </div>
-                <div class="settings-item" onclick="showNotifications()">
-                    <span class="settings-icon">🔔</span>
-                    <span>Notifications</span>
-                </div>
-                <div class="settings-item" onclick="showHelp()">
-                    <span class="settings-icon">❓</span>
-                    <span>Help & Support</span>
-                </div>
-                <a class="settings-item" href="https://claritymetabolics.com" target="_blank">
-                    <span class="settings-icon">🏠</span>
-                    <span>Visit Clarity Metabolics</span>
-                </a>
             </div>
             <button class="theme-toggle" onclick="toggleTheme()">
                 <span id="theme-icon">🌙</span>
@@ -1187,9 +1104,6 @@
                             <button class="rating-btn" data-value="5">5</button>
                         </div>
                         <textarea placeholder="Optional notes about your physical state..." class="anchor-notes"></textarea>
-                        <button class="encouragement-btn" onclick="showEncouragement('physical')">
-                            ✨ Get Encouragement
-                        </button>
                     </div>
                     
                     <div class="anchor-input" data-anchor="mental">
@@ -1205,9 +1119,6 @@
                             <button class="rating-btn" data-value="5">5</button>
                         </div>
                         <textarea placeholder="Optional notes about your mental clarity..." class="anchor-notes"></textarea>
-                        <button class="encouragement-btn" onclick="showEncouragement('mental')">
-                            ✨ Get Encouragement
-                        </button>
                     </div>
                     
                     <div class="anchor-input" data-anchor="emotional">
@@ -1223,9 +1134,6 @@
                             <button class="rating-btn" data-value="5">5</button>
                         </div>
                         <textarea placeholder="Optional notes about your emotional state..." class="anchor-notes"></textarea>
-                        <button class="encouragement-btn" onclick="showEncouragement('emotional')">
-                            ✨ Get Encouragement
-                        </button>
                     </div>
                     
                     <div class="anchor-input" data-anchor="spiritual">
@@ -1241,9 +1149,6 @@
                             <button class="rating-btn" data-value="5">5</button>
                         </div>
                         <textarea placeholder="Optional notes about your spiritual connection..." class="anchor-notes"></textarea>
-                        <button class="encouragement-btn" onclick="showEncouragement('spiritual')">
-                            ✨ Get Encouragement
-                        </button>
                     </div>
                     
                     <div class="anchor-input" data-anchor="relational">
@@ -1259,9 +1164,6 @@
                             <button class="rating-btn" data-value="5">5</button>
                         </div>
                         <textarea placeholder="Optional notes about your relationships..." class="anchor-notes"></textarea>
-                        <button class="encouragement-btn" onclick="showEncouragement('relational')">
-                            ✨ Get Encouragement
-                        </button>
                     </div>
                 </div>
                 
@@ -1276,14 +1178,6 @@
                 <h3>Today's Focus</h3>
                 <div id="focus-recommendations">
                     <p class="focus-message">Complete your daily check-in to receive personalized recommendations.</p>
-                </div>
-            </div>
-
-            <!-- Anchor Statements Display -->
-            <div class="card">
-                <h3>Your Anchor Statements</h3>
-                <div id="anchor-statements">
-                    <p class="focus-message">Your completed anchor statements from tool sessions will appear here.</p>
                 </div>
             </div>
         </section>
@@ -1323,132 +1217,10 @@
             
             <div class="card">
                 <h3>Your Anchor Tools</h3>
-                <p style="margin-bottom: 2rem; opacity: 0.8;">Each anchor tool guides you through a complete process to strengthen that area of your life. Choose the anchor that needs attention or work through them systematically.</p>
+                <p style="margin-bottom: 2rem; opacity: 0.8;">Each anchor tool guides you through a complete process to strengthen that area of your life. Your coach controls access to these tools based on your session progress.</p>
                 
-                <div class="anchor-tools-grid">
-                    <!-- Physical Anchor -->
-                    <div class="tool-card" data-anchor="physical">
-                        <div class="tool-header">
-                            <span class="tool-icon">🧭</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">Physical Anchor</h4>
-                                <p class="tool-subtitle">A Grounding Compass</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">9-step body awareness and nervous system regulation process. Creates your physical "home base" for returning when overwhelmed.</p>
-                        <div class="tool-features">
-                            <span class="feature-tag">Body Awareness</span>
-                            <span class="feature-tag">Regulation Techniques</span>
-                            <span class="feature-tag">Pattern Recognition</span>
-                        </div>
-                        <a href="../five-anchors/physical-anchor.html" target="_blank" class="tool-button" style="background: var(--physical-color);">
-                            <span>Begin Physical Anchor</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    </div>
-
-                    <!-- Mental Anchor -->
-                    <div class="tool-card" data-anchor="mental">
-                        <div class="tool-header">
-                            <span class="tool-icon">👓</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">Mental Anchor</h4>
-                                <p class="tool-subtitle">The Clarity Lens</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">7-step process to filter mental noise and see truth clearly. Separates grounded thoughts from fear-driven narratives.</p>
-                        <div class="tool-features">
-                            <span class="feature-tag">Mental Filtering</span>
-                            <span class="feature-tag">Perspective Shifting</span>
-                            <span class="feature-tag">Control Assessment</span>
-                        </div>
-                        <a href="../five-anchors/mental-anchor.html" target="_blank" class="tool-button" style="background: var(--mental-color);">
-                            <span>Begin Mental Anchor</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    </div>
-
-                    <!-- Emotional Anchor -->
-                    <div class="tool-card" data-anchor="emotional">
-                        <div class="tool-header">
-                            <span class="tool-icon">🪣</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">Emotional Anchor</h4>
-                                <p class="tool-subtitle">The Stability Well</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">8-step journey from emotional reactivity to conscious response. Transforms overwhelming feelings into wise action through your body's early warning system.</p>
-                        <div class="tool-features">
-                            <span class="feature-tag">Emotional Processing</span>
-                            <span class="feature-tag">Early Warning System</span>
-                            <span class="feature-tag">Response Choice</span>
-                        </div>
-                        <a href="../five-anchors/emotional-anchor.html" target="_blank" class="tool-button" style="background: var(--emotional-color);">
-                            <span>Begin Emotional Anchor</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    </div>
-
-                    <!-- Spiritual Anchor -->
-                    <div class="tool-card" data-anchor="spiritual">
-                        <div class="tool-header">
-                            <span class="tool-icon">🕊️</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">Spiritual Anchor</h4>
-                                <p class="tool-subtitle">The Communion Bridge</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">7-step spiritual grounding through divine connection, personal calling, and eternal foundation. Non-denominational approach.</p>
-                        <div class="tool-features">
-                            <span class="feature-tag">Spiritual Grounding</span>
-                            <span class="feature-tag">Calling Identification</span>
-                            <span class="feature-tag">Practice Building</span>
-                        </div>
-                        <a href="../five-anchors/spiritual-anchor.html" target="_blank" class="tool-button" style="background: var(--spiritual-color);">
-                            <span>Begin Spiritual Anchor</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    </div>
-
-                    <!-- Relational Anchor -->
-                    <div class="tool-card" data-anchor="relational">
-                        <div class="tool-header">
-                            <span class="tool-icon">🌐</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">Relational Anchor</h4>
-                                <p class="tool-subtitle">The Harmony Web</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">8-step journey to build authentic connections from grounded center. Boundary wisdom and community building strategies.</p>
-                        <div class="tool-features">
-                            <span class="feature-tag">Relationship Assessment</span>
-                            <span class="feature-tag">Boundary Setting</span>
-                            <span class="feature-tag">Community Building</span>
-                        </div>
-                        <a href="../five-anchors/relational-anchor.html" target="_blank" class="tool-button" style="background: var(--relational-color);">
-                            <span>Begin Relational Anchor</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Tool Usage Tips -->
-                <div class="usage-tips">
-                    <h4>💡 How to Use Your Anchor Tools</h4>
-                    <div class="tips-grid">
-                        <div class="tip">
-                            <strong>🎯 Focus Approach:</strong> Use your daily check-in to identify which anchor needs attention, then complete that specific tool.
-                        </div>
-                        <div class="tip">
-                            <strong>🔄 Systematic Approach:</strong> Work through all five anchors in order (Physical → Mental → Emotional → Spiritual → Relational) for comprehensive grounding.
-                        </div>
-                        <div class="tip">
-                            <strong>⚡ Crisis Mode:</strong> When overwhelmed, start with Physical Anchor for immediate nervous system regulation.
-                        </div>
-                        <div class="tip">
-                            <strong>📈 Progress Tracking:</strong> Complete tools regularly and track your patterns in the dashboard's daily check-ins.
-                        </div>
-                    </div>
+                <div class="anchor-tools-grid" id="anchor-tools-grid">
+                    <!-- Generated by JavaScript -->
                 </div>
             </div>
         </section>
@@ -1462,132 +1234,10 @@
             
             <div class="card">
                 <h3>Your Discernment Tools</h3>
-                <p style="margin-bottom: 2rem; opacity: 0.8;">Advanced tools for spiritual discernment and clarity. These tools work from subtle to gross, refining your ability to distinguish truth from deception and break free from limiting patterns.</p>
+                <p style="margin-bottom: 2rem; opacity: 0.8;">Advanced tools for spiritual discernment and clarity. These tools are available as part of the 12-week coaching program and are released by your coach based on your progress.</p>
                 
-                <div class="anchor-tools-grid">
-                    <!-- Thought Refiner -->
-                    <div class="tool-card" data-anchor="thought">
-                        <div class="tool-header">
-                            <span class="tool-icon">🔍</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">Thought Refiner</h4>
-                                <p class="tool-subtitle">Purifying Thoughts at the Source</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">7-step sophisticated mental filtering system that examines thoughts for truth, clarity, and spiritual alignment. Refines mental input for maximum clarity and wisdom.</p>
-                        <div class="tool-features">
-                            <span class="feature-tag">Mental Purification</span>
-                            <span class="feature-tag">Truth Detection</span>
-                            <span class="feature-tag">Clarity Enhancement</span>
-                        </div>
-                        <a href="../discernment-tools/thought-refiner.html" target="_blank" class="tool-button" style="background: var(--discernment-color);">
-                            <span>Begin Thought Refiner</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    </div>
-
-                    <!-- Belief Threader -->
-                    <div class="tool-card" data-anchor="belief">
-                        <div class="tool-header">
-                            <span class="tool-icon">🧵</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">Belief Threader</h4>
-                                <p class="tool-subtitle">Examining Crystallized Thoughts</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">6-step journey through crystallized thought patterns. Explores how thoughts became hardened beliefs, what they're protecting, and carefully dissolves them to reveal the truer truth beneath.</p>
-                        <div class="tool-features">
-                            <span class="feature-tag">Belief Archaeology</span>
-                            <span class="feature-tag">Trinity Integration</span>
-                            <span class="feature-tag">Truth Threading</span>
-                        </div>
-                        <a href="../discernment-tools/belief-threader.html" target="_blank" class="tool-button" style="background: var(--discernment-color);">
-                            <span>Begin Belief Threader</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    </div>
-
-                    <!-- Echo Eraser (Replacing Residue Recovery) -->
-                    <div class="tool-card" data-anchor="echo">
-                        <div class="tool-header">
-                            <span class="tool-icon">🌊</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">Echo Eraser</h4>
-                                <p class="tool-subtitle">Clearing Energetic Aftermath</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">8-step advanced integration process for clearing lingering emotional and spiritual residue. Addresses subtle energetic "stickiness" that remains after Thought Refiner and Belief Threader work.</p>
-                        <div class="tool-features">
-                            <span class="feature-tag">Echo Integration</span>
-                            <span class="feature-tag">Sitting Practice</span>
-                            <span class="feature-tag">Truth Planting</span>
-                        </div>
-                        <a href="../discernment-tools/echo-eraser.html" target="_blank" class="tool-button" style="background: var(--discernment-color);">
-                            <span>Begin Echo Eraser</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    </div>
-
-                    <!-- Forgiveness Filter -->
-                    <div class="tool-card" data-anchor="forgiveness">
-                        <div class="tool-header">
-                            <span class="tool-icon">🪶</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">Forgiveness Filter</h4>
-                                <p class="tool-subtitle">Releasing Burdens with Grace</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">7-step journey to process hurt and find authentic forgiveness. Separates honoring pain from carrying burdens, creating space for healing and freedom.</p>
-                        <div class="tool-features">
-                            <span class="feature-tag">Pain Processing</span>
-                            <span class="feature-tag">Burden Release</span>
-                            <span class="feature-tag">Freedom Creation</span>
-                        </div>
-                        <a href="../discernment-tools/forgiveness-filter.html" target="_blank" class="tool-button" style="background: var(--discernment-color);">
-                            <span>Begin Forgiveness Filter</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    </div>
-
-                    <!-- Connection Calibrator -->
-                    <div class="tool-card" data-anchor="connection">
-                        <div class="tool-header">
-                            <span class="tool-icon">🌍</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">Connection Calibrator</h4>
-                                <p class="tool-subtitle">Balancing Relationship Dynamics</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">8-step relationship calibration tool across three parts. Navigate the spectrum from dependence to independence to healthy interdependence in your connections.</p>
-                        <div class="tool-features">
-                            <span class="feature-tag">Relationship Assessment</span>
-                            <span class="feature-tag">Boundary Calibration</span>
-                            <span class="feature-tag">Connection Balance</span>
-                        </div>
-                        <a href="../discernment-tools/connection-calibrator-part1.html" target="_blank" class="tool-button" style="background: var(--discernment-color);">
-                            <span>Begin Connection Calibrator</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Tool Usage Guidance -->
-                <div class="usage-tips">
-                    <h4>🎯 How to Use Your Discernment Tools</h4>
-                    <div class="tips-grid">
-                        <div class="tip">
-                            <strong>🔄 Progression Order:</strong> Work from subtle to gross: Thought Refiner → Belief Threader → Echo Eraser → Spiritual Metabolizer → Enslavement Sequence for systematic clearing and integration.
-                        </div>
-                        <div class="tip">
-                            <strong>🎯 Targeted Approach:</strong> Choose specific tools based on current needs - mental confusion (Thought Refiner), stubborn beliefs (Belief Threader), or lingering residue (Echo Eraser).
-                        </div>
-                        <div class="tip">
-                            <strong>⚓ Anchor Integration:</strong> Use discernment tools when anchor ratings are consistently low, or when you sense spiritual interference with your grounding process.
-                        </div>
-                        <div class="tip">
-                            <strong>🛡️ Spiritual Protection:</strong> Start with prayer and spiritual protection. These tools work in spiritual realms and benefit from divine covering and wisdom throughout the process.
-                        </div>
-                    </div>
+                <div class="anchor-tools-grid" id="discernment-tools-grid">
+                    <!-- Generated by JavaScript -->
                 </div>
             </div>
         </section>
@@ -1601,428 +1251,81 @@
             
             <div class="card">
                 <h3>Private Journal</h3>
-    <!-- Replace the "Private Journal" placeholder in your Reflect & Reset section with this: -->
-
-<div class="card">
-    <p style="margin-bottom: 1.5rem; opacity: 0.8;">Reflect on your thoughts, patterns, and growth. These entries are private and never shared with coaches.</p>
-    
-    <!-- Journal Entry Form -->
-    <div class="journal-form">
-        <div class="form-group">
-            <label for="journal-date">Date:</label>
-            <input type="date" id="journal-date" class="journal-input">
-        </div>
-        
-        <div class="form-group">
-            <label for="overall-feeling">How are you feeling overall today? (1-5)</label>
-            <div class="rating-scale">
-                <button class="rating-btn journal-rating" data-value="1">1</button>
-                <button class="rating-btn journal-rating" data-value="2">2</button>
-                <button class="rating-btn journal-rating" data-value="3">3</button>
-                <button class="rating-btn journal-rating" data-value="4">4</button>
-                <button class="rating-btn journal-rating" data-value="5">5</button>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="thought-pattern">Primary thought pattern today:</label>
-            <select id="thought-pattern" class="journal-input">
-                <option value="">Select a pattern...</option>
-                <option value="grateful">Grateful and positive</option>
-                <option value="worried">Worried or anxious</option>
-                <option value="overwhelmed">Overwhelmed</option>
-                <option value="peaceful">Peaceful and centered</option>
-                <option value="restless">Restless or unsettled</option>
-                <option value="hopeful">Hopeful about the future</option>
-                <option value="confused">Confused or uncertain</option>
-                <option value="focused">Clear and focused</option>
-                <option value="other">Other</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="practice-used">What practice or tool helped you today?</label>
-            <select id="practice-used" class="journal-input">
-                <option value="">Select a practice...</option>
-                <option value="prayer">Prayer or meditation</option>
-                <option value="breathing">Breathing exercises</option>
-                <option value="physical">Physical movement/exercise</option>
-                <option value="anchor-tool">Used an anchor tool</option>
-                <option value="discernment-tool">Used a discernment tool</option>
-                <option value="boundaries">Set healthy boundaries</option>
-                <option value="rest">Rest and self-care</option>
-                <option value="connection">Connected with others</option>
-                <option value="nature">Time in nature</option>
-                <option value="none">Nothing specific today</option>
-                <option value="other">Other</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="reflection-text">Your reflection:</label>
-            <textarea id="reflection-text" class="journal-textarea" 
-                      placeholder="What's on your heart today? What patterns do you notice? What are you learning about yourself?"></textarea>
-        </div>
-        
-        <div class="journal-actions">
-            <button class="save-journal-btn">Save Journal Entry</button>
-            <button class="clear-journal-btn">Clear Form</button>
-        </div>
-    </div>
-    
-    <!-- Recent Entries -->
-    <div class="recent-entries" style="margin-top: 2rem;">
-        <h4>Recent Entries</h4>
-        <div id="journal-entries-list">
-            <p class="focus-message">Your recent journal entries will appear here.</p>
-        </div>
-    </div>
-</div>
-
-<style>
-/* Journal-specific styles */
-.journal-form {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: var(--accent-color);
-}
-
-.journal-input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--card-border);
-    border-radius: 6px;
-    background: var(--bg-color);
-    color: var(--text-color);
-    font-family: inherit;
-}
-
-.journal-input:focus {
-    outline: none;
-    border-color: var(--accent-color);
-}
-
-.journal-textarea {
-    width: 100%;
-    min-height: 120px;
-    padding: 0.75rem;
-    border: 1px solid var(--card-border);
-    border-radius: 6px;
-    background: var(--bg-color);
-    color: var(--text-color);
-    font-family: inherit;
-    resize: vertical;
-}
-
-.journal-textarea:focus {
-    outline: none;
-    border-color: var(--accent-color);
-}
-
-.journal-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 1.5rem;
-}
-
-.save-journal-btn {
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.save-journal-btn:hover {
-    background: var(--physical-color);
-    transform: translateY(-2px);
-}
-
-.clear-journal-btn {
-    background: transparent;
-    color: var(--text-color);
-    border: 2px solid var(--card-border);
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.clear-journal-btn:hover {
-    border-color: var(--accent-color);
-    color: var(--accent-color);
-}
-
-.journal-entry {
-    background: var(--nav-hover);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-left: 4px solid var(--accent-color);
-}
-
-.entry-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-
-.entry-date {
-    font-weight: 600;
-    color: var(--accent-color);
-}
-
-.entry-rating {
-    background: var(--accent-color);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-}
-
-.entry-meta {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin-bottom: 0.75rem;
-}
-
-.entry-reflection {
-    line-height: 1.6;
-}
-
-@media (max-width: 768px) {
-    .journal-actions {
-        flex-direction: column;
-    }
-    
-    .save-journal-btn,
-    .clear-journal-btn {
-        width: 100%;
-    }
-}
-</style>
-
-<script>
-// Journal functionality
-class JournalManager {
-    constructor() {
-        this.storageKey = 'cm_journal_v1';
-        this.entries = this.loadEntries();
-        this.init();
-    }
-    
-    init() {
-        this.setupEventListeners();
-        this.setDefaultDate();
-        this.renderRecentEntries();
-    }
-    
-    setupEventListeners() {
-        // Save button
-        const saveBtn = document.querySelector('.save-journal-btn');
-        if (saveBtn) {
-            saveBtn.addEventListener('click', () => this.saveEntry());
-        }
-        
-        // Clear button
-        const clearBtn = document.querySelector('.clear-journal-btn');
-        if (clearBtn) {
-            clearBtn.addEventListener('click', () => this.clearForm());
-        }
-        
-        // Rating buttons
-        const ratingBtns = document.querySelectorAll('.journal-rating');
-        ratingBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                // Remove selected from siblings
-                ratingBtns.forEach(b => b.classList.remove('selected'));
-                // Add selected to clicked
-                e.target.classList.add('selected');
-            });
-        });
-    }
-    
-    setDefaultDate() {
-        const dateInput = document.getElementById('journal-date');
-        if (dateInput) {
-            const today = new Date().toISOString().split('T')[0];
-            dateInput.value = today;
-        }
-    }
-    
-    saveEntry() {
-        const dateInput = document.getElementById('journal-date');
-        const selectedRating = document.querySelector('.journal-rating.selected');
-        const thoughtPattern = document.getElementById('thought-pattern');
-        const practiceUsed = document.getElementById('practice-used');
-        const reflectionText = document.getElementById('reflection-text');
-        
-        // Validation
-        if (!dateInput.value) {
-            this.showNotification('Please select a date', 'error');
-            return;
-        }
-        
-        if (!selectedRating) {
-            this.showNotification('Please rate your overall feeling', 'error');
-            return;
-        }
-        
-        if (!reflectionText.value.trim()) {
-            this.showNotification('Please write a reflection', 'error');
-            return;
-        }
-        
-        // Create entry
-        const entry = {
-            dateISO: dateInput.value,
-            rating: parseInt(selectedRating.dataset.value),
-            primaryThoughtPattern: thoughtPattern.value,
-            practiceUsed: practiceUsed.value,
-            reflection: reflectionText.value.trim(),
-            timestamp: new Date().toISOString()
-        };
-        
-        // Add to entries
-        this.entries.unshift(entry); // Add to beginning
-        
-        // Keep only last 30 entries
-        if (this.entries.length > 30) {
-            this.entries = this.entries.slice(0, 30);
-        }
-        
-        // Save to localStorage
-        this.saveEntries();
-        
-        // Show success
-        this.showNotification('Journal entry saved successfully!', 'success');
-        
-        // Clear form
-        this.clearForm();
-        
-        // Refresh display
-        this.renderRecentEntries();
-    }
-    
-    clearForm() {
-        // Reset rating buttons
-        document.querySelectorAll('.journal-rating').forEach(btn => {
-            btn.classList.remove('selected');
-        });
-        
-        // Reset dropdowns
-        document.getElementById('thought-pattern').value = '';
-        document.getElementById('practice-used').value = '';
-        
-        // Clear textarea
-        document.getElementById('reflection-text').value = '';
-        
-        // Reset date to today
-        this.setDefaultDate();
-    }
-    
-    loadEntries() {
-        const stored = localStorage.getItem(this.storageKey);
-        return stored ? JSON.parse(stored) : [];
-    }
-    
-    saveEntries() {
-        localStorage.setItem(this.storageKey, JSON.stringify(this.entries));
-    }
-    
-    renderRecentEntries() {
-        const container = document.getElementById('journal-entries-list');
-        if (!container) return;
-        
-        if (this.entries.length === 0) {
-            container.innerHTML = '<p class="focus-message">Your recent journal entries will appear here.</p>';
-            return;
-        }
-        
-        const recentEntries = this.entries.slice(0, 5); // Show last 5
-        
-        container.innerHTML = recentEntries.map(entry => {
-            const date = new Date(entry.dateISO).toLocaleDateString();
-            const thoughtPattern = entry.primaryThoughtPattern || 'Not specified';
-            const practice = entry.practiceUsed || 'None specified';
-            
-            return `
-                <div class="journal-entry">
-                    <div class="entry-header">
-                        <span class="entry-date">${date}</span>
-                        <span class="entry-rating">${entry.rating}/5</span>
+                <p style="margin-bottom: 1.5rem; opacity: 0.8;">Reflect on your thoughts, patterns, and growth. These entries are private and never shared with coaches.</p>
+                
+                <!-- Journal Entry Form -->
+                <div class="journal-form">
+                    <div class="form-group">
+                        <label for="journal-date">Date:</label>
+                        <input type="date" id="journal-date" class="journal-input">
                     </div>
-                    <div class="entry-meta">
-                        <strong>Pattern:</strong> ${thoughtPattern} | <strong>Practice:</strong> ${practice}
+                    
+                    <div class="form-group">
+                        <label for="overall-feeling">How are you feeling overall today? (1-5)</label>
+                        <div class="rating-scale">
+                            <button class="rating-btn journal-rating" data-value="1">1</button>
+                            <button class="rating-btn journal-rating" data-value="2">2</button>
+                            <button class="rating-btn journal-rating" data-value="3">3</button>
+                            <button class="rating-btn journal-rating" data-value="4">4</button>
+                            <button class="rating-btn journal-rating" data-value="5">5</button>
+                        </div>
                     </div>
-                    <div class="entry-reflection">${entry.reflection}</div>
+                    
+                    <div class="form-group">
+                        <label for="thought-pattern">Primary thought pattern today:</label>
+                        <select id="thought-pattern" class="journal-input">
+                            <option value="">Select a pattern...</option>
+                            <option value="grateful">Grateful and positive</option>
+                            <option value="worried">Worried or anxious</option>
+                            <option value="overwhelmed">Overwhelmed</option>
+                            <option value="peaceful">Peaceful and centered</option>
+                            <option value="restless">Restless or unsettled</option>
+                            <option value="hopeful">Hopeful about the future</option>
+                            <option value="confused">Confused or uncertain</option>
+                            <option value="focused">Clear and focused</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="practice-used">What practice or tool helped you today?</label>
+                        <select id="practice-used" class="journal-input">
+                            <option value="">Select a practice...</option>
+                            <option value="prayer">Prayer or meditation</option>
+                            <option value="breathing">Breathing exercises</option>
+                            <option value="physical">Physical movement/exercise</option>
+                            <option value="anchor-tool">Used an anchor tool</option>
+                            <option value="discernment-tool">Used a discernment tool</option>
+                            <option value="boundaries">Set healthy boundaries</option>
+                            <option value="rest">Rest and self-care</option>
+                            <option value="connection">Connected with others</option>
+                            <option value="nature">Time in nature</option>
+                            <option value="none">Nothing specific today</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reflection-text">Your reflection:</label>
+                        <textarea id="reflection-text" class="journal-textarea" 
+                                  placeholder="What's on your heart today? What patterns do you notice? What are you learning about yourself?"></textarea>
+                    </div>
+                    
+                    <div class="journal-actions">
+                        <button class="save-journal-btn">Save Journal Entry</button>
+                        <button class="clear-journal-btn">Clear Form</button>
+                    </div>
                 </div>
-            `;
-        }).join('');
-    }
-    
-    showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 6px;
-            z-index: 1001;
-            animation: slideIn 0.3s ease;
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-    }
-}
+                
+                <!-- Recent Entries -->
+                <div class="recent-entries" style="margin-top: 2rem;">
+                    <h4>Recent Entries</h4>
+                    <div id="journal-entries-list">
+                        <p class="focus-message">Your recent journal entries will appear here.</p>
+                    </div>
+                </div>
+            </div>
 
-// Initialize journal when section becomes active
-document.addEventListener('sectionChanged', (e) => {
-    if (e.detail.sectionName === 'reflect') {
-        if (!window.journalManager) {
-            window.journalManager = new JournalManager();
-        }
-    }
-});
-
-// Initialize immediately if we're already on reflect section
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        const reflectSection = document.getElementById('reflect');
-        if (reflectSection && reflectSection.classList.contains('active')) {
-            if (!window.journalManager) {
-                window.journalManager = new JournalManager();
-            }
-        }
-    }, 500);
-});
-</script>
-</div>
             <div class="card">
                 <h3>Prayer & Meditation</h3>
                 <div class="placeholder">
@@ -2070,19 +1373,141 @@ document.addEventListener('DOMContentLoaded', () => {
 
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            © 2025 Clarity Metabolics | Finding Balance In A Chaotic World | <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a>
-        </div>
-    </footer>
-
     <!-- Always-Visible Crisis Support Button -->
     <button class="crisis-support" onclick="showSection('crisis')">
         🆘 Crisis Support
     </button>
 
     <script>
+        // Simulated client access data - in production, this would come from server/coach assignments
+        const clientModuleAccess = {
+            fiveAnchors: {
+                physical: { guide: true, webTool: false },
+                mental: { guide: false, webTool: false },
+                emotional: { guide: false, webTool: false },
+                spiritual: { guide: false, webTool: false },
+                relational: { guide: false, webTool: false }
+            },
+            discernmentTools: {
+                thoughtRefiner: { unlocked: true },
+                beliefThreader: { unlocked: false },
+                echoEraser: { unlocked: false },
+                forgivenessFilter: { unlocked: false },
+                connectionCalibrator: { unlocked: false }
+            },
+            coachingPackage: {
+                type: '12-week', // Changed from '6-week' to show discernment tools
+                hasDiscernmentAccess: true // Changed from false to true
+            }
+        };
+
+        // Module definitions matching coach dashboard
+        const anchorModules = [
+            {
+                key: 'physical',
+                title: 'Physical Anchor',
+                subtitle: 'A Grounding Compass',
+                icon: '🧭',
+                description: '9-step body awareness and nervous system regulation process. Creates your physical "home base" for returning when overwhelmed.',
+                features: ['Body Awareness', 'Regulation Techniques', 'Pattern Recognition'],
+                guideUrl: '../anchor-guides/physical-anchor-guide.html',
+                toolUrl: '../five-anchors/physical-anchor.html',
+                color: 'var(--physical-color)'
+            },
+            {
+                key: 'mental',
+                title: 'Mental Anchor',
+                subtitle: 'The Clarity Lens',
+                icon: '👓',
+                description: '7-step process to filter mental noise and see truth clearly. Separates grounded thoughts from fear-driven narratives.',
+                features: ['Mental Filtering', 'Perspective Shifting', 'Control Assessment'],
+                guideUrl: '../anchor-guides/mental-anchor-guide.html',
+                toolUrl: '../five-anchors/mental-anchor.html',
+                color: 'var(--mental-color)'
+            },
+            {
+                key: 'emotional',
+                title: 'Emotional Anchor',
+                subtitle: 'The Stability Well',
+                icon: '🪣',
+                description: '8-step journey from emotional reactivity to conscious response. Transforms overwhelming feelings into wise action through your body\'s early warning system.',
+                features: ['Emotional Processing', 'Early Warning System', 'Response Choice'],
+                guideUrl: '../anchor-guides/emotional-anchor-guide.html',
+                toolUrl: '../five-anchors/emotional-anchor.html',
+                color: 'var(--emotional-color)'
+            },
+            {
+                key: 'spiritual',
+                title: 'Spiritual Anchor',
+                subtitle: 'The Communion Bridge',
+                icon: '🕊️',
+                description: '7-step spiritual grounding through divine connection, personal calling, and eternal foundation. Non-denominational approach.',
+                features: ['Spiritual Grounding', 'Calling Identification', 'Practice Building'],
+                guideUrl: '../anchor-guides/spiritual-anchor-guide.html',
+                toolUrl: '../five-anchors/spiritual-anchor.html',
+                color: 'var(--spiritual-color)'
+            },
+            {
+                key: 'relational',
+                title: 'Relational Anchor',
+                subtitle: 'The Harmony Web',
+                icon: '🌐',
+                description: '8-step journey to build authentic connections from grounded center. Boundary wisdom and community building strategies.',
+                features: ['Relationship Assessment', 'Boundary Setting', 'Community Building'],
+                guideUrl: '../anchor-guides/relational-anchor-guide.html',
+                toolUrl: '../five-anchors/relational-anchor.html',
+                color: 'var(--relational-color)'
+            }
+        ];
+
+        const discernmentModules = [
+            {
+                key: 'thoughtRefiner',
+                title: 'Thought Refiner',
+                subtitle: 'Purifying Thoughts at the Source',
+                icon: '🔍',
+                description: '7-step sophisticated mental filtering system that examines thoughts for truth, clarity, and spiritual alignment.',
+                features: ['Mental Purification', 'Truth Detection', 'Clarity Enhancement'],
+                toolUrl: '../discernment-tools/thought-refiner.html'
+            },
+            {
+                key: 'beliefThreader',
+                title: 'Belief Threader',
+                subtitle: 'Examining Crystallized Thoughts',
+                icon: '🧵',
+                description: '6-step journey through crystallized thought patterns. Explores how thoughts became hardened beliefs.',
+                features: ['Belief Archaeology', 'Trinity Integration', 'Truth Threading'],
+                toolUrl: '../discernment-tools/belief-threader.html'
+            },
+            {
+                key: 'echoEraser',
+                title: 'Echo Eraser',
+                subtitle: 'Clearing Energetic Aftermath',
+                icon: '🌊',
+                description: '8-step advanced integration process for clearing lingering emotional and spiritual residue.',
+                features: ['Echo Integration', 'Sitting Practice', 'Truth Planting'],
+                toolUrl: '../discernment-tools/echo-eraser.html'
+            },
+            {
+                key: 'forgivenessFilter',
+                title: 'Forgiveness Filter',
+                subtitle: 'Releasing Burdens with Grace',
+                icon: '🪶',
+                description: '7-step journey to process hurt and find authentic forgiveness. Separates honoring pain from carrying burdens.',
+                features: ['Pain Processing', 'Burden Release', 'Freedom Creation'],
+                toolUrl: '../discernment-tools/forgiveness-filter.html'
+            },
+            {
+                key: 'connectionCalibrator',
+                title: 'Connection Calibrator',
+                subtitle: 'Balancing Relationship Dynamics',
+                icon: '🌍',
+                description: '8-step relationship calibration tool. Navigate from dependence to independence to healthy interdependence.',
+                features: ['Relationship Assessment', 'Boundary Calibration', 'Connection Balance'],
+                toolUrl: '../discernment-tools/connection-calibrator-part1.html'
+            }
+        ];
+
         // Theme Management
         function toggleTheme() {
             const body = document.body;
@@ -2099,7 +1524,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Load saved theme
         function loadTheme() {
             const savedTheme = localStorage.getItem('theme');
             const themeIcon = document.getElementById('theme-icon');
@@ -2114,31 +1538,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Navigation Management
         function showSection(sectionName) {
-            // Hide all sections
             const sections = document.querySelectorAll('.section');
             sections.forEach(section => section.classList.remove('active'));
             
-            // Remove active class from all nav items
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => item.classList.remove('active'));
             
-            // Show selected section
             const targetSection = document.getElementById(sectionName);
             if (targetSection) {
                 targetSection.classList.add('active');
             }
             
-            // Add active class to corresponding nav item
             const activeNavItem = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
             if (activeNavItem) {
                 activeNavItem.classList.add('active');
             }
             
-            // Save current section
             localStorage.setItem('currentSection', sectionName);
+
+            // Load specific section content
+            if (sectionName === 'anchors') {
+                loadAnchorTools();
+            } else if (sectionName === 'discernment') {
+                loadDiscernmentTools();
+            }
         }
 
-        // Load saved section
         function loadSection() {
             const savedSection = localStorage.getItem('currentSection');
             if (savedSection && document.getElementById(savedSection)) {
@@ -2146,6 +1571,183 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 showSection('dashboard');
             }
+        }
+
+        // Module Access Control
+        function loadAnchorTools() {
+            const container = document.getElementById('anchor-tools-grid');
+            if (!container) return;
+
+            container.innerHTML = anchorModules.map(module => {
+                const access = clientModuleAccess.fiveAnchors[module.key];
+                const hasGuideAccess = access.guide;
+                const hasToolAccess = access.webTool;
+                const hasAnyAccess = hasGuideAccess || hasToolAccess;
+
+                let accessIndicator = '';
+                let cardClass = '';
+                let content = '';
+                
+                if (hasAnyAccess) {
+                    // Unlocked content - show full details
+                    if (hasGuideAccess && hasToolAccess) {
+                        accessIndicator = '<div class="access-indicator access-unlocked">✅ Full Access - Guide & Tool Unlocked</div>';
+                    } else {
+                        const unlockedItems = [];
+                        if (hasGuideAccess) unlockedItems.push('Guide');
+                        if (hasToolAccess) unlockedItems.push('Tool');
+                        accessIndicator = `<div class="access-indicator access-partial">🔓 Partial Access - ${unlockedItems.join(' & ')} Unlocked</div>`;
+                    }
+                    
+                    content = `
+                        <div class="tool-header">
+                            <span class="tool-icon">${module.icon}</span>
+                            <div class="tool-info">
+                                <h4 class="tool-title">${module.title}</h4>
+                                <p class="tool-subtitle">${module.subtitle}</p>
+                            </div>
+                        </div>
+                        <p class="tool-description">${module.description}</p>
+                        <div class="tool-features">
+                            ${module.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                        </div>
+                        ${accessIndicator}
+                        ${hasGuideAccess ? `<a href="${module.guideUrl}" target="_blank" class="tool-button" style="background: ${module.color}; margin-bottom: 0.5rem;">
+                            <span>📖 Open Guide (PDF)</span>
+                            <span class="button-arrow">→</span>
+                        </a>` : ''}
+                        ${hasToolAccess ? `<a href="${module.toolUrl}" target="_blank" class="tool-button" style="background: ${module.color};">
+                            <span>🔧 Use Web Tool</span>
+                            <span class="button-arrow">→</span>
+                        </a>` : ''}
+                    `;
+                } else {
+                    // Locked content - show minimal info with lock message
+                    cardClass = 'locked';
+                    accessIndicator = '<div class="access-indicator access-locked">🔒 Locked - Contact your coach to unlock</div>';
+                    
+                    content = `
+                        <div class="tool-header">
+                            <span class="tool-icon">${module.icon}</span>
+                            <div class="tool-info">
+                                <h4 class="tool-title">${module.title}</h4>
+                                <p class="tool-subtitle">${module.subtitle}</p>
+                            </div>
+                        </div>
+                        <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+                            <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">Module Locked</h4>
+                            <p style="color: var(--locked-color);">Your coach will unlock this when you're ready</p>
+                        </div>
+                        ${accessIndicator}
+                        <button class="tool-button locked">
+                            <span>🔒 Locked by Coach</span>
+                            <span class="button-arrow">⏸</span>
+                        </button>
+                    `;
+                }
+
+                return `
+                    <div class="tool-card ${cardClass}">
+                        ${content}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadDiscernmentTools() {
+            const container = document.getElementById('discernment-tools-grid');
+            if (!container) return;
+
+            // Check if client has access to discernment tools (12-week package only)
+            if (!clientModuleAccess.coachingPackage.hasDiscernmentAccess) {
+                container.innerHTML = `
+                    <div class="tool-card locked" style="grid-column: 1 / -1;">
+                        <div class="tool-header">
+                            <span class="tool-icon">🔍</span>
+                            <div class="tool-info">
+                                <h4 class="tool-title">Advanced Discernment Tools</h4>
+                                <p class="tool-subtitle">12-Week Program Content</p>
+                            </div>
+                        </div>
+                        <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🎓</div>
+                            <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">12-Week Package Required</h4>
+                            <p style="color: var(--locked-color);">Discernment Tools are available as part of the 12-week coaching program. Contact your coach to learn more about upgrading your package.</p>
+                        </div>
+                        <div class="access-indicator access-locked">🎓 Requires 12-Week Coaching Package</div>
+                        <button class="tool-button locked">
+                            <span>Contact Coach to Upgrade</span>
+                            <span class="button-arrow">📞</span>
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Client has 12-week access, show individual tools based on coach permissions
+            container.innerHTML = discernmentModules.map(module => {
+                const access = clientModuleAccess.discernmentTools[module.key];
+                const hasAccess = access.unlocked;
+
+                let accessIndicator = '';
+                let cardClass = '';
+                let content = '';
+                
+                if (hasAccess) {
+                    // Unlocked content - show full details
+                    accessIndicator = '<div class="access-indicator access-unlocked">✅ Unlocked by Coach</div>';
+                    
+                    content = `
+                        <div class="tool-header">
+                            <span class="tool-icon">${module.icon}</span>
+                            <div class="tool-info">
+                                <h4 class="tool-title">${module.title}</h4>
+                                <p class="tool-subtitle">${module.subtitle}</p>
+                            </div>
+                        </div>
+                        <p class="tool-description">${module.description}</p>
+                        <div class="tool-features">
+                            ${module.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                        </div>
+                        ${accessIndicator}
+                        <a href="${module.toolUrl}" target="_blank" class="tool-button" style="background: var(--discernment-color);">
+                            <span>Begin ${module.title}</span>
+                            <span class="button-arrow">→</span>
+                        </a>
+                    `;
+                } else {
+                    // Locked content - show minimal info with lock message
+                    cardClass = 'locked';
+                    accessIndicator = '<div class="access-indicator access-locked">🔒 Locked - Your coach will unlock when ready</div>';
+                    
+                    content = `
+                        <div class="tool-header">
+                            <span class="tool-icon">${module.icon}</span>
+                            <div class="tool-info">
+                                <h4 class="tool-title">${module.title}</h4>
+                                <p class="tool-subtitle">${module.subtitle}</p>
+                            </div>
+                        </div>
+                        <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+                            <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">Tool Locked</h4>
+                            <p style="color: var(--locked-color);">Your coach will unlock this based on your session progress</p>
+                        </div>
+                        ${accessIndicator}
+                        <button class="tool-button locked">
+                            <span>🔒 Locked by Coach</span>
+                            <span class="button-arrow">⏸</span>
+                        </button>
+                    `;
+                }
+
+                return `
+                    <div class="tool-card ${cardClass}">
+                        ${content}
+                    </div>
+                `;
+            }).join('');
         }
 
         // Dashboard Initialization
@@ -2156,7 +1758,6 @@ document.addEventListener('DOMContentLoaded', () => {
             generateRecommendations();
         }
 
-        // Update current date display
         function updateCurrentDate() {
             const now = new Date();
             const options = { 
@@ -2168,7 +1769,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
         }
 
-        // Setup rating button interactions
         function setupRatingButtons() {
             const ratingButtons = document.querySelectorAll('.rating-btn');
             
@@ -2194,7 +1794,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Update individual anchor progress with filled color opacity
         function updateAnchorProgress(anchor, rating) {
             const circle = document.querySelector(`.anchor-circle[data-anchor="${anchor}"] .circle-progress`);
             const ratingDisplay = circle.querySelector('.anchor-rating');
@@ -2209,7 +1808,6 @@ document.addEventListener('DOMContentLoaded', () => {
             updateOverallWellness();
         }
 
-        // Update overall wellness calculation
         function updateOverallWellness() {
             const circles = document.querySelectorAll('.circle-progress');
             let totalRating = 0;
@@ -2238,7 +1836,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Save daily check-in
         function saveCheckIn() {
             const today = new Date().toISOString().split('T')[0];
             const checkInData = {
@@ -2275,7 +1872,6 @@ document.addEventListener('DOMContentLoaded', () => {
             generateRecommendations();
         }
 
-        // Clear check-in
         function clearCheckIn() {
             if (confirm('Are you sure you want to clear all ratings and notes?')) {
                 // Clear all selected ratings
@@ -2302,7 +1898,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Load today's ratings if they exist
         function loadDailyRatings() {
             const today = new Date().toISOString().split('T')[0];
             const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
@@ -2333,7 +1928,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Generate personalized recommendations
         function generateRecommendations() {
             const recommendationsContainer = document.getElementById('focus-recommendations');
             const circles = document.querySelectorAll('.circle-progress');
@@ -2385,7 +1979,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Get specific recommendations for each anchor
         function getAnchorRecommendation(anchor, rating) {
             const recommendations = {
                 physical: {
@@ -2410,7 +2003,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Practice self-compassion and do something nurturing for yourself.'
                 },
                 spiritual: {
-                    title: '✨ Spiritual Anchor Needs Connection',
+                    title: '🕊️ Spiritual Anchor Needs Connection',
                     description: 'Your spiritual foundation could use strengthening.',
                     action: rating <= 2 ? 
                         'Spend 5 minutes in prayer, meditation, or reading something meaningful.' :
@@ -2428,233 +2021,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return recommendations[anchor];
         }
 
-        // Show encouragement modal
-        function showEncouragement(anchor) {
-            const encouragements = getEncouragementMessage(anchor);
-            
-            const modal = document.createElement('div');
-            modal.className = 'encouragement-modal';
-            modal.innerHTML = `
-                <div class="encouragement-content">
-                    <h3 class="encouragement-title">${encouragements.title}</h3>
-                    <p class="encouragement-message">${encouragements.message}</p>
-                    <button class="encouragement-close" onclick="closeEncouragement()">Thank You ✨</button>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeEncouragement();
-                }
-            });
-        }
-
-        // Close encouragement modal
-        function closeEncouragement() {
-            const modal = document.querySelector('.encouragement-modal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        // Get encouragement messages
-        function getEncouragementMessage(anchor) {
-            const dayOfWeek = new Date().getDay();
-            const messages = {
-                physical: {
-                    title: "🧭 Grounding Encouragement",
-                    messages: [
-                        "Sunday Stillness: Your body deserves rest and restoration today. Listen to what it needs and honor that wisdom.",
-                        "Monday Motivation: Your physical anchor is the foundation for everything else. Honor it today.",
-                        "Tuesday Truth: You don't have to be perfect - just present in your body.",
-                        "Wednesday Wisdom: Small movements create big changes. What tiny step can you take?",
-                        "Thursday Thought: Your body holds wisdom. What is it telling you today?",
-                        "Friday Focus: You've carried yourself through another week. That's worth celebrating.",
-                        "Saturday Stillness: Rest is not lazy - it's sacred. Your body deserves restoration."
-                    ]
-                },
-                mental: {
-                    title: "👓 Clarity Encouragement", 
-                    messages: [
-                        "Sunday Serenity: Let your mind rest today. Clarity often comes in quiet, unhurried moments.",
-                        "Monday Motivation: You have everything you need to think clearly. Start with one thought.",
-                        "Tuesday Troubleshooting: Confusion is temporary. Clarity is coming.",
-                        "Wednesday Wisdom: The wise mind observes thoughts without becoming them.",
-                        "Thursday Thought: Your perspective is powerful. Choose thoughts that serve you.",
-                        "Friday Focus: You've processed so much this week. Your mental resilience is beautiful.",
-                        "Saturday Stillness: Sometimes the clearest thinking happens in quiet moments."
-                    ]
-                },
-                emotional: {
-                    title: "🪣 Stability Encouragement",
-                    messages: [
-                        "Sunday Softness: Your emotions are welcome here today. Feel deeply, rest fully, trust the process.",
-                        "Monday Motivation: You can feel deeply and still stand strong. That's emotional maturity.",
-                        "Tuesday Troubleshooting: It's okay to not be okay. Feelings flow through, they don't define you.",
-                        "Wednesday Wisdom: Stability doesn't mean never feeling shaken - it means knowing how to return to center.",
-                        "Thursday Thought: Your emotional world is rich and valid. All feelings have a place.",
-                        "Friday Focus: You've navigated another week of feelings with grace. That takes courage.",
-                        "Saturday Stillness: Rest allows emotions to settle naturally. Give yourself this gift."
-                    ]
-                },
-                spiritual: {
-                    title: "✨ Communion Encouragement",
-                    messages: [
-                        "Sunday Sanctuary: This is a day set apart for rest and connection with the Divine. Your soul knows this rhythm.",
-                        "Monday Motivation: Your spiritual journey is unique and beautiful. Trust the path you're on.",
-                        "Tuesday Truth: Even in spiritual dryness, you are not alone. God is working in the waiting.",
-                        "Wednesday Wisdom: Prayer doesn't have to be perfect. God hears the heart behind every word.",
-                        "Thursday Thought: You are fearfully and wonderfully made. This truth anchors everything.",
-                        "Friday Focus: Look for the sacred in ordinary moments. God is present in your daily life.",
-                        "Saturday Stillness: Sabbath rest is spiritual medicine. Your soul needs this rhythm."
-                    ]
-                },
-                relational: {
-                    title: "🌐 Harmony Encouragement",
-                    messages: [
-                        "Sunday Sabbath: Rest is a gift you give not just to yourself, but to all your relationships. You model healthy boundaries.",
-                        "Monday Motivation: Healthy relationships begin with healthy boundaries. You get to choose.",
-                        "Tuesday Troubleshooting: Not everyone will understand your journey, and that's okay.",
-                        "Wednesday Wisdom: True connection happens when we show up as ourselves.",
-                        "Thursday Thought: You attract what you embody. Be the energy you want to receive.",
-                        "Friday Focus: Relationships are gardens - they need tending, not perfection.",
-                        "Saturday Stillness: Sometimes the best gift you can give others is taking care of yourself."
-                    ]
-                }
-            };
-            
-            return {
-                title: messages[anchor].title,
-                message: messages[anchor].messages[dayOfWeek]
-            };
-        }
-
-        // Settings Menu Management
-        function toggleSettings() {
-            const menu = document.getElementById('settings-menu');
-            menu.classList.toggle('show');
-        }
-
-        // Close settings menu when clicking outside
-        document.addEventListener('click', function(e) {
-            const settingsToggle = document.querySelector('.settings-toggle');
-            const settingsMenu = document.getElementById('settings-menu');
-            
-            if (!settingsToggle.contains(e.target) && !settingsMenu.contains(e.target)) {
-                settingsMenu.classList.remove('show');
-            }
-        });
-
-        // Show About Modal
-        function showAbout() {
-            const modal = document.createElement('div');
-            modal.className = 'about-modal';
-            modal.innerHTML = `
-                <div class="about-content">
-                    <h3 class="about-title">About The Five Anchors</h3>
-                    <div class="about-text">
-                        <p>The Five Anchors methodology helps you navigate life from a grounded, conscious place by strengthening your Physical, Mental, Emotional, Spiritual, and Relational foundations.</p>
-                        <p>Developed by Clarity Metabolics, this system transforms overwhelm into stability through practical, evidence-based tools designed to help you find balance in a chaotic world.</p>
-                        <p><strong>Learn more at <a href="https://claritymetabolics.com" target="_blank">claritymetabolics.com</a></strong></p>
-                    </div>
-                    <button class="about-close" onclick="closeAbout()">Got It ✨</button>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-            document.getElementById('settings-menu').classList.remove('show');
-            
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeAbout();
-                }
-            });
-        }
-
-        function closeAbout() {
-            const modal = document.querySelector('.about-modal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        // Export Data Function
-        function exportData() {
-            const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
-            
-            if (Object.keys(allCheckIns).length === 0) {
-                showNotification('No data to export yet. Complete some daily check-ins first!', 'info');
-                document.getElementById('settings-menu').classList.remove('show');
-                return;
-            }
-
-            let exportContent = `Five Anchors Progress Report
-Generated by The Five Anchors Dashboard - Clarity Metabolics
-Website: https://claritymetabolics.com
-Export Date: ${new Date().toLocaleDateString()}
-Finding Balance In A Chaotic World
-
-=== DAILY CHECK-IN HISTORY ===
-
-`;
-
-            Object.entries(allCheckIns).sort().forEach(([date, data]) => {
-                exportContent += `Date: ${new Date(date).toLocaleDateString()}\n`;
-                
-                if (data.ratings) {
-                    exportContent += `Ratings:\n`;
-                    Object.entries(data.ratings).forEach(([anchor, rating]) => {
-                        const anchorName = anchor.charAt(0).toUpperCase() + anchor.slice(1);
-                        exportContent += `  ${anchorName}: ${rating}/5\n`;
-                    });
-                }
-                
-                if (data.notes) {
-                    exportContent += `Notes:\n`;
-                    Object.entries(data.notes).forEach(([anchor, note]) => {
-                        const anchorName = anchor.charAt(0).toUpperCase() + anchor.slice(1);
-                        exportContent += `  ${anchorName}: ${note}\n`;
-                    });
-                }
-                
-                exportContent += `\n`;
-            });
-
-            exportContent += `
-=== ABOUT YOUR DATA ===
-
-This report contains your Five Anchors daily check-in data.
-For more insights and coaching support, visit: https://claritymetabolics.com
-
-© 2025 Clarity Metabolics - Finding Balance In A Chaotic World
-Website: https://claritymetabolics.com`;
-
-            const blob = new Blob([exportContent], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Five_Anchors_Progress_${new Date().toISOString().split('T')[0]}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-            showNotification('Data exported successfully!', 'success');
-            document.getElementById('settings-menu').classList.remove('show');
-        }
-
-        // Placeholder functions for future features
-        function showNotifications() {
-            showNotification('Notification settings coming soon!', 'info');
-            document.getElementById('settings-menu').classList.remove('show');
-        }
-
-        function showHelp() {
-            showNotification('Help & Support features coming soon!', 'info');
-            document.getElementById('settings-menu').classList.remove('show');
-        }
-
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
@@ -2669,6 +2035,7 @@ Website: https://claritymetabolics.com`;
                 border-radius: 6px;
                 z-index: 1001;
                 animation: slideIn 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             `;
             
             document.body.appendChild(notification);
@@ -2679,66 +2046,198 @@ Website: https://claritymetabolics.com`;
             }, 3000);
         }
 
-        // --- Anchor Guide Gating (Self-Paced flow) ---
-        function setupAnchorGating() {
-          const KEY = 'cm_progress_v1';
-          const progress = JSON.parse(localStorage.getItem(KEY) || '{}');
-
-          // Guide wrapper pages (adjust paths if your wrappers live elsewhere)
-          const guidePage = {
-            physical:   '../five-anchors/physical-anchor-guide.html',
-            mental:     '../five-anchors/mental-anchor-guide.html',
-            emotional:  '../five-anchors/emotional-anchor-guide.html',
-            spiritual:  '../five-anchors/spiritual-anchor-guide.html',
-            relational: '../five-anchors/relational-anchor-guide.html',
-          };
-
-          // Default tier to self-paced unless set elsewhere
-          const tier = localStorage.getItem('userTier') || 'self';
-
-          document.querySelectorAll('.tool-card[data-anchor]').forEach(card => {
-            const anchor = card.dataset.anchor;
-            const btn = card.querySelector('.tool-button');
-            if (!btn) return;
-
-            btn.addEventListener('click', (e) => {
-              // Enforce "Physical first" for self tier
-              if (tier === 'self' && anchor !== 'physical' && progress.physical_guide !== true) {
-                e.preventDefault();
-                promptGuide('Physical', guidePage.physical, 'Start with the Physical Guide first, then come back to run this tool.');
-                return;
-              }
-
-              // Require the matching guide for each anchor
-              const flag = `${anchor}_guide`;
-              if (progress[flag] !== true) {
-                e.preventDefault();
-                const title = anchor.charAt(0).toUpperCase() + anchor.slice(1);
-                promptGuide(title, guidePage[anchor], `Please open the ${title} Guide (PDF), mark it complete, and then return here.`);
-              }
-            });
-          });
-
-          function promptGuide(title, url, msg) {
-            const modal = document.createElement('div');
-            modal.className = 'about-modal';
-            modal.innerHTML = `
-              <div class="about-content" style="max-width:560px">
-                <h3 class="about-title">Begin with the ${title} Guide</h3>
-                <p class="about-text">${msg}</p>
-                <div style="display:flex;gap:.75rem;justify-content:center;margin-top:1rem;">
-                  <a class="about-close" href="${url}" target="_blank" rel="noopener">Open Guide</a>
-                  <button class="about-close" onclick="this.closest('.about-modal').remove()">Close</button>
-                </div>
-              </div>
-            `;
-            document.body.appendChild(modal);
-            modal.addEventListener('click', (evt) => { if (evt.target === modal) modal.remove(); });
-          }
+        // Journal functionality
+        class JournalManager {
+            constructor() {
+                this.storageKey = 'cm_journal_v1';
+                this.entries = this.loadEntries();
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.setDefaultDate();
+                this.renderRecentEntries();
+            }
+            
+            setupEventListeners() {
+                const saveBtn = document.querySelector('.save-journal-btn');
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', () => this.saveEntry());
+                }
+                
+                const clearBtn = document.querySelector('.clear-journal-btn');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => this.clearForm());
+                }
+                
+                const ratingBtns = document.querySelectorAll('.journal-rating');
+                ratingBtns.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        ratingBtns.forEach(b => b.classList.remove('selected'));
+                        e.target.classList.add('selected');
+                    });
+                });
+            }
+            
+            setDefaultDate() {
+                const dateInput = document.getElementById('journal-date');
+                if (dateInput) {
+                    const today = new Date().toISOString().split('T')[0];
+                    dateInput.value = today;
+                }
+            }
+            
+            saveEntry() {
+                const dateInput = document.getElementById('journal-date');
+                const selectedRating = document.querySelector('.journal-rating.selected');
+                const thoughtPattern = document.getElementById('thought-pattern');
+                const practiceUsed = document.getElementById('practice-used');
+                const reflectionText = document.getElementById('reflection-text');
+                
+                // Validation
+                if (!dateInput.value) {
+                    showNotification('Please select a date', 'error');
+                    return;
+                }
+                
+                if (!selectedRating) {
+                    showNotification('Please rate your overall feeling', 'error');
+                    return;
+                }
+                
+                if (!reflectionText.value.trim()) {
+                    showNotification('Please write a reflection', 'error');
+                    return;
+                }
+                
+                // Create entry
+                const entry = {
+                    dateISO: dateInput.value,
+                    rating: parseInt(selectedRating.dataset.value),
+                    primaryThoughtPattern: thoughtPattern.value,
+                    practiceUsed: practiceUsed.value,
+                    reflection: reflectionText.value.trim(),
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Add to entries
+                this.entries.unshift(entry);
+                
+                // Keep only last 30 entries
+                if (this.entries.length > 30) {
+                    this.entries = this.entries.slice(0, 30);
+                }
+                
+                // Save to localStorage
+                this.saveEntries();
+                
+                // Show success
+                showNotification('Journal entry saved successfully!', 'success');
+                
+                // Clear form
+                this.clearForm();
+                
+                // Refresh display
+                this.renderRecentEntries();
+            }
+            
+            clearForm() {
+                document.querySelectorAll('.journal-rating').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                
+                document.getElementById('thought-pattern').value = '';
+                document.getElementById('practice-used').value = '';
+                document.getElementById('reflection-text').value = '';
+                
+                this.setDefaultDate();
+            }
+            
+            loadEntries() {
+                const stored = localStorage.getItem(this.storageKey);
+                return stored ? JSON.parse(stored) : [];
+            }
+            
+            saveEntries() {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.entries));
+            }
+            
+            renderRecentEntries() {
+                const container = document.getElementById('journal-entries-list');
+                if (!container) return;
+                
+                if (this.entries.length === 0) {
+                    container.innerHTML = '<p class="focus-message">Your recent journal entries will appear here.</p>';
+                    return;
+                }
+                
+                const recentEntries = this.entries.slice(0, 5);
+                
+                container.innerHTML = recentEntries.map(entry => {
+                    const date = new Date(entry.dateISO).toLocaleDateString();
+                    const thoughtPattern = entry.primaryThoughtPattern || 'Not specified';
+                    const practice = entry.practiceUsed || 'None specified';
+                    
+                    return `
+                        <div class="journal-entry">
+                            <div class="entry-header">
+                                <span class="entry-date">${date}</span>
+                                <span class="entry-rating">${entry.rating}/5</span>
+                            </div>
+                            <div class="entry-meta">
+                                <strong>Pattern:</strong> ${thoughtPattern} | <strong>Practice:</strong> ${practice}
+                            </div>
+                            <div class="entry-reflection">${entry.reflection}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
 
-        // Initialize on page load
-        // Authentication check before loading dashboard
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            loadSection();
+            initializeDashboard();
+            
+            // Initialize journal when reflect section is active
+            setTimeout(() => {
+                const reflectSection = document.getElementById('reflect');
+                if (reflectSection && reflectSection.classList.contains('active')) {
+                    if (!window.journalManager) {
+                        window.journalManager = new JournalManager();
+                    }
+                }
+            }, 500);
+        });
+
+        // Initialize journal when section becomes active
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('[onclick*="reflect"]')) {
+                setTimeout(() => {
+                    if (!window.journalManager) {
+                        window.journalManager = new JournalManager();
+                    }
+                }, 100);
+            }
+        });
+
+        // Add animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+// Authentication check before loading dashboard
 import('./js/supabase-config.js').then(({ authManager }) => {
     document.addEventListener('DOMContentLoaded', async function() {
         // Check if user is authenticated
@@ -2751,76 +2250,25 @@ import('./js/supabase-config.js').then(({ authManager }) => {
         }
         
         // User is authenticated - continue with existing initialization
-        // set default tier if not set
-        if (!localStorage.getItem('userTier')) localStorage.setItem('userTier','self');
-
         loadTheme();
         loadSection();
         initializeDashboard();
-        setupAnchorGating();
+        
+        // Initialize journal when reflect section is active
+        setTimeout(() => {
+            const reflectSection = document.getElementById('reflect');
+            if (reflectSection && reflectSection.classList.contains('active')) {
+                if (!window.journalManager) {
+                    window.journalManager = new JournalManager();
+                }
+            }
+        }, 500);
     });
 }).catch(error => {
     console.error('Error loading authentication:', error);
     // Fallback to auth page if there's an error
     window.location.href = './auth.html';
 });
-
-        // Handle browser back/forward
-        window.addEventListener('popstate', function() {
-            loadSection();
-        });
     </script>
-<!-- Enhanced Navigation Fix -->
-<script>
-// Simple navigation enhancement without breaking existing structure
-document.addEventListener('DOMContentLoaded', function() {
-    // Cache elements
-    const navItems = document.querySelectorAll('.nav-item');
-    const sections = document.querySelectorAll('.section');
-    
-    // Add click listeners to nav items
-    navItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            // Get section from onclick attribute
-            const onclick = this.getAttribute('onclick');
-            if (onclick) {
-                const match = onclick.match(/showSection\(['"](.+?)['"]\)/);
-                if (match) {
-                    const sectionName = match[1];
-                    showSectionEnhanced(sectionName);
-                }
-            }
-        });
-    });
-    
-    function showSectionEnhanced(sectionName) {
-        // Hide all sections
-        sections.forEach(section => section.classList.remove('active'));
-        
-        // Remove active from nav items
-        navItems.forEach(item => item.classList.remove('active'));
-        
-        // Show target section
-        const targetSection = document.getElementById(sectionName);
-        if (targetSection) {
-            targetSection.classList.add('active');
-        }
-        
-        // Add active to nav item
-        const activeNavItem = Array.from(navItems).find(item => {
-            const onclick = item.getAttribute('onclick');
-            return onclick && onclick.includes(sectionName);
-        });
-        if (activeNavItem) {
-            activeNavItem.classList.add('active');
-        }
-        
-        // Save section
-        localStorage.setItem('currentSection', sectionName);
-    }
-    
-    console.log('Navigation enhanced successfully!');
-});
-</script>
 </body>
 </html>
