@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Begin Your Five Anchors Journey with Lesley</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --physical-color: #7C8B60;
+            --mental-color: #B7AFA3;
+            --emotional-color: #C97D7D;
+            --spiritual-color: #B6B0C3;
+            --relational-color: #E8934A;
+            --bg-color: #FEFEFE;
+            --text-color: #2C2C2C;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E5E5;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --accent-color: #5A6C57;
+            --success-color: #4CAF50;
+            --error-color: #f44336;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, 
+                rgba(124, 139, 96, 0.1) 0%, 
+                rgba(232, 147, 74, 0.1) 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, 
+                rgba(124, 139, 96, 0.7) 0%, 
+                rgba(183, 175, 163, 0.7) 25%, 
+                rgba(201, 125, 125, 0.7) 50%, 
+                rgba(182, 176, 195, 0.7) 75%, 
+                rgba(232, 147, 74, 0.7) 100%);
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .logo {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: white;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            max-width: 800px;
+            margin: -2rem auto 2rem;
+            padding: 0 1rem;
+        }
+
+        .intake-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px var(--shadow);
+            border: 1px solid var(--card-border);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--card-border);
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            background: var(--accent-color);
+            transform: scale(1.2);
+        }
+
+        .step-dot.completed {
+            background: var(--success-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--card-border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg-color);
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(90, 108, 87, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-input {
+            width: auto;
+            margin: 0;
+        }
+
+        .checkbox-label {
+            margin-bottom: 0;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .anchor-assessment {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .anchor-item {
+            background: var(--bg-color);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .anchor-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .anchor-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .anchor-icon.physical { background: var(--physical-color); }
+        .anchor-icon.mental { background: var(--mental-color); }
+        .anchor-icon.emotional { background: var(--emotional-color); }
+        .anchor-icon.spiritual { background: var(--spiritual-color); }
+        .anchor-icon.relational { background: var(--relational-color); }
+
+        .anchor-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .rating-scale {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            justify-content: center;
+        }
+
+        .rating-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--card-border);
+            border-radius: 50%;
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .rating-btn:hover {
+            border-color: var(--accent-color);
+            background: rgba(90, 108, 87, 0.1);
+        }
+
+        .rating-btn.selected {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .lesley-intro {
+            background: rgba(90, 108, 87, 0.05);
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .lesley-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--physical-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .validation-message {
+            background: var(--error-color);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: var(--success-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box {
+            background: rgba(90, 108, 87, 0.1);
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-indicator {
+            background: var(--card-border);
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--accent-color);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .intake-card {
+                padding: 1.5rem;
+                margin: -1rem 1rem 2rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .rating-scale {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">Begin Your Five Anchors Journey</div>
+        <div class="subtitle">Work with Lesley to find stability in a chaotic world</div>
+    </header>
+
+    <div class="main-container">
+        <div class="intake-card">
+            <div class="card-header">
+                <h1 class="card-title">Let's Get Started</h1>
+                <p class="card-subtitle">Help me understand where you are and where you want to go</p>
+            </div>
+
+            <div class="progress-indicator">
+                <div class="progress-fill" id="progress-fill" style="width: 33%"></div>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <form id="lesley-intake-form">
+                <!-- Step 1: Basic Information -->
+                <div class="form-step active" data-step="1">
+                    <h3>Step 1: Getting to Know You</h3>
+                    
+                    <div class="form-group">
+                        <label for="full-name">Full Name *</label>
+                        <input type="text" id="full-name" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-input">
+                        <small style="opacity: 0.7; font-size: 0.9rem;">Optional - for appointment reminders and urgent contact</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timezone">Timezone *</label>
+                        <select id="timezone" class="form-select" required>
+                            <option value="">Select your timezone...</option>
+                            <option value="America/Los_Angeles">Pacific Time</option>
+                            <option value="America/Denver">Mountain Time</option>
+                            <option value="America/Chicago">Central Time</option>
+                            <option value="America/New_York">Eastern Time</option>
+                            <option value="UTC">UTC</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="referral-source">How did you find me?</label>
+                        <select id="referral-source" class="form-select">
+                            <option value="">Select source...</option>
+                            <option value="social-media">Social Media (Instagram, Facebook, TikTok)</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="search">Google/Web Search</option>
+                            <option value="friend-referral">Friend/Family Referral</option>
+                            <option value="professional-referral">Professional Referral</option>
+                            <option value="website">Clarity Metabolics Website</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="crisis-support">Current emotional state *</label>
+                        <select id="crisis-support" class="form-select" required>
+                            <option value="">How are you feeling right now?</option>
+                            <option value="stable">Stable and ready to work on growth</option>
+                            <option value="mild-distress">Some distress but manageable</option>
+                            <option value="significant-distress">Significant distress, need support soon</option>
+                            <option value="crisis">In crisis, need immediate help</option>
+                        </select>
+                        <small style="opacity: 0.7; font-size: 0.9rem;">
+                            If you're in immediate danger, please contact 988 (Suicide & Crisis Lifeline) or your local emergency services.
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Step 2: Current Situation & Goals -->
+                <div class="form-step" data-step="2">
+                    <h3>Step 2: Your Journey and Goals</h3>
+                    
+                    <div class="form-group">
+                        <label for="current-challenges">What brings you to Five Anchors coaching? *</label>
+                        <textarea id="current-challenges" class="form-textarea" required
+                                  placeholder="Share what's feeling overwhelming, unstable, or chaotic in your life right now. What areas need the most attention?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="primary-goals">What would success look like for you? *</label>
+                        <textarea id="primary-goals" class="form-textarea" required
+                                  placeholder="Describe what changes you hope to see. How would your life be different if you felt more grounded and stable?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="previous-experience">Previous therapy or coaching experience</label>
+                        <select id="previous-experience" class="form-select">
+                            <option value="">Select experience level...</option>
+                            <option value="none">No previous experience</option>
+                            <option value="some-therapy">Some therapy experience</option>
+                            <option value="extensive-therapy">Extensive therapy experience</option>
+                            <option value="some-coaching">Some coaching experience</option>
+                            <option value="both">Both therapy and coaching</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="session-frequency">How often would you like to meet?</label>
+                        <select id="session-frequency" class="form-select">
+                            <option value="">Select frequency...</option>
+                            <option value="weekly">Weekly sessions</option>
+                            <option value="bi-weekly">Every two weeks</option>
+                            <option value="monthly">Monthly sessions</option>
+                            <option value="as-needed">As needed basis</option>
+                            <option value="discuss">Let's discuss what works best</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="session-format">Preferred session format</label>
+                        <select id="session-format" class="form-select">
+                            <option value="video">Video sessions</option>
+                            <option value="phone">Phone sessions</option>
+                            <option value="flexible">Flexible/Mixed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 3: Five Anchors Assessment & Completion -->
+                <div class="form-step" data-step="3">
+                    <h3>Step 3: Five Anchors Assessment</h3>
+                    
+                    <div class="info-box">
+                        <h4>About the Five Anchors</h4>
+                        <p>Rate how stable you currently feel in each of these five foundational areas. This helps me understand where to focus our work together and which anchor tools will be most helpful for you.</p>
+                    </div>
+
+                    <div class="anchor-assessment">
+                        <div class="anchor-item">
+                            <div class="anchor-header">
+                                <div class="anchor-icon physical">🧭</div>
+                                <div>
+                                    <div class="anchor-title">Physical Anchor</div>
+                                    <small>Body awareness, health, energy, grounding</small>
+                                </div>
+                            </div>
+                            <p style="margin-bottom: 1rem; font-size: 0.9rem;">How connected and stable do you feel in your physical body?</p>
+                            <div class="rating-scale">
+                                <button type="button" class="rating-btn" data-anchor="physical" data-value="1">1</button>
+                                <button type="button" class="rating-btn" data-anchor="physical" data-value="2">2</button>
+                                <button type="button" class="rating-btn" data-anchor="physical" data-value="3">3</button>
+                                <button type="button" class="rating-btn" data-anchor="physical" data-value="4">4</button>
+                                <button type="button" class="rating-btn" data-anchor="physical" data-value="5">5</button>
+                            </div>
+                            <small style="opacity: 0.7;">1 = Very unstable/disconnected, 5 = Very stable/connected</small>
+                        </div>
+
+                        <div class="anchor-item">
+                            <div class="anchor-header">
+                                <div class="anchor-icon mental">👓</div>
+                                <div>
+                                    <div class="anchor-title">Mental Anchor</div>
+                                    <small>Clarity, focus, mental organization, decision-making</small>
+                                </div>
+                            </div>
+                            <p style="margin-bottom: 1rem; font-size: 0.9rem;">How clear and organized does your thinking feel?</p>
+                            <div class="rating-scale">
+                                <button type="button" class="rating-btn" data-anchor="mental" data-value="1">1</button>
+                                <button type="button" class="rating-btn" data-anchor="mental" data-value="2">2</button>
+                                <button type="button" class="rating-btn" data-anchor="mental" data-value="3">3</button>
+                                <button type="button" class="rating-btn" data-anchor="mental" data-value="4">4</button>
+                                <button type="button" class="rating-btn" data-anchor="mental" data-value="5">5</button>
+                            </div>
+                            <small style="opacity: 0.7;">1 = Very foggy/chaotic, 5 = Very clear/organized</small>
+                        </div>
+
+                        <div class="anchor-item">
+                            <div class="anchor-header">
+                                <div class="anchor-icon emotional">🪣</div>
+                                <div>
+                                    <div class="anchor-title">Emotional Anchor</div>
+                                    <small>Emotional regulation, stability, resilience</small>
+                                </div>
+                            </div>
+                            <p style="margin-bottom: 1rem; font-size: 0.9rem;">How well do you handle and process your emotions?</p>
+                            <div class="rating-scale">
+                                <button type="button" class="rating-btn" data-anchor="emotional" data-value="1">1</button>
+                                <button type="button" class="rating-btn" data-anchor="emotional" data-value="2">2</button>
+                                <button type="button" class="rating-btn" data-anchor="emotional" data-value="3">3</button>
+                                <button type="button" class="rating-btn" data-anchor="emotional" data-value="4">4</button>
+                                <button type="button" class="rating-btn" data-anchor="emotional" data-value="5">5</button>
+                            </div>
+                            <small style="opacity: 0.7;">1 = Very reactive/unstable, 5 = Very stable/regulated</small>
+                        </div>
+
+                        <div class="anchor-item">
+                            <div class="anchor-header">
+                                <div class="anchor-icon spiritual">🕊️</div>
+                                <div>
+                                    <div class="anchor-title">Spiritual Anchor</div>
+                                    <small>Purpose, meaning, connection to the divine</small>
+                                </div>
+                            </div>
+                            <p style="margin-bottom: 1rem; font-size: 0.9rem;">How connected do you feel to your spiritual foundation and life purpose?</p>
+                            <div class="rating-scale">
+                                <button type="button" class="rating-btn" data-anchor="spiritual" data-value="1">1</button>
+                                <button type="button" class="rating-btn" data-anchor="spiritual" data-value="2">2</button>
+                                <button type="button" class="rating-btn" data-anchor="spiritual" data-value="3">3</button>
+                                <button type="button" class="rating-btn" data-anchor="spiritual" data-value="4">4</button>
+                                <button type="button" class="rating-btn" data-anchor="spiritual" data-value="5">5</button>
+                            </div>
+                            <small style="opacity: 0.7;">1 = Very disconnected/lost, 5 = Very connected/purposeful</small>
+                        </div>
+
+                        <div class="anchor-item">
+                            <div class="anchor-header">
+                                <div class="anchor-icon relational">🌐</div>
+                                <div>
+                                    <div class="anchor-title">Relational Anchor</div>
+                                    <small>Relationships, boundaries, community, connection</small>
+                                </div>
+                            </div>
+                            <p style="margin-bottom: 1rem; font-size: 0.9rem;">How healthy and fulfilling are your relationships?</p>
+                            <div class="rating-scale">
+                                <button type="button" class="rating-btn" data-anchor="relational" data-value="1">1</button>
+                                <button type="button" class="rating-btn" data-anchor="relational" data-value="2">2</button>
+                                <button type="button" class="rating-btn" data-anchor="relational" data-value="3">3</button>
+                                <button type="button" class="rating-btn" data-anchor="relational" data-value="4">4</button>
+                                <button type="button" class="rating-btn" data-anchor="relational" data-value="5">5</button>
+                            </div>
+                            <small style="opacity: 0.7;">1 = Very isolated/conflicted, 5 = Very connected/harmonious</small>
+                        </div>
+                    </div>
+
+                    <div class="lesley-intro">
+                        <div class="lesley-photo">L</div>
+                        <h4 style="color: var(--accent-color); margin-bottom: 1rem;">Working Together</h4>
+                        <p style="margin-bottom: 1rem;">Based on your assessment, I'll create a personalized approach to strengthen your anchors and help you find stability in the chaos. We'll work together to build practical tools you can use every day.</p>
+                        <p style="font-weight: 600;">I'll contact you within 24 hours to schedule our first session.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additional-info">Anything else you'd like me to know?</label>
+                        <textarea id="additional-info" class="form-textarea" 
+                                  placeholder="Questions, concerns, specific preferences, or anything else that would help me serve you better"></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms-agreement" class="checkbox-input" required>
+                        <label for="terms-agreement" class="checkbox-label">
+                            I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a> for Five Anchors coaching.
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="contact-consent" class="checkbox-input" required>
+                        <label for="contact-consent" class="checkbox-label">
+                            I consent to being contacted by Lesley to schedule sessions and receive coaching support.
+                        </label>
+                    </div>
+                </div>
+
+                <div id="validation-messages"></div>
+
+                <div class="form-actions">
+                    <button type="button" id="prev-btn" class="btn btn-secondary" disabled>
+                        ← Previous
+                    </button>
+                    <button type="button" id="next-btn" class="btn btn-primary">
+                        Next →
+                    </button>
+                    <button type="submit" id="submit-btn" class="btn btn-primary" style="display: none;">
+                        Start My Five Anchors Journey
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class LesleyIntake {
+            constructor() {
+                this.currentStep = 1;
+                this.totalSteps = 3;
+                this.formData = {};
+                this.anchorRatings = {};
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.updateProgress();
+            }
+
+            setupEventListeners() {
+                // Navigation buttons
+                document.getElementById('next-btn').addEventListener('click', () => this.nextStep());
+                document.getElementById('prev-btn').addEventListener('click', () => this.prevStep());
+                document.getElementById('submit-btn').addEventListener('click', (e) => this.submitForm(e));
+
+                // Anchor rating buttons
+                document.querySelectorAll('.rating-btn').forEach(btn => {
+                    btn.addEventListener('click', () => this.selectRating(btn));
+                });
+
+                // Form inputs for real-time validation
+                document.querySelectorAll('.form-input, .form-textarea, .form-select').forEach(input => {
+                    input.addEventListener('blur', () => this.validateField(input));
+                });
+
+                // Crisis support monitoring
+                document.getElementById('crisis-support').addEventListener('change', (e) => {
+                    this.handleCrisisResponse(e.target.value);
+                });
+            }
+
+            selectRating(btn) {
+                const anchor = btn.dataset.anchor;
+                const value = parseInt(btn.dataset.value);
+                
+                // Remove selected from siblings
+                document.querySelectorAll(`[data-anchor="${anchor}"]`).forEach(b => {
+                    b.classList.remove('selected');
+                });
+                
+                // Add selected to clicked button
+                btn.classList.add('selected');
+                
+                // Store rating
+                this.anchorRatings[anchor] = value;
+            }
+
+            handleCrisisResponse(value) {
+                if (value === 'crisis' || value === 'significant-distress') {
+                    const modal = document.createElement('div');
+                    modal.className = 'crisis-modal';
+                    modal.style.cssText = `
+                        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                        background: rgba(0,0,0,0.8); display: flex; align-items: center;
+                        justify-content: center; z-index: 1000;
+                    `;
+                    
+                    const urgentText = value === 'crisis' ? 
+                        'If you\'re having thoughts of self-harm or are in immediate danger, please reach out for support right now:' :
+                        'It sounds like you\'re going through a difficult time. Here are some immediate support resources:';
+                    
+                    modal.innerHTML = `
+                        <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 500px; text-align: center;">
+                            <h3 style="color: var(--error-color); margin-bottom: 1rem;">Support Available Right Now</h3>
+                            <p style="margin-bottom: 1.5rem;">${urgentText}</p>
+                            <div style="margin-bottom: 1.5rem; text-align: left;">
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Immediate Support:</div>
+                                <div>🇺🇸 988 Suicide & Crisis Lifeline: <strong>988</strong></div>
+                                <div>📱 Crisis Text Line: Text HOME to <strong>741741</strong></div>
+                                <div>🚨 Emergency Services: <strong>911</strong></div>
+                                <div style="margin-top: 0.5rem;">📧 Lesley: <strong>lesley@claritymetabolics.com</strong></div>
+                            </div>
+                            <button onclick="this.closest('.crisis-modal').remove()" 
+                                    style="background: var(--accent-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer;">
+                                Continue with intake
+                            </button>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(modal);
+                }
+            }
+
+            validateField(field) {
+                const value = field.value.trim();
+                const isRequired = field.hasAttribute('required');
+                
+                if (isRequired && !value) {
+                    field.style.borderColor = 'var(--error-color)';
+                    return false;
+                } else {
+                    field.style.borderColor = 'var(--card-border)';
+                    return true;
+                }
+            }
+
+            validateStep(step) {
+                const stepElement = document.querySelector(`[data-step="${step}"]`);
+                const requiredFields = stepElement.querySelectorAll('[required]');
+                let valid = true;
+                const errors = [];
+
+                requiredFields.forEach(field => {
+                    if (!this.validateField(field)) {
+                        valid = false;
+                        const label = stepElement.querySelector(`label[for="${field.id}"]`);
+                        if (label) {
+                            errors.push(`${label.textContent.replace(' *', '')} is required`);
+                        }
+                    }
+                });
+
+                // Step-specific validation
+                if (step === 3) {
+                    const requiredAnchors = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
+                    const missingRatings = requiredAnchors.filter(anchor => !this.anchorRatings[anchor]);
+                    
+                    if (missingRatings.length > 0) {
+                        valid = false;
+                        errors.push('Please rate all five anchors');
+                    }
+                }
+
+                this.displayValidationMessages(errors);
+                return valid;
+            }
+
+            displayValidationMessages(errors) {
+                const container = document.getElementById('validation-messages');
+                
+                if (errors.length === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="validation-message">
+                        <strong>Please complete the following:</strong>
+                        <ul style="margin: 0.5rem 0 0 1rem;">
+                            ${errors.map(error => `<li>${error}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            nextStep() {
+                if (this.validateStep(this.currentStep)) {
+                    this.collectStepData();
+                    
+                    if (this.currentStep < this.totalSteps) {
+                        this.currentStep++;
+                        this.showStep();
+                        this.updateProgress();
+                    }
+                }
+            }
+
+            prevStep() {
+                if (this.currentStep > 1) {
+                    this.currentStep--;
+                    this.showStep();
+                    this.updateProgress();
+                }
+            }
+
+            showStep() {
+                // Hide all steps
+                document.querySelectorAll('.form-step').forEach(step => {
+                    step.classList.remove('active');
+                });
+
+                // Show current step
+                document.querySelector(`[data-step="${this.currentStep}"]`).classList.add('active');
+
+                // Update navigation buttons
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                const submitBtn = document.getElementById('submit-btn');
+
+                prevBtn.disabled = this.currentStep === 1;
+                
+                if (this.currentStep === this.totalSteps) {
+                    nextBtn.style.display = 'none';
+                    submitBtn.style.display = 'block';
+                } else {
+                    nextBtn.style.display = 'block';
+                    submitBtn.style.display = 'none';
+                }
+
+                // Clear validation messages when moving between steps
+                document.getElementById('validation-messages').innerHTML = '';
+            }
+
+            updateProgress() {
+                const progressPercent = (this.currentStep / this.totalSteps) * 100;
+                document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+
+                // Update step dots
+                document.querySelectorAll('.step-dot').forEach((dot, index) => {
+                    dot.classList.remove('active', 'completed');
+                    
+                    if (index + 1 < this.currentStep) {
+                        dot.classList.add('completed');
+                    } else if (index + 1 === this.currentStep) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+
+            collectStepData() {
+                const currentStepElement = document.querySelector(`[data-step="${this.currentStep}"]`);
+                const inputs = currentStepElement.querySelectorAll('input, textarea, select');
+                
+                inputs.forEach(input => {
+                    if (input.type === 'checkbox') {
+                        this.formData[input.id] = input.checked;
+                    } else {
+                        this.formData[input.id] = input.value;
+                    }
+                });
+
+                // Store anchor ratings
+                if (Object.keys(this.anchorRatings).length > 0) {
+                    this.formData.anchorRatings = { ...this.anchorRatings };
+                }
+            }
+
+            async submitForm(e) {
+                e.preventDefault();
+                
+                if (!this.validateStep(this.currentStep)) {
+                    return;
+                }
+
+                this.collectStepData();
+
+                // Show loading state
+                const submitBtn = document.getElementById('submit-btn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = 'Submitting...';
+                submitBtn.disabled = true;
+
+                try {
+                    await this.processIntake();
+                    this.showSuccessMessage();
+                    
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    this.displayValidationMessages(['Submission failed. Please try again.']);
+                } finally {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            }
+
+            async processIntake() {
+                // Create client record for Lesley
+                const clientData = {
+                    ...this.formData,
+                    assignedCoachId: 'lesley_001', // Lesley's coach ID
+                    anchorRatings: this.anchorRatings,
+                    submittedAt: new Date().toISOString(),
+                    status: 'pending_contact',
+                    clientId: 'CLIENT_' + Date.now(),
+                    coachName: 'Lesley'
+                };
+
+                // Save to localStorage (replace with actual API call later)
+                localStorage.setItem('lesleyClientIntake', JSON.stringify(clientData));
+                
+                // Add to coach's client list for dashboard
+                this.addToCoachDashboard(clientData);
+                
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                console.log('Lesley client intake completed:', clientData);
+            }
+
+            addToCoachDashboard(clientData) {
+                // Get existing coach clients or create new list
+                const coachClients = JSON.parse(localStorage.getItem('cm_coach_clients') || '[]');
+                
+                // Add this client to Lesley's dashboard
+                coachClients.push({
+                    id: clientData.clientId,
+                    name: clientData['full-name'],
+                    email: clientData.email,
+                    assignedCoachId: 'lesley_001',
+                    lastActivity: new Date().toISOString(),
+                    checkIns: {
+                        [new Date().toISOString().split('T')[0]]: {
+                            ratings: clientData.anchorRatings,
+                            notes: {
+                                intake: `Initial intake completed. Goals: ${clientData['primary-goals']?.substring(0, 100)}...`
+                            }
+                        }
+                    },
+                    goals: clientData['primary-goals'],
+                    challenges: clientData['current-challenges'],
+                    timezone: clientData.timezone,
+                    sessionFormat: clientData['session-format'],
+                    sessionFrequency: clientData['session-frequency']
+                });
+                
+                localStorage.setItem('cm_coach_clients', JSON.stringify(coachClients));
+            }
+
+            showSuccessMessage() {
+                const form = document.getElementById('lesley-intake-form');
+                
+                form.innerHTML = `
+                    <div class="success-message">
+                        <h3>Welcome to Five Anchors!</h3>
+                        <p>Your intake is complete and I'll be in touch within 24 hours.</p>
+                    </div>
+                    
+                    <div class="lesley-intro">
+                        <div class="lesley-photo">L</div>
+                        <h4 style="color: var(--accent-color); margin-bottom: 1rem;">What Happens Next</h4>
+                        <div style="text-align: left; margin-bottom: 1.5rem;">
+                            <p style="margin-bottom: 0.75rem;"><strong>📧 Personal Contact:</strong> I'll email you within 24 hours to schedule our first session</p>
+                            <p style="margin-bottom: 0.75rem;"><strong>🗓️ First Session:</strong> We'll dive deeper into your goals and create your personalized Five Anchors plan</p>
+                            <p style="margin-bottom: 0.75rem;"><strong>🔧 Dashboard Access:</strong> You'll receive login credentials to track your progress and access anchor tools</p>
+                            <p><strong>📈 Your Journey:</strong> We'll work together to strengthen your anchors and build lasting stability</p>
+                        </div>
+                        <p style="font-weight: 600; color: var(--accent-color);">I'm excited to work with you on this journey to grounded living!</p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="../dashboard/index.html" class="btn btn-primary">
+                            Preview Your Dashboard
+                        </a>
+                        <a href="mailto:lesley@claritymetabolics.com" class="btn btn-secondary">
+                            Email Me Directly
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize the intake system
+        document.addEventListener('DOMContentLoaded', function() {
+            new LesleyIntake();
+        });
+    </script>
+</body>
+</html>
