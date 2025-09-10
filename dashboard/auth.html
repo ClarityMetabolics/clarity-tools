@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Five Anchors Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --physical-color: #7C8B60;
+            --mental-color: #B7AFA3;
+            --emotional-color: #C97D7D;
+            --spiritual-color: #B6B0C3;
+            --relational-color: #E8934A;
+            --bg-color: #FEFEFE;
+            --text-color: #2C2C2C;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E5E5;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --accent-color: #5A6C57;
+            --success-color: #4CAF50;
+            --error-color: #f44336;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, 
+                rgba(124, 139, 96, 0.1) 0%, 
+                rgba(183, 175, 163, 0.1) 25%, 
+                rgba(201, 125, 125, 0.1) 50%, 
+                rgba(182, 176, 195, 0.1) 75%, 
+                rgba(232, 147, 74, 0.1) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+        }
+
+        .auth-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px var(--shadow);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .auth-form {
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .auth-btn:hover {
+            background: var(--physical-color);
+            transform: translateY(-1px);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-message {
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .auth-message.success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .auth-message.error {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .auth-message.info {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid #2196F3;
+            color: #2196F3;
+        }
+
+        .role-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .role-options {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .role-option {
+            flex: 1;
+            padding: 0.5rem;
+            border: 2px solid var(--card-border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .role-option.selected {
+            border-color: var(--accent-color);
+            background: rgba(90, 108, 87, 0.1);
+        }
+
+        .help-text {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .demo-login {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .demo-login h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .demo-btn {
+            width: 100%;
+            background: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .demo-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .role-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="logo">Five Anchors Platform</div>
+        <div class="subtitle">Sign in to access your coaching dashboard</div>
+
+        <form class="auth-form" id="auth-form">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    class="form-input" 
+                    placeholder="your@email.com"
+                    required
+                >
+            </div>
+
+            <div class="role-selector">
+                <label>I am a:</label>
+                <div class="role-options">
+                    <div class="role-option selected" data-role="client">
+                        Client
+                    </div>
+                    <div class="role-option" data-role="coach">
+                        Coach
+                    </div>
+                </div>
+            </div>
+
+            <div id="auth-messages"></div>
+
+            <button type="submit" class="auth-btn" id="signin-btn">
+                Send Magic Link
+            </button>
+        </form>
+
+        <div class="help-text">
+            We'll send you a secure magic link to sign in. No passwords needed!
+        </div>
+
+        <!-- Demo login for development -->
+        <div class="demo-login">
+            <h4>Demo Access (Development)</h4>
+            <button class="demo-btn" onclick="demoLogin('client')">
+                Demo Client Login
+            </button>
+            <button class="demo-btn" onclick="demoLogin('coach')">
+                Demo Coach Login
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { authManager, showNotification } from './js/supabase-config.js';
+
+        let selectedRole = 'client';
+        let isLoading = false;
+
+        // Initialize auth interface
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeRoleSelector();
+            initializeForm();
+            checkAuthStatus();
+        });
+
+        function initializeRoleSelector() {
+            const roleOptions = document.querySelectorAll('.role-option');
+            
+            roleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    roleOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedRole = this.dataset.role;
+                });
+            });
+        }
+
+        function initializeForm() {
+            const form = document.getElementById('auth-form');
+            
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (isLoading) return;
+                
+                const email = document.getElementById('email').value.trim();
+                
+                if (!email) {
+                    showAuthMessage('Please enter your email address', 'error');
+                    return;
+                }
+
+                await signInWithMagicLink(email);
+            });
+        }
+
+        async function signInWithMagicLink(email) {
+            isLoading = true;
+            const btn = document.getElementById('signin-btn');
+            const originalText = btn.textContent;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span>Sending...';
+            
+            try {
+                const { data, error } = await authManager.signInWithEmail(email);
+                
+                if (error) {
+                    showAuthMessage(`Error: ${error.message}`, 'error');
+                } else {
+                    showAuthMessage(
+                        `Magic link sent to ${email}! Check your email and click the link to sign in.`,
+                        'success'
+                    );
+                    
+                    // Store selected role for after sign-in
+                    localStorage.setItem('pendingUserRole', selectedRole);
+                }
+            } catch (err) {
+                showAuthMessage('Failed to send magic link. Please try again.', 'error');
+                console.error('Auth error:', err);
+            } finally {
+                isLoading = false;
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        function showAuthMessage(message, type) {
+            const container = document.getElementById('auth-messages');
+            container.innerHTML = `<div class="auth-message ${type}">${message}</div>`;
+            
+            // Auto-clear error messages after 5 seconds
+            if (type === 'error') {
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 5000);
+            }
+        }
+
+        async function checkAuthStatus() {
+            // Check if user is already authenticated
+            const { session } = await authManager.getSession();
+            
+            if (session?.user) {
+                // User is already logged in, redirect to appropriate dashboard
+                redirectToDashboard(authManager.isCoach);
+            }
+
+            // Listen for successful authentication
+            document.addEventListener('userLoaded', function(e) {
+                const { isCoach } = e.detail;
+                showAuthMessage('Successfully signed in! Redirecting...', 'success');
+                
+                setTimeout(() => {
+                    redirectToDashboard(isCoach);
+                }, 1500);
+            });
+        }
+
+        function redirectToDashboard(isCoach) {
+            if (isCoach) {
+                window.location.href = './coach-dashboard.html';
+            } else {
+                window.location.href = './index.html';
+            }
+        }
+
+        // Demo login functions for development
+        window.demoLogin = function(role) {
+            if (role === 'client') {
+                localStorage.setItem('demoUser', JSON.stringify({
+                    id: 'demo-client-001',
+                    email: 'demo.client@example.com',
+                    name: 'Demo Client',
+                    role: 'client'
+                }));
+                redirectToDashboard(false);
+            } else if (role === 'coach') {
+                localStorage.setItem('demoUser', JSON.stringify({
+                    id: 'demo-coach-001',
+                    email: 'demo.coach@example.com',
+                    name: 'Demo Coach',
+                    role: 'coach'
+                }));
+                redirectToDashboard(true);
+            }
+        };
+
+        // Handle URL parameters (for magic link returns)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('type') === 'magiclink') {
+            showAuthMessage('Processing sign-in...', 'info');
+        }
+    </script>
+</body>
+</html>
