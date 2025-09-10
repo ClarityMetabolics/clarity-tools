@@ -3,17 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coach Dashboard - Five Anchors Platform</title>
+    <title>The Five Anchors Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Color System */
             --physical-color: #7C8B60;
             --mental-color: #B7AFA3;
             --emotional-color: #C97D7D;
             --spiritual-color: #B6B0C3;
             --relational-color: #E8934A;
+            --discernment-color: #7A94A8;
+            
+            /* Theme Variables - Light Mode */
             --bg-color: #FEFEFE;
             --text-color: #2C2C2C;
+            --header-bg: #F8F8F8;
             --nav-bg: #FFFFFF;
             --nav-border: #E5E5E5;
             --nav-hover: #F0F0F0;
@@ -21,63 +26,133 @@
             --card-border: #E5E5E5;
             --shadow: rgba(0, 0, 0, 0.1);
             --accent-color: #5A6C57;
-            --alert-low: #f44336;
-            --success-color: #4CAF50;
+            --locked-color: #999;
+            --warning-color: #FF9800;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        [data-theme="dark"] {
+            --bg-color: #1A1A1A;
+            --text-color: #E5E5E5;
+            --header-bg: #2A2A2A;
+            --nav-bg: #2A2A2A;
+            --nav-border: #404040;
+            --nav-hover: #3A3A3A;
+            --card-bg: #2A2A2A;
+            --card-border: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --accent-color: #8A9C87;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Open Sans', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* Header - Ethereal Design */
         .header {
             background: linear-gradient(135deg, 
                 rgba(124, 139, 96, 0.7) 0%, 
                 rgba(183, 175, 163, 0.7) 25%, 
                 rgba(201, 125, 125, 0.7) 50%, 
                 rgba(182, 176, 195, 0.7) 75%, 
-                rgba(232, 147, 74, 0.7) 100%);
+                rgba(232, 147, 74, 0.7) 100%),
+                linear-gradient(45deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.05) 100%);
+            border-bottom: 2px solid var(--nav-border);
             padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                position: static;
+            }
         }
 
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
             padding: 0 1rem;
+            position: relative;
         }
 
         .logo {
             font-family: 'Libre Baskerville', serif;
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: 700;
             color: white;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            margin-bottom: 0.75rem;
+            text-align: center;
         }
 
-        .coach-info {
+        .subtitle-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             color: white;
-            text-align: right;
+            font-size: 1rem;
+            font-weight: 400;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            text-align: center;
         }
 
-        .coach-name {
-            font-weight: 600;
-            font-size: 1.1rem;
+        .subtitle-icon {
+            font-size: 1.3rem;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
         }
 
-        .coach-role {
-            font-size: 0.9rem;
-            opacity: 0.8;
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: white;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main Navigation */
         .main-nav {
             background: var(--nav-bg);
             border-bottom: 1px solid var(--nav-border);
+            position: sticky;
+            top: 73px;
+            z-index: 99;
+        }
+
+        @media (max-width: 768px) {
+            .main-nav {
+                position: static;
+            }
         }
 
         .nav-content {
@@ -89,34 +164,62 @@
         .nav-menu {
             display: flex;
             overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .nav-menu::-webkit-scrollbar {
+            display: none;
         }
 
         .nav-item {
+            flex: 0 0 auto;
             padding: 1rem 1.5rem;
             cursor: pointer;
             border-bottom: 3px solid transparent;
             transition: all 0.3s ease;
+            white-space: nowrap;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            white-space: nowrap;
         }
 
-        .nav-item:hover { background: var(--nav-hover); }
-        .nav-item.active { 
-            border-bottom-color: var(--accent-color); 
-            background: var(--nav-hover); 
+        .nav-item:hover {
+            background: var(--nav-hover);
         }
 
+        .nav-item.active {
+            border-bottom-color: var(--accent-color);
+            background: var(--nav-hover);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem 1rem;
+            min-height: calc(100vh - 250px);
         }
 
-        .section { display: none; }
-        .section.active { display: block; }
+        .section {
+            display: none;
+        }
 
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Headers */
         .section-header {
             margin-bottom: 2rem;
             text-align: center;
@@ -125,8 +228,8 @@
         .section-title {
             font-family: 'Libre Baskerville', serif;
             font-size: 2rem;
-            color: var(--accent-color);
             margin-bottom: 0.5rem;
+            color: var(--accent-color);
         }
 
         .section-subtitle {
@@ -134,6 +237,7 @@
             opacity: 0.8;
         }
 
+        /* Cards */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -149,716 +253,1990 @@
             color: var(--accent-color);
         }
 
-        .coach-controls {
+        /* Five Anchors Progress Display */
+        .anchors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .anchor-circle {
+            display: flex;
+            justify-content: center;
+        }
+
+        .circle-progress {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .coach-selector {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .coach-selector select {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--card-border);
-            border-radius: 6px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            min-width: 200px;
-        }
-
-        .supervisor-toggle {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
+            justify-content: center;
             transition: all 0.3s ease;
+            cursor: pointer;
+            opacity: 1.0;
         }
 
-        .supervisor-toggle:hover {
-            opacity: 0.9;
+        .circle-progress:hover {
+            transform: scale(1.05);
         }
 
-        .supervisor-toggle.active {
+        .circle-fill {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            transition: all 0.5s ease;
+        }
+
+        /* Anchor-specific filled circle backgrounds */
+        .anchor-circle[data-anchor="physical"] .circle-progress {
             background: var(--physical-color);
         }
 
-        .view-indicator {
-            padding: 0.5rem 1rem;
-            background: var(--nav-hover);
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
+        .anchor-circle[data-anchor="mental"] .circle-progress {
+            background: var(--mental-color);
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+        .anchor-circle[data-anchor="emotional"] .circle-progress {
+            background: var(--emotional-color);
         }
 
-        .stat-card {
-            background: var(--nav-hover);
-            padding: 1rem;
-            border-radius: 8px;
+        .anchor-circle[data-anchor="spiritual"] .circle-progress {
+            background: var(--spiritual-color);
+        }
+
+        .anchor-circle[data-anchor="relational"] .circle-progress {
+            background: var(--relational-color);
+        }
+
+        .circle-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
+            z-index: 2;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent-color);
+        .anchor-icon {
+            font-size: 1.5rem;
             margin-bottom: 0.25rem;
         }
 
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
+        .anchor-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.1rem;
+            opacity: 0.9;
         }
 
-        .clients-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        .anchor-subtitle {
+            font-size: 0.6rem;
+            font-weight: 400;
+            margin-bottom: 0.25rem;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .anchor-rating {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Overall Wellness */
+        .overall-wellness {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .overall-wellness h4 {
+            margin-bottom: 1rem;
+            font-family: 'Libre Baskerville', serif;
+        }
+
+        .wellness-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--card-border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .wellness-fill {
+            height: 100%;
+            background: linear-gradient(90deg, 
+                var(--physical-color) 0%, 
+                var(--mental-color) 25%, 
+                var(--emotional-color) 50%, 
+                var(--spiritual-color) 75%, 
+                var(--relational-color) 100%);
+            transition: width 0.5s ease;
+        }
+
+        /* Daily Check-In Styles */
+        .check-in-date {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .daily-inputs {
+            display: flex;
+            flex-direction: column;
             gap: 1.5rem;
         }
 
-        .client-card {
+        .anchor-input {
+            padding: 1rem;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .anchor-input:hover {
+            border-color: var(--accent-color);
+        }
+
+        .anchor-input label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .input-icon {
+            font-size: 1.25rem;
+        }
+
+        .rating-scale {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            justify-content: center;
+        }
+
+        .rating-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--card-border);
+            border-radius: 50%;
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .rating-btn:hover {
+            border-color: var(--accent-color);
+            background: var(--nav-hover);
+        }
+
+        .rating-btn.selected {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .anchor-notes {
+            width: 100%;
+            min-height: 60px;
+            padding: 0.75rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .anchor-notes:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* Check-in Actions */
+        .check-in-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .save-checkin-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .save-checkin-btn:hover {
+            background: var(--physical-color);
+            transform: translateY(-2px);
+        }
+
+        .clear-checkin-btn {
+            background: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--card-border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-checkin-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        /* Focus Recommendations */
+        .focus-message {
+            text-align: center;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .focus-recommendation {
+            padding: 1rem;
+            background: var(--nav-hover);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .focus-recommendation h4 {
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        /* Crisis Support Button - Always Visible */
+        .crisis-support {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #D32F2F;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .crisis-support:hover {
+            background: #B71C1C;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(211, 47, 47, 0.4);
+        }
+
+        /* Placeholder Content */
+        .placeholder {
+            text-align: center;
+            padding: 3rem;
+            opacity: 0.6;
+        }
+
+        .placeholder h3 {
+            margin-bottom: 1rem;
+        }
+
+        /* Anchor Tools Grid */
+        .anchor-tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tool-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 12px;
             padding: 1.5rem;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow);
+            position: relative;
         }
 
-        .client-card:hover {
+        .tool-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 16px var(--shadow);
         }
 
-        .client-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
+        .tool-card.locked {
+            opacity: 0.6;
+            background: var(--nav-hover);
         }
 
-        .client-name {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 1.2rem;
-            color: var(--accent-color);
-            margin-bottom: 0.25rem;
+        .tool-card.locked:hover {
+            transform: none;
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
-        .client-email {
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-
-        /* FIXED: Compact status badges with even padding */
-        .client-status {
-            padding: 0.1rem 0.4rem;
+        .lock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(153, 153, 153, 0.1);
             border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            line-height: 1.1;
-            display: inline-block;
-        }
-
-        .status-active { background: var(--success-color); color: white; }
-        .status-concern { background: var(--alert-low); color: white; }
-        .status-inactive { background: var(--nav-border); color: var(--text-color); }
-
-        .anchor-summary {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .anchor-mini {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(2px);
         }
 
-        .anchor-mini.physical { background: var(--physical-color); }
-        .anchor-mini.mental { background: var(--mental-color); }
-        .anchor-mini.emotional { background: var(--emotional-color); }
-        .anchor-mini.spiritual { background: var(--spiritual-color); }
-        .anchor-mini.relational { background: var(--relational-color); }
-
-        .anchor-mini.low {
-            box-shadow: 0 0 8px var(--alert-low);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .client-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .client-btn {
-            flex: 1;
-            padding: 0.5rem 0.8rem;
-            border: 1px solid var(--accent-color);
-            background: transparent;
-            color: var(--accent-color);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.8rem;
-        }
-
-        .client-btn:hover {
-            background: var(--accent-color);
-            color: white;
-        }
-
-        .client-btn.primary {
-            background: var(--accent-color);
-            color: white;
-        }
-
-        .client-btn.transfer {
-            border-color: var(--relational-color);
-            color: var(--relational-color);
-        }
-
-        .client-btn.transfer:hover {
-            background: var(--relational-color);
-            color: white;
-        }
-
-        .alert-banner {
-            background: var(--alert-low);
-            color: white;
-            padding: 1rem;
+        .lock-message {
+            background: var(--card-bg);
+            border: 1px solid var(--locked-color);
             border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            color: var(--locked-color);
+            font-weight: 600;
+            max-width: 250px;
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .tool-info {
+            flex: 1;
+        }
+
+        .tool-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+            color: var(--accent-color);
+        }
+
+        .tool-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            font-style: italic;
+            margin: 0;
+        }
+
+        .tool-description {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .tool-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
             margin-bottom: 1.5rem;
         }
 
-        .alert-title {
+        .feature-tag {
+            background: var(--nav-hover);
+            color: var(--text-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .tool-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 1rem 1.5rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
             font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: none;
+            cursor: pointer;
+        }
+
+        .tool-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0.9;
+        }
+
+        .tool-button.locked {
+            background: var(--locked-color);
+            cursor: not-allowed;
+        }
+
+        .tool-button.locked:hover {
+            transform: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            opacity: 0.6;
+        }
+
+        .button-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .tool-button:hover .button-arrow {
+            transform: translateX(4px);
+        }
+
+        .tool-button.locked:hover .button-arrow {
+            transform: none;
+        }
+
+        .access-indicator {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .access-unlocked {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+
+        .access-partial {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
+        }
+
+        .access-locked {
+            background: rgba(153, 153, 153, 0.1);
+            color: var(--locked-color);
+            border: 1px solid var(--locked-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.4rem;
+                text-align: center;
+            }
+            
+            .subtitle-container {
+                font-size: 0.9rem;
+                text-align: center;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .theme-toggle {
+                top: 0.5rem;
+                right: 0.5rem;
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .nav-item {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .crisis-support {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .anchors-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+
+            .circle-progress {
+                width: 100px;
+                height: 100px;
+            }
+
+            .circle-fill {
+                width: 100px;
+                height: 100px;
+            }
+
+            .anchor-tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tool-card {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .subtitle-container {
+                font-size: 0.8rem;
+            }
+            
+            .nav-item .nav-text {
+                display: none;
+            }
+
+            .nav-item {
+                padding: 0.75rem;
+            }
+        }
+
+        /* Journal Styles */
+        .journal-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .journal-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: inherit;
+        }
+
+        .journal-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .journal-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.75rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .journal-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .journal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .save-journal-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .save-journal-btn:hover {
+            background: var(--physical-color);
+            transform: translateY(-2px);
+        }
+
+        .clear-journal-btn {
+            background: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--card-border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-journal-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .journal-entry {
+            background: var(--nav-hover);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 0.5rem;
         }
 
+        .entry-date {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .entry-rating {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .entry-meta {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 0.75rem;
+        }
+
+        .entry-reflection {
+            line-height: 1.6;
+        }
+
         @media (max-width: 768px) {
-            .clients-grid { grid-template-columns: 1fr; }
-            .client-actions { flex-wrap: wrap; }
-            .client-btn { font-size: 0.7rem; }
-            .coach-controls { flex-direction: column; align-items: flex-start; }
+            .journal-actions {
+                flex-direction: column;
+            }
+            
+            .save-journal-btn,
+            .clear-journal-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <div class="logo">Coach Dashboard - Five Anchors</div>
-            <div class="coach-info">
-                <div class="coach-name">Lesley Turner</div>
-                <div class="coach-role">Lead Coach</div>
+            <div class="logo">The Five Anchors Dashboard</div>
+            <div class="subtitle-container">
+                <span class="subtitle-icon">⚓</span>
+                <span class="subtitle-text">Your Stability Center — navigate life from a grounded, conscious place</span>
             </div>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span>
+            </button>
         </div>
     </header>
 
+    <!-- Main Navigation -->
     <nav class="main-nav">
         <div class="nav-content">
             <div class="nav-menu">
-                <div class="nav-item active" data-section="clients">
-                    <span>👥</span>
-                    <span>My Clients</span>
+                <div class="nav-item active" onclick="showSection('dashboard')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">Dashboard</span>
                 </div>
-                <div class="nav-item" data-section="sessions">
-                    <span>📅</span>
-                    <span>Sessions</span>
+                <div class="nav-item" onclick="showSection('progress')">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">My Progress</span>
                 </div>
-                <div class="nav-item" data-section="insights">
-                    <span>📊</span>
-                    <span>Insights</span>
+                <div class="nav-item" onclick="showSection('anchors')">
+                    <span class="nav-icon">⚓</span>
+                    <span class="nav-text">Five Anchors</span>
                 </div>
-                <div class="nav-item" data-section="alerts">
-                    <span>⚠️</span>
-                    <span>Alerts</span>
+                <div class="nav-item" onclick="showSection('discernment')">
+                    <span class="nav-icon">🔍</span>
+                    <span class="nav-text">Discernment Tools</span>
                 </div>
-                <div class="nav-item" data-section="tools">
-                    <span>🔧</span>
-                    <span>Tools</span>
+                <div class="nav-item" onclick="showSection('reflect')">
+                    <span class="nav-icon">🙏</span>
+                    <span class="nav-text">Reflect & Reset</span>
+                </div>
+                <div class="nav-item" onclick="showSection('crisis')">
+                    <span class="nav-icon">🆘</span>
+                    <span class="nav-text">Crisis Support</span>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Main Content -->
     <main class="main-content">
         
-        <section id="clients" class="section active">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
             <div class="section-header">
-                <h1 class="section-title">My Clients</h1>
-                <p class="section-subtitle">Monitor client progress and engagement</p>
+                <h1 class="section-title">Your Clarity Dashboard</h1>
+                <p class="section-subtitle">Monitor your anchor strength and find your center</p>
             </div>
-
-            <div class="coach-controls">
-                <div class="coach-selector">
-                    <label for="coach-filter">View clients for:</label>
-                    <select id="coach-filter">
-                        <option value="current">My Clients Only (Lesley)</option>
-                        <option value="all">All Clients (Supervisor View)</option>
-                        <option value="coach_lesley">Lesley Turner - Individual</option>
-                        <option value="coach_sarah">Sarah Johnson - Individual</option>
-                        <option value="coach_mike">Mike Chen - Individual</option>
-                    </select>
+            
+            <!-- Five Anchors Progress Display -->
+            <div class="card">
+                <h3>Five Anchors Status</h3>
+                <div class="anchors-grid">
+                    <div class="anchor-circle" data-anchor="physical">
+                        <div class="circle-progress" data-rating="0">
+                            <div class="circle-fill"></div>
+                            <div class="circle-content">
+                                <span class="anchor-icon">🧭</span>
+                                <span class="anchor-name">Physical</span>
+                                <span class="anchor-subtitle">grounding</span>
+                                <span class="anchor-rating">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="anchor-circle" data-anchor="mental">
+                        <div class="circle-progress" data-rating="0">
+                            <div class="circle-fill"></div>
+                            <div class="circle-content">
+                                <span class="anchor-icon">👓</span>
+                                <span class="anchor-name">Mental</span>
+                                <span class="anchor-subtitle">clarity</span>
+                                <span class="anchor-rating">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="anchor-circle" data-anchor="emotional">
+                        <div class="circle-progress" data-rating="0">
+                            <div class="circle-fill"></div>
+                            <div class="circle-content">
+                                <span class="anchor-icon">🪣</span>
+                                <span class="anchor-name">Emotional</span>
+                                <span class="anchor-subtitle">stability</span>
+                                <span class="anchor-rating">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="anchor-circle" data-anchor="spiritual">
+                        <div class="circle-progress" data-rating="0">
+                            <div class="circle-fill"></div>
+                            <div class="circle-content">
+                                <span class="anchor-icon">🕊️</span>
+                                <span class="anchor-name">Spiritual</span>
+                                <span class="anchor-subtitle">communion</span>
+                                <span class="anchor-rating">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="anchor-circle" data-anchor="relational">
+                        <div class="circle-progress" data-rating="0">
+                            <div class="circle-fill"></div>
+                            <div class="circle-content">
+                                <span class="anchor-icon">🌐</span>
+                                <span class="anchor-name">Relational</span>
+                                <span class="anchor-subtitle">harmony</span>
+                                <span class="anchor-rating">-</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <button class="supervisor-toggle" id="supervisor-mode">
-                    Enable Supervisor View
-                </button>
+                <div class="overall-wellness">
+                    <h4>Overall Wellness: <span id="overall-rating">Not Rated</span></h4>
+                    <div class="wellness-bar">
+                        <div class="wellness-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Check-In -->
+            <div class="card">
+                <h3>Daily Check-In</h3>
+                <p class="check-in-date">Today: <span id="current-date"></span></p>
                 
-                <div class="view-indicator" id="view-indicator">
-                    Individual Coach View
+                <div class="daily-inputs">
+                    <div class="anchor-input" data-anchor="physical">
+                        <label>
+                            <span class="input-icon">🧭</span>
+                            <span class="input-label">Physical Anchor (grounding)</span>
+                        </label>
+                        <div class="rating-scale">
+                            <button class="rating-btn" data-value="1">1</button>
+                            <button class="rating-btn" data-value="2">2</button>
+                            <button class="rating-btn" data-value="3">3</button>
+                            <button class="rating-btn" data-value="4">4</button>
+                            <button class="rating-btn" data-value="5">5</button>
+                        </div>
+                        <textarea placeholder="Optional notes about your physical state..." class="anchor-notes"></textarea>
+                    </div>
+                    
+                    <div class="anchor-input" data-anchor="mental">
+                        <label>
+                            <span class="input-icon">👓</span>
+                            <span class="input-label">Mental Anchor (clarity)</span>
+                        </label>
+                        <div class="rating-scale">
+                            <button class="rating-btn" data-value="1">1</button>
+                            <button class="rating-btn" data-value="2">2</button>
+                            <button class="rating-btn" data-value="3">3</button>
+                            <button class="rating-btn" data-value="4">4</button>
+                            <button class="rating-btn" data-value="5">5</button>
+                        </div>
+                        <textarea placeholder="Optional notes about your mental clarity..." class="anchor-notes"></textarea>
+                    </div>
+                    
+                    <div class="anchor-input" data-anchor="emotional">
+                        <label>
+                            <span class="input-icon">🪣</span>
+                            <span class="input-label">Emotional Anchor (stability)</span>
+                        </label>
+                        <div class="rating-scale">
+                            <button class="rating-btn" data-value="1">1</button>
+                            <button class="rating-btn" data-value="2">2</button>
+                            <button class="rating-btn" data-value="3">3</button>
+                            <button class="rating-btn" data-value="4">4</button>
+                            <button class="rating-btn" data-value="5">5</button>
+                        </div>
+                        <textarea placeholder="Optional notes about your emotional state..." class="anchor-notes"></textarea>
+                    </div>
+                    
+                    <div class="anchor-input" data-anchor="spiritual">
+                        <label>
+                            <span class="input-icon">🕊️</span>
+                            <span class="input-label">Spiritual Anchor (communion)</span>
+                        </label>
+                        <div class="rating-scale">
+                            <button class="rating-btn" data-value="1">1</button>
+                            <button class="rating-btn" data-value="2">2</button>
+                            <button class="rating-btn" data-value="3">3</button>
+                            <button class="rating-btn" data-value="4">4</button>
+                            <button class="rating-btn" data-value="5">5</button>
+                        </div>
+                        <textarea placeholder="Optional notes about your spiritual connection..." class="anchor-notes"></textarea>
+                    </div>
+                    
+                    <div class="anchor-input" data-anchor="relational">
+                        <label>
+                            <span class="input-icon">🌐</span>
+                            <span class="input-label">Relational Anchor (harmony)</span>
+                        </label>
+                        <div class="rating-scale">
+                            <button class="rating-btn" data-value="1">1</button>
+                            <button class="rating-btn" data-value="2">2</button>
+                            <button class="rating-btn" data-value="3">3</button>
+                            <button class="rating-btn" data-value="4">4</button>
+                            <button class="rating-btn" data-value="5">5</button>
+                        </div>
+                        <textarea placeholder="Optional notes about your relationships..." class="anchor-notes"></textarea>
+                    </div>
+                </div>
+                
+                <div class="check-in-actions">
+                    <button class="save-checkin-btn" onclick="saveCheckIn()">Save Today's Check-In</button>
+                    <button class="clear-checkin-btn" onclick="clearCheckIn()">Clear All</button>
                 </div>
             </div>
 
+            <!-- Today's Focus & Recommendations -->
             <div class="card">
-                <h3>Overview</h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="total-clients">3</div>
-                        <div class="stat-label">Total Clients</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="active-today">2</div>
-                        <div class="stat-label">Active Today</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="low-anchors">1</div>
-                        <div class="stat-label">Need Attention</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="avg-wellness">3.2</div>
-                        <div class="stat-label">Avg Wellness</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Client Dashboard</h3>
-                <div class="clients-grid" id="clients-list">
-                    <!-- Clients loaded by JavaScript -->
+                <h3>Today's Focus</h3>
+                <div id="focus-recommendations">
+                    <p class="focus-message">Complete your daily check-in to receive personalized recommendations.</p>
                 </div>
             </div>
         </section>
 
-        <section id="sessions" class="section">
+        <!-- My Progress Section -->
+        <section id="progress" class="section">
             <div class="section-header">
-                <h1 class="section-title">Sessions & Appointments</h1>
-                <p class="section-subtitle">Manage client appointments and session notes</p>
-            </div>
-
-            <div class="card">
-                <h3>Quick Actions</h3>
-                <div class="client-actions" style="max-width: 600px;">
-                    <button class="client-btn primary">📅 Schedule New Session</button>
-                    <button class="client-btn">📋 Today's Sessions</button>
-                    <button class="client-btn">⏰ Upcoming Sessions</button>
-                    <button class="client-btn primary" onclick="window.open('session-guidance.html', '_blank')">📋 Start Guided Session</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Today's Schedule</h3>
-                <p>Session management features coming soon.</p>
-            </div>
-        </section>
-
-        <section id="insights" class="section">
-            <div class="section-header">
-                <h1 class="section-title">Practice Insights</h1>
-                <p class="section-subtitle">Patterns and trends across your client base</p>
+                <h1 class="section-title">My Progress</h1>
+                <p class="section-subtitle">Track your journey over time</p>
             </div>
             
             <div class="card">
-                <h3>Analytics</h3>
-                <p>Advanced analytics coming soon.</p>
+                <h3>Calendar View</h3>
+                <div class="placeholder">
+                    <h3>Progress Calendar</h3>
+                    <p>Visual calendar showing daily anchor ratings and patterns</p>
+                    <small>(Coming in next build phase)</small>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Trends & Insights</h3>
+                <div class="placeholder">
+                    <h3>Weekly/Monthly Analysis</h3>
+                    <p>Identify patterns and growth areas in your anchor development</p>
+                    <small>(Coming in next build phase)</small>
+                </div>
             </div>
         </section>
 
-        <section id="alerts" class="section">
+        <!-- Five Anchors Section -->
+        <section id="anchors" class="section">
             <div class="section-header">
-                <h1 class="section-title">Client Alerts</h1>
-                <p class="section-subtitle">Clients who need immediate attention</p>
-            </div>
-            
-            <div id="alerts-container">
-                <!-- Generated by JavaScript -->
-            </div>
-        </section>
-
-        <section id="tools" class="section">
-            <div class="section-header">
-                <h1 class="section-title">Coach Tools</h1>
-                <p class="section-subtitle">Manage client access and progress</p>
+                <h1 class="section-title">Five Anchors</h1>
+                <p class="section-subtitle">Access your grounding tools</p>
             </div>
             
             <div class="card">
-                <h3>Module Management</h3>
-                <p>Release and track Five Anchors and Discernment Tools for individual clients.</p>
+                <h3>Your Anchor Tools</h3>
+                <p style="margin-bottom: 2rem; opacity: 0.8;">Each anchor tool guides you through a complete process to strengthen that area of your life. Your coach controls access to these tools based on your session progress.</p>
+                
+                <div class="anchor-tools-grid" id="anchor-tools-grid">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Discernment Tools Section -->
+        <section id="discernment" class="section">
+            <div class="section-header">
+                <h1 class="section-title">Discernment Tools</h1>
+                <p class="section-subtitle">Refine your clarity and spiritual discernment</p>
+            </div>
+            
+            <div class="card">
+                <h3>Your Discernment Tools</h3>
+                <p style="margin-bottom: 2rem; opacity: 0.8;">Advanced tools for spiritual discernment and clarity. These tools are available as part of the 12-week coaching program and are released by your coach based on your progress.</p>
+                
+                <div class="anchor-tools-grid" id="discernment-tools-grid">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Reflect & Reset Section -->
+        <section id="reflect" class="section">
+            <div class="section-header">
+                <h1 class="section-title">Reflect & Reset</h1>
+                <p class="section-subtitle">Find peace and grounding in the moment</p>
+            </div>
+            
+            <div class="card">
+                <h3>Private Journal</h3>
+                <p style="margin-bottom: 1.5rem; opacity: 0.8;">Reflect on your thoughts, patterns, and growth. These entries are private and never shared with coaches.</p>
+                
+                <!-- Journal Entry Form -->
+                <div class="journal-form">
+                    <div class="form-group">
+                        <label for="journal-date">Date:</label>
+                        <input type="date" id="journal-date" class="journal-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="overall-feeling">How are you feeling overall today? (1-5)</label>
+                        <div class="rating-scale">
+                            <button class="rating-btn journal-rating" data-value="1">1</button>
+                            <button class="rating-btn journal-rating" data-value="2">2</button>
+                            <button class="rating-btn journal-rating" data-value="3">3</button>
+                            <button class="rating-btn journal-rating" data-value="4">4</button>
+                            <button class="rating-btn journal-rating" data-value="5">5</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="thought-pattern">Primary thought pattern today:</label>
+                        <select id="thought-pattern" class="journal-input">
+                            <option value="">Select a pattern...</option>
+                            <option value="grateful">Grateful and positive</option>
+                            <option value="worried">Worried or anxious</option>
+                            <option value="overwhelmed">Overwhelmed</option>
+                            <option value="peaceful">Peaceful and centered</option>
+                            <option value="restless">Restless or unsettled</option>
+                            <option value="hopeful">Hopeful about the future</option>
+                            <option value="confused">Confused or uncertain</option>
+                            <option value="focused">Clear and focused</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="practice-used">What practice or tool helped you today?</label>
+                        <select id="practice-used" class="journal-input">
+                            <option value="">Select a practice...</option>
+                            <option value="prayer">Prayer or meditation</option>
+                            <option value="breathing">Breathing exercises</option>
+                            <option value="physical">Physical movement/exercise</option>
+                            <option value="anchor-tool">Used an anchor tool</option>
+                            <option value="discernment-tool">Used a discernment tool</option>
+                            <option value="boundaries">Set healthy boundaries</option>
+                            <option value="rest">Rest and self-care</option>
+                            <option value="connection">Connected with others</option>
+                            <option value="nature">Time in nature</option>
+                            <option value="none">Nothing specific today</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reflection-text">Your reflection:</label>
+                        <textarea id="reflection-text" class="journal-textarea" 
+                                  placeholder="What's on your heart today? What patterns do you notice? What are you learning about yourself?"></textarea>
+                    </div>
+                    
+                    <div class="journal-actions">
+                        <button class="save-journal-btn">Save Journal Entry</button>
+                        <button class="clear-journal-btn">Clear Form</button>
+                    </div>
+                </div>
+                
+                <!-- Recent Entries -->
+                <div class="recent-entries" style="margin-top: 2rem;">
+                    <h4>Recent Entries</h4>
+                    <div id="journal-entries-list">
+                        <p class="focus-message">Your recent journal entries will appear here.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Prayer & Meditation</h3>
+                <div class="placeholder">
+                    <h3>Guided Reflection</h3>
+                    <p>Trinity prayers and meaningful reflection opportunities</p>
+                    <small>(Coming in next build phase)</small>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Breathing & Grounding</h3>
+                <div class="placeholder">
+                    <h3>Immediate Grounding Tools</h3>
+                    <p>Quick breathing exercises and body awareness practices</p>
+                    <small>(Coming in next build phase)</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Crisis Support Section -->
+        <section id="crisis" class="section">
+            <div class="section-header">
+                <h1 class="section-title">Crisis Support</h1>
+                <p class="section-subtitle">Immediate help when you need it most</p>
+            </div>
+            
+            <div class="card">
+                <h3>Quick Grounding</h3>
+                <div class="placeholder">
+                    <h3>Emergency Grounding Protocol</h3>
+                    <p>Fast-access grounding techniques for crisis moments</p>
+                    <small>(Coming in next build phase)</small>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Emergency Resources</h3>
+                <div class="placeholder">
+                    <h3>Crisis Contacts & Tools</h3>
+                    <p>Immediate access to crisis hotlines and emergency grounding techniques</p>
+                    <small>(Coming in next build phase)</small>
+                </div>
             </div>
         </section>
 
     </main>
 
+    <!-- Always-Visible Crisis Support Button -->
+    <button class="crisis-support" onclick="showSection('crisis')">
+        🆘 Crisis Support
+    </button>
+
     <script>
-        const sampleClients = [
+        // Simulated client access data - in production, this would come from server/coach assignments
+        const clientModuleAccess = {
+            fiveAnchors: {
+                physical: { guide: true, webTool: false },
+                mental: { guide: false, webTool: false },
+                emotional: { guide: false, webTool: false },
+                spiritual: { guide: false, webTool: false },
+                relational: { guide: false, webTool: false }
+            },
+            discernmentTools: {
+                thoughtRefiner: { unlocked: false },
+                beliefThreader: { unlocked: false },
+                echoEraser: { unlocked: false },
+                forgivenessFilter: { unlocked: false },
+                connectionCalibrator: { unlocked: false }
+            },
+            coachingPackage: {
+                type: '6-week', // or '12-week'
+                hasDiscernmentAccess: false
+            }
+        };
+
+        // Module definitions matching coach dashboard
+        const anchorModules = [
             {
-                id: 'client001',
-                name: 'Sarah Johnson',
-                email: 'sarah.j@email.com',
-                assignedCoachId: 'coach_lesley',
-                lastActivity: '2025-01-08T10:30:00Z',
-                checkIns: {
-                    '2025-01-08': {
-                        ratings: { physical: 4, mental: 3, emotional: 2, spiritual: 4, relational: 3 },
-                        notes: { emotional: 'Feeling overwhelmed with work deadlines' }
-                    }
-                }
+                key: 'physical',
+                title: 'Physical Anchor',
+                subtitle: 'A Grounding Compass',
+                icon: '🧭',
+                description: '9-step body awareness and nervous system regulation process. Creates your physical "home base" for returning when overwhelmed.',
+                features: ['Body Awareness', 'Regulation Techniques', 'Pattern Recognition'],
+                guideUrl: '../anchor-guides/physical-anchor-guide.html',
+                toolUrl: '../five-anchors/physical-anchor.html',
+                color: 'var(--physical-color)'
             },
             {
-                id: 'client002', 
-                name: 'Michael Chen',
-                email: 'mchen@email.com',
-                assignedCoachId: 'coach_lesley',
-                lastActivity: '2025-01-07T16:45:00Z',
-                checkIns: {
-                    '2025-01-07': {
-                        ratings: { physical: 2, mental: 2, emotional: 1, spiritual: 3, relational: 2 },
-                        notes: { 
-                            emotional: 'Relationship stress affecting everything',
-                            physical: 'Not sleeping well, very tired'
-                        }
-                    }
-                }
+                key: 'mental',
+                title: 'Mental Anchor',
+                subtitle: 'The Clarity Lens',
+                icon: '👓',
+                description: '7-step process to filter mental noise and see truth clearly. Separates grounded thoughts from fear-driven narratives.',
+                features: ['Mental Filtering', 'Perspective Shifting', 'Control Assessment'],
+                guideUrl: '../anchor-guides/mental-anchor-guide.html',
+                toolUrl: '../five-anchors/mental-anchor.html',
+                color: 'var(--mental-color)'
             },
             {
-                id: 'client003',
-                name: 'Emma Rodriguez', 
-                email: 'emma.r@email.com',
-                assignedCoachId: 'coach_lesley',
-                lastActivity: '2025-01-08T08:15:00Z',
-                checkIns: {
-                    '2025-01-08': {
-                        ratings: { physical: 5, mental: 4, emotional: 4, spiritual: 5, relational: 4 },
-                        notes: { spiritual: 'Amazing prayer time this morning' }
-                    }
-                }
+                key: 'emotional',
+                title: 'Emotional Anchor',
+                subtitle: 'The Stability Well',
+                icon: '🪣',
+                description: '8-step journey from emotional reactivity to conscious response. Transforms overwhelming feelings into wise action through your body\'s early warning system.',
+                features: ['Emotional Processing', 'Early Warning System', 'Response Choice'],
+                guideUrl: '../anchor-guides/emotional-anchor-guide.html',
+                toolUrl: '../five-anchors/emotional-anchor.html',
+                color: 'var(--emotional-color)'
             },
             {
-                id: 'client004',
-                name: 'David Park',
-                email: 'david.p@email.com',
-                assignedCoachId: 'coach_sarah',
-                lastActivity: '2025-01-08T14:20:00Z',
-                checkIns: {
-                    '2025-01-08': {
-                        ratings: { physical: 3, mental: 4, emotional: 3, spiritual: 3, relational: 2 },
-                        notes: { relational: 'Struggling with team dynamics at work' }
-                    }
-                }
+                key: 'spiritual',
+                title: 'Spiritual Anchor',
+                subtitle: 'The Communion Bridge',
+                icon: '🕊️',
+                description: '7-step spiritual grounding through divine connection, personal calling, and eternal foundation. Non-denominational approach.',
+                features: ['Spiritual Grounding', 'Calling Identification', 'Practice Building'],
+                guideUrl: '../anchor-guides/spiritual-anchor-guide.html',
+                toolUrl: '../five-anchors/spiritual-anchor.html',
+                color: 'var(--spiritual-color)'
             },
             {
-                id: 'client005',
-                name: 'Lisa Thompson',
-                email: 'lisa.t@email.com',
-                assignedCoachId: 'coach_mike',
-                lastActivity: '2025-01-07T09:30:00Z',
-                checkIns: {
-                    '2025-01-07': {
-                        ratings: { physical: 4, mental: 5, emotional: 4, spiritual: 4, relational: 5 },
-                        notes: { mental: 'Great week of focused work and clarity' }
-                    }
-                }
+                key: 'relational',
+                title: 'Relational Anchor',
+                subtitle: 'The Harmony Web',
+                icon: '🌐',
+                description: '8-step journey to build authentic connections from grounded center. Boundary wisdom and community building strategies.',
+                features: ['Relationship Assessment', 'Boundary Setting', 'Community Building'],
+                guideUrl: '../anchor-guides/relational-anchor-guide.html',
+                toolUrl: '../five-anchors/relational-anchor.html',
+                color: 'var(--relational-color)'
             }
         ];
 
-        const availableCoaches = [
-            { id: 'coach_lesley', name: 'Lesley Turner', role: 'Lead Coach' },
-            { id: 'coach_sarah', name: 'Sarah Johnson', role: 'Associate Coach' },
-            { id: 'coach_mike', name: 'Mike Chen', role: 'Associate Coach' }
+        const discernmentModules = [
+            {
+                key: 'thoughtRefiner',
+                title: 'Thought Refiner',
+                subtitle: 'Purifying Thoughts at the Source',
+                icon: '🔍',
+                description: '7-step sophisticated mental filtering system that examines thoughts for truth, clarity, and spiritual alignment.',
+                features: ['Mental Purification', 'Truth Detection', 'Clarity Enhancement'],
+                toolUrl: '../discernment-tools/thought-refiner.html'
+            },
+            {
+                key: 'beliefThreader',
+                title: 'Belief Threader',
+                subtitle: 'Examining Crystallized Thoughts',
+                icon: '🧵',
+                description: '6-step journey through crystallized thought patterns. Explores how thoughts became hardened beliefs.',
+                features: ['Belief Archaeology', 'Trinity Integration', 'Truth Threading'],
+                toolUrl: '../discernment-tools/belief-threader.html'
+            },
+            {
+                key: 'echoEraser',
+                title: 'Echo Eraser',
+                subtitle: 'Clearing Energetic Aftermath',
+                icon: '🌊',
+                description: '8-step advanced integration process for clearing lingering emotional and spiritual residue.',
+                features: ['Echo Integration', 'Sitting Practice', 'Truth Planting'],
+                toolUrl: '../discernment-tools/echo-eraser.html'
+            },
+            {
+                key: 'forgivenessFilter',
+                title: 'Forgiveness Filter',
+                subtitle: 'Releasing Burdens with Grace',
+                icon: '🪶',
+                description: '7-step journey to process hurt and find authentic forgiveness. Separates honoring pain from carrying burdens.',
+                features: ['Pain Processing', 'Burden Release', 'Freedom Creation'],
+                toolUrl: '../discernment-tools/forgiveness-filter.html'
+            },
+            {
+                key: 'connectionCalibrator',
+                title: 'Connection Calibrator',
+                subtitle: 'Balancing Relationship Dynamics',
+                icon: '🌍',
+                description: '8-step relationship calibration tool. Navigate from dependence to independence to healthy interdependence.',
+                features: ['Relationship Assessment', 'Boundary Calibration', 'Connection Balance'],
+                toolUrl: '../discernment-tools/connection-calibrator-part1.html'
+            }
         ];
 
-        let currentCoachId = 'coach_lesley';
-        let supervisorMode = false;
+        // Theme Management
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
 
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+            } else {
+                themeIcon.textContent = '🌙';
+            }
+        }
+
+        // Navigation Management
         function showSection(sectionName) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
             
-            const section = document.getElementById(sectionName);
-            const navItem = document.querySelector(`[data-section="${sectionName}"]`);
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
             
-            if (section) section.classList.add('active');
-            if (navItem) navItem.classList.add('active');
-        }
-
-        function filterClientsByCoach() {
-            const filterValue = document.getElementById('coach-filter').value;
-            const viewIndicator = document.getElementById('view-indicator');
-            const supervisorToggle = document.getElementById('supervisor-mode');
-            
-            if (filterValue === 'all') {
-                supervisorMode = true;
-                viewIndicator.textContent = 'Supervisor View - All Coaches';
-                supervisorToggle.classList.add('active');
-                supervisorToggle.textContent = 'Disable Supervisor View';
-            } else if (filterValue === 'current') {
-                supervisorMode = false;
-                viewIndicator.textContent = 'Individual Coach View';
-                supervisorToggle.classList.remove('active');
-                supervisorToggle.textContent = 'Enable Supervisor View';
-            } else {
-                supervisorMode = true;
-                const selectedCoach = availableCoaches.find(coach => coach.id === filterValue);
-                viewIndicator.textContent = `Viewing: ${selectedCoach?.name || 'Unknown Coach'}`;
-                supervisorToggle.classList.add('active');
-                supervisorToggle.textContent = 'Disable Supervisor View';
+            const targetSection = document.getElementById(sectionName);
+            if (targetSection) {
+                targetSection.classList.add('active');
             }
             
-            loadClients();
-        }
-
-        function getFilteredClients() {
-            const filterValue = document.getElementById('coach-filter').value;
+            const activeNavItem = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (activeNavItem) {
+                activeNavItem.classList.add('active');
+            }
             
-            if (filterValue === 'all') {
-                return sampleClients;
-            } else if (filterValue === 'current') {
-                return sampleClients.filter(client => client.assignedCoachId === currentCoachId);
-            } else {
-                return sampleClients.filter(client => client.assignedCoachId === filterValue);
+            localStorage.setItem('currentSection', sectionName);
+
+            // Load specific section content
+            if (sectionName === 'anchors') {
+                loadAnchorTools();
+            } else if (sectionName === 'discernment') {
+                loadDiscernmentTools();
             }
         }
 
-        function loadClients() {
-            const clientsList = document.getElementById('clients-list');
-            if (!clientsList) return;
+        function loadSection() {
+            const savedSection = localStorage.getItem('currentSection');
+            if (savedSection && document.getElementById(savedSection)) {
+                showSection(savedSection);
+            } else {
+                showSection('dashboard');
+            }
+        }
 
-            const filteredClients = getFilteredClients();
-            
-            const clientCards = filteredClients.map(client => {
-                const latestCheckIn = getLatestCheckIn(client);
-                const status = getClientStatus(client, latestCheckIn);
-                const anchorSummary = getAnchorSummary(latestCheckIn);
-                const lastActivityText = getLastActivityText(client.lastActivity);
-                const assignedCoach = availableCoaches.find(coach => coach.id === client.assignedCoachId);
-                const coachName = assignedCoach ? assignedCoach.name : 'Unassigned';
+        // Module Access Control
+        function loadAnchorTools() {
+            const container = document.getElementById('anchor-tools-grid');
+            if (!container) return;
+
+            container.innerHTML = anchorModules.map(module => {
+                const access = clientModuleAccess.fiveAnchors[module.key];
+                const hasGuideAccess = access.guide;
+                const hasToolAccess = access.webTool;
+                const hasAnyAccess = hasGuideAccess || hasToolAccess;
+
+                let accessIndicator = '';
+                let cardClass = '';
+                let content = '';
+                
+                if (hasAnyAccess) {
+                    // Unlocked content - show full details
+                    if (hasGuideAccess && hasToolAccess) {
+                        accessIndicator = '<div class="access-indicator access-unlocked">✅ Full Access - Guide & Tool Unlocked</div>';
+                    } else {
+                        const unlockedItems = [];
+                        if (hasGuideAccess) unlockedItems.push('Guide');
+                        if (hasToolAccess) unlockedItems.push('Tool');
+                        accessIndicator = `<div class="access-indicator access-partial">🔓 Partial Access - ${unlockedItems.join(' & ')} Unlocked</div>`;
+                    }
+                    
+                    content = `
+                        <div class="tool-header">
+                            <span class="tool-icon">${module.icon}</span>
+                            <div class="tool-info">
+                                <h4 class="tool-title">${module.title}</h4>
+                                <p class="tool-subtitle">${module.subtitle}</p>
+                            </div>
+                        </div>
+                        <p class="tool-description">${module.description}</p>
+                        <div class="tool-features">
+                            ${module.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                        </div>
+                        ${accessIndicator}
+                        ${hasGuideAccess ? `<a href="${module.guideUrl}" target="_blank" class="tool-button" style="background: ${module.color}; margin-bottom: 0.5rem;">
+                            <span>📖 Open Guide (PDF)</span>
+                            <span class="button-arrow">→</span>
+                        </a>` : ''}
+                        ${hasToolAccess ? `<a href="${module.toolUrl}" target="_blank" class="tool-button" style="background: ${module.color};">
+                            <span>🔧 Use Web Tool</span>
+                            <span class="button-arrow">→</span>
+                        </a>` : ''}
+                    `;
+                } else {
+                    // Locked content - show minimal info with lock message
+                    cardClass = 'locked';
+                    accessIndicator = '<div class="access-indicator access-locked">🔒 Locked - Contact your coach to unlock</div>';
+                    
+                    content = `
+                        <div class="tool-header">
+                            <span class="tool-icon">${module.icon}</span>
+                            <div class="tool-info">
+                                <h4 class="tool-title">${module.title}</h4>
+                                <p class="tool-subtitle">${module.subtitle}</p>
+                            </div>
+                        </div>
+                        <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+                            <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">Module Locked</h4>
+                            <p style="color: var(--locked-color);">Your coach will unlock this when you're ready</p>
+                        </div>
+                        ${accessIndicator}
+                        <button class="tool-button locked">
+                            <span>🔒 Locked by Coach</span>
+                            <span class="button-arrow">⏸</span>
+                        </button>
+                    `;
+                }
 
                 return `
-                    <div class="client-card">
-                        <div class="client-header">
-                            <div>
-                                <div class="client-name">${client.name}</div>
-                                <div class="client-email">${client.email}</div>
-                                ${supervisorMode ? `<div style="font-size: 0.8rem; color: var(--accent-color); margin-top: 0.25rem;">Coach: ${coachName}</div>` : ''}
-                            </div>
-                            <div class="client-status ${status.class}">${status.text}</div>
-                        </div>
-                        
-                        <div style="margin-bottom: 1rem;">
-                            <div style="font-size: 0.85rem; opacity: 0.7;">Last Activity</div>
-                            <div style="font-weight: 600;">${lastActivityText}</div>
-                        </div>
-                        
-                        <div class="anchor-summary">
-                            ${anchorSummary}
-                        </div>
-                        
-                        <div class="client-actions">
-                            <button class="client-btn primary">View Progress</button>
-                            <button class="client-btn">Sessions</button>
-                            ${supervisorMode ? `<button class="client-btn transfer">Transfer</button>` : ''}
-                            <button class="client-btn">Message</button>
-                        </div>
+                    <div class="tool-card ${cardClass}">
+                        ${content}
                     </div>
                 `;
             }).join('');
-
-            clientsList.innerHTML = clientCards;
-            updateStats(filteredClients);
-            generateAlerts(filteredClients);
         }
 
-        function updateStats(clients) {
-            const totalClients = clients.length;
-            const activeToday = clients.filter(client => {
-                const lastActivity = new Date(client.lastActivity);
-                const today = new Date();
-                return lastActivity.toDateString() === today.toDateString();
-            }).length;
-            
-            let lowAnchorsCount = 0;
-            let totalRatings = 0;
-            let ratingCount = 0;
-            
-            clients.forEach(client => {
-                const latest = getLatestCheckIn(client);
-                if (latest && latest.ratings) {
-                    Object.values(latest.ratings).forEach(rating => {
-                        if (rating <= 2) lowAnchorsCount++;
-                        totalRatings += rating;
-                        ratingCount++;
-                    });
-                }
-            });
-            
-            const avgWellness = ratingCount > 0 ? (totalRatings / ratingCount).toFixed(1) : 0;
-            
-            document.getElementById('total-clients').textContent = totalClients;
-            document.getElementById('active-today').textContent = activeToday;
-            document.getElementById('low-anchors').textContent = Math.ceil(lowAnchorsCount / 5);
-            document.getElementById('avg-wellness').textContent = avgWellness;
-        }
+        function loadDiscernmentTools() {
+            const container = document.getElementById('discernment-tools-grid');
+            if (!container) return;
 
-        function getLatestCheckIn(client) {
-            const dates = Object.keys(client.checkIns).sort().reverse();
-            return dates.length > 0 ? client.checkIns[dates[0]] : null;
-        }
-
-        function getClientStatus(client, latestCheckIn) {
-            if (!latestCheckIn) return { class: 'status-inactive', text: 'No Data' };
-            
-            const hasLowRatings = Object.values(latestCheckIn.ratings).some(rating => rating <= 2);
-            return hasLowRatings ? 
-                { class: 'status-concern', text: 'Needs Attention' } :
-                { class: 'status-active', text: 'Active Today' };
-        }
-
-        function getAnchorSummary(checkIn) {
-            if (!checkIn || !checkIn.ratings) {
-                return '<span style="opacity: 0.5;">No recent check-ins</span>';
-            }
-
-            const anchors = [
-                { key: 'physical', class: 'physical' },
-                { key: 'mental', class: 'mental' }, 
-                { key: 'emotional', class: 'emotional' },
-                { key: 'spiritual', class: 'spiritual' },
-                { key: 'relational', class: 'relational' }
-            ];
-
-            return anchors.map(anchor => {
-                const rating = checkIn.ratings[anchor.key] || 0;
-                const lowClass = rating <= 2 ? ' low' : '';
-                return `<div class="anchor-mini ${anchor.class}${lowClass}" title="${anchor.key}: ${rating}/5">${rating}</div>`;
-            }).join('');
-        }
-
-        function getLastActivityText(lastActivity) {
-            const lastDate = new Date(lastActivity);
-            const now = new Date();
-            const diffHours = Math.floor((now - lastDate) / (1000 * 60 * 60));
-            
-            if (diffHours < 1) return 'Just now';
-            if (diffHours < 24) return `${diffHours} hours ago`;
-            
-            const diffDays = Math.floor(diffHours / 24);
-            return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
-        }
-
-        function generateAlerts(clients) {
-            const alertsContainer = document.getElementById('alerts-container');
-            if (!alertsContainer) return;
-
-            const alerts = [];
-            clients.forEach(client => {
-                const latest = getLatestCheckIn(client);
-                if (!latest) return;
-
-                Object.entries(latest.ratings).forEach(([anchor, rating]) => {
-                    if (rating <= 2) {
-                        const assignedCoach = availableCoaches.find(coach => coach.id === client.assignedCoachId);
-                        alerts.push({
-                            client: client.name,
-                            coach: assignedCoach?.name || 'Unassigned',
-                            type: 'Low Anchor Rating',
-                            details: `${anchor.charAt(0).toUpperCase() + anchor.slice(1)}: ${rating}/5`
-                        });
-                    }
-                });
-            });
-
-            if (alerts.length === 0) {
-                alertsContainer.innerHTML = '<div class="card"><h3>No Active Alerts</h3><p>All clients showing stable patterns.</p></div>';
+            // Check if client has access to discernment tools (12-week package only)
+            if (!clientModuleAccess.coachingPackage.hasDiscernmentAccess) {
+                container.innerHTML = `
+                    <div class="tool-card locked" style="grid-column: 1 / -1;">
+                        <div class="tool-header">
+                            <span class="tool-icon">🔍</span>
+                            <div class="tool-info">
+                                <h4 class="tool-title">Advanced Discernment Tools</h4>
+                                <p class="tool-subtitle">12-Week Program Content</p>
+                            </div>
+                        </div>
+                        <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🎓</div>
+                            <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">12-Week Package Required</h4>
+                            <p style="color: var(--locked-color);">Discernment Tools are available as part of the 12-week coaching program. Contact your coach to learn more about upgrading your package.</p>
+                        </div>
+                        <div class="access-indicator access-locked">🎓 Requires 12-Week Coaching Package</div>
+                        <button class="tool-button locked">
+                            <span>Contact Coach to Upgrade</span>
+                            <span class="button-arrow">📞</span>
+                        </button>
+                    </div>
+                `;
                 return;
             }
 
-            alertsContainer.innerHTML = alerts.map(alert => `
-                <div class="alert-banner">
-                    <div class="alert-title">${alert.client}${supervisorMode ? ` (Coach: ${alert.coach})` : ''} - ${alert.type}</div>
-                    <div>${alert.details}</div>
-                </div>
-            `).join('');
+            // Client has 12-week access, show individual tools based on coach permissions
+            container.innerHTML = discernmentModules.map(module => {
+                const access = clientModuleAccess.discernmentTools[module.key];
+                const hasAccess = access.unlocked;
+
+                let accessIndicator = '';
+                let cardClass = '';
+                let content = '';
+                
+                if (hasAccess) {
+                    // Unlocked content - show full details
+                    accessIndicator = '<div class="access-indicator access-unlocked">✅ Unlocked by Coach</div>';
+                    
+                    content = `
+                        <div class="tool-header">
+                            <span class="tool-icon">${module.icon}</span>
+                            <div class="tool-info">
+                                <h4 class="tool-title">${module.title}</h4>
+                                <p class="tool-subtitle">${module.subtitle}</p>
+                            </div>
+                        </div>
+                        <p class="tool-description">${module.description}</p>
+                        <div class="tool-features">
+                            ${module.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                        </div>
+                        ${accessIndicator}
+                        <a href="${module.toolUrl}" target="_blank" class="tool-button" style="background: var(--discernment-color);">
+                            <span>Begin ${module.title}</span>
+                            <span class="button-arrow">→</span>
+                        </a>
+                    `;
+                } else {
+                    // Locked content - show minimal info with lock message
+                    cardClass = 'locked';
+                    accessIndicator = '<div class="access-indicator access-locked">🔒 Locked - Your coach will unlock when ready</div>';
+                    
+                    content = `
+                        <div class="tool-header">
+                            <span class="tool-icon">${module.icon}</span>
+                            <div class="tool-info">
+                                <h4 class="tool-title">${module.title}</h4>
+                                <p class="tool-subtitle">${module.subtitle}</p>
+                            </div>
+                        </div>
+                        <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+                            <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">Tool Locked</h4>
+                            <p style="color: var(--locked-color);">Your coach will unlock this based on your session progress</p>
+                        </div>
+                        ${accessIndicator}
+                        <button class="tool-button locked">
+                            <span>🔒 Locked by Coach</span>
+                            <span class="button-arrow">⏸</span>
+                        </button>
+                    `;
+                }
+
+                return `
+                    <div class="tool-card ${cardClass}">
+                        ${content}
+                    </div>
+                `;
+            }).join('');
         }
 
-        function toggleSupervisorMode() {
-            const coachFilter = document.getElementById('coach-filter');
-            
-            if (supervisorMode) {
-                coachFilter.value = 'current';
-            } else {
-                coachFilter.value = 'all';
-            }
-            
-            filterClientsByCoach();
+        // Dashboard Initialization
+        function initializeDashboard() {
+            updateCurrentDate();
+            loadDailyRatings();
+            setupRatingButtons();
+            generateRecommendations();
         }
 
-        function initializeNavigation() {
-            const navItems = document.querySelectorAll('.nav-item');
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        function setupRatingButtons() {
+            const ratingButtons = document.querySelectorAll('.rating-btn');
             
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const sectionName = this.getAttribute('data-section');
-                    if (sectionName) {
-                        showSection(sectionName);
-                    }
+            ratingButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const anchorInput = this.closest('.anchor-input');
+                    const anchor = anchorInput.dataset.anchor;
+                    const value = parseInt(this.dataset.value);
+                    
+                    // Remove selected class from siblings
+                    const siblings = anchorInput.querySelectorAll('.rating-btn');
+                    siblings.forEach(btn => btn.classList.remove('selected'));
+                    
+                    // Add selected class to clicked button
+                    this.classList.add('selected');
+                    
+                    // Update progress circle
+                    updateAnchorProgress(anchor, value);
+                    
+                    // Generate new recommendations
+                    generateRecommendations();
                 });
             });
         }
 
-        function initializeCoachControls() {
-            const coachFilter = document.getElementById('coach-filter');
-            const supervisorToggle = document.getElementById('supervisor-mode');
+        function updateAnchorProgress(anchor, rating) {
+            const circle = document.querySelector(`.anchor-circle[data-anchor="${anchor}"] .circle-progress`);
+            const ratingDisplay = circle.querySelector('.anchor-rating');
             
-            if (coachFilter) {
-                coachFilter.addEventListener('change', filterClientsByCoach);
+            circle.dataset.rating = rating;
+            ratingDisplay.textContent = rating;
+            
+            // Calculate opacity based on rating (0.2 to 1.0)
+            const opacity = rating > 0 ? (rating / 5) * 0.8 + 0.2 : 0.1;
+            circle.style.opacity = opacity;
+            
+            updateOverallWellness();
+        }
+
+        function updateOverallWellness() {
+            const circles = document.querySelectorAll('.circle-progress');
+            let totalRating = 0;
+            let ratedCount = 0;
+            
+            circles.forEach(circle => {
+                const rating = parseInt(circle.dataset.rating);
+                if (rating > 0) {
+                    totalRating += rating;
+                    ratedCount++;
+                }
+            });
+            
+            const overallRatingElement = document.getElementById('overall-rating');
+            const wellnessFill = document.querySelector('.wellness-fill');
+            
+            if (ratedCount === 0) {
+                overallRatingElement.textContent = 'Not Rated';
+                wellnessFill.style.width = '0%';
+            } else {
+                const average = totalRating / ratedCount;
+                const percentage = (average / 5) * 100;
+                
+                overallRatingElement.textContent = `${average.toFixed(1)}/5`;
+                wellnessFill.style.width = `${percentage}%`;
+            }
+        }
+
+        function saveCheckIn() {
+            const today = new Date().toISOString().split('T')[0];
+            const checkInData = {
+                date: today,
+                ratings: {},
+                notes: {}
+            };
+            
+            // Collect ratings
+            const anchorInputs = document.querySelectorAll('.anchor-input');
+            anchorInputs.forEach(input => {
+                const anchor = input.dataset.anchor;
+                const selectedRating = input.querySelector('.rating-btn.selected');
+                const notes = input.querySelector('.anchor-notes').value;
+                
+                if (selectedRating) {
+                    checkInData.ratings[anchor] = parseInt(selectedRating.dataset.value);
+                }
+                
+                if (notes.trim()) {
+                    checkInData.notes[anchor] = notes.trim();
+                }
+            });
+            
+            // Save to localStorage
+            const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+            allCheckIns[today] = checkInData;
+            localStorage.setItem('dailyCheckIns', JSON.stringify(allCheckIns));
+            
+            // Show confirmation
+            showNotification('Daily check-in saved successfully!', 'success');
+            
+            // Update recommendations
+            generateRecommendations();
+        }
+
+        function clearCheckIn() {
+            if (confirm('Are you sure you want to clear all ratings and notes?')) {
+                // Clear all selected ratings
+                document.querySelectorAll('.rating-btn.selected').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                
+                // Clear all notes
+                document.querySelectorAll('.anchor-notes').forEach(textarea => {
+                    textarea.value = '';
+                });
+                
+                // Reset progress circles
+                document.querySelectorAll('.circle-progress').forEach(circle => {
+                    circle.dataset.rating = '0';
+                    circle.querySelector('.anchor-rating').textContent = '-';
+                    circle.style.opacity = '0.1';
+                });
+                
+                updateOverallWellness();
+                generateRecommendations();
+                
+                showNotification('Check-in cleared', 'info');
+            }
+        }
+
+        function loadDailyRatings() {
+            const today = new Date().toISOString().split('T')[0];
+            const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+            const todayData = allCheckIns[today];
+            
+            if (todayData) {
+                // Load ratings
+                Object.entries(todayData.ratings).forEach(([anchor, rating]) => {
+                    const anchorInput = document.querySelector(`.anchor-input[data-anchor="${anchor}"]`);
+                    if (anchorInput) {
+                        const ratingBtn = anchorInput.querySelector(`[data-value="${rating}"]`);
+                        
+                        if (ratingBtn) {
+                            ratingBtn.classList.add('selected');
+                            updateAnchorProgress(anchor, rating);
+                        }
+                    }
+                });
+                
+                // Load notes
+                Object.entries(todayData.notes).forEach(([anchor, note]) => {
+                    const anchorInput = document.querySelector(`.anchor-input[data-anchor="${anchor}"]`);
+                    if (anchorInput) {
+                        const notesField = anchorInput.querySelector('.anchor-notes');
+                        notesField.value = note;
+                    }
+                });
+            }
+        }
+
+        function generateRecommendations() {
+            const recommendationsContainer = document.getElementById('focus-recommendations');
+            const circles = document.querySelectorAll('.circle-progress');
+            
+            let ratings = {};
+            let hasRatings = false;
+            
+            circles.forEach(circle => {
+                const anchor = circle.closest('.anchor-circle').dataset.anchor;
+                const rating = parseInt(circle.dataset.rating);
+                if (rating > 0) {
+                    ratings[anchor] = rating;
+                    hasRatings = true;
+                }
+            });
+            
+            if (!hasRatings) {
+                recommendationsContainer.innerHTML = '<p class="focus-message">Complete your daily check-in to receive personalized recommendations.</p>';
+                return;
             }
             
-            if (supervisorToggle) {
-                supervisorToggle.addEventListener('click', toggleSupervisorMode);
+            // Find lowest rated anchor(s)
+            const lowestRating = Math.min(...Object.values(ratings));
+            const needsAttention = Object.entries(ratings)
+                .filter(([anchor, rating]) => rating === lowestRating)
+                .map(([anchor]) => anchor);
+            
+            let recommendations = [];
+            
+            // Generate specific recommendations
+            needsAttention.forEach(anchor => {
+                const recommendation = getAnchorRecommendation(anchor, lowestRating);
+                if (recommendation) {
+                    recommendations.push(recommendation);
+                }
+            });
+            
+            // Display recommendations
+            if (recommendations.length > 0) {
+                recommendationsContainer.innerHTML = recommendations.map(rec => `
+                    <div class="focus-recommendation">
+                        <h4>${rec.title}</h4>
+                        <p>${rec.description}</p>
+                        ${rec.action ? `<p><strong>Try this:</strong> ${rec.action}</p>` : ''}
+                    </div>
+                `).join('');
+            } else {
+                recommendationsContainer.innerHTML = '<p class="focus-message">Great work! All your anchors are showing strength today.</p>';
+            }
+        }
+
+        function getAnchorRecommendation(anchor, rating) {
+            const recommendations = {
+                physical: {
+                    title: '🧭 Physical Anchor Needs Attention',
+                    description: 'Your body is asking for care and attention today.',
+                    action: rating <= 2 ? 
+                        'Take 5 deep breaths, drink a glass of water, and do 3 gentle stretches.' :
+                        'Try a short walk or some light movement to reconnect with your body.'
+                },
+                mental: {
+                    title: '👓 Mental Anchor Needs Clarity',
+                    description: 'Your mind could use some clearing and focus.',
+                    action: rating <= 2 ? 
+                        'Write down 3 things that feel overwhelming, then identify one small action for each.' :
+                        'Take 10 minutes to organize your thoughts or practice mindfulness.'
+                },
+                emotional: {
+                    title: '🪣 Emotional Anchor Needs Support',
+                    description: 'Your emotional well-being deserves attention today.',
+                    action: rating <= 2 ? 
+                        'Acknowledge how you\'re feeling without judgment and consider reaching out to someone who cares.' :
+                        'Practice self-compassion and do something nurturing for yourself.'
+                },
+                spiritual: {
+                    title: '🕊️ Spiritual Anchor Needs Connection',
+                    description: 'Your spiritual foundation could use strengthening.',
+                    action: rating <= 2 ? 
+                        'Spend 5 minutes in prayer, meditation, or reading something meaningful.' :
+                        'Take a moment to reflect on what gives your life purpose and meaning.'
+                },
+                relational: {
+                    title: '🌐 Relational Anchor Needs Care',
+                    description: 'Your connections with others need attention.',
+                    action: rating <= 2 ? 
+                        'Reach out to one person you care about, even just to say hello.' :
+                        'Consider how you can show appreciation to someone important in your life.'
+                }
+            };
+            
+            return recommendations[anchor];
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 6px;
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Journal functionality
+        class JournalManager {
+            constructor() {
+                this.storageKey = 'cm_journal_v1';
+                this.entries = this.loadEntries();
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.setDefaultDate();
+                this.renderRecentEntries();
+            }
+            
+            setupEventListeners() {
+                const saveBtn = document.querySelector('.save-journal-btn');
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', () => this.saveEntry());
+                }
+                
+                const clearBtn = document.querySelector('.clear-journal-btn');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => this.clearForm());
+                }
+                
+                const ratingBtns = document.querySelectorAll('.journal-rating');
+                ratingBtns.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        ratingBtns.forEach(b => b.classList.remove('selected'));
+                        e.target.classList.add('selected');
+                    });
+                });
+            }
+            
+            setDefaultDate() {
+                const dateInput = document.getElementById('journal-date');
+                if (dateInput) {
+                    const today = new Date().toISOString().split('T')[0];
+                    dateInput.value = today;
+                }
+            }
+            
+            saveEntry() {
+                const dateInput = document.getElementById('journal-date');
+                const selectedRating = document.querySelector('.journal-rating.selected');
+                const thoughtPattern = document.getElementById('thought-pattern');
+                const practiceUsed = document.getElementById('practice-used');
+                const reflectionText = document.getElementById('reflection-text');
+                
+                // Validation
+                if (!dateInput.value) {
+                    showNotification('Please select a date', 'error');
+                    return;
+                }
+                
+                if (!selectedRating) {
+                    showNotification('Please rate your overall feeling', 'error');
+                    return;
+                }
+                
+                if (!reflectionText.value.trim()) {
+                    showNotification('Please write a reflection', 'error');
+                    return;
+                }
+                
+                // Create entry
+                const entry = {
+                    dateISO: dateInput.value,
+                    rating: parseInt(selectedRating.dataset.value),
+                    primaryThoughtPattern: thoughtPattern.value,
+                    practiceUsed: practiceUsed.value,
+                    reflection: reflectionText.value.trim(),
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Add to entries
+                this.entries.unshift(entry);
+                
+                // Keep only last 30 entries
+                if (this.entries.length > 30) {
+                    this.entries = this.entries.slice(0, 30);
+                }
+                
+                // Save to localStorage
+                this.saveEntries();
+                
+                // Show success
+                showNotification('Journal entry saved successfully!', 'success');
+                
+                // Clear form
+                this.clearForm();
+                
+                // Refresh display
+                this.renderRecentEntries();
+            }
+            
+            clearForm() {
+                document.querySelectorAll('.journal-rating').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                
+                document.getElementById('thought-pattern').value = '';
+                document.getElementById('practice-used').value = '';
+                document.getElementById('reflection-text').value = '';
+                
+                this.setDefaultDate();
+            }
+            
+            loadEntries() {
+                const stored = localStorage.getItem(this.storageKey);
+                return stored ? JSON.parse(stored) : [];
+            }
+            
+            saveEntries() {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.entries));
+            }
+            
+            renderRecentEntries() {
+                const container = document.getElementById('journal-entries-list');
+                if (!container) return;
+                
+                if (this.entries.length === 0) {
+                    container.innerHTML = '<p class="focus-message">Your recent journal entries will appear here.</p>';
+                    return;
+                }
+                
+                const recentEntries = this.entries.slice(0, 5);
+                
+                container.innerHTML = recentEntries.map(entry => {
+                    const date = new Date(entry.dateISO).toLocaleDateString();
+                    const thoughtPattern = entry.primaryThoughtPattern || 'Not specified';
+                    const practice = entry.practiceUsed || 'None specified';
+                    
+                    return `
+                        <div class="journal-entry">
+                            <div class="entry-header">
+                                <span class="entry-date">${date}</span>
+                                <span class="entry-rating">${entry.rating}/5</span>
+                            </div>
+                            <div class="entry-meta">
+                                <strong>Pattern:</strong> ${thoughtPattern} | <strong>Practice:</strong> ${practice}
+                            </div>
+                            <div class="entry-reflection">${entry.reflection}</div>
+                        </div>
+                    `;
+                }).join('');
             }
         }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            initializeNavigation();
-            initializeCoachControls();
-            loadClients();
+            loadTheme();
+            loadSection();
+            initializeDashboard();
+            
+            // Initialize journal when reflect section is active
+            setTimeout(() => {
+                const reflectSection = document.getElementById('reflect');
+                if (reflectSection && reflectSection.classList.contains('active')) {
+                    if (!window.journalManager) {
+                        window.journalManager = new JournalManager();
+                    }
+                }
+            }, 500);
         });
+
+        // Initialize journal when section becomes active
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('[onclick*="reflect"]')) {
+                setTimeout(() => {
+                    if (!window.journalManager) {
+                        window.journalManager = new JournalManager();
+                    }
+                }, 100);
+            }
+        });
+
+        // Add animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
