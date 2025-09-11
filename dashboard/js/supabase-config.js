@@ -92,7 +92,7 @@ export class AuthManager {
         const { data, error } = await supabase.auth.signInWithOtp({
             email: email,
             options: {
-                emailRedirectTo: window.location.origin + '/dashboard/'
+                emailRedirectTo: 'https://claritymetabolics.github.io/clarity-tools/dashboard/auth.html'
             }
         })
         return { data, error }
