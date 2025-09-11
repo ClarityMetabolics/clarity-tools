@@ -358,7 +358,7 @@
             50% { opacity: 0.7; }
         }
 
-        /* FIXED: Client Actions with Consistent Padding */
+        /* Client Actions with Consistent Padding */
         .client-actions {
             display: flex;
             gap: 0.5rem;
@@ -403,7 +403,6 @@
             color: white;
         }
 
-        /* FIXED: Transfer Button Styling */
         .client-btn.transfer {
             border-color: var(--transfer-color);
             color: var(--transfer-color);
@@ -627,7 +626,7 @@
             cursor: not-allowed;
         }
 
-        /* FIXED: Transfer Modal Styles */
+        /* Transfer Modal Styles */
         .transfer-modal {
             position: fixed;
             top: 0;
@@ -702,7 +701,7 @@
             opacity: 0.8;
         }
 
-        /* FIXED: Alert Banner with Consistent Button Padding */
+        /* Enhanced Alert Banner with Clickable Functionality */
         .alert-banner {
             background: var(--alert-low);
             color: white;
@@ -713,6 +712,14 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .alert-banner:hover {
+            background: #d32f2f;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
         }
 
         .alert-content {
@@ -757,6 +764,192 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
+        /* Client Detail Modal */
+        .client-detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+
+        .client-detail-modal.show {
+            display: flex;
+        }
+
+        .client-detail-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .client-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--nav-border);
+            padding-bottom: 1rem;
+        }
+
+        .client-detail-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .close-modal:hover {
+            opacity: 1;
+        }
+
+        .client-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-section {
+            background: var(--nav-hover);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .detail-section h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        .detail-value {
+            text-align: right;
+        }
+
+        .anchor-ratings-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .rating-indicator {
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .rating-indicator.physical { background: var(--physical-color); color: white; }
+        .rating-indicator.mental { background: var(--mental-color); color: white; }
+        .rating-indicator.emotional { background: var(--emotional-color); color: white; }
+        .rating-indicator.spiritual { background: var(--spiritual-color); color: white; }
+        .rating-indicator.relational { background: var(--relational-color); color: white; }
+
+        .rating-indicator.low {
+            box-shadow: 0 0 8px var(--alert-low);
+            animation: pulse 2s infinite;
+        }
+
+        .module-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .access-item {
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .access-item.unlocked {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+        }
+
+        .access-item.locked {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--alert-low);
+        }
+
+        .client-detail-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--nav-border);
+        }
+
+        .detail-action-btn {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--accent-color);
+            background: transparent;
+            color: var(--accent-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .detail-action-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .detail-action-btn.primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .detail-action-btn.modules {
+            border-color: var(--relational-color);
+            color: var(--relational-color);
+        }
+
+        .detail-action-btn.modules:hover {
+            background: var(--relational-color);
+            color: white;
+        }
+
         @media (max-width: 768px) {
             .clients-grid { grid-template-columns: 1fr; }
             .client-actions { flex-direction: column; }
@@ -769,6 +962,8 @@
             .bulk-btn-grid { grid-template-columns: 1fr; }
             .alert-banner { flex-direction: column; }
             .alert-actions { align-self: stretch; }
+            .client-detail-grid { grid-template-columns: 1fr; }
+            .client-detail-actions { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -976,7 +1171,7 @@
 
     </main>
 
-    <!-- FIXED: Transfer Client Modal -->
+    <!-- Transfer Client Modal -->
     <div class="transfer-modal" id="transfer-modal">
         <div class="transfer-modal-content">
             <h3>Transfer Client</h3>
@@ -995,6 +1190,86 @@
                     <button class="transfer-btn cancel" onclick="closeTransferModal()">Cancel</button>
                     <button class="transfer-btn confirm" onclick="confirmTransfer()">Transfer Client</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Client Detail Modal -->
+    <div class="client-detail-modal" id="client-detail-modal">
+        <div class="client-detail-content">
+            <div class="client-detail-header">
+                <h3 class="client-detail-title" id="client-detail-name">Client Details</h3>
+                <button class="close-modal" onclick="closeClientDetailModal()">&times;</button>
+            </div>
+            
+            <div class="client-detail-grid">
+                <div class="detail-section">
+                    <h4>Client Information</h4>
+                    <div class="detail-item">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value" id="detail-email">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Last Activity:</span>
+                        <span class="detail-value" id="detail-last-activity">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Assigned Coach:</span>
+                        <span class="detail-value" id="detail-coach">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Client Status:</span>
+                        <span class="detail-value" id="detail-status">-</span>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h4>Coaching Package</h4>
+                    <div class="detail-item">
+                        <span class="detail-label">Package Type:</span>
+                        <span class="detail-value" id="detail-package-type">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Sessions Progress:</span>
+                        <span class="detail-value" id="detail-sessions">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Start Date:</span>
+                        <span class="detail-value" id="detail-start-date">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Package Status:</span>
+                        <span class="detail-value" id="detail-package-status">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h4>Recent Anchor Ratings</h4>
+                <div class="anchor-ratings-grid" id="detail-anchor-ratings">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h4>Module Access Overview</h4>
+                <div class="module-access-grid" id="detail-module-access">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="detail-section" id="detail-notes-section">
+                <h4>Recent Notes & Concerns</h4>
+                <div id="detail-notes-content">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="client-detail-actions">
+                <button class="detail-action-btn primary" onclick="closeClientDetailModal(); showSection('sessions')">Schedule Session</button>
+                <button class="detail-action-btn modules" onclick="openModuleManagementFromDetail()">Manage Modules</button>
+                <button class="detail-action-btn" onclick="closeClientDetailModal()">Send Message</button>
+                <button class="detail-action-btn" onclick="exportClientProgress()">Export Progress</button>
             </div>
         </div>
     </div>
@@ -1230,6 +1505,7 @@
         let supervisorMode = false;
         let selectedModuleClient = null;
         let transferClientId = null;
+        let currentDetailClientId = null;
 
         function showSection(sectionName) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -1323,7 +1599,7 @@
                         </div>
                         
                         <div class="client-actions${supervisorMode ? ' supervisor-mode' : ''}">
-                            <button class="client-btn primary">View Progress</button>
+                            <button class="client-btn primary" onclick="openClientDetailFromCard('${client.id}')">View Progress</button>
                             <button class="client-btn modules" onclick="openModuleManagement('${client.id}')">Modules</button>
                             <button class="client-btn">Sessions</button>
                             ${supervisorMode ? `<button class="client-btn transfer" onclick="openTransferModal('${client.id}')">Transfer</button>` : ''}
@@ -1335,7 +1611,7 @@
 
             clientsList.innerHTML = clientCards;
             updateStats(filteredClients);
-            generateAlerts(filteredClients);
+            generateEnhancedAlerts(filteredClients);
         }
 
         function getPackageDisplay(packageInfo) {
@@ -1418,7 +1694,8 @@
             return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
         }
 
-        function generateAlerts(clients) {
+        // Enhanced Alert Generation with Clickable Functionality
+        function generateEnhancedAlerts(clients) {
             const alertsContainer = document.getElementById('alerts-container');
             if (!alertsContainer) return;
 
@@ -1436,7 +1713,8 @@
                             coach: assignedCoach?.name || 'Unassigned',
                             type: 'Low Anchor Rating',
                             details: `${anchor.charAt(0).toUpperCase() + anchor.slice(1)}: ${rating}/5`,
-                            severity: rating === 1 ? 'critical' : 'warning'
+                            severity: rating === 1 ? 'critical' : 'warning',
+                            fullClient: client
                         });
                     }
                 });
@@ -1448,20 +1726,138 @@
             }
 
             alertsContainer.innerHTML = alerts.map(alert => `
-                <div class="alert-banner">
+                <div class="alert-banner" onclick="openClientDetailFromAlert('${alert.clientId}')">
                     <div class="alert-content">
                         <div class="alert-title">${alert.client}${supervisorMode ? ` (Coach: ${alert.coach})` : ''} - ${alert.type}</div>
                         <div class="alert-details">${alert.details}</div>
                     </div>
                     <div class="alert-actions">
-                        <button class="alert-btn" onclick="openModuleManagement('${alert.clientId}')">Modules</button>
-                        <button class="alert-btn">Contact</button>
+                        <button class="alert-btn" onclick="event.stopPropagation(); openModuleManagement('${alert.clientId}')">Modules</button>
+                        <button class="alert-btn" onclick="event.stopPropagation(); alert('Message feature coming soon')">Contact</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // FIXED: Transfer Modal Functions
+        // Enhanced Client Detail Modal Functions
+        function openClientDetailFromAlert(clientId) {
+            currentDetailClientId = clientId;
+            const client = sampleClients.find(c => c.id === clientId);
+            if (!client) return;
+
+            populateClientDetailModal(client);
+            document.getElementById('client-detail-modal').classList.add('show');
+        }
+
+        function openClientDetailFromCard(clientId) {
+            currentDetailClientId = clientId;
+            const client = sampleClients.find(c => c.id === clientId);
+            if (!client) return;
+
+            populateClientDetailModal(client);
+            document.getElementById('client-detail-modal').classList.add('show');
+        }
+
+        function populateClientDetailModal(client) {
+            const latestCheckIn = getLatestCheckIn(client);
+            const assignedCoach = availableCoaches.find(coach => coach.id === client.assignedCoachId);
+            const status = getClientStatus(client, latestCheckIn);
+
+            // Basic information
+            document.getElementById('client-detail-name').textContent = client.name;
+            document.getElementById('detail-email').textContent = client.email;
+            document.getElementById('detail-last-activity').textContent = getLastActivityText(client.lastActivity);
+            document.getElementById('detail-coach').textContent = assignedCoach ? assignedCoach.name : 'Unassigned';
+            document.getElementById('detail-status').textContent = status.text;
+
+            // Package information
+            document.getElementById('detail-package-type').textContent = client.coachingPackage.type.toUpperCase();
+            document.getElementById('detail-sessions').textContent = `${client.coachingPackage.sessionsCompleted}/${client.coachingPackage.sessionsTotal}`;
+            document.getElementById('detail-start-date').textContent = new Date(client.coachingPackage.startDate).toLocaleDateString();
+            document.getElementById('detail-package-status').textContent = client.coachingPackage.status.charAt(0).toUpperCase() + client.coachingPackage.status.slice(1);
+
+            // Anchor ratings
+            const anchorRatingsContainer = document.getElementById('detail-anchor-ratings');
+            if (latestCheckIn && latestCheckIn.ratings) {
+                const anchors = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
+                anchorRatingsContainer.innerHTML = anchors.map(anchor => {
+                    const rating = latestCheckIn.ratings[anchor] || 0;
+                    const lowClass = rating <= 2 ? ' low' : '';
+                    return `<div class="rating-indicator ${anchor}${lowClass}">${anchor.charAt(0).toUpperCase() + anchor.slice(1)}<br>${rating}/5</div>`;
+                }).join('');
+            } else {
+                anchorRatingsContainer.innerHTML = '<p style="opacity: 0.6; text-align: center; grid-column: 1 / -1;">No recent check-in data</p>';
+            }
+
+            // Module access overview
+            const moduleAccessContainer = document.getElementById('detail-module-access');
+            const fiveAnchorsAccess = client.moduleAccess.fiveAnchors;
+            const discernmentAccess = client.moduleAccess.discernmentTools;
+            
+            let moduleItems = [];
+            
+            // Five Anchors modules
+            Object.entries(fiveAnchorsAccess).forEach(([anchor, access]) => {
+                const hasAny = access.guide || access.webTool;
+                moduleItems.push(`
+                    <div class="access-item ${hasAny ? 'unlocked' : 'locked'}">
+                        ${anchor.charAt(0).toUpperCase() + anchor.slice(1)} Anchor
+                        ${hasAny ? '✓' : '🔒'}
+                    </div>
+                `);
+            });
+
+            // Discernment tools (if 12-week package)
+            if (client.coachingPackage.type === '12-week') {
+                Object.entries(discernmentAccess).forEach(([tool, access]) => {
+                    if (tool !== 'packageRequired') {
+                        moduleItems.push(`
+                            <div class="access-item ${access.unlocked ? 'unlocked' : 'locked'}">
+                                ${tool.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                                ${access.unlocked ? '✓' : '🔒'}
+                            </div>
+                        `);
+                    }
+                });
+            }
+
+            moduleAccessContainer.innerHTML = moduleItems.join('');
+
+            // Recent notes and concerns
+            const notesContainer = document.getElementById('detail-notes-content');
+            if (latestCheckIn && latestCheckIn.notes && Object.keys(latestCheckIn.notes).length > 0) {
+                const notesList = Object.entries(latestCheckIn.notes).map(([anchor, note]) => 
+                    `<div style="margin-bottom: 0.75rem;"><strong>${anchor.charAt(0).toUpperCase() + anchor.slice(1)}:</strong> ${note}</div>`
+                ).join('');
+                notesContainer.innerHTML = notesList;
+            } else {
+                notesContainer.innerHTML = '<p style="opacity: 0.6;">No recent notes or concerns</p>';
+            }
+        }
+
+        function closeClientDetailModal() {
+            document.getElementById('client-detail-modal').classList.remove('show');
+            currentDetailClientId = null;
+        }
+
+        function openModuleManagementFromDetail() {
+            if (currentDetailClientId) {
+                closeClientDetailModal();
+                openModuleManagement(currentDetailClientId);
+            }
+        }
+
+        function exportClientProgress() {
+            if (currentDetailClientId) {
+                const client = sampleClients.find(c => c.id === currentDetailClientId);
+                if (client) {
+                    showNotification(`Exporting progress for ${client.name}...`, 'info');
+                    // Export functionality would be implemented here
+                }
+            }
+        }
+
+        // Transfer Modal Functions
         function openTransferModal(clientId) {
             transferClientId = clientId;
             const client = sampleClients.find(c => c.id === clientId);
@@ -1910,10 +2306,13 @@
             }, 3000);
         }
 
-        // Close modal when clicking outside
+        // Close modals when clicking outside
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('transfer-modal')) {
                 closeTransferModal();
+            }
+            if (e.target.classList.contains('client-detail-modal')) {
+                closeClientDetailModal();
             }
         });
 
