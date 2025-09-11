@@ -1,12 +1,13 @@
 // File: /dashboard/js/supabase-config.js
-// Supabase Configuration for Five Anchors Platform
+// Updated Supabase Configuration for Five Anchors Platform
 
 // Import Supabase client
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2'
 
 // Supabase configuration - Replace with your actual values
 const SUPABASE_URL = 'https://fcoosyveumtkalsdwppg.supabase.co'
-const SUPABASE_ANON_KEY = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjb29zeXZldW10a2Fsc2R3cHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY4ODc5NTAsImV4cCI6MjA1MjQ2Mzk1MH0.gfE6XNfzKVXCOBBrgtR6JnEJ3x4X4y6y4XzYFUDgNIM`
+const SUPABASE_ANON_KEY = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjb29zeXZldW10a2Fsc2R3cHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NjQxOTUsImV4cCI6MjA3MzA0MDE5NX0.hukhtamCJx3nlxh_8Sya12sAnwZ6dOGjxp_vXp4ZsBY`
+
 // Create Supabase client
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
@@ -30,8 +31,11 @@ export class AuthManager {
         supabase.auth.onAuthStateChange(async (event, session) => {
             if (event === 'SIGNED_IN' && session?.user) {
                 await this.setCurrentUser(session.user)
+                // Redirect based on role
+                this.redirectBasedOnRole()
             } else if (event === 'SIGNED_OUT') {
                 this.clearCurrentUser()
+                window.location.href = './auth.html'
             }
         })
     }
@@ -49,11 +53,23 @@ export class AuthManager {
         if (profile) {
             this.userProfile = profile
             this.isCoach = profile.role === 'coach' || profile.role === 'admin'
+        } else if (error && error.code === 'PGRST116') {
+            // Profile doesn't exist, create it
+            const { data: newProfile, error: createError } = await supabase
+                .from('profiles')
+                .insert([{
+                    id: user.id,
+                    email: user.email,
+                    full_name: user.user_metadata?.full_name || '',
+                    role: 'client'
+                }])
+                .select()
+                .single()
             
-            // Trigger user loaded event
-            document.dispatchEvent(new CustomEvent('userLoaded', {
-                detail: { user, profile, isCoach: this.isCoach }
-            }))
+            if (newProfile) {
+                this.userProfile = newProfile
+                this.isCoach = false
+            }
         }
     }
 
@@ -61,9 +77,14 @@ export class AuthManager {
         this.currentUser = null
         this.userProfile = null
         this.isCoach = false
-        
-        // Trigger user cleared event
-        document.dispatchEvent(new CustomEvent('userCleared'))
+    }
+
+    redirectBasedOnRole() {
+        if (this.isCoach) {
+            window.location.href = './coach-dashboard.html'
+        } else {
+            window.location.href = './index.html'
+        }
     }
 
     // Magic link sign in
@@ -91,58 +112,81 @@ export class AuthManager {
         const { data: { session }, error } = await supabase.auth.getSession()
         return { session, error }
     }
+
+    getCurrentUserId() {
+        return this.currentUser?.id
+    }
 }
 
-// Database helper functions
+// Database manager that bridges localStorage format with Supabase
 export class DatabaseManager {
     constructor() {
         this.authManager = new AuthManager()
     }
 
-    // Save daily check-in to database
+    getCurrentUserId() {
+        return this.authManager.getCurrentUserId()
+    }
+
+    // Save daily check-in in localStorage format to database
     async saveCheckIn(checkInData) {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
+
         const { data, error } = await supabase
             .from('daily_checkins')
-            .insert([{
-                user_id: this.authManager.currentUser?.id,
-                date: checkInData.date,
-                physical_rating: checkInData.ratings.physical,
-                mental_rating: checkInData.ratings.mental,
-                emotional_rating: checkInData.ratings.emotional,
-                spiritual_rating: checkInData.ratings.spiritual,
-                relational_rating: checkInData.ratings.relational,
-                physical_notes: checkInData.notes.physical || null,
-                mental_notes: checkInData.notes.mental || null,
-                emotional_notes: checkInData.notes.emotional || null,
-                spiritual_notes: checkInData.notes.spiritual || null,
-                relational_notes: checkInData.notes.relational || null
-            }])
+            .upsert([{
+                client_id: userId,
+                checkin_date: checkInData.date,
+                ratings: checkInData.ratings,
+                notes: checkInData.notes || {}
+            }], {
+                onConflict: 'client_id,checkin_date'
+            })
             .select()
 
         return { data, error }
     }
 
-    // Get user's check-ins
-    async getCheckIns(userId, limit = 30) {
+    // Get check-ins in localStorage format
+    async getCheckIns(limit = 30) {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: {}, error: { message: 'Not authenticated' } }
+
         const { data, error } = await supabase
             .from('daily_checkins')
             .select('*')
-            .eq('user_id', userId || this.authManager.currentUser?.id)
-            .order('date', { ascending: false })
+            .eq('client_id', userId)
+            .order('checkin_date', { ascending: false })
             .limit(limit)
 
-        return { data, error }
+        // Transform to localStorage format: { [date]: { date, ratings, notes } }
+        const transformed = {}
+        if (data) {
+            data.forEach(item => {
+                transformed[item.checkin_date] = {
+                    date: item.checkin_date,
+                    ratings: item.ratings,
+                    notes: item.notes || {}
+                }
+            })
+        }
+
+        return { data: transformed, error }
     }
 
-    // Save journal entry (client-only, never shared with coaches)
+    // Save journal entry in dashboard's 5-field format
     async saveJournalEntry(entryData) {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
+
         const { data, error } = await supabase
             .from('journal_entries')
             .insert([{
-                user_id: this.authManager.currentUser?.id,
+                client_id: userId,
                 date_iso: entryData.dateISO,
                 feeling_rating: entryData.rating,
-                thought_pattern: entryData.primaryThoughtPattern,
+                primary_thought_pattern: entryData.primaryThoughtPattern,
                 practice_used: entryData.practiceUsed,
                 reflection_text: entryData.reflection
             }])
@@ -151,65 +195,129 @@ export class DatabaseManager {
         return { data, error }
     }
 
-    // Get user's journal entries (user can only see their own)
+    // Get journal entries in localStorage format
     async getJournalEntries(limit = 10) {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: [], error: { message: 'Not authenticated' } }
+
         const { data, error } = await supabase
             .from('journal_entries')
             .select('*')
-            .eq('user_id', this.authManager.currentUser?.id)
+            .eq('client_id', userId)
             .order('date_iso', { ascending: false })
             .limit(limit)
 
-        return { data, error }
+        // Transform to localStorage format
+        const transformed = []
+        if (data) {
+            data.forEach(item => {
+                transformed.push({
+                    dateISO: item.date_iso,
+                    rating: item.feeling_rating,
+                    primaryThoughtPattern: item.primary_thought_pattern || '',
+                    practiceUsed: item.practice_used || '',
+                    reflection: item.reflection_text,
+                    timestamp: item.created_at
+                })
+            })
+        }
+
+        return { data: transformed, error }
     }
 
-    // Get coaching sessions for a user
-    async getCoachingSessions(userId = null) {
-        const targetUserId = userId || this.authManager.currentUser?.id
-        
-        const { data, error } = await supabase
-            .from('coaching_sessions')
-            .select(`
-                *,
-                client:profiles!coaching_sessions_client_id_fkey(id, name, email),
-                coach:profiles!coaching_sessions_coach_id_fkey(id, name, email)
-            `)
-            .eq('client_id', targetUserId)
-            .order('scheduled_time', { ascending: false })
+    // Get module access in localStorage format
+    async getModuleAccess() {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
 
-        return { data, error }
-    }
-
-    // Get module access for a user
-    async getModuleAccess(userId = null) {
-        const targetUserId = userId || this.authManager.currentUser?.id
-        
         const { data, error } = await supabase
-            .from('enhancement_modules')
+            .from('module_access')
             .select('*')
-            .eq('user_id', targetUserId)
+            .eq('user_id', userId)
 
-        return { data, error }
+        // Transform to localStorage structure
+        const access = {
+            fiveAnchors: {
+                physical: { guide: false, webTool: false },
+                mental: { guide: false, webTool: false },
+                emotional: { guide: false, webTool: false },
+                spiritual: { guide: false, webTool: false },
+                relational: { guide: false, webTool: false }
+            },
+            discernmentTools: {
+                thoughtRefiner: { unlocked: false },
+                beliefThreader: { unlocked: false },
+                echoEraser: { unlocked: false },
+                forgivenessFilter: { unlocked: false },
+                connectionCalibrator: { unlocked: false }
+            }
+        }
+
+        if (data) {
+            data.forEach(item => {
+                if (item.module_type === 'fiveAnchors') {
+                    if (access.fiveAnchors[item.module_key]) {
+                        access.fiveAnchors[item.module_key][item.access_type] = item.unlocked
+                    }
+                } else if (item.module_type === 'discernmentTools') {
+                    if (access.discernmentTools[item.module_key]) {
+                        access.discernmentTools[item.module_key].unlocked = item.unlocked
+                    }
+                }
+            })
+        }
+
+        return { data: access, error }
     }
 
     // Update module access (coach only)
-    async updateModuleAccess(userId, moduleType, moduleKey, accessType, unlocked) {
-        if (!this.authManager.isCoach) {
-            return { data: null, error: { message: 'Unauthorized: Coach access required' } }
-        }
+    async updateModuleAccess(clientId, moduleType, moduleKey, accessType, unlocked) {
+        const coachId = this.getCurrentUserId()
+        if (!coachId) return { data: null, error: { message: 'Not authenticated' } }
 
         const { data, error } = await supabase
-            .from('enhancement_modules')
+            .from('module_access')
             .upsert([{
-                user_id: userId,
+                user_id: clientId,
                 module_type: moduleType,
                 module_key: moduleKey,
                 access_type: accessType,
-                unlocked: unlocked
+                unlocked: unlocked,
+                unlocked_at: unlocked ? new Date().toISOString() : null,
+                unlocked_by: unlocked ? coachId : null
             }], {
                 onConflict: 'user_id,module_type,module_key,access_type'
             })
             .select()
+
+        return { data, error }
+    }
+
+    // Get coaching clients (for coaches)
+    async getCoachingClients() {
+        const coachId = this.getCurrentUserId()
+        if (!coachId) return { data: [], error: { message: 'Not authenticated' } }
+
+        const { data, error } = await supabase
+            .from('profiles')
+            .select(`
+                id, email, full_name, coaching_package, sessions_completed, sessions_total, 
+                start_date, status, assigned_coach_id, created_at
+            `)
+            .eq('assigned_coach_id', coachId)
+            .eq('role', 'client')
+
+        return { data, error }
+    }
+
+    // Get client's latest check-ins (for coaches)
+    async getClientCheckIns(clientId, limit = 7) {
+        const { data, error } = await supabase
+            .from('daily_checkins')
+            .select('*')
+            .eq('client_id', clientId)
+            .order('checkin_date', { ascending: false })
+            .limit(limit)
 
         return { data, error }
     }
@@ -220,38 +328,45 @@ export class MessagingManager {
     constructor() {
         this.authManager = new AuthManager()
         this.activeSubscriptions = new Map()
-        this.messageHandlers = new Map()
+    }
+
+    getCurrentUserId() {
+        return this.authManager.getCurrentUserId()
     }
 
     // Send message between coach and client
     async sendMessage(recipientId, messageText, messageType = 'text') {
+        const senderId = this.getCurrentUserId()
+        if (!senderId) return { data: null, error: { message: 'Not authenticated' } }
+
         const { data, error } = await supabase
             .from('messages')
             .insert([{
-                sender_id: this.authManager.currentUser?.id,
+                sender_id: senderId,
                 recipient_id: recipientId,
                 message_text: messageText,
                 message_type: messageType
             }])
             .select(`
                 *,
-                sender:profiles!messages_sender_id_fkey(id, name, email),
-                recipient:profiles!messages_recipient_id_fkey(id, name, email)
+                sender:profiles!messages_sender_id_fkey(id, full_name, email),
+                recipient:profiles!messages_recipient_id_fkey(id, full_name, email)
             `)
 
         return { data, error }
     }
 
-    // Get conversation between two users
+    // Get conversation between current user and another user
     async getConversation(otherUserId, limit = 50) {
-        const currentUserId = this.authManager.currentUser?.id
+        const currentUserId = this.getCurrentUserId()
+        if (!currentUserId) return { data: [], error: { message: 'Not authenticated' } }
         
         const { data, error } = await supabase
             .from('messages')
             .select(`
                 *,
-                sender:profiles!messages_sender_id_fkey(id, name, email),
-                recipient:profiles!messages_recipient_id_fkey(id, name, email)
+                sender:profiles!messages_sender_id_fkey(id, full_name, email),
+                recipient:profiles!messages_recipient_id_fkey(id, full_name, email)
             `)
             .or(`and(sender_id.eq.${currentUserId},recipient_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},recipient_id.eq.${currentUserId})`)
             .order('created_at', { ascending: true })
@@ -262,7 +377,8 @@ export class MessagingManager {
 
     // Subscribe to real-time messages
     subscribeToMessages(otherUserId, onMessage) {
-        const currentUserId = this.authManager.currentUser?.id
+        const currentUserId = this.getCurrentUserId()
+        if (!currentUserId) return null
         
         const subscription = supabase
             .channel(`messages-${currentUserId}-${otherUserId}`)
@@ -280,48 +396,120 @@ export class MessagingManager {
         return subscription
     }
 
-    // Unsubscribe from messages
-    unsubscribeFromMessages(otherUserId) {
-        const currentUserId = this.authManager.currentUser?.id
-        const key = `${currentUserId}-${otherUserId}`
-        
-        const subscription = this.activeSubscriptions.get(key)
-        if (subscription) {
-            supabase.removeChannel(subscription)
-            this.activeSubscriptions.delete(key)
-        }
-    }
-
     // Mark messages as read
     async markMessagesAsRead(fromUserId) {
+        const currentUserId = this.getCurrentUserId()
+        if (!currentUserId) return { data: null, error: { message: 'Not authenticated' } }
+
         const { data, error } = await supabase
             .from('messages')
             .update({ read_at: new Date().toISOString() })
             .eq('sender_id', fromUserId)
-            .eq('recipient_id', this.authManager.currentUser?.id)
+            .eq('recipient_id', currentUserId)
             .is('read_at', null)
 
         return { data, error }
     }
+}
 
-    // Get unread message count
-    async getUnreadCount() {
-        const { count, error } = await supabase
-            .from('messages')
-            .select('*', { count: 'exact', head: true })
-            .eq('recipient_id', this.authManager.currentUser?.id)
-            .is('read_at', null)
+// Hybrid data manager - uses database first, localStorage as fallback
+export class HybridDataManager {
+    constructor() {
+        this.dbManager = new DatabaseManager()
+        this.storagePrefix = 'cm_'
+        this.isOnline = true
+    }
 
-        return { count, error }
+    // Save check-in to both database and localStorage
+    async saveCheckIn(checkInData) {
+        // Try database first
+        const dbResult = await this.dbManager.saveCheckIn(checkInData)
+        
+        // Always save to localStorage as backup
+        const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}')
+        allCheckIns[checkInData.date] = checkInData
+        localStorage.setItem('dailyCheckIns', JSON.stringify(allCheckIns))
+        
+        return dbResult.error ? { data: checkInData, error: null } : dbResult
+    }
+
+    // Load check-ins from database, fallback to localStorage
+    async getCheckIns() {
+        const dbResult = await this.dbManager.getCheckIns()
+        
+        if (!dbResult.error && Object.keys(dbResult.data).length > 0) {
+            return dbResult
+        }
+        
+        // Fallback to localStorage
+        const localData = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}')
+        return { data: localData, error: null }
+    }
+
+    // Save journal entry to both
+    async saveJournalEntry(entryData) {
+        const dbResult = await this.dbManager.saveJournalEntry(entryData)
+        
+        // Save to localStorage
+        const entries = JSON.parse(localStorage.getItem(this.storagePrefix + 'journal_v1') || '[]')
+        entries.unshift(entryData)
+        if (entries.length > 30) entries.splice(30)
+        localStorage.setItem(this.storagePrefix + 'journal_v1', JSON.stringify(entries))
+        
+        return dbResult.error ? { data: entryData, error: null } : dbResult
+    }
+
+    // Load journal entries
+    async getJournalEntries() {
+        const dbResult = await this.dbManager.getJournalEntries()
+        
+        if (!dbResult.error && dbResult.data.length > 0) {
+            return dbResult
+        }
+        
+        // Fallback to localStorage
+        const localData = JSON.parse(localStorage.getItem(this.storagePrefix + 'journal_v1') || '[]')
+        return { data: localData, error: null }
+    }
+
+    // Module access
+    async getModuleAccess() {
+        const dbResult = await this.dbManager.getModuleAccess()
+        
+        if (!dbResult.error) {
+            return dbResult
+        }
+        
+        // Fallback to localStorage simulation
+        return {
+            data: {
+                fiveAnchors: {
+                    physical: { guide: true, webTool: false },
+                    mental: { guide: false, webTool: false },
+                    emotional: { guide: false, webTool: false },
+                    spiritual: { guide: false, webTool: false },
+                    relational: { guide: false, webTool: false }
+                },
+                discernmentTools: {
+                    thoughtRefiner: { unlocked: false },
+                    beliefThreader: { unlocked: false },
+                    echoEraser: { unlocked: false },
+                    forgivenessFilter: { unlocked: false },
+                    connectionCalibrator: { unlocked: false }
+                }
+            },
+            error: null
+        }
     }
 }
 
-// Global managers - initialize once
+// Global managers
 export const authManager = new AuthManager()
 export const dbManager = new DatabaseManager()
 export const messagingManager = new MessagingManager()
+export const hybridDataManager = new HybridDataManager()
 
-// Utility functions
+// Utility function for notifications
 export function showNotification(message, type = 'info') {
     const notification = document.createElement('div')
     notification.className = `notification ${type}`
