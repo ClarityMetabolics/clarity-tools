@@ -973,11 +973,10 @@
     <!-- Main Navigation -->
     <nav class="main-nav">
         <div class="nav-content">
-            <div class="nav-menu">
-                <div class="nav-item active" onclick="showSection('dashboard')">
-                    <span class="nav-icon">🏠</span>
-                    <span class="nav-text">Dashboard</span>
-                </div>
+            function openWelcomeModal() {
+    window.open('./welcome-modal.html', 'welcomeModal', 
+        'width=900,height=700,scrollbars=yes,resizable=yes,centerscreen=yes');
+}
                 <div class="nav-item" onclick="showSection('progress')">
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">My Progress</span>
