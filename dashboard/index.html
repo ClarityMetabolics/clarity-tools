@@ -978,6 +978,10 @@
                     <span class="nav-icon">🏠</span>
                     <span class="nav-text">Dashboard</span>
                 </div>
+                <div class="nav-item" onclick="openWelcomeModal()">
+                    <span class="nav-icon">👋</span>
+                    <span class="nav-text">Welcome Guide</span>
+                </div>
                 <div class="nav-item" onclick="showSection('progress')">
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">My Progress</span>
@@ -2269,6 +2273,10 @@ import('./js/supabase-config.js').then(({ authManager }) => {
     // Fallback to auth page if there's an error
     window.location.href = './auth.html';
 });
+    function openWelcomeModal() {
+    window.open('./welcome-modal.html', 'welcomeModal', 
+        'width=900,height=700,scrollbars=yes,resizable=yes,centerscreen=yes');
+}
     </script>
 </body>
 </html>
