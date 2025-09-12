@@ -340,7 +340,9 @@
                     <h3>Your First Steps</h3>
                     
                     <h4>1. Complete Your First Daily Check-In</h4>
-                    <p>Start by rating how you're feeling in each anchor area today. This establishes your baseline and begins the pattern tracking that will inform your coaching.</p>
+                    <p>Start by rating how you're feeling in each anchor area today. This establishes your baseline and begins the pattern tracking that will inform your coaching.</p><h4>2. Explore the Physical Anchor</h4>
+                    <p>Your coach has unlocked the Physical Anchor—your grounding foundation. When you feel ready, click the 'Five Anchors' tab in your main dashboard navigation to begin building this essential stability.</p>
+                    <button class="modal-btn secondary" onclick="takeToPhysicalAnchor()" style="margin-top: 1rem; padding: 0.5rem 1rem; font-size: 0.9rem;">Take me there</button>
                     
                     
     }
@@ -389,7 +391,26 @@
             document.getElementById(tabName + '-tab').classList.add('active');
             event.target.classList.add('active');
         }
-
+        function takeToPhysicalAnchor() {
+            // Mark welcome as completed
+            localStorage.setItem('welcomeCompleted', 'true');
+            
+            // Update parent window button and navigate to Five Anchors
+            if (window.opener && !window.opener.closed) {
+                const welcomeBtn = window.opener.document.querySelector('.welcome-guide');
+                if (welcomeBtn) {
+                    welcomeBtn.textContent = '📖 Platform Guide';
+                }
+                
+                // Navigate to Five Anchors section
+                if (window.opener.showSection) {
+                    window.opener.showSection('anchors');
+                }
+            }
+            
+            // Close the modal
+            window.close();
+        }
         function markComplete() {
     // Mark welcome as completed in localStorage
     localStorage.setItem('welcomeCompleted', 'true');
