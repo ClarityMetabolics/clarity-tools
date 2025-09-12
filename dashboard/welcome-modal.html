@@ -388,9 +388,19 @@
         }
 
         function markComplete() {
-            alert('Welcome completed! Button would now change to "Platform Guide"');
-            closeModal();
+    // Mark welcome as completed in localStorage
+    localStorage.setItem('welcomeCompleted', 'true');
+    
+    // Update the parent window's welcome button if it exists
+    if (window.opener && !window.opener.closed) {
+        const welcomeBtn = window.opener.document.querySelector('.welcome-guide');
+        if (welcomeBtn) {
+            welcomeBtn.textContent = '📖 Platform Guide';
         }
+    }
+    
+    closeModal();
+}
 
         // Close modal when clicking outside
         document.addEventListener('click', function(e) {
