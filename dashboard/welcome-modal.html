@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Modal Test</title>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .open-modal-btn {
+            background: #5A6C57;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .open-modal-btn:hover {
+            background: #7C8B60;
+        }
+
+        /* Modal Styles */
+        .welcome-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+
+        .welcome-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2rem 1rem 2rem;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .modal-header h2 {
+            color: #5A6C57;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .modal-body {
+            flex: 1;
+            padding: 0 2rem;
+            overflow-y: auto;
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e5e5;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .tab-btn.active {
+            border-bottom-color: #5A6C57;
+            color: #5A6C57;
+            background: #f0f0f0;
+        }
+
+        .modal-tab-content {
+            display: none;
+            padding-bottom: 2rem;
+        }
+
+        .modal-tab-content.active {
+            display: block;
+        }
+
+        .modal-tab-content h3 {
+            color: #5A6C57;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .modal-tab-content h4 {
+            color: #5A6C57;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .modal-tab-content p {
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+
+        .welcome-highlight {
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid #5A6C57;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem 2rem 2rem;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .modal-btn.primary {
+            background: #5A6C57;
+            color: white;
+        }
+
+        .modal-btn.secondary {
+            background: transparent;
+            color: #333;
+            border: 2px solid #e5e5e5;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>Welcome Modal Demo</h1>
+        <p>Click the button below to see the welcome modal in action:</p>
+        <button class="open-modal-btn" onclick="openModal()">Start Here - Welcome!</button>
+    </div>
+
+    <!-- Welcome Modal -->
+    <div class="welcome-modal" id="welcome-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome to Your Five Anchors Journey</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Navigation Tabs -->
+                <div class="modal-tabs">
+                    <button class="tab-btn active" onclick="showTab('welcome')">Welcome</button>
+                    <button class="tab-btn" onclick="showTab('dashboard')">Your Dashboard</button>
+                    <button class="tab-btn" onclick="showTab('navigation')">Platform Guide</button>
+                    <button class="tab-btn" onclick="showTab('privacy')">Privacy & Coaching</button>
+                    <button class="tab-btn" onclick="showTab('getting-started')">Getting Started</button>
+                </div>
+                
+                <!-- Welcome Tab -->
+                <div class="modal-tab-content active" id="welcome-tab">
+                    <h3>Welcome to Something Substantial</h3>
+                    <p>You've joined a coaching platform designed for adults who understand that meaningful change requires intention, practice, and time. This isn't a quick-fix app or a collection of tips—it's a structured approach to building genuine stability in five foundational areas of your life.</p>
+                    
+                    <p>Your coach has years of experience guiding people through this process and is genuinely invested in your growth. Together, you'll work through each anchor methodically, building real foundation rather than surface-level changes.</p>
+                    
+                    <div class="welcome-highlight">
+                        <h4>What Makes This Different</h4>
+                        <p>This platform facilitates a real coaching relationship. Your progress, patterns, and anchor work inform your sessions with your coach. You're not working alone—you have a knowledgeable guide who will unlock new content as you develop readiness and understanding.</p>
+                    </div>
+                    
+                    <p>Take some time to explore the platform. Each section has a specific purpose in supporting your growth. When you feel ready, your coach has made the Physical Anchor available as your starting foundation.</p>
+                </div>
+                
+                <!-- Dashboard Tab -->
+                <div class="modal-tab-content" id="dashboard-tab">
+                    <h3>Understanding Your Dashboard</h3>
+                    
+                    <h4>Five Anchors Status</h4>
+                    <p>The circular displays show your current anchor strength. As you complete daily check-ins, these circles fill to reflect your ratings. This visual helps both you and your coach see patterns over time.</p>
+                    
+                    <h4>Daily Check-In</h4>
+                    <p>Rate how you're feeling in each anchor area today (1-5 scale). Add optional notes about what's affecting each area. This isn't just self-reflection—it's data that helps your coach understand your patterns and guide your sessions effectively.</p>
+                    
+                    <h4>Today's Focus</h4>
+                    <p>Based on your daily ratings, you'll receive personalized recommendations. These suggestions help you focus your attention where it's most needed and often inform what you'll discuss in coaching sessions.</p>
+                    
+                    <h4>Overall Wellness</h4>
+                    <p>This reflects your combined anchor strength. It's not a judgment—it's information. Some days will be stronger than others, and those fluctuations teach both you and your coach about your patterns.</p>
+                </div>
+                
+                <!-- Navigation Tab -->
+                <div class="modal-tab-content" id="navigation-tab">
+                    <h3>Platform Navigation Guide</h3>
+                    
+                    <h4>🏠 Dashboard</h4>
+                    <p>Your daily check-in hub and anchor status overview. Start here each day to track your current state and receive personalized focus recommendations.</p>
+                    
+                    <h4>📊 My Progress</h4>
+                    <p>View your anchor ratings over time through calendar and graph views. See patterns, track growth, and understand your journey's arc.</p>
+                    
+                    <h4>⚓ Five Anchors</h4>
+                    <p>Access your anchor tools and guides. Your coach unlocks these based on your readiness. Each anchor includes both educational content and practical exercises.</p>
+                    
+                    <h4>🔍 Discernment Tools</h4>
+                    <p>Advanced tools for spiritual discernment and clarity (12-week program only). These become available later in your coaching journey.</p>
+                    
+                    <h4>🙏 Reflect & Reset</h4>
+                    <p>Your private space for journaling, prayer, meditation, and grounding exercises. This section includes your completely private journal that your coach never sees.</p>
+                    
+                    <h4>🆘 Crisis Support</h4>
+                    <p>Immediate grounding tools and resources for difficult moments. Always accessible when you need quick stabilization techniques.</p>
+                </div>
+                
+                <!-- Privacy Tab -->
+                <div class="modal-tab-content" id="privacy-tab">
+                    <h3>Your Privacy & Coaching Relationship</h3>
+                    
+                    <h4>What Your Coach Can See</h4>
+                    <ul>
+                        <li>Your daily anchor ratings and patterns</li>
+                        <li>Which tools and guides you've accessed</li>
+                        <li>Your progress through anchor exercises</li>
+                        <li>Notes you add to daily check-ins</li>
+                        <li>Completion status of assigned tools</li>
+                    </ul>
+                    <p>This information helps your coach understand your patterns, prepare for sessions, and guide your progress appropriately.</p>
+                    
+                    <h4>What Remains Completely Private</h4>
+                    <p>Your journal entries in the "Reflect & Reset" section are yours alone. Your coach cannot access, view, or export these entries. This space is for your personal reflection, prayer, and private processing.</p>
+                    
+                    <h4>How Coaching Works</h4>
+                    <p>Your coach uses your platform activity to inform sessions, not replace them. They'll notice patterns in your anchor ratings, see which tools resonate with you, and unlock new content based on your readiness and session discussions.</p>
+                    
+                    <p>This isn't automated coaching—it's human wisdom supported by meaningful data. Your coach is genuinely invested in your growth and will guide this process with care and attention to your individual needs.</p>
+                </div>
+                
+                <!-- Getting Started Tab -->
+                <div class="modal-tab-content" id="getting-started-tab">
+                    <h3>Your First Steps</h3>
+                    
+                    <h4>1. Complete Your First Daily Check-In</h4>
+                    <p>Start by rating how you're feeling in each anchor area today. This establishes your baseline and begins the pattern tracking that will inform your coaching.</p>
+                    
+                    <h4>2. Explore the Physical Anchor</h4>
+                    <p>Your coach has unlocked the Physical Anchor—your grounding foundation. When you feel ready, visit the Five Anchors section to begin building this essential stability.</p>
+                    
+                    <h4>3. Use Your Private Journal</h4>
+                    <p>In Reflect & Reset, you'll find your private journal. Use this space for personal reflection, prayer, or processing. These entries remain completely private.</p>
+                    
+                    <h4>4. Develop Your Daily Rhythm</h4>
+                    <p>Return to your dashboard daily to check in with your anchor status. This consistent practice creates the foundation for meaningful growth.</p>
+                    
+                    <div class="welcome-highlight">
+                        <p><strong>Remember:</strong> meaningful change happens through consistent practice and patient attention to what is. Your coach is here to guide this process with wisdom and care. You're not doing this alone.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="modal-btn secondary" onclick="closeModal()">Close for Now</button>
+                <button class="modal-btn primary" onclick="markComplete()">I'm Ready to Begin</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('welcome-modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('welcome-modal').classList.remove('show');
+        }
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.modal-tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function markComplete() {
+            alert('Welcome completed! Button would now change to "Platform Guide"');
+            closeModal();
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('welcome-modal')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
