@@ -940,29 +940,102 @@
             }
 
             async processIntake() {
-                // Create client record for Lesley
-                const clientData = {
-                    ...this.formData,
-                    assignedCoachId: 'lesley_001', // Lesley's coach ID
-                    anchorRatings: this.anchorRatings,
-                    submittedAt: new Date().toISOString(),
-                    status: 'pending_contact',
-                    clientId: 'CLIENT_' + Date.now(),
-                    coachName: 'Lesley'
-                };
+    // Import database configuration
+    const { supabase, authManager } = await import('./js/supabase-config.js');
+    
+    // Prepare client data
+    const clientData = {
+        ...this.formData,
+        anchorRatings: this.anchorRatings,
+        submittedAt: new Date().toISOString(),
+        status: 'pending_contact',
+        clientId: 'CLIENT_' + Date.now()
+    };
 
-                // Save to localStorage (replace with actual API call later)
-                localStorage.setItem('lesleyClientIntake', JSON.stringify(clientData));
-                
-                // Add to coach's client list for dashboard
-                this.addToCoachDashboard(clientData);
-                
-                // Simulate network delay
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                console.log('Lesley client intake completed:', clientData);
+    try {
+        // Step 1: Save intake responses to database
+        const { data: intakeResponse, error: intakeError } = await supabase
+            .from('intake_responses')
+            .insert([{
+                client_email: clientData.email,
+                full_name: clientData['full-name'],
+                phone: clientData.phone || null,
+                timezone: clientData.timezone,
+                referral_source: clientData['referral-source'],
+                current_challenges: clientData['current-challenges'],
+                primary_goals: clientData['primary-goals'],
+                previous_experience: clientData['previous-experience'],
+                session_frequency: clientData['session-frequency'],
+                session_format: clientData['session-format'],
+                anchor_ratings: this.anchorRatings,
+                crisis_support_level: clientData['crisis-support'],
+                additional_info: clientData['additional-info'],
+                assigned_coach_id: 'coach_lesley',
+                coaching_package: this.determinePackage(),
+                intake_completed_at: new Date().toISOString()
+            }])
+            .select();
+
+        if (intakeError) throw intakeError;
+
+        // Step 2: Create user profile for authentication
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .insert([{
+                email: clientData.email,
+                full_name: clientData['full-name'],
+                role: 'client',
+                assigned_coach_id: 'coach_lesley',
+                coaching_package: this.determinePackage(),
+                sessions_total: this.determinePackage() === '6-week' ? 6 : 12,
+                sessions_completed: 0,
+                start_date: new Date().toISOString().split('T')[0],
+                status: 'active',
+                timezone: clientData.timezone,
+                phone: clientData.phone || null,
+                onboarding_completed: false
+            }])
+            .select();
+
+        if (profileError) throw profileError;
+
+        // Step 3: Set up initial module access
+        await this.setupModuleAccess(profile[0].id, this.determinePackage());
+
+        // Step 4: Send magic link for account access
+        const { data: authData, error: authError } = await supabase.auth.signInWithOtp({
+            email: clientData.email,
+            options: {
+                emailRedirectTo: 'https://claritymetabolics.github.io/clarity-tools/dashboard/index.html',
+                data: {
+                    full_name: clientData['full-name'],
+                    intake_completed: true,
+                    coach_id: 'coach_lesley'
+                }
             }
+        });
 
+        if (authError) throw authError;
+
+        // Step 5: Save initial check-in from intake ratings
+        await this.saveInitialCheckIn(profile[0].id);
+
+        // Step 6: Send coach notification
+        await this.notifyCoach(clientData);
+
+        console.log('Complete intake processing successful');
+        return { success: true, clientId: profile[0].id };
+
+    } catch (error) {
+        console.error('Intake processing error:', error);
+        
+        // Fallback to localStorage if database fails
+        localStorage.setItem('lesleyClientIntake', JSON.stringify(clientData));
+        this.addToCoachDashboard(clientData);
+        
+        throw new Error('Account creation failed. Please contact Lesley directly.');
+    }
+}
             addToCoachDashboard(clientData) {
                 // Get existing coach clients or create new list
                 const coachClients = JSON.parse(localStorage.getItem('cm_coach_clients') || '[]');
