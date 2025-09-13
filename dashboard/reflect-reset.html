@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflect & Reset - Five Anchors Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Color System */
+            --physical-color: #7C8B60;
+            --mental-color: #B7AFA3;
+            --emotional-color: #C97D7D;
+            --spiritual-color: #B6B0C3;
+            --relational-color: #E8934A;
+            
+            /* Theme Variables - Light Mode */
+            --bg-color: #FEFEFE;
+            --text-color: #2C2C2C;
+            --header-bg: #F8F8F8;
+            --nav-bg: #FFFFFF;
+            --nav-border: #E5E5E5;
+            --nav-hover: #F0F0F0;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E5E5;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --accent-color: #5A6C57;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Header - Ethereal Design */
+        .header {
+            background: linear-gradient(135deg, 
+                rgba(124, 139, 96, 0.7) 0%, 
+                rgba(183, 175, 163, 0.7) 25%, 
+                rgba(201, 125, 125, 0.7) 50%, 
+                rgba(182, 176, 195, 0.7) 75%, 
+                rgba(232, 147, 74, 0.7) 100%),
+                linear-gradient(45deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.05) 100%);
+            border-bottom: 2px solid var(--nav-border);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        .subtitle-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 400;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .subtitle-icon {
+            font-size: 1.3rem;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .section-intro {
+            background: var(--nav-hover);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent-color);
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-intro p {
+            margin: 0 0 0.75rem 0;
+            line-height: 1.7;
+        }
+
+        .section-intro p:last-child {
+            margin-bottom: 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.7;
+        }
+
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .tool-info {
+            flex: 1;
+        }
+
+        .tool-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+            color: var(--accent-color);
+        }
+
+        .tool-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .tool-description {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            opacity: 0.85;
+        }
+
+        .tool-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-tag {
+            background: var(--nav-hover);
+            color: var(--text-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .tool-action {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            color: white;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .tool-action:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+        .tool-action.anchor-statements {
+            background: var(--spiritual-color);
+        }
+
+        .tool-action.prayer-meditation {
+            background: var(--spiritual-color);
+        }
+
+        .tool-action.breathing-grounding {
+            background: var(--physical-color);
+        }
+
+        .tool-action.private-journal {
+            background: var(--accent-color);
+        }
+
+        .action-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .tool-card:hover .action-arrow {
+            transform: translateX(4px);
+        }
+
+        .privacy-note {
+            background: rgba(232, 147, 74, 0.1);
+            border: 1px solid rgba(232, 147, 74, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .privacy-note strong {
+            color: var(--relational-color);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.4rem;
+            }
+            
+            .subtitle-container {
+                font-size: 0.9rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .tool-card {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">The Five Anchors Dashboard</div>
+            <div class="subtitle-container">
+                <span class="subtitle-icon">⚓</span>
+                <span class="subtitle-text">Your Stability Center — navigate life from a grounded, conscious place</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <a href="index.html" class="back-link">← Back to Dashboard</a>
+        
+        <div class="section-header">
+            <h1 class="section-title">Reflect & Reset</h1>
+            <p class="section-subtitle">Find peace and grounding in the moment</p>
+        </div>
+
+        <div class="section-intro">
+            <p>This is your space for processing thoughts, connecting with God, and finding stability when life feels overwhelming. Each tool offers a different way to pause, reflect, and reset.</p>
+            <p>Use what serves you today—skip what doesn't. There's no pressure to use everything, just an invitation to explore what brings you peace and clarity.</p>
+        </div>
+
+        <div class="tools-grid">
+            
+            <!-- Anchor Statements -->
+            <div class="tool-card" onclick="location.href='anchor-statements.html'">
+                <div class="tool-header">
+                    <span class="tool-icon">💭</span>
+                    <div class="tool-info">
+                        <h3 class="tool-title">Your Anchor Statements</h3>
+                        <p class="tool-subtitle">Personal insights and reflections</p>
+                    </div>
+                </div>
+                
+                <p class="tool-description">
+                    Review and reflect on the personal insights you've discovered through your anchor work. You choose what to share with your coach to guide your sessions together.
+                </p>
+                
+                <div class="tool-features">
+                    <span class="feature-tag">Privacy Controls</span>
+                    <span class="feature-tag">Personal Insights</span>
+                    <span class="feature-tag">Coach Sharing</span>
+                </div>
+                
+                <button class="tool-action anchor-statements">
+                    <span>View Your Statements</span>
+                    <span class="action-arrow">→</span>
+                </button>
+            </div>
+
+            <!-- Prayer & Meditation -->
+            <div class="tool-card" onclick="location.href='prayer-meditation.html'">
+                <div class="tool-header">
+                    <span class="tool-icon">🙏</span>
+                    <div class="tool-info">
+                        <h3 class="tool-title">Prayer & Meditation</h3>
+                        <p class="tool-subtitle">Connect through prayer or quiet time</p>
+                    </div>
+                </div>
+                
+                <p class="tool-description">
+                    Simple ways to pray or quietly listen. Whether you're experienced with prayer or curious about it, find approaches that feel right for you.
+                </p>
+                
+                <div class="tool-features">
+                    <span class="feature-tag">Simple Prayer</span>
+                    <span class="feature-tag">Listening Prayer</span>
+                    <span class="feature-tag">Guided Timers</span>
+                </div>
+                
+                <button class="tool-action prayer-meditation">
+                    <span>Begin Prayer Time</span>
+                    <span class="action-arrow">→</span>
+                </button>
+            </div>
+
+            <!-- Breathing & Grounding -->
+            <div class="tool-card" onclick="location.href='breathing-grounding.html'">
+                <div class="tool-header">
+                    <span class="tool-icon">🫁</span>
+                    <div class="tool-info">
+                        <h3 class="tool-title">Breathing & Grounding</h3>
+                        <p class="tool-subtitle">Simple techniques to feel steady</p>
+                    </div>
+                </div>
+                
+                <p class="tool-description">
+                    Practical breathing and grounding techniques to help you feel more stable when life feels overwhelming. Easy to use, no experience needed.
+                </p>
+                
+                <div class="tool-features">
+                    <span class="feature-tag">Deep Breathing</span>
+                    <span class="feature-tag">Grounding Exercises</span>
+                    <span class="feature-tag">Guided Sessions</span>
+                </div>
+                
+                <button class="tool-action breathing-grounding">
+                    <span>Start Grounding</span>
+                    <span class="action-arrow">→</span>
+                </button>
+            </div>
+
+            <!-- Private Journal -->
+            <div class="tool-card" onclick="location.href='private-journal.html'">
+                <div class="tool-header">
+                    <span class="tool-icon">📔</span>
+                    <div class="tool-info">
+                        <h3 class="tool-title">Private Journal</h3>
+                        <p class="tool-subtitle">Your personal reflection space</p>
+                    </div>
+                </div>
+                
+                <p class="tool-description">
+                    Process your thoughts, prayers, and experiences in complete privacy. Write freely about your journey—guided prompts available but entirely optional.
+                </p>
+                
+                <div class="tool-features">
+                    <span class="feature-tag">Completely Private</span>
+                    <span class="feature-tag">Optional Prompts</span>
+                    <span class="feature-tag">Free Writing</span>
+                </div>
+                
+                <button class="tool-action private-journal">
+                    <span>Open Journal</span>
+                    <span class="action-arrow">→</span>
+                </button>
+            </div>
+
+        </div>
+
+        <div class="privacy-note">
+            <p><strong>Your Space, Your Choice:</strong> Your journal is completely private—never shared with coaches. Anchor statements are private by default, with sharing controls you control. Use these tools however feels most helpful to you.</p>
+        </div>
+    </main>
+
+    <script>
+        // Add click event handling for tool cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const toolCards = document.querySelectorAll('.tool-card');
+            
+            toolCards.forEach(card => {
+                card.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        card.click();
+                    }
+                });
+                
+                // Make cards focusable for accessibility
+                card.setAttribute('tabindex', '0');
+            });
+        });
+    </script>
+</body>
+</html>
