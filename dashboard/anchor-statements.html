@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Anchor Statements - Five Anchors Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Color System */
+            --physical-color: #7C8B60;
+            --mental-color: #B7AFA3;
+            --emotional-color: #C97D7D;
+            --spiritual-color: #B6B0C3;
+            --relational-color: #E8934A;
+            
+            /* Theme Variables - Light Mode */
+            --bg-color: #FEFEFE;
+            --text-color: #2C2C2C;
+            --header-bg: #F8F8F8;
+            --nav-bg: #FFFFFF;
+            --nav-border: #E5E5E5;
+            --nav-hover: #F0F0F0;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E5E5;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --accent-color: #5A6C57;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Header - Ethereal Design */
+        .header {
+            background: linear-gradient(135deg, 
+                rgba(124, 139, 96, 0.7) 0%, 
+                rgba(183, 175, 163, 0.7) 25%, 
+                rgba(201, 125, 125, 0.7) 50%, 
+                rgba(182, 176, 195, 0.7) 75%, 
+                rgba(232, 147, 74, 0.7) 100%),
+                linear-gradient(45deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.05) 100%);
+            border-bottom: 2px solid var(--nav-border);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        .subtitle-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 400;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .subtitle-icon {
+            font-size: 1.3rem;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.7;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .card h3 {
+            font-family: 'Libre Baskerville', serif;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .section-intro {
+            background: var(--nav-hover);
+            border-radius: 8px;
+            padding: 1.25rem;
+            border-left: 4px solid var(--accent-color);
+            margin-bottom: 2rem;
+        }
+
+        .section-intro p {
+            margin: 0 0 0.75rem 0;
+            line-height: 1.7;
+        }
+
+        .section-intro p:last-child {
+            margin-bottom: 0;
+        }
+
+        .anchor-statements-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .anchor-statement {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .anchor-statement.physical { 
+            border-left: 4px solid var(--physical-color);
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 139, 96, 0.05) 100%);
+        }
+        .anchor-statement.mental { 
+            border-left: 4px solid var(--mental-color);
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(183, 175, 163, 0.05) 100%);
+        }
+        .anchor-statement.emotional { 
+            border-left: 4px solid var(--emotional-color);
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(201, 125, 125, 0.05) 100%);
+        }
+        .anchor-statement.spiritual { 
+            border-left: 4px solid var(--spiritual-color);
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(182, 176, 195, 0.05) 100%);
+        }
+        .anchor-statement.relational { 
+            border-left: 4px solid var(--relational-color);
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(232, 147, 74, 0.05) 100%);
+        }
+
+        .anchor-statement.locked {
+            opacity: 0.6;
+            background: var(--nav-hover);
+        }
+
+        .statement-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .anchor-icon {
+            font-size: 1.25rem;
+        }
+
+        .anchor-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            font-size: 1rem;
+        }
+
+        .privacy-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--accent-color);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(20px);
+        }
+
+        .current-statement {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 6px;
+            padding: 1rem;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+            border-left: 3px solid var(--accent-color);
+            font-size: 0.95rem;
+        }
+
+        .no-statement {
+            color: #666;
+            font-style: italic;
+            opacity: 0.8;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .locked-message {
+            text-align: center;
+            padding: 1.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .locked-message .lock-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.5;
+        }
+
+        .reflect-prompt {
+            background: rgba(182, 176, 195, 0.1);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 3px solid var(--spiritual-color);
+        }
+
+        .reflect-prompt h5 {
+            margin: 0 0 0.5rem 0;
+            color: var(--spiritual-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .reflect-prompt p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .statement-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .action-btn.primary {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--physical-color);
+        }
+
+        .privacy-note {
+            background: linear-gradient(135deg, rgba(232, 147, 74, 0.1) 0%, rgba(232, 147, 74, 0.05) 100%);
+            border: 1px solid rgba(232, 147, 74, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .privacy-note strong {
+            color: var(--relational-color);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.4rem;
+            }
+            
+            .subtitle-container {
+                font-size: 0.9rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .statement-actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .statement-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .privacy-toggle {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">The Five Anchors Dashboard</div>
+            <div class="subtitle-container">
+                <span class="subtitle-icon">⚓</span>
+                <span class="subtitle-text">Your Stability Center — navigate life from a grounded, conscious place</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <a href="reflect-reset.html" class="back-link">← Back to Reflect & Reset</a>
+        
+        <div class="section-header">
+            <h1 class="section-title">Your Anchor Statements</h1>
+            <p class="section-subtitle">Personal insights from your anchor journey</p>
+        </div>
+
+        <div class="card">
+            <div class="section-intro">
+                <p>These are personal insights you discover while working through each anchor—moments of clarity about what stability means in your life. You choose what to share with your coach to help guide your sessions together.</p>
+            </div>
+
+            <div class="anchor-statements-grid">
+                
+                <!-- Physical Anchor Statement -->
+                <div class="anchor-statement physical">
+                    <div class="statement-header">
+                        <div class="header-left">
+                            <span class="anchor-icon">🧭</span>
+                            <div class="anchor-title">Physical</div>
+                        </div>
+                        <div class="privacy-toggle">
+                            <span>Private</span>
+                            <div class="toggle-switch" data-anchor="physical">
+                                <div class="toggle-slider"></div>
+                            </div>
+                            <span style="opacity: 0.5;">Share</span>
+                        </div>
+                    </div>
+                    
+                    <div class="current-statement">
+                        "I'm learning to notice when my body feels stable versus chaotic. Taking time to breathe deeply helps me remember I'm part of something bigger."
+                    </div>
+
+                    <div class="reflect-prompt">
+                        <h5>Continue Reflecting</h5>
+                        <p>How has your understanding of physical stability shifted since writing this? What patterns are you noticing?</p>
+                    </div>
+                    
+                    <div class="statement-actions">
+                        <a href="../five-anchors/physical-anchor.html" class="action-btn">Return to Physical Anchor</a>
+                        <a href="private-journal.html" class="action-btn">Write in Journal</a>
+                    </div>
+                </div>
+
+                <!-- Mental Anchor Statement -->
+                <div class="anchor-statement mental">
+                    <div class="statement-header">
+                        <div class="header-left">
+                            <span class="anchor-icon">👓</span>
+                            <div class="anchor-title">Mental</div>
+                        </div>
+                        <div class="privacy-toggle">
+                            <span>Private</span>
+                            <div class="toggle-switch" data-anchor="mental">
+                                <div class="toggle-slider"></div>
+                            </div>
+                            <span style="opacity: 0.5;">Share</span>
+                        </div>
+                    </div>
+                    
+                    <div class="no-statement">
+                        Work through the Mental Anchor guide to discover your insights.
+                    </div>
+                    
+                    <div class="statement-actions">
+                        <a href="../five-anchors/mental-anchor.html" class="action-btn primary">Explore Mental Anchor</a>
+                    </div>
+                </div>
+
+                <!-- Emotional Anchor Statement -->
+                <div class="anchor-statement emotional locked">
+                    <div class="statement-header">
+                        <div class="header-left">
+                            <span class="anchor-icon">🪣</span>
+                            <div class="anchor-title">Emotional</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locked-message">
+                        <div class="lock-icon">🔒</div>
+                        <div>Your coach will unlock this anchor when you're ready to explore emotional stability.</div>
+                    </div>
+                </div>
+
+                <!-- Spiritual Anchor Statement -->
+                <div class="anchor-statement spiritual locked">
+                    <div class="statement-header">
+                        <div class="header-left">
+                            <span class="anchor-icon">🕊️</span>
+                            <div class="anchor-title">Spiritual</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locked-message">
+                        <div class="lock-icon">🔒</div>
+                        <div>Your coach will unlock this anchor when you're ready to explore spiritual connection.</div>
+                    </div>
+                </div>
+
+                <!-- Relational Anchor Statement -->
+                <div class="anchor-statement relational locked">
+                    <div class="statement-header">
+                        <div class="header-left">
+                            <span class="anchor-icon">🌐</span>
+                            <div class="anchor-title">Relational</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locked-message">
+                        <div class="lock-icon">🔒</div>
+                        <div>Your coach will unlock this anchor when you're ready to explore relational harmony.</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="privacy-note">
+                <p><strong>Your Choice:</strong> All anchor statements are private by default. You can choose to share any statement with your coach using the toggle switches above. This helps your coach understand your journey and provide better guidance while keeping your personal reflections private until you're ready to share.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Privacy toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggles = document.querySelectorAll('.toggle-switch');
+            
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const anchor = this.dataset.anchor;
+                    const isActive = this.classList.contains('active');
+                    
+                    if (isActive) {
+                        // Turn off sharing
+                        this.classList.remove('active');
+                        updatePrivacyStatus(this, false);
+                        saveStatementPrivacy(anchor, false);
+                    } else {
+                        // Turn on sharing
+                        this.classList.add('active');
+                        updatePrivacyStatus(this, true);
+                        saveStatementPrivacy(anchor, true);
+                    }
+                });
+            });
+        });
+        
+        function updatePrivacyStatus(toggle, isShared) {
+            const container = toggle.closest('.anchor-statement');
+            const privacyToggleDiv = container.querySelector('.privacy-toggle');
+            const statusSpans = privacyToggleDiv.querySelectorAll('span');
+            
+            if (isShared) {
+                statusSpans[0].style.opacity = '0.5'; // Private
+                statusSpans[1].style.opacity = '1'; // Share
+            } else {
+                statusSpans[0].style.opacity = '1'; // Private
+                statusSpans[1].style.opacity = '0.5'; // Share
+            }
+        }
+        
+        function saveStatementPrivacy(anchor, isShared) {
+            // Save privacy preference to database
+            console.log(`${anchor} anchor statement privacy: ${isShared ? 'shared with coach' : 'private'}`);
+            
+            // Database integration will be added here:
+            // await supabase
+            //   .from('anchor_statements')
+            //   .update({ shared_with_coach: isShared })
+            //   .eq('client_id', currentUserId)
+            //   .eq('anchor_type', anchor);
+        }
+    </script>
+</body>
+</html>
