@@ -1036,6 +1036,76 @@
         throw new Error('Account creation failed. Please contact Lesley directly.');
     }
 }
+            // Helper method to determine package type
+determinePackage() {
+    // You can enhance this logic based on Stripe payment data
+    // For now, default to 6-week (you can modify this)
+    return '6-week'; // or '12-week' based on payment
+}
+
+// Set up initial module permissions
+async setupModuleAccess(userId, packageType) {
+    const { supabase } = await import('./js/supabase-config.js');
+    
+    // Set up Five Anchors access (Physical guide unlocked by default)
+    const fiveAnchorsAccess = [
+        { user_id: userId, module_type: 'fiveAnchors', module_key: 'physical', access_type: 'guide', unlocked: true },
+        { user_id: userId, module_type: 'fiveAnchors', module_key: 'physical', access_type: 'webTool', unlocked: false },
+        { user_id: userId, module_type: 'fiveAnchors', module_key: 'mental', access_type: 'guide', unlocked: false },
+        { user_id: userId, module_type: 'fiveAnchors', module_key: 'mental', access_type: 'webTool', unlocked: false },
+        { user_id: userId, module_type: 'fiveAnchors', module_key: 'emotional', access_type: 'guide', unlocked: false },
+        { user_id: userId, module_type: 'fiveAnchors', module_key: 'emotional', access_type: 'webTool', unlocked: false },
+        { user_id: userId, module_type: 'fiveAnchors', module_key: 'spiritual', access_type: 'guide', unlocked: false },
+        { user_id: userId, module_type: 'fiveAnchors', module_key: 'spiritual', access_type: 'webTool', unlocked: false },
+        { user_id: userId, module_type: 'fiveAnchors', module_key: 'relational', access_type: 'guide', unlocked: false },
+        { user_id: userId, module_type: 'fiveAnchors', module_key: 'relational', access_type: 'webTool', unlocked: false }
+    ];
+
+    // Set up Discernment Tools access (only for 12-week clients)
+    if (packageType === '12-week') {
+        const discernmentAccess = [
+            { user_id: userId, module_type: 'discernmentTools', module_key: 'thoughtRefiner', access_type: 'tool', unlocked: false },
+            { user_id: userId, module_type: 'discernmentTools', module_key: 'beliefThreader', access_type: 'tool', unlocked: false },
+            { user_id: userId, module_type: 'discernmentTools', module_key: 'echoEraser', access_type: 'tool', unlocked: false },
+            { user_id: userId, module_type: 'discernmentTools', module_key: 'forgivenessFilter', access_type: 'tool', unlocked: false },
+            { user_id: userId, module_type: 'discernmentTools', module_key: 'connectionCalibrator', access_type: 'tool', unlocked: false }
+        ];
+        fiveAnchorsAccess.push(...discernmentAccess);
+    }
+
+    const { error } = await supabase
+        .from('module_access')
+        .insert(fiveAnchorsAccess);
+
+    if (error) throw error;
+}
+
+// Save initial check-in from intake ratings
+async saveInitialCheckIn(userId) {
+    const { supabase } = await import('./js/supabase-config.js');
+    
+    const { error } = await supabase
+        .from('daily_checkins')
+        .insert([{
+            client_id: userId,
+            checkin_date: new Date().toISOString().split('T')[0],
+            ratings: this.anchorRatings,
+            notes: { intake: 'Initial intake assessment completed' },
+            source: 'intake_form'
+        }]);
+
+    if (error) throw error;
+}
+
+// Notify coach of new client
+async notifyCoach(clientData) {
+    console.log('New client notification for Lesley:', {
+        name: clientData['full-name'],
+        email: clientData.email,
+        package: this.determinePackage(),
+        submittedAt: clientData.submittedAt
+    });
+}
             addToCoachDashboard(clientData) {
                 // Get existing coach clients or create new list
                 const coachClients = JSON.parse(localStorage.getItem('cm_coach_clients') || '[]');
