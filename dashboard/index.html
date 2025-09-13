@@ -2273,6 +2273,27 @@ import('./js/supabase-config.js').then(({ authManager }) => {
     window.open('./welcome-modal.html', 'welcomeModal', 
         'width=900,height=700,scrollbars=yes,resizable=yes,centerscreen=yes');
 }
+    // Test database connection (safe integration)
+async function testDatabaseConnection() {
+    try {
+        // Try to import the database manager
+        const { hybridDataManager } = await import('./js/supabase-config.js');
+        console.log('Database connection available');
+        return hybridDataManager;
+    } catch (error) {
+        console.log('Database not available, using localStorage only');
+        return null;
+    }
+}
+
+// Initialize database manager when page loads
+let databaseManager = null;
+testDatabaseConnection().then(manager => {
+    databaseManager = manager;
+    if (manager) {
+        console.log('Database integration active');
+    }
+});
     </script>
 </body>
 </html>
