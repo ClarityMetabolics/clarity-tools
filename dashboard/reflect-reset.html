@@ -162,6 +162,12 @@
             margin-bottom: 2rem;
         }
 
+        /* Ensure consistent order across all screen sizes */
+        .tool-card:nth-child(1) { order: 1; } /* Private Journal */
+        .tool-card:nth-child(2) { order: 2; } /* Prayer & Meditation */
+        .tool-card:nth-child(3) { order: 3; } /* Breathing & Grounding */
+        .tool-card:nth-child(4) { order: 4; } /* Anchor Statements */
+
         .tool-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -349,28 +355,28 @@
 
         <div class="tools-grid">
             
-            <!-- Anchor Statements -->
-            <div class="tool-card" onclick="location.href='anchor-statements.html'">
+            <!-- Private Journal -->
+            <div class="tool-card" onclick="location.href='private-journal.html'">
                 <div class="tool-header">
-                    <span class="tool-icon">💭</span>
+                    <span class="tool-icon">📔</span>
                     <div class="tool-info">
-                        <h3 class="tool-title">Your Anchor Statements</h3>
-                        <p class="tool-subtitle">Personal insights and reflections</p>
+                        <h3 class="tool-title">Private Journal</h3>
+                        <p class="tool-subtitle">Your personal reflection space</p>
                     </div>
                 </div>
                 
                 <p class="tool-description">
-                    Review and reflect on the personal insights you've discovered through your anchor work. You choose what to share with your coach to guide your sessions together.
+                    Process your thoughts, prayers, and experiences in complete privacy. Write freely about your journey—guided prompts available but entirely optional.
                 </p>
                 
                 <div class="tool-features">
-                    <span class="feature-tag">Privacy Controls</span>
-                    <span class="feature-tag">Personal Insights</span>
-                    <span class="feature-tag">Coach Sharing</span>
+                    <span class="feature-tag">Completely Private</span>
+                    <span class="feature-tag">Optional Prompts</span>
+                    <span class="feature-tag">Free Writing</span>
                 </div>
                 
-                <button class="tool-action anchor-statements">
-                    <span>View Your Statements</span>
+                <button class="tool-action private-journal">
+                    <span>Open Journal</span>
                     <span class="action-arrow">→</span>
                 </button>
             </div>
@@ -427,28 +433,28 @@
                 </button>
             </div>
 
-            <!-- Private Journal -->
-            <div class="tool-card" onclick="location.href='private-journal.html'">
+            <!-- Anchor Statements -->
+            <div class="tool-card" onclick="location.href='anchor-statements.html'">
                 <div class="tool-header">
-                    <span class="tool-icon">📔</span>
+                    <span class="tool-icon">💭</span>
                     <div class="tool-info">
-                        <h3 class="tool-title">Private Journal</h3>
-                        <p class="tool-subtitle">Your personal reflection space</p>
+                        <h3 class="tool-title">Your Anchor Statements</h3>
+                        <p class="tool-subtitle">Personal insights and reflections</p>
                     </div>
                 </div>
                 
                 <p class="tool-description">
-                    Process your thoughts, prayers, and experiences in complete privacy. Write freely about your journey—guided prompts available but entirely optional.
+                    Review and reflect on the personal insights you've discovered through your anchor work. You choose what to share with your coach to guide your sessions together.
                 </p>
                 
                 <div class="tool-features">
-                    <span class="feature-tag">Completely Private</span>
-                    <span class="feature-tag">Optional Prompts</span>
-                    <span class="feature-tag">Free Writing</span>
+                    <span class="feature-tag">Privacy Controls</span>
+                    <span class="feature-tag">Personal Insights</span>
+                    <span class="feature-tag">Coach Sharing</span>
                 </div>
                 
-                <button class="tool-action private-journal">
-                    <span>Open Journal</span>
+                <button class="tool-action anchor-statements">
+                    <span>View Your Statements</span>
                     <span class="action-arrow">→</span>
                 </button>
             </div>
