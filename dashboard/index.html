@@ -1836,41 +1836,72 @@
             }
         }
 
-        function saveCheckIn() {
-            const today = new Date().toISOString().split('T')[0];
-            const checkInData = {
-                date: today,
-                ratings: {},
-                notes: {}
-            };
-            
-            // Collect ratings
-            const anchorInputs = document.querySelectorAll('.anchor-input');
-            anchorInputs.forEach(input => {
-                const anchor = input.dataset.anchor;
-                const selectedRating = input.querySelector('.rating-btn.selected');
-                const notes = input.querySelector('.anchor-notes').value;
-                
-                if (selectedRating) {
-                    checkInData.ratings[anchor] = parseInt(selectedRating.dataset.value);
-                }
-                
-                if (notes.trim()) {
-                    checkInData.notes[anchor] = notes.trim();
-                }
-            });
-            
-            // Save to localStorage
-            const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
-            allCheckIns[today] = checkInData;
-            localStorage.setItem('dailyCheckIns', JSON.stringify(allCheckIns));
-            
-            // Show confirmation
-            showNotification('Daily check-in saved successfully!', 'success');
-            
-            // Update recommendations
-            generateRecommendations();
+        async function saveCheckIn() {
+    const today = new Date().toISOString().split('T')[0];
+    const checkInData = {
+        date: today,
+        ratings: {},
+        notes: {}
+    };
+
+    // Collect ratings
+    const anchorInputs = document.querySelectorAll('.anchor-input');
+    anchorInputs.forEach(input => {
+        const anchor = input.dataset.anchor;
+        const selectedRating = input.querySelector('.rating-btn.selected');
+        const notes = input.querySelector('.anchor-notes').value;
+
+        if (selectedRating) {
+            checkInData.ratings[anchor] = parseInt(selectedRating.dataset.value);
         }
+
+        if (notes.trim()) {
+            checkInData.notes[anchor] = notes.trim();
+        }
+    });
+
+    // Try database save first, then localStorage as fallback
+    let savedToDatabase = false;
+    let savedToLocalStorage = false;
+
+    try {
+        // Attempt database save
+        if (window.databaseManager && typeof window.databaseManager.saveCheckIn === 'function') {
+            console.log('Attempting database save...', checkInData);
+            await window.databaseManager.saveCheckIn(checkInData);
+            savedToDatabase = true;
+            console.log('✅ Database save successful');
+        }
+    } catch (error) {
+        console.warn('Database save failed, using localStorage fallback:', error);
+    }
+
+    try {
+        // Always save to localStorage as backup/fallback
+        const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+        allCheckIns[today] = checkInData;
+        localStorage.setItem('dailyCheckIns', JSON.stringify(allCheckIns));
+        savedToLocalStorage = true;
+        console.log('✅ localStorage save successful');
+    } catch (error) {
+        console.error('localStorage save failed:', error);
+    }
+
+    // Show appropriate success message
+    if (savedToDatabase && savedToLocalStorage) {
+        showNotification('Daily check-in saved successfully! ✨ (Database + Backup)', 'success');
+    } else if (savedToDatabase) {
+        showNotification('Daily check-in saved to database! ✨', 'success');
+    } else if (savedToLocalStorage) {
+        showNotification('Daily check-in saved locally! 📱 (Offline mode)', 'success');
+    } else {
+        showNotification('Error saving check-in. Please try again.', 'error');
+        return; // Don't update recommendations if save failed completely
+    }
+
+    // Update recommendations
+    generateRecommendations();
+}
 
         function clearCheckIn() {
             if (confirm('Are you sure you want to clear all ratings and notes?')) {
