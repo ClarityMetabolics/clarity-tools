@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing & Grounding - Reflect & Reset</title>
+    <style>
+        :root {
+            --physical-color: #7C8B60;
+            --mental-color: #B7AFA3;
+            --emotional-color: #C97D7D;
+            --spiritual-color: #B6B0C3;
+            --relational-color: #E8934A;
+            --bg-color: #FEFEFE;
+            --text-color: #2C2C2C;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E5E5;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --accent-color: #5A6C57;
+            --nav-hover: #F0F0F0;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .card h3 {
+            font-family: 'Libre Baskerville', serif;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .section-intro {
+            background: var(--nav-hover);
+            border-radius: 8px;
+            padding: 1.25rem;
+            border-left: 4px solid var(--physical-color);
+            margin-bottom: 2rem;
+        }
+
+        .section-intro p {
+            margin: 0 0 0.75rem 0;
+            line-height: 1.7;
+        }
+
+        .section-intro p:last-child {
+            margin-bottom: 0;
+        }
+
+        .techniques-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .technique-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .technique-card:hover {
+            border-color: var(--physical-color);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .technique-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .technique-icon {
+            font-size: 1.5rem;
+        }
+
+        .technique-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        .technique-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .technique-description {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .steps-box {
+            background: rgba(124, 139, 96, 0.1);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--physical-color);
+        }
+
+        .steps-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--physical-color);
+            font-size: 0.9rem;
+        }
+
+        .steps-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .steps-list li {
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .step-number {
+            background: var(--physical-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            border-color: var(--physical-color);
+            color: var(--physical-color);
+        }
+
+        .action-btn.primary {
+            background: var(--physical-color);
+            color: white;
+            border-color: var(--physical-color);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--accent-color);
+        }
+
+        .guided-section {
+            background: var(--nav-hover);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        .guided-section.active {
+            display: block;
+        }
+
+        .guided-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--physical-color);
+            margin-bottom: 1rem;
+        }
+
+        .guided-instruction {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .breathing-visual {
+            width: 120px;
+            height: 120px;
+            border: 3px solid var(--physical-color);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: var(--physical-color);
+            transition: all 4s ease-in-out;
+        }
+
+        .breathing-visual.inhale {
+            transform: scale(1.3);
+            background: rgba(124, 139, 96, 0.1);
+        }
+
+        .breathing-visual.exhale {
+            transform: scale(1);
+            background: transparent;
+        }
+
+        .guided-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .guided-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: var(--physical-color);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .guided-btn:hover {
+            background: var(--accent-color);
+        }
+
+        .guided-btn.secondary {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--card-border);
+        }
+
+        .guided-btn.secondary:hover {
+            border-color: var(--physical-color);
+            color: var(--physical-color);
+        }
+
+        .tips-box {
+            background: rgba(232, 147, 74, 0.1);
+            border: 1px solid rgba(232, 147, 74, 0.3);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .tips-box h5 {
+            margin: 0 0 0.5rem 0;
+            color: var(--relational-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tips-list li {
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .tips-list li::before {
+            content: "• ";
+            color: var(--relational-color);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .guided-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .guided-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h3>Breathing & Grounding</h3>
+            
+            <div class="section-intro">
+                <p>When life feels overwhelming or your mind is racing, simple breathing techniques can help you feel more steady and present. These aren't complicated—just practical ways to reset when you need it.</p>
+                <p>Try what works for you. Sometimes all it takes is a few deep breaths to feel more like yourself again.</p>
+            </div>
+
+            <div class="techniques-grid">
+                
+                <!-- Simple Deep Breathing -->
+                <div class="technique-card">
+                    <div class="technique-header">
+                        <span class="technique-icon">🫁</span>
+                        <div>
+                            <div class="technique-title">Simple Deep Breathing</div>
+                            <div class="technique-subtitle">Reset in 2 minutes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="technique-description">
+                        When you're feeling stressed or scattered, taking a few slow, deep breaths can help you feel more settled. This is the simplest way to calm your nervous system.
+                    </div>
+                    
+                    <div class="steps-box">
+                        <div class="steps-title">How to do it:</div>
+                        <ul class="steps-list">
+                            <li><span class="step-number">1</span>Breathe in slowly through your nose for 4 counts</li>
+                            <li><span class="step-number">2</span>Hold for 2 counts</li>
+                            <li><span class="step-number">3</span>Breathe out slowly through your mouth for 6 counts</li>
+                            <li><span class="step-number">4</span>Repeat 5-10 times</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="startGuided('deep-breathing')">Start Guided Session</button>
+                        <button class="action-btn">Write in Journal</button>
+                    </div>
+                </div>
+
+                <!-- 5-4-3-2-1 Grounding -->
+                <div class="technique-card">
+                    <div class="technique-header">
+                        <span class="technique-icon">👀</span>
+                        <div>
+                            <div class="technique-title">5-4-3-2-1 Grounding</div>
+                            <div class="technique-subtitle">Notice what's around you</div>
+                        </div>
+                    </div>
+                    
+                    <div class="technique-description">
+                        When your thoughts are spinning or you feel disconnected, this technique helps you notice what's actually happening right now around you.
+                    </div>
+                    
+                    <div class="steps-box">
+                        <div class="steps-title">Notice:</div>
+                        <ul class="steps-list">
+                            <li><span class="step-number">5</span>Things you can see</li>
+                            <li><span class="step-number">4</span>Things you can touch</li>
+                            <li><span class="step-number">3</span>Things you can hear</li>
+                            <li><span class="step-number">2</span>Things you can smell</li>
+                            <li><span class="step-number">1</span>Thing you can taste</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="startGuided('grounding')">Start Guided Session</button>
+                        <button class="action-btn">Write in Journal</button>
+                    </div>
+                </div>
+
+                <!-- Feel Your Feet -->
+                <div class="technique-card">
+                    <div class="technique-header">
+                        <span class="technique-icon">🦶</span>
+                        <div>
+                            <div class="technique-title">Feel Your Feet</div>
+                            <div class="technique-subtitle">Connect to the ground</div>
+                        </div>
+                    </div>
+                    
+                    <div class="technique-description">
+                        This simple technique helps you feel more grounded and present by focusing on the physical connection between your body and the earth beneath you.
+                    </div>
+                    
+                    <div class="steps-box">
+                        <div class="steps-title">How to do it:</div>
+                        <ul class="steps-list">
+                            <li><span class="step-number">1</span>Sit or stand with your feet flat on the floor</li>
+                            <li><span class="step-number">2</span>Take off your shoes if possible</li>
+                            <li><span class="step-number">3</span>Notice the weight of your feet</li>
+                            <li><span class="step-number">4</span>Feel the connection to the ground</li>
+                            <li><span class="step-number">5</span>Stay here for 1-2 minutes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="startGuided('feet')">Start Guided Session</button>
+                        <button class="action-btn">Write in Journal</button>
+                    </div>
+                </div>
+
+                <!-- Hand on Heart -->
+                <div class="technique-card">
+                    <div class="technique-header">
+                        <span class="technique-icon">❤️</span>
+                        <div>
+                            <div class="technique-title">Hand on Heart</div>
+                            <div class="technique-subtitle">Self-soothing touch</div>
+                        </div>
+                    </div>
+                    
+                    <div class="technique-description">
+                        Sometimes a gentle touch can be comforting when you're feeling anxious or upset. This simple gesture can help you feel more calm and connected to yourself.
+                    </div>
+                    
+                    <div class="steps-box">
+                        <div class="steps-title">How to do it:</div>
+                        <ul class="steps-list">
+                            <li><span class="step-number">1</span>Place one or both hands on your chest</li>
+                            <li><span class="step-number">2</span>Feel the warmth of your hands</li>
+                            <li><span class="step-number">3</span>Notice your heartbeat</li>
+                            <li><span class="step-number">4</span>Breathe slowly and gently</li>
+                            <li><span class="step-number">5</span>Stay here as long as feels good</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="startGuided('heart')">Start Guided Session</button>
+                        <button class="action-btn">Write in Journal</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Guided Session Section -->
+            <div class="guided-section" id="guidedSection">
+                <div class="guided-title" id="guidedTitle">Guided Deep Breathing</div>
+                <div class="guided-instruction" id="guidedInstruction">Get comfortable and follow along</div>
+                
+                <div class="breathing-visual" id="breathingVisual">
+                    Breathe
+                </div>
+                
+                <div class="guided-controls">
+                    <button class="guided-btn" id="startBtn" onclick="startBreathing()">Start</button>
+                    <button class="guided-btn secondary" onclick="stopGuided()">Stop</button>
+                    <button class="guided-btn secondary" onclick="hideGuided()">Close</button>
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <h5>Remember</h5>
+                <ul class="tips-list">
+                    <li>There's no perfect way to do these—just do what feels natural</li>
+                    <li>If you feel dizzy, slow down or take a break</li>
+                    <li>Even 30 seconds can make a difference</li>
+                    <li>Use these whenever you need to feel more steady</li>
+                    <li>Notice how you feel before and after trying a technique</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let breathingInterval;
+        let currentTechnique = '';
+        let isBreathing = false;
+
+        function startGuided(technique) {
+            currentTechnique = technique;
+            const guidedSection = document.getElementById('guidedSection');
+            const title = document.getElementById('guidedTitle');
+            const instruction = document.getElementById('guidedInstruction');
+            
+            switch(technique) {
+                case 'deep-breathing':
+                    title.textContent = 'Guided Deep Breathing';
+                    instruction.textContent = 'Follow the circle as it grows and shrinks';
+                    break;
+                case 'grounding':
+                    title.textContent = '5-4-3-2-1 Grounding';
+                    instruction.textContent = 'We\'ll go through each sense together';
+                    break;
+                case 'feet':
+                    title.textContent = 'Feel Your Feet';
+                    instruction.textContent = 'Focus on the connection to the ground';
+                    break;
+                case 'heart':
+                    title.textContent = 'Hand on Heart';
+                    instruction.textContent = 'Place your hands on your chest and breathe';
+                    break;
+            }
+            
+            guidedSection.classList.add('active');
+            guidedSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function startBreathing() {
+            if (isBreathing) return;
+            
+            isBreathing = true;
+            document.getElementById('startBtn').textContent = 'Running...';
+            
+            const visual = document.getElementById('breathingVisual');
+            const instruction = document.getElementById('guidedInstruction');
+            
+            let cycle = 0;
+            const totalCycles = 10;
+            
+            function breatheCycle() {
+                if (cycle >= totalCycles) {
+                    stopBreathing();
+                    return;
+                }
+                
+                // Inhale phase
+                visual.textContent = 'Breathe In';
+                visual.classList.add('inhale');
+                instruction.textContent = 'Breathe in slowly through your nose...';
+                
+                setTimeout(() => {
+                    if (!isBreathing) return;
+                    
+                    // Hold phase
+                    visual.textContent = 'Hold';
+                    instruction.textContent = 'Hold for a moment...';
+                    
+                    setTimeout(() => {
+                        if (!isBreathing) return;
+                        
+                        // Exhale phase
+                        visual.textContent = 'Breathe Out';
+                        visual.classList.remove('inhale');
+                        visual.classList.add('exhale');
+                        instruction.textContent = 'Breathe out slowly through your mouth...';
+                        
+                        setTimeout(() => {
+                            if (!isBreathing) return;
+                            
+                            visual.classList.remove('exhale');
+                            cycle++;
+                            
+                            if (cycle < totalCycles) {
+                                setTimeout(breatheCycle, 1000);
+                            } else {
+                                stopBreathing();
+                            }
+                        }, 6000); // Exhale for 6 seconds
+                    }, 2000); // Hold for 2 seconds
+                }, 4000); // Inhale for 4 seconds
+            }
+            
+            breatheCycle();
+        }
+
+        function stopBreathing() {
+            isBreathing = false;
+            clearInterval(breathingInterval);
+            
+            const visual = document.getElementById('breathingVisual');
+            const instruction = document.getElementById('guidedInstruction');
+            
+            visual.textContent = 'Complete';
+            visual.classList.remove('inhale', 'exhale');
+            instruction.textContent = 'Well done! Notice how you feel now.';
+            document.getElementById('startBtn').textContent = 'Start Again';
+        }
+
+        function stopGuided() {
+            isBreathing = false;
+            clearInterval(breathingInterval);
+            
+            const visual = document.getElementById('breathingVisual');
+            const instruction = document.getElementById('guidedInstruction');
+            
+            visual.textContent = 'Breathe';
+            visual.classList.remove('inhale', 'exhale');
+            instruction.textContent = 'Get comfortable and follow along';
+            document.getElementById('startBtn').textContent = 'Start';
+        }
+
+        function hideGuided() {
+            stopGuided();
+            document.getElementById('guidedSection').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
