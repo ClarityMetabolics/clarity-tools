@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer & Meditation - Reflect & Reset</title>
+    <style>
+        :root {
+            --physical-color: #7C8B60;
+            --mental-color: #B7AFA3;
+            --emotional-color: #C97D7D;
+            --spiritual-color: #B6B0C3;
+            --relational-color: #E8934A;
+            --bg-color: #FEFEFE;
+            --text-color: #2C2C2C;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E5E5;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --accent-color: #5A6C57;
+            --nav-hover: #F0F0F0;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .card h3 {
+            font-family: 'Libre Baskerville', serif;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .section-intro {
+            background: var(--nav-hover);
+            border-radius: 8px;
+            padding: 1.25rem;
+            border-left: 4px solid var(--spiritual-color);
+            margin-bottom: 2rem;
+        }
+
+        .section-intro p {
+            margin: 0 0 0.75rem 0;
+            line-height: 1.7;
+        }
+
+        .section-intro p:last-child {
+            margin-bottom: 0;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .option-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            border-color: var(--spiritual-color);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .option-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .option-icon {
+            font-size: 1.5rem;
+        }
+
+        .option-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        .option-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .option-description {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .guidance-text {
+            background: rgba(182, 176, 195, 0.1);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--spiritual-color);
+            font-style: italic;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            border-color: var(--spiritual-color);
+            color: var(--spiritual-color);
+        }
+
+        .action-btn.primary {
+            background: var(--spiritual-color);
+            color: white;
+            border-color: var(--spiritual-color);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--accent-color);
+        }
+
+        .timer-section {
+            background: var(--nav-hover);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--spiritual-color);
+            margin-bottom: 1rem;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .timer-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: var(--spiritual-color);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .timer-btn:hover {
+            background: var(--accent-color);
+        }
+
+        .timer-btn.secondary {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--card-border);
+        }
+
+        .timer-btn.secondary:hover {
+            border-color: var(--spiritual-color);
+            color: var(--spiritual-color);
+        }
+
+        .suggestions-box {
+            background: rgba(232, 147, 74, 0.1);
+            border: 1px solid rgba(232, 147, 74, 0.3);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .suggestions-box h5 {
+            margin: 0 0 0.5rem 0;
+            color: var(--relational-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .suggestions-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestions-list li {
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .suggestions-list li::before {
+            content: "• ";
+            color: var(--relational-color);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .timer-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .timer-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h3>Prayer & Meditation</h3>
+            
+            <div class="section-intro">
+                <p>Many people find that taking time to pray or quietly listen brings balance to their lives. Whether you're experienced with prayer or curious about it, this space offers simple ways to pause and connect.</p>
+                <p>Use what feels right for you—skip what doesn't. There's no pressure, just an invitation to explore what brings you peace.</p>
+            </div>
+
+            <div class="options-grid">
+                
+                <!-- Simple Prayer -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <span class="option-icon">🙏</span>
+                        <div>
+                            <div class="option-title">Simple Prayer</div>
+                            <div class="option-subtitle">Talking with God</div>
+                        </div>
+                    </div>
+                    
+                    <div class="option-description">
+                        Prayer doesn't have to be formal or perfect. It's simply talking honestly with God about whatever is on your heart—your worries, gratitude, questions, or requests for help.
+                    </div>
+                    
+                    <div class="guidance-text">
+                        "God, I'm here. Help me find balance today. Show me what I need to see, and give me peace with what I can't control."
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="startTimer('prayer')">Start 5 Minutes</button>
+                        <button class="action-btn">Write in Journal</button>
+                    </div>
+                </div>
+
+                <!-- Listening Prayer -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <span class="option-icon">👂</span>
+                        <div>
+                            <div class="option-title">Listening Prayer</div>
+                            <div class="option-subtitle">Being Still</div>
+                        </div>
+                    </div>
+                    
+                    <div class="option-description">
+                        Sometimes prayer is less about talking and more about listening. Sit quietly and be open to whatever God might want to show you—thoughts, feelings, or simply peace.
+                    </div>
+                    
+                    <div class="guidance-text">
+                        Breathe slowly. Ask "What do you want me to know today?" Then simply listen with your heart, not your head.
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="startTimer('listening')">Start 10 Minutes</button>
+                        <button class="action-btn">Write in Journal</button>
+                    </div>
+                </div>
+
+                <!-- Gratitude Prayer -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <span class="option-icon">💝</span>
+                        <div>
+                            <div class="option-title">Gratitude Prayer</div>
+                            <div class="option-subtitle">Noticing Gifts</div>
+                        </div>
+                    </div>
+                    
+                    <div class="option-description">
+                        When life feels overwhelming, noticing what you're grateful for can shift your perspective. Thank God for both big and small things—they all matter.
+                    </div>
+                    
+                    <div class="guidance-text">
+                        "Thank you for..." Start with whatever comes to mind, even simple things like your next breath or morning coffee.
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="startTimer('gratitude')">Start 5 Minutes</button>
+                        <button class="action-btn">Write in Journal</button>
+                    </div>
+                </div>
+
+                <!-- Quiet Meditation -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <span class="option-icon">🕊️</span>
+                        <div>
+                            <div class="option-title">Quiet Meditation</div>
+                            <div class="option-subtitle">Being Present</div>
+                        </div>
+                    </div>
+                    
+                    <div class="option-description">
+                        If prayer feels unfamiliar, you can simply sit quietly and breathe. Many find that in stillness, they naturally become aware of something greater than themselves.
+                    </div>
+                    
+                    <div class="guidance-text">
+                        Focus on your breathing. When your mind wanders, gently return to your breath. Notice what comes up without judging it.
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="startTimer('meditation')">Start 10 Minutes</button>
+                        <button class="action-btn">Write in Journal</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Timer Section -->
+            <div class="timer-section" id="timerSection" style="display: none;">
+                <div class="timer-display" id="timerDisplay">05:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn" id="startPauseBtn" onclick="toggleTimer()">Start</button>
+                    <button class="timer-btn secondary" onclick="resetTimer()">Reset</button>
+                    <button class="timer-btn secondary" onclick="hideTimer()">Close</button>
+                </div>
+            </div>
+
+            <div class="suggestions-box">
+                <h5>Getting Started</h5>
+                <ul class="suggestions-list">
+                    <li>Choose a quiet spot where you won't be interrupted</li>
+                    <li>Start with just a few minutes—there's no pressure to be perfect</li>
+                    <li>If your mind wanders, that's normal—gently bring your attention back</li>
+                    <li>Notice how you feel before and after</li>
+                    <li>Consider writing down any thoughts or insights in your journal</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let timerInterval;
+        let currentTime = 300; // 5 minutes default
+        let isRunning = false;
+        let currentType = '';
+
+        function startTimer(type) {
+            currentType = type;
+            
+            // Set timer duration based on type
+            if (type === 'prayer' || type === 'gratitude') {
+                currentTime = 300; // 5 minutes
+            } else {
+                currentTime = 600; // 10 minutes
+            }
+            
+            updateTimerDisplay();
+            document.getElementById('timerSection').style.display = 'block';
+            document.getElementById('timerSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('startPauseBtn');
+            
+            if (isRunning) {
+                // Pause
+                clearInterval(timerInterval);
+                btn.textContent = 'Start';
+                isRunning = false;
+            } else {
+                // Start
+                timerInterval = setInterval(() => {
+                    currentTime--;
+                    updateTimerDisplay();
+                    
+                    if (currentTime <= 0) {
+                        // Timer finished
+                        clearInterval(timerInterval);
+                        btn.textContent = 'Start';
+                        isRunning = false;
+                        alert('Time complete! Take a moment to notice how you feel.');
+                    }
+                }, 1000);
+                
+                btn.textContent = 'Pause';
+                isRunning = true;
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            document.getElementById('startPauseBtn').textContent = 'Start';
+            
+            // Reset to original time based on current type
+            if (currentType === 'prayer' || currentType === 'gratitude') {
+                currentTime = 300;
+            } else {
+                currentTime = 600;
+            }
+            
+            updateTimerDisplay();
+        }
+
+        function hideTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            document.getElementById('timerSection').style.display = 'none';
+            document.getElementById('startPauseBtn').textContent = 'Start';
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = currentTime % 60;
+            const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = display;
+        }
+    </script>
+</body>
+</html>
