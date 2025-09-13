@@ -2318,9 +2318,9 @@ async function testDatabaseConnection() {
 }
 
 // Initialize database manager when page loads
-let databaseManager = null;
+window.databaseManager = null;
 testDatabaseConnection().then(manager => {
-    databaseManager = manager;
+    window.databaseManager = manager;
     if (manager) {
         console.log('Database integration active');
     }
