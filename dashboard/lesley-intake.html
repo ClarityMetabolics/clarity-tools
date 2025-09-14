@@ -1006,7 +1006,6 @@
         const { data: authData, error: authError } = await supabase.auth.signInWithOtp({
             email: clientData.email,
             options: {
-                emailRedirectTo: 'https://claritymetabolics.github.io/clarity-tools/dashboard/index.html',
                 data: {
                     full_name: clientData['full-name'],
                     intake_completed: true,
