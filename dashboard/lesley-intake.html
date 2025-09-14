@@ -830,16 +830,20 @@
             }
 
             nextStep() {
-                if (this.validateStep(this.currentStep)) {
-                    this.collectStepData();
-                    
-                    if (this.currentStep < this.totalSteps) {
-                        this.currentStep++;
-                        this.showStep();
-                        this.updateProgress();
-                    }
-                }
-            }
+    console.log('Next button clicked, current step:', this.currentStep);
+    
+    // Skip validation for now - just move to next step
+    this.collectStepData();
+    
+    if (this.currentStep < this.totalSteps) {
+        this.currentStep++;
+        console.log('Moving to step:', this.currentStep);
+        this.showStep();
+        this.updateProgress();
+    } else {
+        console.log('At final step');
+    }
+}
 
             prevStep() {
                 if (this.currentStep > 1) {
