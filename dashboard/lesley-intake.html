@@ -1405,34 +1405,52 @@
             }
         }
 
-        // Set up initial module permissions based on program type
+        // Set up initial module permissions based on program type - Updated for actual table structure
         async function setupInitialModules(userId, programType) {
             try {
                 const modulePermissions = [];
                 
-                // Base permissions for all programs
-                const baseModules = [
-                    'physical-guide', 'mental-guide', 'emotional-guide', 
-                    'spiritual-guide', 'relational-guide'
-                ];
+                // Five Anchors modules for all programs
+                const fiveAnchorsModules = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
                 
-                // Add discernment tools for 12-week program
-                const discernmentTools = [
-                    'thought-refiner', 'belief-threader', 'echo-eraser',
-                    'forgiveness-filter', 'connection-calibrator'
-                ];
-                
-                const allModules = programType === '12-week' 
-                    ? [...baseModules, ...discernmentTools]
-                    : baseModules;
-                
-                // Create module access records
-                for (const module of allModules) {
+                fiveAnchorsModules.forEach(anchor => {
+                    // Guide access
                     modulePermissions.push({
                         user_id: userId,
-                        module_name: module,
-                        unlocked: module === 'physical-guide', // Only physical unlocked initially
-                        unlocked_at: module === 'physical-guide' ? new Date().toISOString() : null
+                        module_type: 'fiveAnchors',
+                        module_key: anchor,
+                        access_type: 'guide',
+                        unlocked: anchor === 'physical', // Only physical unlocked initially
+                        session_unlocked: anchor === 'physical' ? 1 : 2,
+                        unlocked_at: anchor === 'physical' ? new Date().toISOString() : null
+                    });
+                    
+                    // Web tool access
+                    modulePermissions.push({
+                        user_id: userId,
+                        module_type: 'fiveAnchors',
+                        module_key: anchor,
+                        access_type: 'webTool',
+                        unlocked: false,
+                        session_unlocked: 2,
+                        unlocked_at: null
+                    });
+                });
+                
+                // Add discernment tools for 12-week program
+                if (programType === '12-week') {
+                    const discernmentTools = ['thoughtRefiner', 'beliefThreader', 'echoEraser', 'forgivenessFilter', 'connectionCalibrator'];
+                    
+                    discernmentTools.forEach(tool => {
+                        modulePermissions.push({
+                            user_id: userId,
+                            module_type: 'discernmentTools',
+                            module_key: tool,
+                            access_type: 'full',
+                            unlocked: false,
+                            session_unlocked: 6,
+                            unlocked_at: null
+                        });
                     });
                 }
                 
