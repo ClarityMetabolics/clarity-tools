@@ -1274,1069 +1274,294 @@
         </div>
     </div>
 
-    <script>
-        // Enhanced sample clients with coaching packages and module access
-        const sampleClients = [
-            {
-                id: 'client001',
-                name: 'Sarah Johnson',
-                email: 'sarah.j@email.com',
-                assignedCoachId: 'coach_lesley',
-                lastActivity: '2025-01-08T10:30:00Z',
+    <script type="module">
+        // Replace the sample data section in coach-dashboard.html with this code
+
+// Import database configuration
+import { supabase, dbManager } from './js/supabase-config.js';
+
+// Remove the sampleClients array and replace with real data loading
+let realClients = [];
+let currentCoachId = 'coach_lesley';
+let supervisorMode = false;
+let selectedModuleClient = null;
+let transferClientId = null;
+let currentDetailClientId = null;
+
+// Load real clients from database
+async function loadRealClientsFromDatabase() {
+    try {
+        console.log('Loading real clients from database...');
+        
+        // Get all client profiles with their coaching information
+        const { data: profiles, error: profileError } = await supabase
+            .from('profiles')
+            .select(`
+                id, email, full_name, coaching_package, sessions_completed, 
+                sessions_total, start_date, status, assigned_coach_id, created_at
+            `)
+            .eq('role', 'client');
+
+        if (profileError) {
+            console.error('Error loading client profiles:', profileError);
+            return [];
+        }
+
+        const clients = [];
+        
+        for (const profile of profiles) {
+            // Get latest check-in for each client
+            const { data: checkIns, error: checkInError } = await supabase
+                .from('daily_checkins')
+                .select('*')
+                .eq('client_id', profile.id)
+                .order('checkin_date', { ascending: false })
+                .limit(7);
+
+            // Get intake responses for baseline data
+            const { data: intakeData, error: intakeError } = await supabase
+                .from('intake_responses')
+                .select('*')
+                .eq('client_id', profile.id)
+                .single();
+
+            // Get module access
+            const { data: moduleAccess, error: moduleError } = await supabase
+                .from('module_access')
+                .select('*')
+                .eq('user_id', profile.id);
+
+            // Transform to match existing coach dashboard format
+            const client = {
+                id: profile.id,
+                name: profile.full_name || 'Unknown Client',
+                email: profile.email,
+                assignedCoachId: profile.assigned_coach_id || 'coach_lesley',
+                lastActivity: checkIns && checkIns.length > 0 ? checkIns[0].created_at : profile.created_at,
                 coachingPackage: {
-                    type: '6-week',
-                    sessionsTotal: 6,
-                    sessionsCompleted: 2,
-                    startDate: '2024-12-01',
-                    status: 'active'
+                    type: profile.coaching_package || '6-week',
+                    sessionsTotal: profile.sessions_total || 6,
+                    sessionsCompleted: profile.sessions_completed || 0,
+                    startDate: profile.start_date || profile.created_at.split('T')[0],
+                    status: profile.status || 'active'
                 },
-                moduleAccess: {
-                    fiveAnchors: {
-                        physical: { guide: true, webTool: false, sessionUnlocked: 1 },
-                        mental: { guide: true, webTool: false, sessionUnlocked: 2 },
-                        emotional: { guide: false, webTool: false, sessionUnlocked: 3 },
-                        spiritual: { guide: false, webTool: false, sessionUnlocked: 4 },
-                        relational: { guide: false, webTool: false, sessionUnlocked: 5 }
-                    },
-                    discernmentTools: {
-                        packageRequired: '12-week',
-                        thoughtRefiner: { unlocked: false, sessionUnlocked: 7 },
-                        beliefThreader: { unlocked: false, sessionUnlocked: 8 },
-                        echoEraser: { unlocked: false, sessionUnlocked: 9 },
-                        forgivenessFilter: { unlocked: false, sessionUnlocked: 10 },
-                        connectionCalibrator: { unlocked: false, sessionUnlocked: 11 }
-                    },
-                    supplementaryContent: []
-                },
-                checkIns: {
-                    '2025-01-08': {
-                        ratings: { physical: 4, mental: 3, emotional: 2, spiritual: 4, relational: 3 },
-                        notes: { emotional: 'Feeling overwhelmed with work deadlines' }
-                    }
-                }
-            },
-            {
-                id: 'client002', 
-                name: 'Michael Chen',
-                email: 'mchen@email.com',
-                assignedCoachId: 'coach_lesley',
-                lastActivity: '2025-01-07T16:45:00Z',
-                coachingPackage: {
-                    type: '12-week',
-                    sessionsTotal: 12,
-                    sessionsCompleted: 8,
-                    startDate: '2024-10-15',
-                    status: 'active'
-                },
-                moduleAccess: {
-                    fiveAnchors: {
-                        physical: { guide: true, webTool: true, sessionUnlocked: 1 },
-                        mental: { guide: true, webTool: true, sessionUnlocked: 2 },
-                        emotional: { guide: true, webTool: true, sessionUnlocked: 3 },
-                        spiritual: { guide: true, webTool: false, sessionUnlocked: 4 },
-                        relational: { guide: true, webTool: false, sessionUnlocked: 5 }
-                    },
-                    discernmentTools: {
-                        packageRequired: '12-week',
-                        thoughtRefiner: { unlocked: true, sessionUnlocked: 7 },
-                        beliefThreader: { unlocked: true, sessionUnlocked: 8 },
-                        echoEraser: { unlocked: false, sessionUnlocked: 9 },
-                        forgivenessFilter: { unlocked: false, sessionUnlocked: 10 },
-                        connectionCalibrator: { unlocked: false, sessionUnlocked: 11 }
-                    },
-                    supplementaryContent: [
-                        { id: 'bonus_pdf_001', title: 'Advanced Grounding Techniques', type: 'pdf', unlocked: true },
-                        { id: 'video_001', title: 'Discernment in Daily Life', type: 'video', unlocked: false }
-                    ]
-                },
-                checkIns: {
-                    '2025-01-07': {
-                        ratings: { physical: 2, mental: 2, emotional: 1, spiritual: 3, relational: 2 },
-                        notes: { 
-                            emotional: 'Relationship stress affecting everything',
-                            physical: 'Not sleeping well, very tired'
-                        }
-                    }
-                }
-            },
-            {
-                id: 'client003',
-                name: 'Emma Rodriguez', 
-                email: 'emma.r@email.com',
-                assignedCoachId: 'coach_lesley',
-                lastActivity: '2025-01-08T08:15:00Z',
-                coachingPackage: {
-                    type: '6-week',
-                    sessionsTotal: 6,
-                    sessionsCompleted: 5,
-                    startDate: '2024-11-15',
-                    status: 'active'
-                },
-                moduleAccess: {
-                    fiveAnchors: {
-                        physical: { guide: true, webTool: true, sessionUnlocked: 1 },
-                        mental: { guide: true, webTool: true, sessionUnlocked: 2 },
-                        emotional: { guide: true, webTool: true, sessionUnlocked: 3 },
-                        spiritual: { guide: true, webTool: true, sessionUnlocked: 4 },
-                        relational: { guide: true, webTool: false, sessionUnlocked: 5 }
-                    },
-                    discernmentTools: {
-                        packageRequired: '12-week',
-                        thoughtRefiner: { unlocked: false, sessionUnlocked: 7 },
-                        beliefThreader: { unlocked: false, sessionUnlocked: 8 },
-                        echoEraser: { unlocked: false, sessionUnlocked: 9 },
-                        forgivenessFilter: { unlocked: false, sessionUnlocked: 10 },
-                        connectionCalibrator: { unlocked: false, sessionUnlocked: 11 }
-                    },
-                    supplementaryContent: [
-                        { id: 'integration_guide', title: '6-Week Integration Guide', type: 'pdf', unlocked: true }
-                    ]
-                },
-                checkIns: {
-                    '2025-01-08': {
-                        ratings: { physical: 5, mental: 4, emotional: 4, spiritual: 5, relational: 4 },
-                        notes: { spiritual: 'Amazing prayer time this morning' }
-                    }
-                }
-            },
-            {
-                id: 'client004',
-                name: 'David Park',
-                email: 'david.p@email.com',
-                assignedCoachId: 'coach_sarah',
-                lastActivity: '2025-01-08T14:20:00Z',
-                coachingPackage: {
-                    type: '6-week',
-                    sessionsTotal: 6,
-                    sessionsCompleted: 1,
-                    startDate: '2025-01-01',
-                    status: 'active'
-                },
-                moduleAccess: {
-                    fiveAnchors: {
-                        physical: { guide: true, webTool: false, sessionUnlocked: 1 },
-                        mental: { guide: false, webTool: false, sessionUnlocked: 2 },
-                        emotional: { guide: false, webTool: false, sessionUnlocked: 3 },
-                        spiritual: { guide: false, webTool: false, sessionUnlocked: 4 },
-                        relational: { guide: false, webTool: false, sessionUnlocked: 5 }
-                    },
-                    discernmentTools: {
-                        packageRequired: '12-week',
-                        thoughtRefiner: { unlocked: false, sessionUnlocked: 7 },
-                        beliefThreader: { unlocked: false, sessionUnlocked: 8 },
-                        echoEraser: { unlocked: false, sessionUnlocked: 9 },
-                        forgivenessFilter: { unlocked: false, sessionUnlocked: 10 },
-                        connectionCalibrator: { unlocked: false, sessionUnlocked: 11 }
-                    },
-                    supplementaryContent: []
-                },
-                checkIns: {
-                    '2025-01-08': {
-                        ratings: { physical: 3, mental: 4, emotional: 3, spiritual: 3, relational: 2 },
-                        notes: { relational: 'Struggling with team dynamics at work' }
-                    }
-                }
-            },
-            {
-                id: 'client005',
-                name: 'Lisa Thompson',
-                email: 'lisa.t@email.com',
-                assignedCoachId: 'coach_mike',
-                lastActivity: '2025-01-07T09:30:00Z',
-                coachingPackage: {
-                    type: '12-week',
-                    sessionsTotal: 12,
-                    sessionsCompleted: 3,
-                    startDate: '2024-12-10',
-                    status: 'active'
-                },
-                moduleAccess: {
-                    fiveAnchors: {
-                        physical: { guide: true, webTool: false, sessionUnlocked: 1 },
-                        mental: { guide: true, webTool: false, sessionUnlocked: 2 },
-                        emotional: { guide: true, webTool: false, sessionUnlocked: 3 },
-                        spiritual: { guide: false, webTool: false, sessionUnlocked: 4 },
-                        relational: { guide: false, webTool: false, sessionUnlocked: 5 }
-                    },
-                    discernmentTools: {
-                        packageRequired: '12-week',
-                        thoughtRefiner: { unlocked: false, sessionUnlocked: 7 },
-                        beliefThreader: { unlocked: false, sessionUnlocked: 8 },
-                        echoEraser: { unlocked: false, sessionUnlocked: 9 },
-                        forgivenessFilter: { unlocked: false, sessionUnlocked: 10 },
-                        connectionCalibrator: { unlocked: false, sessionUnlocked: 11 }
-                    },
-                    supplementaryContent: []
-                },
-                checkIns: {
-                    '2025-01-07': {
-                        ratings: { physical: 4, mental: 5, emotional: 4, spiritual: 4, relational: 5 },
-                        notes: { mental: 'Great week of focused work and clarity' }
-                    }
-                }
-            }
-        ];
+                moduleAccess: transformModuleAccess(moduleAccess),
+                checkIns: transformCheckIns(checkIns),
+                intakeBaseline: intakeData?.baseline_anchor_scores || null
+            };
 
-        const availableCoaches = [
-            { id: 'coach_lesley', name: 'Lesley Turner', role: 'Lead Coach' },
-            { id: 'coach_sarah', name: 'Sarah Johnson', role: 'Associate Coach' },
-            { id: 'coach_mike', name: 'Mike Chen', role: 'Associate Coach' }
-        ];
-
-        // Module definitions
-        const moduleDefinitions = {
-            fiveAnchors: [
-                { key: 'physical', title: 'Physical Anchor', description: 'Grounding and body awareness guide + web tool', sessionUnlocked: 1 },
-                { key: 'mental', title: 'Mental Anchor', description: 'Mental clarity and filtering guide + web tool', sessionUnlocked: 2 },
-                { key: 'emotional', title: 'Emotional Anchor', description: 'Emotional stability and regulation guide + web tool', sessionUnlocked: 3 },
-                { key: 'spiritual', title: 'Spiritual Anchor', description: 'Spiritual grounding and communion guide + web tool', sessionUnlocked: 4 },
-                { key: 'relational', title: 'Relational Anchor', description: 'Relationship harmony and boundaries guide + web tool', sessionUnlocked: 5 }
-            ],
-            discernmentTools: [
-                { key: 'thoughtRefiner', title: 'Thought Refiner', description: 'Advanced mental filtering and truth detection', sessionUnlocked: 7 },
-                { key: 'beliefThreader', title: 'Belief Threader', description: 'Examining and dissolving crystallized thought patterns', sessionUnlocked: 8 },
-                { key: 'echoEraser', title: 'Echo Eraser', description: 'Clearing energetic residue and integration', sessionUnlocked: 9 },
-                { key: 'forgivenessFilter', title: 'Forgiveness Filter', description: 'Processing hurt and finding authentic forgiveness', sessionUnlocked: 10 },
-                { key: 'connectionCalibrator', title: 'Connection Calibrator', description: 'Balancing relationship dynamics and boundaries', sessionUnlocked: 11 }
-            ]
-        };
-
-        let currentCoachId = 'coach_lesley';
-        let supervisorMode = false;
-        let selectedModuleClient = null;
-        let transferClientId = null;
-        let currentDetailClientId = null;
-
-        function showSection(sectionName) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            const section = document.getElementById(sectionName);
-            const navItem = document.querySelector(`[data-section="${sectionName}"]`);
-            
-            if (section) section.classList.add('active');
-            if (navItem) navItem.classList.add('active');
-
-            // Initialize module management when section is shown
-            if (sectionName === 'modules') {
-                initializeModuleManagement();
-            }
+            clients.push(client);
         }
 
-        function filterClientsByCoach() {
-            const filterValue = document.getElementById('coach-filter').value;
-            const viewIndicator = document.getElementById('view-indicator');
-            const supervisorToggle = document.getElementById('supervisor-mode');
-            
-            if (filterValue === 'all') {
-                supervisorMode = true;
-                viewIndicator.textContent = 'Supervisor View - All Coaches';
-                supervisorToggle.classList.add('active');
-                supervisorToggle.textContent = 'Disable Supervisor View';
-            } else if (filterValue === 'current') {
-                supervisorMode = false;
-                viewIndicator.textContent = 'Individual Coach View';
-                supervisorToggle.classList.remove('active');
-                supervisorToggle.textContent = 'Enable Supervisor View';
-            } else {
-                supervisorMode = true;
-                const selectedCoach = availableCoaches.find(coach => coach.id === filterValue);
-                viewIndicator.textContent = `Viewing: ${selectedCoach?.name || 'Unknown Coach'}`;
-                supervisorToggle.classList.add('active');
-                supervisorToggle.textContent = 'Disable Supervisor View';
-            }
-            
-            loadClients();
-        }
-
-        function getFilteredClients() {
-            const filterValue = document.getElementById('coach-filter').value;
-            
-            if (filterValue === 'all') {
-                return sampleClients;
-            } else if (filterValue === 'current') {
-                return sampleClients.filter(client => client.assignedCoachId === currentCoachId);
-            } else {
-                return sampleClients.filter(client => client.assignedCoachId === filterValue);
-            }
-        }
-
-        function loadClients() {
-            const clientsList = document.getElementById('clients-list');
-            if (!clientsList) return;
-
-            const filteredClients = getFilteredClients();
-            
-            const clientCards = filteredClients.map(client => {
-                const latestCheckIn = getLatestCheckIn(client);
-                const status = getClientStatus(client, latestCheckIn);
-                const anchorSummary = getAnchorSummary(latestCheckIn);
-                const lastActivityText = getLastActivityText(client.lastActivity);
-                const assignedCoach = availableCoaches.find(coach => coach.id === client.assignedCoachId);
-                const coachName = assignedCoach ? assignedCoach.name : 'Unassigned';
-                const packageInfo = getPackageDisplay(client.coachingPackage);
-
-                return `
-                    <div class="client-card">
-                        <div class="client-header">
-                            <div>
-                                <div class="client-name">${client.name}</div>
-                                <div class="client-email">${client.email}</div>
-                                ${supervisorMode ? `<div style="font-size: 0.8rem; color: var(--accent-color); margin-top: 0.25rem;">Coach: ${coachName}</div>` : ''}
-                            </div>
-                            <div class="client-status ${status.class}">${status.text}</div>
-                        </div>
-                        
-                        ${packageInfo}
-                        
-                        <div style="margin-bottom: 1rem;">
-                            <div style="font-size: 0.85rem; opacity: 0.7;">Last Activity</div>
-                            <div style="font-weight: 600;">${lastActivityText}</div>
-                        </div>
-                        
-                        <div class="anchor-summary">
-                            ${anchorSummary}
-                        </div>
-                        
-                        <div class="client-actions${supervisorMode ? ' supervisor-mode' : ''}">
-                            <button class="client-btn primary" onclick="openClientDetailFromCard('${client.id}')">View Progress</button>
-                            <button class="client-btn modules" onclick="openModuleManagement('${client.id}')">Modules</button>
-                            <button class="client-btn">Sessions</button>
-                            ${supervisorMode ? `<button class="client-btn transfer" onclick="openTransferModal('${client.id}')">Transfer</button>` : ''}
-                            <button class="client-btn${supervisorMode ? '' : ' full-width'}">Message</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            clientsList.innerHTML = clientCards;
-            updateStats(filteredClients);
-            generateEnhancedAlerts(filteredClients);
-        }
-
-        function getPackageDisplay(packageInfo) {
-            const progressPercentage = (packageInfo.sessionsCompleted / packageInfo.sessionsTotal) * 100;
-            const packageClass = packageInfo.type === '6-week' ? 'package-6week' : 'package-12week';
-            
-            return `
-                <div class="package-info ${packageClass}">
-                    <div class="package-header">
-                        <span class="package-type">${packageInfo.type.toUpperCase()} Package</span>
-                        <span class="session-progress">${packageInfo.sessionsCompleted}/${packageInfo.sessionsTotal} sessions</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${progressPercentage}%"></div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function updateStats(clients) {
-            const totalClients = clients.length;
-            const activeToday = clients.filter(client => {
-                const lastActivity = new Date(client.lastActivity);
-                const today = new Date();
-                return lastActivity.toDateString() === today.toDateString();
-            }).length;
-            
-            const sixWeekClients = clients.filter(client => client.coachingPackage.type === '6-week').length;
-            const twelveWeekClients = clients.filter(client => client.coachingPackage.type === '12-week').length;
-            
-            document.getElementById('total-clients').textContent = totalClients;
-            document.getElementById('active-today').textContent = activeToday;
-            document.getElementById('six-week-clients').textContent = sixWeekClients;
-            document.getElementById('twelve-week-clients').textContent = twelveWeekClients;
-        }
-
-        function getLatestCheckIn(client) {
-            const dates = Object.keys(client.checkIns).sort().reverse();
-            return dates.length > 0 ? client.checkIns[dates[0]] : null;
-        }
-
-        function getClientStatus(client, latestCheckIn) {
-            if (!latestCheckIn) return { class: 'status-inactive', text: 'No Data' };
-            
-            const hasLowRatings = Object.values(latestCheckIn.ratings).some(rating => rating <= 2);
-            return hasLowRatings ? 
-                { class: 'status-concern', text: 'Needs Attention' } :
-                { class: 'status-active', text: 'Active Today' };
-        }
-
-        function getAnchorSummary(checkIn) {
-            if (!checkIn || !checkIn.ratings) {
-                return '<span style="opacity: 0.5;">No recent check-ins</span>';
-            }
-
-            const anchors = [
-                { key: 'physical', class: 'physical' },
-                { key: 'mental', class: 'mental' }, 
-                { key: 'emotional', class: 'emotional' },
-                { key: 'spiritual', class: 'spiritual' },
-                { key: 'relational', class: 'relational' }
-            ];
-
-            return anchors.map(anchor => {
-                const rating = checkIn.ratings[anchor.key] || 0;
-                const lowClass = rating <= 2 ? ' low' : '';
-                return `<div class="anchor-mini ${anchor.class}${lowClass}" title="${anchor.key}: ${rating}/5">${rating}</div>`;
-            }).join('');
-        }
-
-        function getLastActivityText(lastActivity) {
-            const lastDate = new Date(lastActivity);
-            const now = new Date();
-            const diffHours = Math.floor((now - lastDate) / (1000 * 60 * 60));
-            
-            if (diffHours < 1) return 'Just now';
-            if (diffHours < 24) return `${diffHours} hours ago`;
-            
-            const diffDays = Math.floor(diffHours / 24);
-            return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
-        }
-
-        // Enhanced Alert Generation with Clickable Functionality
-        function generateEnhancedAlerts(clients) {
-            const alertsContainer = document.getElementById('alerts-container');
-            if (!alertsContainer) return;
-
-            const alerts = [];
-            clients.forEach(client => {
-                const latest = getLatestCheckIn(client);
-                if (!latest) return;
-
-                Object.entries(latest.ratings).forEach(([anchor, rating]) => {
-                    if (rating <= 2) {
-                        const assignedCoach = availableCoaches.find(coach => coach.id === client.assignedCoachId);
-                        alerts.push({
-                            client: client.name,
-                            clientId: client.id,
-                            coach: assignedCoach?.name || 'Unassigned',
-                            type: 'Low Anchor Rating',
-                            details: `${anchor.charAt(0).toUpperCase() + anchor.slice(1)}: ${rating}/5`,
-                            severity: rating === 1 ? 'critical' : 'warning',
-                            fullClient: client
-                        });
-                    }
-                });
-            });
-
-            if (alerts.length === 0) {
-                alertsContainer.innerHTML = '<div class="card"><h3>No Active Alerts</h3><p>All clients showing stable patterns.</p></div>';
-                return;
-            }
-
-            alertsContainer.innerHTML = alerts.map(alert => `
-                <div class="alert-banner" onclick="openClientDetailFromAlert('${alert.clientId}')">
-                    <div class="alert-content">
-                        <div class="alert-title">${alert.client}${supervisorMode ? ` (Coach: ${alert.coach})` : ''} - ${alert.type}</div>
-                        <div class="alert-details">${alert.details}</div>
-                    </div>
-                    <div class="alert-actions">
-                        <button class="alert-btn" onclick="event.stopPropagation(); openModuleManagement('${alert.clientId}')">Modules</button>
-                        <button class="alert-btn" onclick="event.stopPropagation(); alert('Message feature coming soon')">Contact</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Enhanced Client Detail Modal Functions
-        function openClientDetailFromAlert(clientId) {
-            currentDetailClientId = clientId;
-            const client = sampleClients.find(c => c.id === clientId);
-            if (!client) return;
-
-            populateClientDetailModal(client);
-            document.getElementById('client-detail-modal').classList.add('show');
-        }
-
-        function openClientDetailFromCard(clientId) {
-            currentDetailClientId = clientId;
-            const client = sampleClients.find(c => c.id === clientId);
-            if (!client) return;
-
-            populateClientDetailModal(client);
-            document.getElementById('client-detail-modal').classList.add('show');
-        }
-
-        function populateClientDetailModal(client) {
-            const latestCheckIn = getLatestCheckIn(client);
-            const assignedCoach = availableCoaches.find(coach => coach.id === client.assignedCoachId);
-            const status = getClientStatus(client, latestCheckIn);
-
-            // Basic information
-            document.getElementById('client-detail-name').textContent = client.name;
-            document.getElementById('detail-email').textContent = client.email;
-            document.getElementById('detail-last-activity').textContent = getLastActivityText(client.lastActivity);
-            document.getElementById('detail-coach').textContent = assignedCoach ? assignedCoach.name : 'Unassigned';
-            document.getElementById('detail-status').textContent = status.text;
-
-            // Package information
-            document.getElementById('detail-package-type').textContent = client.coachingPackage.type.toUpperCase();
-            document.getElementById('detail-sessions').textContent = `${client.coachingPackage.sessionsCompleted}/${client.coachingPackage.sessionsTotal}`;
-            document.getElementById('detail-start-date').textContent = new Date(client.coachingPackage.startDate).toLocaleDateString();
-            document.getElementById('detail-package-status').textContent = client.coachingPackage.status.charAt(0).toUpperCase() + client.coachingPackage.status.slice(1);
-
-            // Anchor ratings
-            const anchorRatingsContainer = document.getElementById('detail-anchor-ratings');
-            if (latestCheckIn && latestCheckIn.ratings) {
-                const anchors = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
-                anchorRatingsContainer.innerHTML = anchors.map(anchor => {
-                    const rating = latestCheckIn.ratings[anchor] || 0;
-                    const lowClass = rating <= 2 ? ' low' : '';
-                    return `<div class="rating-indicator ${anchor}${lowClass}">${anchor.charAt(0).toUpperCase() + anchor.slice(1)}<br>${rating}/5</div>`;
-                }).join('');
-            } else {
-                anchorRatingsContainer.innerHTML = '<p style="opacity: 0.6; text-align: center; grid-column: 1 / -1;">No recent check-in data</p>';
-            }
-
-            // Module access overview
-            const moduleAccessContainer = document.getElementById('detail-module-access');
-            const fiveAnchorsAccess = client.moduleAccess.fiveAnchors;
-            const discernmentAccess = client.moduleAccess.discernmentTools;
-            
-            let moduleItems = [];
-            
-            // Five Anchors modules
-            Object.entries(fiveAnchorsAccess).forEach(([anchor, access]) => {
-                const hasAny = access.guide || access.webTool;
-                moduleItems.push(`
-                    <div class="access-item ${hasAny ? 'unlocked' : 'locked'}">
-                        ${anchor.charAt(0).toUpperCase() + anchor.slice(1)} Anchor
-                        ${hasAny ? '✓' : '🔒'}
-                    </div>
-                `);
-            });
-
-            // Discernment tools (if 12-week package)
-            if (client.coachingPackage.type === '12-week') {
-                Object.entries(discernmentAccess).forEach(([tool, access]) => {
-                    if (tool !== 'packageRequired') {
-                        moduleItems.push(`
-                            <div class="access-item ${access.unlocked ? 'unlocked' : 'locked'}">
-                                ${tool.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                                ${access.unlocked ? '✓' : '🔒'}
-                            </div>
-                        `);
-                    }
-                });
-            }
-
-            moduleAccessContainer.innerHTML = moduleItems.join('');
-
-            // Recent notes and concerns
-            const notesContainer = document.getElementById('detail-notes-content');
-            if (latestCheckIn && latestCheckIn.notes && Object.keys(latestCheckIn.notes).length > 0) {
-                const notesList = Object.entries(latestCheckIn.notes).map(([anchor, note]) => 
-                    `<div style="margin-bottom: 0.75rem;"><strong>${anchor.charAt(0).toUpperCase() + anchor.slice(1)}:</strong> ${note}</div>`
-                ).join('');
-                notesContainer.innerHTML = notesList;
-            } else {
-                notesContainer.innerHTML = '<p style="opacity: 0.6;">No recent notes or concerns</p>';
-            }
-        }
-
-        function closeClientDetailModal() {
-            document.getElementById('client-detail-modal').classList.remove('show');
-            currentDetailClientId = null;
-        }
-
-        function openModuleManagementFromDetail() {
-            if (currentDetailClientId) {
-                closeClientDetailModal();
-                openModuleManagement(currentDetailClientId);
-            }
-        }
-
-        function exportClientProgress() {
-            if (currentDetailClientId) {
-                const client = sampleClients.find(c => c.id === currentDetailClientId);
-                if (client) {
-                    showNotification(`Exporting progress for ${client.name}...`, 'info');
-                    // Export functionality would be implemented here
-                }
-            }
-        }
-
-        // Transfer Modal Functions
-        function openTransferModal(clientId) {
-            transferClientId = clientId;
-            const client = sampleClients.find(c => c.id === clientId);
-            if (!client) return;
-
-            document.getElementById('transfer-client-name').textContent = client.name;
-            
-            // Populate coach dropdown (exclude current coach)
-            const currentCoach = client.assignedCoachId;
-            const transferSelect = document.getElementById('transfer-new-coach');
-            transferSelect.innerHTML = '<option value="">Select new coach...</option>' +
-                availableCoaches
-                    .filter(coach => coach.id !== currentCoach)
-                    .map(coach => `<option value="${coach.id}">${coach.name} (${coach.role})</option>`)
-                    .join('');
-
-            document.getElementById('transfer-modal').classList.add('show');
-        }
-
-        function closeTransferModal() {
-            document.getElementById('transfer-modal').classList.remove('show');
-            transferClientId = null;
-        }
-
-        function confirmTransfer() {
-            const newCoachId = document.getElementById('transfer-new-coach').value;
-            if (!newCoachId || !transferClientId) {
-                showNotification('Please select a coach', 'error');
-                return;
-            }
-
-            const client = sampleClients.find(c => c.id === transferClientId);
-            const newCoach = availableCoaches.find(c => c.id === newCoachId);
-            
-            if (client && newCoach) {
-                client.assignedCoachId = newCoachId;
-                showNotification(`${client.name} transferred to ${newCoach.name}`, 'success');
-                closeTransferModal();
-                loadClients();
-            }
-        }
-
-        // Module Management Functions
-        function initializeModuleManagement() {
-            const clientSelect = document.getElementById('module-client-select');
-            const filteredClients = getFilteredClients();
-            
-            clientSelect.innerHTML = '<option value="">Choose a client to manage their modules...</option>' +
-                filteredClients.map(client => 
-                    `<option value="${client.id}">${client.name} (${client.coachingPackage.type})</option>`
-                ).join('');
-
-            clientSelect.addEventListener('change', function() {
-                if (this.value) {
-                    loadClientModules(this.value);
-                } else {
-                    document.getElementById('module-client-info').classList.remove('show');
-                }
-            });
-        }
-
-        function openModuleManagement(clientId) {
-            showSection('modules');
-            setTimeout(() => {
-                document.getElementById('module-client-select').value = clientId;
-                loadClientModules(clientId);
-            }, 100);
-        }
-
-        function loadClientModules(clientId) {
-            const client = sampleClients.find(c => c.id === clientId);
-            if (!client) return;
-
-            selectedModuleClient = client;
-            
-            document.getElementById('module-client-info').classList.add('show');
-            
-            // Load client basic info
-            document.getElementById('client-basic-info').innerHTML = `
-                <div><strong>Name:</strong> ${client.name}</div>
-                <div><strong>Email:</strong> ${client.email}</div>
-                <div><strong>Last Activity:</strong> ${getLastActivityText(client.lastActivity)}</div>
-            `;
-
-            // Load package info
-            const packageInfo = client.coachingPackage;
-            const progressPercentage = (packageInfo.sessionsCompleted / packageInfo.sessionsTotal) * 100;
-            document.getElementById('client-package-info').innerHTML = `
-                <div><strong>Package:</strong> ${packageInfo.type.toUpperCase()}</div>
-                <div><strong>Sessions:</strong> ${packageInfo.sessionsCompleted}/${packageInfo.sessionsTotal} completed</div>
-                <div><strong>Start Date:</strong> ${new Date(packageInfo.startDate).toLocaleDateString()}</div>
-                <div><strong>Status:</strong> ${packageInfo.status}</div>
-                <div class="progress-bar" style="margin-top: 0.5rem;">
-                    <div class="progress-fill" style="width: ${progressPercentage}%"></div>
-                </div>
-            `;
-
-            // Enable/disable discernment tools bulk button
-            const discernmentBtn = document.getElementById('discernment-bulk-btn');
-            if (packageInfo.type === '12-week') {
-                discernmentBtn.disabled = false;
-                discernmentBtn.textContent = '🔍 Unlock Discernment Tools';
-            } else {
-                discernmentBtn.disabled = true;
-                discernmentBtn.textContent = '🔍 12-Week Package Required';
-            }
-
-            // Load modules
-            loadFiveAnchorsModules(client);
-            loadDiscernmentModules(client);
-            loadSupplementaryModules(client);
-        }
-
-        function loadFiveAnchorsModules(client) {
-            const container = document.getElementById('five-anchors-modules');
-            const moduleAccess = client.moduleAccess.fiveAnchors;
-            const currentSession = client.coachingPackage.sessionsCompleted;
-
-            container.innerHTML = moduleDefinitions.fiveAnchors.map(module => {
-                const access = moduleAccess[module.key];
-                const canUnlock = currentSession >= module.sessionUnlocked || access.guide || access.webTool;
-                
-                let status, statusClass, itemClass;
-                if (access.guide && access.webTool) {
-                    status = 'Fully Unlocked';
-                    statusClass = 'status-unlocked';
-                    itemClass = 'unlocked';
-                } else if (access.guide || access.webTool) {
-                    status = 'Partially Unlocked';
-                    statusClass = 'status-unlocked';
-                    itemClass = 'unlocked';
-                } else if (!canUnlock) {
-                    status = `Session ${module.sessionUnlocked} Required`;
-                    statusClass = 'status-restricted';
-                    itemClass = 'restricted';
-                } else {
-                    status = 'Locked';
-                    statusClass = 'status-locked';
-                    itemClass = 'locked';
-                }
-
-                return `
-                    <div class="module-item ${itemClass}">
-                        <div class="module-header">
-                            <div class="module-title">${module.title}</div>
-                            <div class="module-status ${statusClass}">${status}</div>
-                        </div>
-                        <div class="module-description">${module.description}</div>
-                        <div style="font-size: 0.8rem; margin-bottom: 1rem;">
-                            Guide: ${access.guide ? '✅ Unlocked' : '🔒 Locked'} | 
-                            Web Tool: ${access.webTool ? '✅ Unlocked' : '🔒 Locked'}
-                        </div>
-                        <div class="module-actions">
-                            ${canUnlock ? `
-                                <button class="module-btn unlock" onclick="toggleModulePart('fiveAnchors', '${module.key}', 'guide', ${!access.guide})">${access.guide ? 'Lock' : 'Unlock'} Guide</button>
-                                <button class="module-btn unlock" onclick="toggleModulePart('fiveAnchors', '${module.key}', 'webTool', ${!access.webTool})">${access.webTool ? 'Lock' : 'Unlock'} Tool</button>
-                            ` : `
-                                <button class="module-btn" disabled>Session ${module.sessionUnlocked} Required</button>
-                            `}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function loadDiscernmentModules(client) {
-            const container = document.getElementById('discernment-modules');
-            const moduleAccess = client.moduleAccess.discernmentTools;
-            const currentSession = client.coachingPackage.sessionsCompleted;
-            const packageType = client.coachingPackage.type;
-
-            if (packageType !== '12-week') {
-                container.innerHTML = `
-                    <div class="warning-message">
-                        <strong>12-Week Package Required</strong><br>
-                        Discernment Tools are only available to clients with 12-week coaching packages.
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = moduleDefinitions.discernmentTools.map(module => {
-                const access = moduleAccess[module.key];
-                const canUnlock = currentSession >= module.sessionUnlocked;
-                
-                let status, statusClass, itemClass;
-                if (access.unlocked) {
-                    status = 'Unlocked';
-                    statusClass = 'status-unlocked';
-                    itemClass = 'unlocked';
-                } else if (!canUnlock) {
-                    status = `Session ${module.sessionUnlocked} Required`;
-                    statusClass = 'status-restricted';
-                    itemClass = 'restricted';
-                } else {
-                    status = 'Locked';
-                    statusClass = 'status-locked';
-                    itemClass = 'locked';
-                }
-
-                return `
-                    <div class="module-item ${itemClass}">
-                        <div class="module-header">
-                            <div class="module-title">${module.title}</div>
-                            <div class="module-status ${statusClass}">${status}</div>
-                        </div>
-                        <div class="module-description">${module.description}</div>
-                        <div class="module-actions">
-                            ${canUnlock ? `
-                                <button class="module-btn ${access.unlocked ? 'lock' : 'unlock'}" onclick="toggleDiscernmentTool('${module.key}', ${!access.unlocked})">
-                                    ${access.unlocked ? 'Lock' : 'Unlock'} Tool
-                                </button>
-                            ` : `
-                                <button class="module-btn" disabled>Session ${module.sessionUnlocked} Required</button>
-                            `}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function loadSupplementaryModules(client) {
-            const container = document.getElementById('supplementary-modules');
-            const supplementary = client.moduleAccess.supplementaryContent;
-
-            if (supplementary.length === 0) {
-                container.innerHTML = '<div style="text-align: center; opacity: 0.6; padding: 2rem;">No supplementary content assigned yet.</div>';
-                return;
-            }
-
-            container.innerHTML = supplementary.map(item => `
-                <div class="module-item ${item.unlocked ? 'unlocked' : 'locked'}">
-                    <div class="module-header">
-                        <div class="module-title">${item.title}</div>
-                        <div class="module-status ${item.unlocked ? 'status-unlocked' : 'status-locked'}">
-                            ${item.unlocked ? 'Unlocked' : 'Locked'}
-                        </div>
-                    </div>
-                    <div class="module-description">Type: ${item.type.toUpperCase()}</div>
-                    <div class="module-actions">
-                        <button class="module-btn ${item.unlocked ? 'lock' : 'unlock'}" onclick="toggleSupplementary('${item.id}', ${!item.unlocked})">
-                            ${item.unlocked ? 'Lock' : 'Unlock'}
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Module action functions
-        function toggleModulePart(category, moduleKey, part, unlock) {
-            if (!selectedModuleClient) return;
-            
-            selectedModuleClient.moduleAccess[category][moduleKey][part] = unlock;
-            showNotification(`${unlock ? 'Unlocked' : 'Locked'} ${moduleKey} ${part}`, 'success');
-            loadClientModules(selectedModuleClient.id);
-        }
-
-        function toggleDiscernmentTool(toolKey, unlock) {
-            if (!selectedModuleClient) return;
-            
-            selectedModuleClient.moduleAccess.discernmentTools[toolKey].unlocked = unlock;
-            showNotification(`${unlock ? 'Unlocked' : 'Locked'} ${toolKey}`, 'success');
-            loadClientModules(selectedModuleClient.id);
-        }
-
-        function toggleSupplementary(itemId, unlock) {
-            if (!selectedModuleClient) return;
-            
-            const item = selectedModuleClient.moduleAccess.supplementaryContent.find(s => s.id === itemId);
-            if (item) {
-                item.unlocked = unlock;
-                showNotification(`${unlock ? 'Unlocked' : 'Locked'} ${item.title}`, 'success');
-                loadClientModules(selectedModuleClient.id);
-            }
-        }
-
-        // Bulk action functions
-        function unlockNextRecommended() {
-            if (!selectedModuleClient) return;
-            
-            const currentSession = selectedModuleClient.coachingPackage.sessionsCompleted;
-            const fiveAnchors = selectedModuleClient.moduleAccess.fiveAnchors;
-            
-            // Find next recommended unlock based on session progress
-            for (const module of moduleDefinitions.fiveAnchors) {
-                if (currentSession >= module.sessionUnlocked) {
-                    const access = fiveAnchors[module.key];
-                    if (!access.guide) {
-                        access.guide = true;
-                        showNotification(`Unlocked ${module.title} Guide (recommended for session ${currentSession})`, 'success');
-                        loadClientModules(selectedModuleClient.id);
-                        return;
-                    }
-                    if (!access.webTool) {
-                        access.webTool = true;
-                        showNotification(`Unlocked ${module.title} Web Tool (recommended for session ${currentSession})`, 'success');
-                        loadClientModules(selectedModuleClient.id);
-                        return;
-                    }
-                }
-            }
-            
-            showNotification('All available modules for current session are already unlocked', 'info');
-        }
-
-        function unlockFullAnchorSet() {
-            if (!selectedModuleClient) return;
-            
-            const fiveAnchors = selectedModuleClient.moduleAccess.fiveAnchors;
-            let unlocked = 0;
-            
-            Object.keys(fiveAnchors).forEach(anchor => {
-                if (!fiveAnchors[anchor].guide) {
-                    fiveAnchors[anchor].guide = true;
-                    unlocked++;
-                }
-                if (!fiveAnchors[anchor].webTool) {
-                    fiveAnchors[anchor].webTool = true;
-                    unlocked++;
-                }
-            });
-            
-            if (unlocked > 0) {
-                showNotification(`Unlocked ${unlocked} Five Anchors components`, 'success');
-                loadClientModules(selectedModuleClient.id);
-            } else {
-                showNotification('All Five Anchors modules already unlocked', 'info');
-            }
-        }
-
-        function unlockDiscernmentTools() {
-            if (!selectedModuleClient) return;
-            
-            if (selectedModuleClient.coachingPackage.type !== '12-week') {
-                showNotification('Discernment Tools require a 12-week package', 'error');
-                return;
-            }
-            
-            const discernmentTools = selectedModuleClient.moduleAccess.discernmentTools;
-            let unlocked = 0;
-            
-            Object.keys(discernmentTools).forEach(tool => {
-                if (tool !== 'packageRequired' && !discernmentTools[tool].unlocked) {
-                    discernmentTools[tool].unlocked = true;
-                    unlocked++;
-                }
-            });
-            
-            if (unlocked > 0) {
-                showNotification(`Unlocked ${unlocked} Discernment Tools`, 'success');
-                loadClientModules(selectedModuleClient.id);
-            } else {
-                showNotification('All Discernment Tools already unlocked', 'info');
-            }
-        }
-
-        function resetAllModules() {
-            if (!selectedModuleClient) return;
-            
-            if (!confirm('Are you sure you want to reset ALL modules for this client? This will lock all content.')) {
-                return;
-            }
-            
-            // Reset Five Anchors
-            Object.keys(selectedModuleClient.moduleAccess.fiveAnchors).forEach(anchor => {
-                selectedModuleClient.moduleAccess.fiveAnchors[anchor].guide = false;
-                selectedModuleClient.moduleAccess.fiveAnchors[anchor].webTool = false;
-            });
-            
-            // Reset Discernment Tools
-            Object.keys(selectedModuleClient.moduleAccess.discernmentTools).forEach(tool => {
-                if (tool !== 'packageRequired') {
-                    selectedModuleClient.moduleAccess.discernmentTools[tool].unlocked = false;
-                }
-            });
-            
-            // Reset Supplementary
-            selectedModuleClient.moduleAccess.supplementaryContent.forEach(item => {
-                item.unlocked = false;
-            });
-            
-            showNotification('All modules reset for client', 'success');
-            loadClientModules(selectedModuleClient.id);
-        }
-
-        function toggleSupervisorMode() {
-            const coachFilter = document.getElementById('coach-filter');
-            
-            if (supervisorMode) {
-                coachFilter.value = 'current';
-            } else {
-                coachFilter.value = 'all';
-            }
-            
-            filterClientsByCoach();
-        }
-
-        function initializeNavigation() {
-            const navItems = document.querySelectorAll('.nav-item');
-            
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const sectionName = this.getAttribute('data-section');
-                    if (sectionName) {
-                        showSection(sectionName);
-                    }
-                });
-            });
-        }
-
-        function initializeCoachControls() {
-            const coachFilter = document.getElementById('coach-filter');
-            const supervisorToggle = document.getElementById('supervisor-mode');
-            
-            if (coachFilter) {
-                coachFilter.addEventListener('change', filterClientsByCoach);
-            }
-            
-            if (supervisorToggle) {
-                supervisorToggle.addEventListener('click', toggleSupervisorMode);
-            }
-        }
-
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: 6px;
-                z-index: 1001;
-                animation: slideIn 0.3s ease;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        // Close modals when clicking outside
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('transfer-modal')) {
-                closeTransferModal();
-            }
-            if (e.target.classList.contains('client-detail-modal')) {
-                closeClientDetailModal();
+        console.log(`Loaded ${clients.length} real clients from database`);
+        return clients;
+        
+    } catch (error) {
+        console.error('Error loading real clients:', error);
+        return [];
+    }
+}
+
+// Transform module access data to match expected format
+function transformModuleAccess(moduleAccessData) {
+    const access = {
+        fiveAnchors: {
+            physical: { guide: false, webTool: false, sessionUnlocked: 1 },
+            mental: { guide: false, webTool: false, sessionUnlocked: 2 },
+            emotional: { guide: false, webTool: false, sessionUnlocked: 3 },
+            spiritual: { guide: false, webTool: false, sessionUnlocked: 4 },
+            relational: { guide: false, webTool: false, sessionUnlocked: 5 }
+        },
+        discernmentTools: {
+            packageRequired: '12-week',
+            thoughtRefiner: { unlocked: false, sessionUnlocked: 7 },
+            beliefThreader: { unlocked: false, sessionUnlocked: 8 },
+            echoEraser: { unlocked: false, sessionUnlocked: 9 },
+            forgivenessFilter: { unlocked: false, sessionUnlocked: 10 },
+            connectionCalibrator: { unlocked: false, sessionUnlocked: 11 }
+        },
+        supplementaryContent: []
+    };
+
+    if (moduleAccessData) {
+        moduleAccessData.forEach(item => {
+            if (item.module_type === 'fiveAnchors' && access.fiveAnchors[item.module_key]) {
+                access.fiveAnchors[item.module_key][item.access_type] = item.unlocked;
+            } else if (item.module_type === 'discernmentTools' && access.discernmentTools[item.module_key]) {
+                access.discernmentTools[item.module_key].unlocked = item.unlocked;
             }
         });
+    }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeNavigation();
-            initializeCoachControls();
-            loadClients();
+    return access;
+}
+
+// Transform check-ins to match expected format
+function transformCheckIns(checkInData) {
+    const checkIns = {};
+    
+    if (checkInData && checkInData.length > 0) {
+        checkInData.forEach(checkIn => {
+            checkIns[checkIn.checkin_date] = {
+                ratings: checkIn.ratings || {},
+                notes: checkIn.notes || {}
+            };
         });
+    }
+    
+    return checkIns;
+}
 
-        // Add slideIn and slideOut animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
+// Enhanced loadClients function to use real data
+async function loadClients() {
+    const clientsList = document.getElementById('clients-list');
+    if (!clientsList) return;
+
+    // Show loading state
+    clientsList.innerHTML = '<div style="text-align: center; padding: 2rem;">Loading real client data...</div>';
+
+    // Load real clients if not already loaded
+    if (realClients.length === 0) {
+        realClients = await loadRealClientsFromDatabase();
+    }
+
+    // If no real clients, show appropriate message
+    if (realClients.length === 0) {
+        clientsList.innerHTML = `
+            <div style="text-align: center; padding: 3rem; opacity: 0.7;">
+                <h3>No Clients Found</h3>
+                <p>No clients have been assigned yet, or there was an error loading client data.</p>
+                <button onclick="loadRealClientsFromDatabase().then(clients => { realClients = clients; loadClients(); })" 
+                        style="margin-top: 1rem; padding: 0.5rem 1rem; border: 1px solid var(--accent-color); background: transparent; color: var(--accent-color); border-radius: 6px; cursor: pointer;">
+                    Retry Loading
+                </button>
+            </div>
         `;
-        document.head.appendChild(style);
+        updateStats([]);
+        generateEnhancedAlerts([]);
+        return;
+    }
+
+    const filteredClients = getFilteredClients();
+    
+    const clientCards = filteredClients.map(client => {
+        const latestCheckIn = getLatestCheckIn(client);
+        const status = getClientStatus(client, latestCheckIn);
+        const anchorSummary = getAnchorSummary(latestCheckIn);
+        const lastActivityText = getLastActivityText(client.lastActivity);
+        const assignedCoach = availableCoaches.find(coach => coach.id === client.assignedCoachId);
+        const coachName = assignedCoach ? assignedCoach.name : 'Unassigned';
+        const packageInfo = getPackageDisplay(client.coachingPackage);
+
+        return `
+            <div class="client-card">
+                <div class="client-header">
+                    <div>
+                        <div class="client-name">${client.name}</div>
+                        <div class="client-email">${client.email}</div>
+                        ${supervisorMode ? `<div style="font-size: 0.8rem; color: var(--accent-color); margin-top: 0.25rem;">Coach: ${coachName}</div>` : ''}
+                        ${client.intakeBaseline ? '<div style="font-size: 0.7rem; color: var(--success-color); margin-top: 0.25rem;">✅ Intake Complete</div>' : '<div style="font-size: 0.7rem; color: var(--warning-color); margin-top: 0.25rem;">⏳ Intake Pending</div>'}
+                    </div>
+                    <div class="client-status ${status.class}">${status.text}</div>
+                </div>
+                
+                ${packageInfo}
+                
+                <div style="margin-bottom: 1rem;">
+                    <div style="font-size: 0.85rem; opacity: 0.7;">Last Activity</div>
+                    <div style="font-weight: 600;">${lastActivityText}</div>
+                </div>
+                
+                <div class="anchor-summary">
+                    ${anchorSummary}
+                </div>
+                
+                <div class="client-actions${supervisorMode ? ' supervisor-mode' : ''}">
+                    <button class="client-btn primary" onclick="openClientDetailFromCard('${client.id}')">View Progress</button>
+                    <button class="client-btn modules" onclick="openModuleManagement('${client.id}')">Modules</button>
+                    <button class="client-btn">Sessions</button>
+                    ${supervisorMode ? `<button class="client-btn transfer" onclick="openTransferModal('${client.id}')">Transfer</button>` : ''}
+                    <button class="client-btn${supervisorMode ? '' : ' full-width'}">Message</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    clientsList.innerHTML = clientCards;
+    updateStats(filteredClients);
+    generateEnhancedAlerts(filteredClients);
+}
+
+// Update getFilteredClients to use real data
+function getFilteredClients() {
+    const filterValue = document.getElementById('coach-filter').value;
+    
+    if (filterValue === 'all') {
+        return realClients;
+    } else if (filterValue === 'current') {
+        return realClients.filter(client => client.assignedCoachId === currentCoachId);
+    } else {
+        return realClients.filter(client => client.assignedCoachId === filterValue);
+    }
+}
+
+// Enhanced initialization function
+async function initializeCoachDashboard() {
+    console.log('Initializing coach dashboard with real data...');
+    
+    // Load real clients from database
+    realClients = await loadRealClientsFromDatabase();
+    
+    // Initialize existing functionality
+    initializeNavigation();
+    initializeCoachControls();
+    loadClients();
+    
+    console.log('Coach dashboard initialized with', realClients.length, 'real clients');
+}
+
+// Update the DOMContentLoaded event listener
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCoachDashboard();
+});
+
+// Add refresh button with smart detection
+function addRefreshButton() {
+    const coachControls = document.querySelector('.coach-controls');
+    if (coachControls) {
+        const refreshButton = document.createElement('button');
+        refreshButton.className = 'supervisor-toggle';
+        refreshButton.style.background = 'var(--success-color)';
+        refreshButton.textContent = '🔄 Check for Real Clients';
+        refreshButton.onclick = async function() {
+            this.textContent = '⏳ Checking Database...';
+            this.disabled = true;
+            
+            const previousCount = realClients.length;
+            realClients = await loadRealClientsFromDatabase();
+            await loadClients();
+            
+            const newCount = realClients.length;
+            if (newCount > previousCount) {
+                showNotification(`Found ${newCount} real clients from automation system!`, 'success');
+                this.textContent = '🔄 Refresh Live Data';
+            } else if (newCount > 0) {
+                showNotification('Live client data refreshed', 'success');
+                this.textContent = '🔄 Refresh Live Data';
+            } else {
+                showNotification('No real clients yet - still using demo data', 'info');
+                this.textContent = '🔄 Check for Real Clients';
+            }
+            
+            this.disabled = false;
+        };
+        
+        coachControls.appendChild(refreshButton);
+    }
+}
+
+// Call this after DOM loads
+setTimeout(addRefreshButton, 1000);
     </script>
 </body>
 </html>
