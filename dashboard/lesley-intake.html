@@ -872,7 +872,7 @@
                             </div>
                         </div>
                         
-			<div class="anchor-item">
+                        <div class="anchor-item">
                             <div class="anchor-header">
                                 <span class="anchor-icon">👓</span>
                                 <div class="anchor-info">
@@ -1019,6 +1019,7 @@
                                 </label>
                             </div>
                         </div>
+                        
                         <div class="working-together-section">
                             <div class="coach-avatar">L</div>
                             <h4>Working Together</h4>
@@ -1056,8 +1057,9 @@
             </div>
             
             <div class="success-message" id="success-message">
-                <h3>Thank you for your submission!</h3>
-                <p>I'll be in touch within 24 hours to set up your account and schedule your first session.</p>
+                <h3>Welcome to Five Anchors!</h3>
+                <p>Your account has been created successfully. Check your email for a magic link to access your dashboard.</p>
+                <p style="margin-top: 1rem; color: #666;">The email may take a few minutes to arrive. Don't forget to check your spam folder.</p>
             </div>
         </div>
     </div>
@@ -1093,7 +1095,14 @@
         </div>
     </div>
     
+    <!-- Supabase Configuration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://bkxivucggnwdktnhbgiq.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJreGl2dWNnZ253ZGt0bmhiZ2lxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYwNjA4MTAsImV4cCI6MjA0MTYzNjgxMH0.MlmMgKqyqtxcr_gKmEOKT5W1wumq8LhYLZHvKLbmNiQ';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
         var currentStep = 1;
         var totalSteps = 5;
         var formData = {};
@@ -1307,7 +1316,7 @@
             });
         }
         
-        function submitForm() {
+        async function submitForm() {
             if (!validateCurrentStep()) {
                 return;
             }
@@ -1315,14 +1324,131 @@
             collectStepData();
             
             var submitBtn = document.getElementById('next-btn');
-            submitBtn.textContent = 'Submitting...';
+            submitBtn.textContent = 'Creating your account...';
             submitBtn.disabled = true;
             
-            setTimeout(function() {
-                console.log('Form Data:', formData);
+            try {
+                console.log('Starting intake automation process...', formData);
+
+                // Step 1: Create user account with magic link
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: formData.email,
+                    options: {
+                        emailRedirectTo: 'https://claritymetabolics.github.io/clarity-tools/dashboard/',
+                        data: {
+                            full_name: formData.firstName + ' ' + formData.lastName,
+                            program_type: formData.program
+                        }
+                    }
+                });
+
+                if (authError) {
+                    throw new Error(`Account creation failed: ${authError.message}`);
+                }
+
+                console.log('✅ User account created:', authData);
+
+                // Step 2: Store intake responses in database
+                const { error: intakeError } = await supabase
+                    .from('intake_responses')
+                    .insert([{
+                        user_id: authData.user.id,
+                        first_name: formData.firstName,
+                        last_name: formData.lastName,
+                        email: formData.email,
+                        phone: formData.phone,
+                        timezone: formData.timezone,
+                        emergency_first_name: formData.emergencyFirstName,
+                        emergency_last_name: formData.emergencyLastName,
+                        emergency_relationship: formData.emergencyRelationship,
+                        emergency_phone: formData.emergencyPhone,
+                        program_type: formData.program,
+                        referral_source: formData.referralSource,
+                        current_challenges: formData.currentChallenges,
+                        primary_goals: formData.primaryGoals,
+                        crisis_support_level: formData.crisisSupport,
+                        physical_anchor: parseInt(formData.physical),
+                        mental_anchor: parseInt(formData.mental),
+                        emotional_anchor: parseInt(formData.emotional),
+                        spiritual_anchor: parseInt(formData.spiritual),
+                        relational_anchor: parseInt(formData.relational),
+                        additional_notes: formData.additionalNotes,
+                        terms_agreement: formData.termsAgreement,
+                        contact_consent: formData.contactConsent,
+                        completed_at: new Date().toISOString()
+                    }]);
+
+                if (intakeError) {
+                    console.error('Intake storage error:', intakeError);
+                    // Continue anyway - user account was created
+                }
+
+                console.log('✅ Intake responses stored');
+
+                // Step 3: Set up initial module permissions
+                await setupInitialModules(authData.user.id, formData.program);
+
+                // Step 4: Show success message
                 document.querySelector('.form-card').style.display = 'none';
                 document.getElementById('success-message').style.display = 'block';
-            }, 2000);
+                
+                console.log('✅ Automation bridge completed successfully');
+
+            } catch (error) {
+                console.error('Intake submission error:', error);
+                
+                // Reset button and show error
+                submitBtn.textContent = 'Start My Five Anchors Journey';
+                submitBtn.disabled = false;
+                
+                alert('There was an error creating your account. Please try again or contact Lesley at lesley@claritymetabolics.com');
+            }
+        }
+
+        // Set up initial module permissions based on program type
+        async function setupInitialModules(userId, programType) {
+            try {
+                const modulePermissions = [];
+                
+                // Base permissions for all programs
+                const baseModules = [
+                    'physical-guide', 'mental-guide', 'emotional-guide', 
+                    'spiritual-guide', 'relational-guide'
+                ];
+                
+                // Add discernment tools for 12-week program
+                const discernmentTools = [
+                    'thought-refiner', 'belief-threader', 'echo-eraser',
+                    'forgiveness-filter', 'connection-calibrator'
+                ];
+                
+                const allModules = programType === '12-week' 
+                    ? [...baseModules, ...discernmentTools]
+                    : baseModules;
+                
+                // Create module access records
+                for (const module of allModules) {
+                    modulePermissions.push({
+                        user_id: userId,
+                        module_name: module,
+                        unlocked: module === 'physical-guide', // Only physical unlocked initially
+                        unlocked_at: module === 'physical-guide' ? new Date().toISOString() : null
+                    });
+                }
+                
+                const { error } = await supabase
+                    .from('module_access')
+                    .insert(modulePermissions);
+                
+                if (error) {
+                    console.error('Module setup error:', error);
+                } else {
+                    console.log('✅ Module permissions set up');
+                }
+                
+            } catch (error) {
+                console.error('Module setup failed:', error);
+            }
         }
         
         updateNavigation();
