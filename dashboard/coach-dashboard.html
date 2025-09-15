@@ -1,169 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coach Dashboard - Five Anchors Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --physical-color: #7C8B60;
+            --mental-color: #B7AFA3;
+            --emotional-color: #C97D7D;
+            --spiritual-color: #B6B0C3;
+            --relational-color: #E8934A;
+            --bg-color: #FEFEFE;
+            --text-color: #2C2C2C;
+            --nav-bg: #FFFFFF;
+            --nav-border: #E5E5E5;
+            --nav-hover: #F0F0F0;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E5E5;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --accent-color: #5A6C57;
+            --alert-low: #f44336;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --transfer-color: #9C27B0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, 
+                rgba(124, 139, 96, 0.7) 0%, 
+                rgba(183, 175, 163, 0.7) 25%, 
+                rgba(201, 125, 125, 0.7) 50%, 
+                rgba(182, 176, 195, 0.7) 75%, 
+                rgba(232, 147, 74, 0.7) 100%);
+            padding: 1.5rem 0;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .coach-info {
+            color: white;
+            text-align: right;
+        }
+
+        .coach-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .coach-role {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .main-nav {
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--nav-border);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            overflow-x: auto;
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover { background: var(--nav-hover); }
+        .nav-item.active { 
+            border-bottom-color: var(--accent-color); 
+            background: var(--nav-hover); 
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .section-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .card h3 {
+            font-family: 'Libre Baskerville', serif;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .coach-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .coach-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .coach-selector select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            min-width: 200px;
+        }
+
+        .supervisor-toggle {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .supervisor-toggle:hover {
+            opacity: 0.9;
+        }
+
+        .supervisor-toggle.active {
+            background: var(--physical-color);
+        }
+
+        .view-indicator {
+            padding: 0.5rem 1rem;
+            background: var(--nav-hover);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--nav-hover);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .client-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .client-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px var(--shadow);
+        }
+
+        .client-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .client-name {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .client-email {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .client-status {
+            padding: 0.4rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.2;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 32px;
+            box-sizing: border-box;
+        }
+
+        .status-active { background: var(--success-color); color: white; }
+        .status-concern { background: var(--alert-low); color: white; }
+        .status-inactive { background: var(--nav-border); color: var(--text-color); }
+
+        /* Package Info Styles */
+        .package-info {
+            background: var(--nav-hover);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .package-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .package-type {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .package-6week { border-left: 4px solid var(--physical-color); }
+        .package-12week { border-left: 4px solid var(--relational-color); }
+
+        .session-progress {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--card-border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success-color);
+            transition: width 0.3s ease;
+        }
+
+        .anchor-summary {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .anchor-mini {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .anchor-mini.physical { background: var(--physical-color); }
+        .anchor-mini.mental { background: var(--mental-color); }
+        .anchor-mini.emotional { background: var(--emotional-color); }
+        .anchor-mini.spiritual { background: var(--spiritual-color); }
+        .anchor-mini.relational { background: var(--relational-color); }
+
+        .anchor-mini.low {
+            box-shadow: 0 0 8px var(--alert-low);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Client Actions with Consistent Padding */
+        .client-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .client-btn {
+            flex: 1;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--accent-color);
+            background: transparent;
+            color: var(--accent-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            text-align: center;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        .client-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .client-btn.primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .client-btn.modules {
+            border-color: var(--relational-color);
+            color: var(--relational-color);
+        }
+
+        .client-btn.modules:hover {
+            background: var(--relational-color);
+            color: white;
+        }
+
+        .client-btn.transfer {
+            border-color: var(--transfer-color);
+            color: var(--transfer-color);
+        }
+
+        .client-btn.transfer:hover {
+            background: var(--transfer-color);
+            color: white;
+        }
+
+        /* Module Management Styles */
+        .module-management {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .module-client-selector {
+            background: var(--nav-hover);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .module-client-selector select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            min-width: 250px;
+            font-size: 1rem;
+        }
+
+        .module-client-info {
+            display: none;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .module-client-info.show {
+            display: block;
+        }
+
+        .client-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .overview-section h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .module-section {
+            margin-bottom: 2rem;
+        }
+
+        .module-section h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--nav-border);
+            padding-bottom: 0.5rem;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .module-item {
+            background: var(--nav-hover);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--card-border);
+        }
+
+        .module-item.unlocked {
+            border-left-color: var(--success-color);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .module-item.locked {
+            border-left-color: var(--alert-low);
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .module-item.restricted {
+            border-left-color: var(--warning-color);
+            background: rgba(255, 152, 0, 0.1);
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .module-status {
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .status-unlocked {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-locked {
+            background: var(--alert-low);
+            color: white;
+        }
+
+        .status-restricted {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .module-description {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .module-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .module-btn {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .module-btn.unlock {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .module-btn.lock {
+            background: var(--alert-low);
+            color: white;
+        }
+
+        .module-btn:hover {
+            opacity: 0.8;
+        }
+
+        .module-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .warning-message {
+            background: rgba(255, 152, 0, 0.1);
+            border: 1px solid var(--warning-color);
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: var(--text-color);
+        }
+
+        .warning-message strong {
+            color: var(--warning-color);
+        }
+
+        .bulk-actions {
+            background: var(--nav-hover);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .bulk-actions h4 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .bulk-btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .bulk-btn {
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--accent-color);
+            background: transparent;
+            color: var(--accent-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .bulk-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .bulk-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Transfer Modal Styles */
+        .transfer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .transfer-modal.show {
+            display: flex;
+        }
+
+        .transfer-modal-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .transfer-modal h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .transfer-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .transfer-form select {
+            padding: 0.75rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .transfer-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .transfer-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .transfer-btn.confirm {
+            background: var(--transfer-color);
+            color: white;
+        }
+
+        .transfer-btn.cancel {
+            background: var(--card-border);
+            color: var(--text-color);
+        }
+
+        .transfer-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Enhanced Alert Banner with Clickable Functionality */
+        .alert-banner {
+            background: var(--alert-low);
+            color: white;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .alert-banner:hover {
+            background: #d32f2f;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-details {
+            opacity: 0.9;
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+            align-items: center;
+        }
+
+        .alert-btn {
+            padding: 0.6rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            min-width: 80px;
+        }
+
+        .alert-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Client Detail Modal */
+        .client-detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+
+        .client-detail-modal.show {
+            display: flex;
+        }
+
+        .client-detail-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .client-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--nav-border);
+            padding-bottom: 1rem;
+        }
+
+        .client-detail-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .close-modal:hover {
+            opacity: 1;
+        }
+
+        .client-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-section {
+            background: var(--nav-hover);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .detail-section h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        .detail-value {
+            text-align: right;
+        }
+
+        .anchor-ratings-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .rating-indicator {
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .rating-indicator.physical { background: var(--physical-color); color: white; }
+        .rating-indicator.mental { background: var(--mental-color); color: white; }
+        .rating-indicator.emotional { background: var(--emotional-color); color: white; }
+        .rating-indicator.spiritual { background: var(--spiritual-color); color: white; }
+        .rating-indicator.relational { background: var(--relational-color); color: white; }
+
+        .rating-indicator.low {
+            box-shadow: 0 0 8px var(--alert-low);
+            animation: pulse 2s infinite;
+        }
+
+        .module-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .access-item {
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .access-item.unlocked {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+        }
+
+        .access-item.locked {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--alert-low);
+        }
+
+        .client-detail-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--nav-border);
+        }
+
+        .detail-action-btn {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--accent-color);
+            background: transparent;
+            color: var(--accent-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .detail-action-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .detail-action-btn.primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .detail-action-btn.modules {
+            border-color: var(--relational-color);
+            color: var(--relational-color);
+        }
+
+        .detail-action-btn.modules:hover {
+            background: var(--relational-color);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .clients-grid { grid-template-columns: 1fr; }
+            .client-actions { flex-direction: column; }
+            .client-btn { 
+                width: 100%;
+                margin-bottom: 0.25rem;
+            }
+            .coach-controls { flex-direction: column; align-items: flex-start; }
+            .client-overview { grid-template-columns: 1fr; gap: 1rem; }
+            .bulk-btn-grid { grid-template-columns: 1fr; }
+            .alert-banner { flex-direction: column; }
+            .alert-actions { align-self: stretch; }
+            .client-detail-grid { grid-template-columns: 1fr; }
+            .client-detail-actions { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Coach Dashboard - Five Anchors</div>
+            <div class="coach-info">
+                <div class="coach-name">Lesley Turner</div>
+                <div class="coach-role">Lead Coach</div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-content">
+            <div class="nav-menu">
+                <div class="nav-item active" data-section="clients">
+                    <span>👥</span>
+                    <span>My Clients</span>
+                </div>
+                <div class="nav-item" data-section="sessions">
+                    <span>📅</span>
+                    <span>Sessions</span>
+                </div>
+                <div class="nav-item" data-section="modules">
+                    <span>🔓</span>
+                    <span>Module Management</span>
+                </div>
+                <div class="nav-item" data-section="insights">
+                    <span>📊</span>
+                    <span>Insights</span>
+                </div>
+                <div class="nav-item" data-section="alerts">
+                    <span>⚠️</span>
+                    <span>Alerts</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        
+        <section id="clients" class="section active">
+            <div class="section-header">
+                <h1 class="section-title">My Clients</h1>
+                <p class="section-subtitle">Monitor client progress and coaching packages</p>
+            </div>
+
+            <div class="coach-controls">
+                <div class="coach-selector">
+                    <label for="coach-filter">View clients for:</label>
+                    <select id="coach-filter">
+                        <option value="current">My Clients Only (Lesley)</option>
+                        <option value="all">All Clients (Supervisor View)</option>
+                        <option value="coach_lesley">Lesley Turner - Individual</option>
+                        <option value="coach_sarah">Sarah Johnson - Individual</option>
+                        <option value="coach_mike">Mike Chen - Individual</option>
+                    </select>
+                </div>
+                
+                <button class="supervisor-toggle" id="supervisor-mode">
+                    Enable Supervisor View
+                </button>
+                
+                <div class="view-indicator" id="view-indicator">
+                    Individual Coach View
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Overview</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-clients">3</div>
+                        <div class="stat-label">Total Clients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="active-today">2</div>
+                        <div class="stat-label">Active Today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="six-week-clients">2</div>
+                        <div class="stat-label">6-Week Clients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="twelve-week-clients">1</div>
+                        <div class="stat-label">12-Week Clients</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Client Dashboard</h3>
+                <div class="clients-grid" id="clients-list">
+                    <!-- Clients loaded by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <section id="sessions" class="section">
+            <div class="section-header">
+                <h1 class="section-title">Sessions & Appointments</h1>
+                <p class="section-subtitle">Manage client appointments and session notes</p>
+            </div>
+
+            <div class="card">
+                <h3>Quick Actions</h3>
+                <div class="client-actions" style="max-width: 600px;">
+                    <button class="client-btn primary">📅 Schedule New Session</button>
+                    <button class="client-btn">📋 Today's Sessions</button>
+                    <button class="client-btn">⏰ Upcoming Sessions</button>
+                    <button class="client-btn primary" onclick="window.open('session-guidance.html', '_blank')">📋 Start Guided Session</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Today's Schedule</h3>
+                <p>Session management features coming soon.</p>
+            </div>
+        </section>
+
+        <section id="modules" class="section">
+            <div class="section-header">
+                <h1 class="section-title">Module Management</h1>
+                <p class="section-subtitle">Control client access to coaching content and tools</p>
+            </div>
+
+            <div class="module-management">
+                <div class="module-client-selector">
+                    <label for="module-client-select">Select Client:</label>
+                    <select id="module-client-select">
+                        <option value="">Choose a client to manage their modules...</option>
+                    </select>
+                </div>
+
+                <div class="module-client-info" id="module-client-info">
+                    <div class="client-overview">
+                        <div class="overview-section">
+                            <h4>Client Information</h4>
+                            <div id="client-basic-info"></div>
+                        </div>
+                        <div class="overview-section">
+                            <h4>Coaching Package</h4>
+                            <div id="client-package-info"></div>
+                        </div>
+                    </div>
+
+                    <div class="bulk-actions">
+                        <h4>Quick Actions</h4>
+                        <div class="bulk-btn-grid">
+                            <button class="bulk-btn" onclick="unlockNextRecommended()">🎯 Unlock Next Recommended</button>
+                            <button class="bulk-btn" onclick="unlockFullAnchorSet()">⚓ Unlock All Five Anchors</button>
+                            <button class="bulk-btn" onclick="unlockDiscernmentTools()" disabled id="discernment-bulk-btn">🔍 Unlock Discernment Tools</button>
+                            <button class="bulk-btn" onclick="resetAllModules()">🔄 Reset All Modules</button>
+                        </div>
+                    </div>
+
+                    <div class="module-section">
+                        <h4>Five Anchors Program</h4>
+                        <div class="module-grid" id="five-anchors-modules">
+                            <!-- Generated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="module-section">
+                        <h4>Discernment Tools (12-Week Only)</h4>
+                        <div class="module-grid" id="discernment-modules">
+                            <!-- Generated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="module-section">
+                        <h4>Supplementary Content</h4>
+                        <div class="module-grid" id="supplementary-modules">
+                            <!-- Generated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="insights" class="section">
+            <div class="section-header">
+                <h1 class="section-title">Practice Insights</h1>
+                <p class="section-subtitle">Patterns and trends across your client base</p>
+            </div>
+            
+            <div class="card">
+                <h3>Analytics</h3>
+                <p>Advanced analytics coming soon.</p>
+            </div>
+        </section>
+
+        <section id="alerts" class="section">
+            <div class="section-header">
+                <h1 class="section-title">Client Alerts</h1>
+                <p class="section-subtitle">Clients who need immediate attention</p>
+            </div>
+            
+            <div id="alerts-container">
+                <!-- Generated by JavaScript -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Transfer Client Modal -->
+    <div class="transfer-modal" id="transfer-modal">
+        <div class="transfer-modal-content">
+            <h3>Transfer Client</h3>
+            <div class="transfer-form">
+                <div>
+                    <label for="transfer-client-name">Client:</label>
+                    <div id="transfer-client-name" style="font-weight: 600; margin-bottom: 1rem;"></div>
+                </div>
+                <div>
+                    <label for="transfer-new-coach">Transfer to:</label>
+                    <select id="transfer-new-coach">
+                        <option value="">Select new coach...</option>
+                    </select>
+                </div>
+                <div class="transfer-actions">
+                    <button class="transfer-btn cancel" onclick="closeTransferModal()">Cancel</button>
+                    <button class="transfer-btn confirm" onclick="confirmTransfer()">Transfer Client</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Client Detail Modal -->
+    <div class="client-detail-modal" id="client-detail-modal">
+        <div class="client-detail-content">
+            <div class="client-detail-header">
+                <h3 class="client-detail-title" id="client-detail-name">Client Details</h3>
+                <button class="close-modal" onclick="closeClientDetailModal()">&times;</button>
+            </div>
+            
+            <div class="client-detail-grid">
+                <div class="detail-section">
+                    <h4>Client Information</h4>
+                    <div class="detail-item">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value" id="detail-email">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Last Activity:</span>
+                        <span class="detail-value" id="detail-last-activity">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Assigned Coach:</span>
+                        <span class="detail-value" id="detail-coach">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Client Status:</span>
+                        <span class="detail-value" id="detail-status">-</span>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h4>Coaching Package</h4>
+                    <div class="detail-item">
+                        <span class="detail-label">Package Type:</span>
+                        <span class="detail-value" id="detail-package-type">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Sessions Progress:</span>
+                        <span class="detail-value" id="detail-sessions">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Start Date:</span>
+                        <span class="detail-value" id="detail-start-date">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Package Status:</span>
+                        <span class="detail-value" id="detail-package-status">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h4>Recent Anchor Ratings</h4>
+                <div class="anchor-ratings-grid" id="detail-anchor-ratings">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h4>Module Access Overview</h4>
+                <div class="module-access-grid" id="detail-module-access">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="detail-section" id="detail-notes-section">
+                <h4>Recent Notes & Concerns</h4>
+                <div id="detail-notes-content">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="client-detail-actions">
+                <button class="detail-action-btn primary" onclick="closeClientDetailModal(); showSection('sessions')">Schedule Session</button>
+                <button class="detail-action-btn modules" onclick="openModuleManagementFromDetail()">Manage Modules</button>
+                <button class="detail-action-btn" onclick="closeClientDetailModal()">Send Message</button>
+                <button class="detail-action-btn" onclick="exportClientProgress()">Export Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Replace the sample data section in coach-dashboard.html with this code
+
 // Import database configuration
 import { supabase, dbManager } from './js/supabase-config.js';
 
-// Keep sample clients for demonstration + real client integration
+// Remove the sampleClients array and replace with real data loading
 let realClients = [];
-
-// Complete sample clients data for demonstration
-let sampleClients = [
-    {
-        id: 'client001',
-        name: 'Sarah Johnson',
-        email: 'sarah.j@email.com',
-        assignedCoachId: 'coach_lesley',
-        lastActivity: '2025-01-08T10:30:00Z',
-        coachingPackage: {
-            type: '6-week',
-            sessionsTotal: 6,
-            sessionsCompleted: 2,
-            startDate: '2024-12-01',
-            status: 'active'
-        },
-        moduleAccess: {
-            fiveAnchors: {
-                physical: { guide: true, webTool: false, sessionUnlocked: 1 },
-                mental: { guide: true, webTool: false, sessionUnlocked: 2 },
-                emotional: { guide: false, webTool: false, sessionUnlocked: 3 },
-                spiritual: { guide: false, webTool: false, sessionUnlocked: 4 },
-                relational: { guide: false, webTool: false, sessionUnlocked: 5 }
-            },
-            discernmentTools: {
-                packageRequired: '12-week',
-                thoughtRefiner: { unlocked: false, sessionUnlocked: 7 },
-                beliefThreader: { unlocked: false, sessionUnlocked: 8 },
-                echoEraser: { unlocked: false, sessionUnlocked: 9 },
-                forgivenessFilter: { unlocked: false, sessionUnlocked: 10 },
-                connectionCalibrator: { unlocked: false, sessionUnlocked: 11 }
-            },
-            supplementaryContent: []
-        },
-        checkIns: {
-            '2025-01-08': {
-                ratings: { physical: 4, mental: 3, emotional: 2, spiritual: 4, relational: 3 },
-                notes: { emotional: 'Feeling overwhelmed with work deadlines' }
-            }
-        }
-    },
-    {
-        id: 'client002', 
-        name: 'Michael Chen',
-        email: 'mchen@email.com',
-        assignedCoachId: 'coach_lesley',
-        lastActivity: '2025-01-07T16:45:00Z',
-        coachingPackage: {
-            type: '12-week',
-            sessionsTotal: 12,
-            sessionsCompleted: 8,
-            startDate: '2024-10-15',
-            status: 'active'
-        },
-        moduleAccess: {
-            fiveAnchors: {
-                physical: { guide: true, webTool: true, sessionUnlocked: 1 },
-                mental: { guide: true, webTool: true, sessionUnlocked: 2 },
-                emotional: { guide: true, webTool: true, sessionUnlocked: 3 },
-                spiritual: { guide: true, webTool: false, sessionUnlocked: 4 },
-                relational: { guide: true, webTool: false, sessionUnlocked: 5 }
-            },
-            discernmentTools: {
-                packageRequired: '12-week',
-                thoughtRefiner: { unlocked: true, sessionUnlocked: 7 },
-                beliefThreader: { unlocked: true, sessionUnlocked: 8 },
-                echoEraser: { unlocked: false, sessionUnlocked: 9 },
-                forgivenessFilter: { unlocked: false, sessionUnlocked: 10 },
-                connectionCalibrator: { unlocked: false, sessionUnlocked: 11 }
-            },
-            supplementaryContent: [
-                { id: 'bonus_pdf_001', title: 'Advanced Grounding Techniques', type: 'pdf', unlocked: true },
-                { id: 'video_001', title: 'Discernment in Daily Life', type: 'video', unlocked: false }
-            ]
-        },
-        checkIns: {
-            '2025-01-07': {
-                ratings: { physical: 2, mental: 2, emotional: 1, spiritual: 3, relational: 2 },
-                notes: { 
-                    emotional: 'Relationship stress affecting everything',
-                    physical: 'Not sleeping well, very tired'
-                }
-            }
-        }
-    },
-    {
-        id: 'client003',
-        name: 'Emma Rodriguez', 
-        email: 'emma.r@email.com',
-        assignedCoachId: 'coach_lesley',
-        lastActivity: '2025-01-08T08:15:00Z',
-        coachingPackage: {
-            type: '6-week',
-            sessionsTotal: 6,
-            sessionsCompleted: 5,
-            startDate: '2024-11-15',
-            status: 'active'
-        },
-        moduleAccess: {
-            fiveAnchors: {
-                physical: { guide: true, webTool: true, sessionUnlocked: 1 },
-                mental: { guide: true, webTool: true, sessionUnlocked: 2 },
-                emotional: { guide: true, webTool: true, sessionUnlocked: 3 },
-                spiritual: { guide: true, webTool: true, sessionUnlocked: 4 },
-                relational: { guide: true, webTool: false, sessionUnlocked: 5 }
-            },
-            discernmentTools: {
-                packageRequired: '12-week',
-                thoughtRefiner: { unlocked: false, sessionUnlocked: 7 },
-                beliefThreader: { unlocked: false, sessionUnlocked: 8 },
-                echoEraser: { unlocked: false, sessionUnlocked: 9 },
-                forgivenessFilter: { unlocked: false, sessionUnlocked: 10 },
-                connectionCalibrator: { unlocked: false, sessionUnlocked: 11 }
-            },
-            supplementaryContent: [
-                { id: 'integration_guide', title: '6-Week Integration Guide', type: 'pdf', unlocked: true }
-            ]
-        },
-        checkIns: {
-            '2025-01-08': {
-                ratings: { physical: 5, mental: 4, emotional: 4, spiritual: 5, relational: 4 },
-                notes: { spiritual: 'Amazing prayer time this morning' }
-            }
-        }
-    }
-];
-
-const availableCoaches = [
-    { id: 'coach_lesley', name: 'Lesley Turner', role: 'Lead Coach' },
-    { id: 'coach_sarah', name: 'Sarah Johnson', role: 'Associate Coach' },
-    { id: 'coach_mike', name: 'Mike Chen', role: 'Associate Coach' }
-];
-
-// Module definitions
-const moduleDefinitions = {
-    fiveAnchors: [
-        { key: 'physical', title: 'Physical Anchor', description: 'Grounding and body awareness guide + web tool', sessionUnlocked: 1 },
-        { key: 'mental', title: 'Mental Anchor', description: 'Mental clarity and filtering guide + web tool', sessionUnlocked: 2 },
-        { key: 'emotional', title: 'Emotional Anchor', description: 'Emotional stability and regulation guide + web tool', sessionUnlocked: 3 },
-        { key: 'spiritual', title: 'Spiritual Anchor', description: 'Spiritual grounding and communion guide + web tool', sessionUnlocked: 4 },
-        { key: 'relational', title: 'Relational Anchor', description: 'Relationship harmony and boundaries guide + web tool', sessionUnlocked: 5 }
-    ],
-    discernmentTools: [
-        { key: 'thoughtRefiner', title: 'Thought Refiner', description: 'Advanced mental filtering and truth detection', sessionUnlocked: 7 },
-        { key: 'beliefThreader', title: 'Belief Threader', description: 'Examining and dissolving crystallized thought patterns', sessionUnlocked: 8 },
-        { key: 'echoEraser', title: 'Echo Eraser', description: 'Clearing energetic residue and integration', sessionUnlocked: 9 },
-        { key: 'forgivenessFilter', title: 'Forgiveness Filter', description: 'Processing hurt and finding authentic forgiveness', sessionUnlocked: 10 },
-        { key: 'connectionCalibrator', title: 'Connection Calibrator', description: 'Balancing relationship dynamics and boundaries', sessionUnlocked: 11 }
-    ]
-};
-
 let currentCoachId = 'coach_lesley';
 let supervisorMode = false;
 let selectedModuleClient = null;
 let transferClientId = null;
 let currentDetailClientId = null;
 
-// Load real clients from database (when they exist)
+// Load real clients from database
 async function loadRealClientsFromDatabase() {
     try {
-        console.log('Checking for real clients in database...');
+        console.log('Loading real clients from database...');
         
         // Get all client profiles with their coaching information
         const { data: profiles, error: profileError } = await supabase
@@ -175,12 +1303,7 @@ async function loadRealClientsFromDatabase() {
             .eq('role', 'client');
 
         if (profileError) {
-            console.error('Database not available or error loading profiles:', profileError);
-            return [];
-        }
-
-        if (!profiles || profiles.length === 0) {
-            console.log('No real clients found in database yet - using sample data for demonstration');
+            console.error('Error loading client profiles:', profileError);
             return [];
         }
 
@@ -224,18 +1347,17 @@ async function loadRealClientsFromDatabase() {
                 },
                 moduleAccess: transformModuleAccess(moduleAccess),
                 checkIns: transformCheckIns(checkIns),
-                intakeBaseline: intakeData?.baseline_anchor_scores || null,
-                isRealClient: true // Flag to distinguish from sample data
+                intakeBaseline: intakeData?.baseline_anchor_scores || null
             };
 
             clients.push(client);
         }
 
-        console.log(`Found ${clients.length} real clients from live automation system`);
+        console.log(`Loaded ${clients.length} real clients from database`);
         return clients;
         
     } catch (error) {
-        console.error('Database connection failed, using sample data:', error);
+        console.error('Error loading real clients:', error);
         return [];
     }
 }
@@ -290,85 +1412,37 @@ function transformCheckIns(checkInData) {
     return checkIns;
 }
 
-function showSection(sectionName) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    
-    const section = document.getElementById(sectionName);
-    const navItem = document.querySelector(`[data-section="${sectionName}"]`);
-    
-    if (section) section.classList.add('active');
-    if (navItem) navItem.classList.add('active');
-
-    // Initialize module management when section is shown
-    if (sectionName === 'modules') {
-        initializeModuleManagement();
-    }
-}
-
-function filterClientsByCoach() {
-    const filterValue = document.getElementById('coach-filter').value;
-    const viewIndicator = document.getElementById('view-indicator');
-    const supervisorToggle = document.getElementById('supervisor-mode');
-    
-    if (filterValue === 'all') {
-        supervisorMode = true;
-        viewIndicator.textContent = 'Supervisor View - All Coaches';
-        supervisorToggle.classList.add('active');
-        supervisorToggle.textContent = 'Disable Supervisor View';
-    } else if (filterValue === 'current') {
-        supervisorMode = false;
-        viewIndicator.textContent = 'Individual Coach View';
-        supervisorToggle.classList.remove('active');
-        supervisorToggle.textContent = 'Enable Supervisor View';
-    } else {
-        supervisorMode = true;
-        const selectedCoach = availableCoaches.find(coach => coach.id === filterValue);
-        viewIndicator.textContent = `Viewing: ${selectedCoach?.name || 'Unknown Coach'}`;
-        supervisorToggle.classList.add('active');
-        supervisorToggle.textContent = 'Disable Supervisor View';
-    }
-    
-    loadClients();
-}
-
-// Update getFilteredClients to use hybrid approach
-function getFilteredClients(clientsArray = null) {
-    const activeClients = clientsArray || (realClients.length > 0 ? realClients : sampleClients);
-    const filterValue = document.getElementById('coach-filter').value;
-    
-    if (filterValue === 'all') {
-        return activeClients;
-    } else if (filterValue === 'current') {
-        return activeClients.filter(client => client.assignedCoachId === currentCoachId);
-    } else {
-        return activeClients.filter(client => client.assignedCoachId === filterValue);
-    }
-}
-
-// Enhanced loadClients function to use hybrid approach
+// Enhanced loadClients function to use real data
 async function loadClients() {
     const clientsList = document.getElementById('clients-list');
     if (!clientsList) return;
 
     // Show loading state
-    clientsList.innerHTML = '<div style="text-align: center; padding: 2rem;">Loading client data...</div>';
+    clientsList.innerHTML = '<div style="text-align: center; padding: 2rem;">Loading real client data...</div>';
 
-    // Try to load real clients first
-    realClients = await loadRealClientsFromDatabase();
-    
-    // Use real clients if available, otherwise fall back to sample clients for demonstration
-    const activeClients = realClients.length > 0 ? realClients : sampleClients;
-    const dataSource = realClients.length > 0 ? 'live database' : 'sample demonstration data';
-    
-    console.log(`Using ${dataSource} - showing ${activeClients.length} clients`);
+    // Load real clients if not already loaded
+    if (realClients.length === 0) {
+        realClients = await loadRealClientsFromDatabase();
+    }
 
-    const filteredClients = getFilteredClients(activeClients);
-    
-    // Add data source indicator
-    const dataSourceBanner = realClients.length > 0 ? 
-        '<div style="background: #4CAF50; color: white; padding: 0.75rem; margin-bottom: 1rem; border-radius: 6px; text-align: center; font-weight: 600;">✅ Showing Live Client Data from Automation System</div>' :
-        '<div style="background: #2196F3; color: white; padding: 0.75rem; margin-bottom: 1rem; border-radius: 6px; text-align: center; font-weight: 600;">📊 Showing Sample Data for Demonstration (No real clients yet)</div>';
+    // If no real clients, show appropriate message
+    if (realClients.length === 0) {
+        clientsList.innerHTML = `
+            <div style="text-align: center; padding: 3rem; opacity: 0.7;">
+                <h3>No Clients Found</h3>
+                <p>No clients have been assigned yet, or there was an error loading client data.</p>
+                <button onclick="loadRealClientsFromDatabase().then(clients => { realClients = clients; loadClients(); })" 
+                        style="margin-top: 1rem; padding: 0.5rem 1rem; border: 1px solid var(--accent-color); background: transparent; color: var(--accent-color); border-radius: 6px; cursor: pointer;">
+                    Retry Loading
+                </button>
+            </div>
+        `;
+        updateStats([]);
+        generateEnhancedAlerts([]);
+        return;
+    }
+
+    const filteredClients = getFilteredClients();
     
     const clientCards = filteredClients.map(client => {
         const latestCheckIn = getLatestCheckIn(client);
@@ -379,11 +1453,6 @@ async function loadClients() {
         const coachName = assignedCoach ? assignedCoach.name : 'Unassigned';
         const packageInfo = getPackageDisplay(client.coachingPackage);
 
-        // Add indicator for real vs sample clients
-        const clientTypeIndicator = client.isRealClient ? 
-            '<div style="font-size: 0.7rem; color: var(--success-color); margin-top: 0.25rem;">🔗 Live Client</div>' : 
-            '<div style="font-size: 0.7rem; color: var(--accent-color); margin-top: 0.25rem;">📊 Demo Data</div>';
-
         return `
             <div class="client-card">
                 <div class="client-header">
@@ -391,8 +1460,7 @@ async function loadClients() {
                         <div class="client-name">${client.name}</div>
                         <div class="client-email">${client.email}</div>
                         ${supervisorMode ? `<div style="font-size: 0.8rem; color: var(--accent-color); margin-top: 0.25rem;">Coach: ${coachName}</div>` : ''}
-                        ${client.intakeBaseline ? '<div style="font-size: 0.7rem; color: var(--success-color); margin-top: 0.25rem;">✅ Intake Complete</div>' : ''}
-                        ${clientTypeIndicator}
+                        ${client.intakeBaseline ? '<div style="font-size: 0.7rem; color: var(--success-color); margin-top: 0.25rem;">✅ Intake Complete</div>' : '<div style="font-size: 0.7rem; color: var(--warning-color); margin-top: 0.25rem;">⏳ Intake Pending</div>'}
                     </div>
                     <div class="client-status ${status.class}">${status.text}</div>
                 </div>
@@ -419,218 +1487,43 @@ async function loadClients() {
         `;
     }).join('');
 
-    clientsList.innerHTML = dataSourceBanner + clientCards;
+    clientsList.innerHTML = clientCards;
     updateStats(filteredClients);
     generateEnhancedAlerts(filteredClients);
 }
 
-function updateStats(clients) {
-    const totalClients = clients.length;
-    const activeToday = clients.filter(client => {
-        const lastActivity = new Date(client.lastActivity);
-        const today = new Date();
-        return lastActivity.toDateString() === today.toDateString();
-    }).length;
+// Update getFilteredClients to use real data
+function getFilteredClients() {
+    const filterValue = document.getElementById('coach-filter').value;
     
-    const sixWeekClients = clients.filter(client => client.coachingPackage.type === '6-week').length;
-    const twelveWeekClients = clients.filter(client => client.coachingPackage.type === '12-week').length;
-    
-    document.getElementById('total-clients').textContent = totalClients;
-    document.getElementById('active-today').textContent = activeToday;
-    document.getElementById('six-week-clients').textContent = sixWeekClients;
-    document.getElementById('twelve-week-clients').textContent = twelveWeekClients;
-}
-
-function getLatestCheckIn(client) {
-    const dates = Object.keys(client.checkIns).sort().reverse();
-    return dates.length > 0 ? client.checkIns[dates[0]] : null;
-}
-
-function getClientStatus(client, latestCheckIn) {
-    if (!latestCheckIn) return { class: 'status-inactive', text: 'No Data' };
-    
-    const hasLowRatings = Object.values(latestCheckIn.ratings).some(rating => rating <= 2);
-    return hasLowRatings ? 
-        { class: 'status-concern', text: 'Needs Attention' } :
-        { class: 'status-active', text: 'Active Today' };
-}
-
-function getAnchorSummary(checkIn) {
-    if (!checkIn || !checkIn.ratings) {
-        return '<span style="opacity: 0.5;">No recent check-ins</span>';
-    }
-
-    const anchors = [
-        { key: 'physical', class: 'physical' },
-        { key: 'mental', class: 'mental' }, 
-        { key: 'emotional', class: 'emotional' },
-        { key: 'spiritual', class: 'spiritual' },
-        { key: 'relational', class: 'relational' }
-    ];
-
-    return anchors.map(anchor => {
-        const rating = checkIn.ratings[anchor.key] || 0;
-        const lowClass = rating <= 2 ? ' low' : '';
-        return `<div class="anchor-mini ${anchor.class}${lowClass}" title="${anchor.key}: ${rating}/5">${rating}</div>`;
-    }).join('');
-}
-
-function getLastActivityText(lastActivity) {
-    const lastDate = new Date(lastActivity);
-    const now = new Date();
-    const diffHours = Math.floor((now - lastDate) / (1000 * 60 * 60));
-    
-    if (diffHours < 1) return 'Just now';
-    if (diffHours < 24) return `${diffHours} hours ago`;
-    
-    const diffDays = Math.floor(diffHours / 24);
-    return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
-}
-
-function getPackageDisplay(packageInfo) {
-    const progressPercentage = (packageInfo.sessionsCompleted / packageInfo.sessionsTotal) * 100;
-    const packageClass = packageInfo.type === '6-week' ? 'package-6week' : 'package-12week';
-    
-    return `
-        <div class="package-info ${packageClass}">
-            <div class="package-header">
-                <span class="package-type">${packageInfo.type.toUpperCase()} Package</span>
-                <span class="session-progress">${packageInfo.sessionsCompleted}/${packageInfo.sessionsTotal} sessions</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: ${progressPercentage}%"></div>
-            </div>
-        </div>
-    `;
-}
-
-// Enhanced Alert Generation with Clickable Functionality
-function generateEnhancedAlerts(clients) {
-    const alertsContainer = document.getElementById('alerts-container');
-    if (!alertsContainer) return;
-
-    const alerts = [];
-    clients.forEach(client => {
-        const latest = getLatestCheckIn(client);
-        if (!latest) return;
-
-        Object.entries(latest.ratings).forEach(([anchor, rating]) => {
-            if (rating <= 2) {
-                const assignedCoach = availableCoaches.find(coach => coach.id === client.assignedCoachId);
-                alerts.push({
-                    client: client.name,
-                    clientId: client.id,
-                    coach: assignedCoach?.name || 'Unassigned',
-                    type: 'Low Anchor Rating',
-                    details: `${anchor.charAt(0).toUpperCase() + anchor.slice(1)}: ${rating}/5`,
-                    severity: rating === 1 ? 'critical' : 'warning',
-                    fullClient: client
-                });
-            }
-        });
-    });
-
-    if (alerts.length === 0) {
-        alertsContainer.innerHTML = '<div class="card"><h3>No Active Alerts</h3><p>All clients showing stable patterns.</p></div>';
-        return;
-    }
-
-    alertsContainer.innerHTML = alerts.map(alert => `
-        <div class="alert-banner" onclick="openClientDetailFromAlert('${alert.clientId}')">
-            <div class="alert-content">
-                <div class="alert-title">${alert.client}${supervisorMode ? ` (Coach: ${alert.coach})` : ''} - ${alert.type}</div>
-                <div class="alert-details">${alert.details}</div>
-            </div>
-            <div class="alert-actions">
-                <button class="alert-btn" onclick="event.stopPropagation(); openModuleManagement('${alert.clientId}')">Modules</button>
-                <button class="alert-btn" onclick="event.stopPropagation(); alert('Message feature coming soon')">Contact</button>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Module Management and other functions continue with existing implementations...
-// [Include all the remaining functions from the original coach dashboard]
-
-function toggleSupervisorMode() {
-    const coachFilter = document.getElementById('coach-filter');
-    
-    if (supervisorMode) {
-        coachFilter.value = 'current';
+    if (filterValue === 'all') {
+        return realClients;
+    } else if (filterValue === 'current') {
+        return realClients.filter(client => client.assignedCoachId === currentCoachId);
     } else {
-        coachFilter.value = 'all';
+        return realClients.filter(client => client.assignedCoachId === filterValue);
     }
-    
-    filterClientsByCoach();
-}
-
-function initializeNavigation() {
-    const navItems = document.querySelectorAll('.nav-item');
-    
-    navItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const sectionName = this.getAttribute('data-section');
-            if (sectionName) {
-                showSection(sectionName);
-            }
-        });
-    });
-}
-
-function initializeCoachControls() {
-    const coachFilter = document.getElementById('coach-filter');
-    const supervisorToggle = document.getElementById('supervisor-mode');
-    
-    if (coachFilter) {
-        coachFilter.addEventListener('change', filterClientsByCoach);
-    }
-    
-    if (supervisorToggle) {
-        supervisorToggle.addEventListener('click', toggleSupervisorMode);
-    }
-}
-
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 6px;
-        z-index: 1001;
-        animation: slideIn 0.3s ease;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
 }
 
 // Enhanced initialization function
 async function initializeCoachDashboard() {
-    console.log('Initializing coach dashboard with hybrid data system...');
+    console.log('Initializing coach dashboard with real data...');
+    
+    // Load real clients from database
+    realClients = await loadRealClientsFromDatabase();
     
     // Initialize existing functionality
     initializeNavigation();
     initializeCoachControls();
+    loadClients();
     
-    // Load clients (will check for real clients, fall back to sample)
-    await loadClients();
-    
-    // Add refresh button
-    setTimeout(addRefreshButton, 1000);
-    
-    console.log('Coach dashboard initialized successfully');
+    console.log('Coach dashboard initialized with', realClients.length, 'real clients');
 }
+
+// Update the DOMContentLoaded event listener
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCoachDashboard();
+});
 
 // Add refresh button with smart detection
 function addRefreshButton() {
@@ -667,32 +1560,8 @@ function addRefreshButton() {
     }
 }
 
-// Close modals when clicking outside
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('transfer-modal')) {
-        closeTransferModal();
-    }
-    if (e.target.classList.contains('client-detail-modal')) {
-        closeClientDetailModal();
-    }
-});
-
-// Initialize
-document.addEventListener('DOMContentLoaded', function() {
-    initializeCoachDashboard();
-});
-
-// Add slideIn and slideOut animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-`;
-document.head.appendChild(style);
+// Call this after DOM loads
+setTimeout(addRefreshButton, 1000);
+    </script>
+</body>
+</html>
