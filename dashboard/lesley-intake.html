@@ -1350,34 +1350,42 @@
                 console.log('✅ User account created:', authData);
 
                 // Step 2: Store intake responses in database
-                const { error: intakeError } = await supabase
-                    .from('intake_responses')
-                    .insert([{
-                        user_id: authData.user.id,
-                        first_name: formData.firstName,
-                        last_name: formData.lastName,
-                        email: formData.email,
-                        phone: formData.phone,
-                        timezone: formData.timezone,
-                        emergency_first_name: formData.emergencyFirstName,
-                        emergency_last_name: formData.emergencyLastName,
-                        emergency_relationship: formData.emergencyRelationship,
-                        emergency_phone: formData.emergencyPhone,
-                        program_type: formData.program,
-                        referral_source: formData.referralSource,
-                        current_challenges: formData.currentChallenges,
-                        primary_goals: formData.primaryGoals,
-                        crisis_support_level: formData.crisisSupport,
-                        physical_anchor: parseInt(formData.physical),
-                        mental_anchor: parseInt(formData.mental),
-                        emotional_anchor: parseInt(formData.emotional),
-                        spiritual_anchor: parseInt(formData.spiritual),
-                        relational_anchor: parseInt(formData.relational),
-                        additional_notes: formData.additionalNotes,
-                        terms_agreement: formData.termsAgreement,
-                        contact_consent: formData.contactConsent,
-                        completed_at: new Date().toISOString()
-                    }]);
+                // Step 2: Store intake responses in database - Updated to match actual table structure
+const { error: intakeError } = await supabase
+    .from('intake_responses')
+    .insert([{
+        client_id: authData.user.id,
+        responses: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            emergency_contact: {
+                first_name: formData.emergencyFirstName,
+                last_name: formData.emergencyLastName,
+                relationship: formData.emergencyRelationship,
+                phone: formData.emergencyPhone
+            },
+            program_type: formData.program,
+            referral_source: formData.referralSource,
+            current_challenges: formData.currentChallenges,
+            primary_goals: formData.primaryGoals,
+            crisis_support_level: formData.crisisSupport,
+            additional_notes: formData.additionalNotes,
+            terms_agreement: formData.termsAgreement,
+            contact_consent: formData.contactConsent
+        },
+        baseline_anchor_scores: {
+            physical: parseInt(formData.physical),
+            mental: parseInt(formData.mental),
+            emotional: parseInt(formData.emotional),
+            spiritual: parseInt(formData.spiritual),
+            relational: parseInt(formData.relational)
+        },
+        phone: formData.phone,
+        timezone: formData.timezone,
+        referral_source: formData.referralSource,
+        crisis_support_level: formData.crisisSupport,
+        completion_date: new Date().toISOString()
+    }]);
 
                 if (intakeError) {
                     console.error('Intake storage error:', intakeError);
