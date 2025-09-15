@@ -1332,15 +1332,16 @@
 
                 // Step 1: Create user account with magic link
                 const { data: authData, error: authError } = await supabase.auth.signUp({
-                    email: formData.email,
-                    options: {
-                        emailRedirectTo: 'https://claritymetabolics.github.io/clarity-tools/dashboard/',
-                        data: {
-                            full_name: formData.firstName + ' ' + formData.lastName,
-                            program_type: formData.program
-                        }
-                    }
-                });
+    email: formData.email,
+    password: crypto.randomUUID(), // Generate random password since we use magic links
+    options: {
+        emailRedirectTo: 'https://claritymetabolics.github.io/clarity-tools/dashboard/',
+        data: {
+            full_name: formData.firstName + ' ' + formData.lastName,
+            program_type: formData.program
+        }
+    }
+});
 
                 if (authError) {
                     throw new Error(`Account creation failed: ${authError.message}`);
