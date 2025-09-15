@@ -1316,185 +1316,185 @@
             });
         }
         
-        async function submitForm() {
-            if (!validateCurrentStep()) {
-                return;
-            }
-            
-            collectStepData();
-            
-            var submitBtn = document.getElementById('next-btn');
-            submitBtn.textContent = 'Creating your account...';
-            submitBtn.disabled = true;
-            
-            try {
-                console.log('Starting intake automation process...', formData);
-
-                // Step 1: Create user account with magic link
-                const { data: authData, error: authError } = await supabase.auth.signUp({
-    email: formData.email,
-    password: crypto.randomUUID(), // Generate random password since we use magic links
-    options: {
-        emailRedirectTo: 'https://claritymetabolics.github.io/clarity-tools/dashboard/',
-        data: {
-            full_name: formData.firstName + ' ' + formData.lastName,
-            program_type: formData.program
+// Enhanced submitForm function with proper async sequencing
+async function submitForm() {
+    console.log('Starting intake automation process...');
+    
+    // Get form data
+    const formData = new FormData(document.getElementById('intakeForm'));
+    const data = Object.fromEntries(formData);
+    
+    // Validate all anchor ratings are provided
+    const requiredAnchors = ['physical', 'mental', emotional', 'spiritual', 'relational'];
+    for (const anchor of requiredAnchors) {
+        if (!data[anchor]) {
+            alert(`Please provide a rating for ${anchor} anchor before submitting.`);
+            return;
         }
     }
-});
-
-                if (authError) {
-                    throw new Error(`Account creation failed: ${authError.message}`);
+    
+    console.log('Form data collected:', data);
+    
+    try {
+        // Step 1: Create Supabase auth user account
+        console.log('Step 1: Creating user account...');
+        const password = crypto.randomUUID();
+        
+        const { data: authData, error: signUpError } = await supabase.auth.signUp({
+            email: data.email,
+            password: password,
+            options: {
+                data: {
+                    full_name: `${data.firstName} ${data.lastName}`
                 }
-
-                console.log('✅ User account created:', authData);
-
-                // Step 2: Store intake responses in database
-                // Step 2: Store intake responses in database - Updated to match actual table structure
-const { error: intakeError } = await supabase
-    .from('intake_responses')
-    .insert([{
-        client_id: authData.user.id,
-        responses: {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            emergency_contact: {
-                first_name: formData.emergencyFirstName,
-                last_name: formData.emergencyLastName,
-                relationship: formData.emergencyRelationship,
-                phone: formData.emergencyPhone
+            }
+        });
+        
+        if (signUpError) {
+            console.error('Account creation failed:', signUpError);
+            alert('Failed to create account. Please try again.');
+            return;
+        }
+        
+        if (!authData.user) {
+            console.error('No user returned from signup');
+            alert('Account creation failed. Please try again.');
+            return;
+        }
+        
+        console.log('✅ User account created:', { user: authData.user });
+        const userId = authData.user.id;
+        
+        // Step 2: Wait briefly for auth user to be fully established
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Step 3: Create profile record
+        console.log('Step 2: Creating user profile...');
+        const profileData = {
+            id: userId,
+            email: data.email,
+            full_name: `${data.firstName} ${data.lastName}`,
+            phone: data.phone,
+            role: 'client',
+            tier: 'coached',
+            status: 'active',
+            coaching_package: data.program,
+            sessions_total: data.program === '6-week' ? 6 : 12,
+            start_date: new Date().toISOString().split('T')[0]
+        };
+        
+        const { data: profileResult, error: profileError } = await supabase
+            .from('profiles')
+            .insert(profileData)
+            .select();
+            
+        if (profileError) {
+            console.error('Profile creation error:', profileError);
+            // Continue with intake storage even if profile creation fails
+        } else {
+            console.log('✅ User profile created');
+        }
+        
+        // Step 4: Store intake responses
+        console.log('Step 3: Storing intake responses...');
+        const intakeData = {
+            client_id: userId,
+            responses: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                phone: data.phone,
+                timezone: data.timezone,
+                emergencyLastName: data.emergencyLastName,
+                emergencyFirstName: data.emergencyFirstName,
+                emergencyRelationship: data.emergencyRelationship,
+                emergencyPhone: data.emergencyPhone,
+                program: data.program
             },
-            program_type: formData.program,
-            referral_source: formData.referralSource,
-            current_challenges: formData.currentChallenges,
-            primary_goals: formData.primaryGoals,
-            crisis_support_level: formData.crisisSupport,
-            additional_notes: formData.additionalNotes,
-            terms_agreement: formData.termsAgreement,
-            contact_consent: formData.contactConsent
-        },
-        baseline_anchor_scores: {
-            physical: parseInt(formData.physical),
-            mental: parseInt(formData.mental),
-            emotional: parseInt(formData.emotional),
-            spiritual: parseInt(formData.spiritual),
-            relational: parseInt(formData.relational)
-        },
-        phone: formData.phone,
-        timezone: formData.timezone,
-        referral_source: formData.referralSource,
-        crisis_support_level: formData.crisisSupport,
-        completion_date: new Date().toISOString()
-    }]);
-
-                if (intakeError) {
-                    console.error('Intake storage error:', intakeError);
-                    // Continue anyway - user account was created
-                }
-
-                console.log('✅ Intake responses stored'); // Step 3: Create user profile
-const { error: profileError } = await supabase
-    .from('profiles')
-    .insert([{
-        id: authData.user.id,
-        email: formData.email,
-        full_name: formData.firstName + ' ' + formData.lastName,
-        phone: formData.phone,
-        role: 'client',
-        coaching_package: formData.program,
-        sessions_total: formData.program === '12-week' ? 12 : 6,
-        start_date: new Date().toISOString().split('T')[0]
-    }]);
-
-if (profileError) {
-    console.error('Profile creation error:', profileError);
-}
-
-console.log('✅ User profile created');
-
-                // Step 4: Set up initial module permissions
-                await setupInitialModules(authData.user.id, formData.program);
-
-                // Step 5: Show success message
-                document.querySelector('.form-card').style.display = 'none';
-                document.getElementById('success-message').style.display = 'block';
-                
-                console.log('✅ Automation bridge completed successfully');
-
-            } catch (error) {
-                console.error('Intake submission error:', error);
-                
-                // Reset button and show error
-                submitBtn.textContent = 'Start My Five Anchors Journey';
-                submitBtn.disabled = false;
-                
-                alert('There was an error creating your account. Please try again or contact Lesley at lesley@claritymetabolics.com');
-            }
+            baseline_anchor_scores: {
+                physical: parseInt(data.physical),
+                mental: parseInt(data.mental),
+                emotional: parseInt(data.emotional),
+                spiritual: parseInt(data.spiritual),
+                relational: parseInt(data.relational)
+            },
+            phone: data.phone,
+            timezone: data.timezone
+        };
+        
+        const { data: intakeResult, error: intakeError } = await supabase
+            .from('intake_responses')
+            .insert(intakeData)
+            .select();
+            
+        if (intakeError) {
+            console.error('Intake storage error:', intakeError);
+            // Continue even if this fails
+        } else {
+            console.log('✅ Intake responses stored');
         }
-
-        // Set up initial module permissions based on program type - Updated for actual table structure
-        async function setupInitialModules(userId, programType) {
-            try {
-                const modulePermissions = [];
-                
-                // Five Anchors modules for all programs
-                const fiveAnchorsModules = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
-                
-                fiveAnchorsModules.forEach(anchor => {
-                    // Guide access
-                    modulePermissions.push({
-                        user_id: userId,
-                        module_type: 'fiveAnchors',
-                        module_key: anchor,
-                        access_type: 'guide',
-                        unlocked: anchor === 'physical', // Only physical unlocked initially
-                        session_unlocked: anchor === 'physical' ? 1 : 2,
-                        unlocked_at: anchor === 'physical' ? new Date().toISOString() : null
-                    });
-                    
-                    // Web tool access
-                    modulePermissions.push({
-                        user_id: userId,
-                        module_type: 'fiveAnchors',
-                        module_key: anchor,
-                        access_type: 'webTool',
-                        unlocked: false,
-                        session_unlocked: 2,
-                        unlocked_at: null
-                    });
+        
+        // Step 5: Setup module access permissions
+        console.log('Step 4: Setting up module permissions...');
+        
+        // Define module access based on program type
+        const moduleSetup = [];
+        const fiveAnchorsModules = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
+        const discernmentModules = ['thought-refiner', 'belief-threader', 'echo-eraser', 'forgiveness-filter', 'connection-calibrator'];
+        
+        // Add Five Anchors modules (available to all)
+        fiveAnchorsModules.forEach(module => {
+            moduleSetup.push({
+                user_id: userId,
+                module_type: 'fiveAnchors',
+                module_key: module,
+                access_type: 'full',
+                unlocked: module === 'physical', // Only physical unlocked initially
+                session_unlocked: module === 'physical' ? 1 : (module === 'mental' ? 2 : 4)
+            });
+        });
+        
+        // Add Discernment Tools (only for 12-week program)
+        if (data.program === '12-week') {
+            discernmentModules.forEach(module => {
+                moduleSetup.push({
+                    user_id: userId,
+                    module_type: 'discernmentTools',
+                    module_key: module,
+                    access_type: 'full',
+                    unlocked: false,
+                    session_unlocked: 6
                 });
+            });
+        }
+        
+        if (moduleSetup.length > 0) {
+            const { data: moduleResult, error: moduleError } = await supabase
+                .from('module_access')
+                .insert(moduleSetup)
+                .select();
                 
-                // Add discernment tools for 12-week program
-                if (programType === '12-week') {
-                    const discernmentTools = ['thoughtRefiner', 'beliefThreader', 'echoEraser', 'forgivenessFilter', 'connectionCalibrator'];
-                    
-                    discernmentTools.forEach(tool => {
-                        modulePermissions.push({
-                            user_id: userId,
-                            module_type: 'discernmentTools',
-                            module_key: tool,
-                            access_type: 'full',
-                            unlocked: false,
-                            session_unlocked: 6,
-                            unlocked_at: null
-                        });
-                    });
-                }
-                
-                const { error } = await supabase
-                    .from('module_access')
-                    .insert(modulePermissions);
-                
-                if (error) {
-                    console.error('Module setup error:', error);
-                } else {
-                    console.log('✅ Module permissions set up');
-                }
-                
-            } catch (error) {
-                console.error('Module setup failed:', error);
+            if (moduleError) {
+                console.error('Module setup error:', moduleError);
+                // Continue even if this fails
+            } else {
+                console.log('✅ Module permissions configured');
             }
         }
+        
+        console.log('✅ Automation bridge completed successfully');
+        
+        // Show success message
+        alert('Intake form submitted successfully! Please check your email for a magic link to access your dashboard.');
+        
+        // Clear form
+        document.getElementById('intakeForm').reset();
+        
+    } catch (error) {
+        console.error('Automation bridge error:', error);
+        alert('There was an error processing your submission. Please try again or contact support.');
+    }
+}
         
         updateNavigation();
     </script>
