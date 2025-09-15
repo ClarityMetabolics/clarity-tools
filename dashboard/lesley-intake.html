@@ -1392,12 +1392,30 @@ const { error: intakeError } = await supabase
                     // Continue anyway - user account was created
                 }
 
-                console.log('✅ Intake responses stored');
+                console.log('✅ Intake responses stored'); // Step 3: Create user profile
+const { error: profileError } = await supabase
+    .from('profiles')
+    .insert([{
+        id: authData.user.id,
+        email: formData.email,
+        full_name: formData.firstName + ' ' + formData.lastName,
+        phone: formData.phone,
+        role: 'client',
+        coaching_package: formData.program,
+        sessions_total: formData.program === '12-week' ? 12 : 6,
+        start_date: new Date().toISOString().split('T')[0]
+    }]);
 
-                // Step 3: Set up initial module permissions
+if (profileError) {
+    console.error('Profile creation error:', profileError);
+}
+
+console.log('✅ User profile created');
+
+                // Step 4: Set up initial module permissions
                 await setupInitialModules(authData.user.id, formData.program);
 
-                // Step 4: Show success message
+                // Step 5: Show success message
                 document.querySelector('.form-card').style.display = 'none';
                 document.getElementById('success-message').style.display = 'block';
                 
