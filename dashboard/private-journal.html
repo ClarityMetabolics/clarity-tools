@@ -442,211 +442,256 @@
 
     <script>
         // Journal Management Class
-        class JournalManager {
-            constructor() {
-                this.storageKey = 'cm_journal_v1';
-                this.entries = this.loadEntries();
-                this.init();
-            }
-            
-            init() {
-                this.setupEventListeners();
-                this.setDefaultDate();
-                this.renderRecentEntries();
-            }
-            
-            setupEventListeners() {
-                const saveBtn = document.querySelector('.save-journal-btn');
-                if (saveBtn) {
-                    saveBtn.addEventListener('click', () => this.saveEntry());
-                }
-                
-                const clearBtn = document.querySelector('.clear-journal-btn');
-                if (clearBtn) {
-                    clearBtn.addEventListener('click', () => this.clearForm());
-                }
-                
-                const ratingBtns = document.querySelectorAll('.journal-rating');
-                ratingBtns.forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        ratingBtns.forEach(b => b.classList.remove('selected'));
-                        e.target.classList.add('selected');
-                    });
-                });
-            }
-            
-            setDefaultDate() {
-                const dateInput = document.getElementById('journal-date');
-                if (dateInput) {
-                    const today = new Date().toISOString().split('T')[0];
-                    dateInput.value = today;
-                }
-            }
-            
-            saveEntry() {
-                const dateInput = document.getElementById('journal-date');
-                const selectedRating = document.querySelector('.journal-rating.selected');
-                const thoughtPattern = document.getElementById('thought-pattern');
-                const practiceUsed = document.getElementById('practice-used');
-                const reflectionText = document.getElementById('reflection-text');
-                
-                // Validation
-                if (!dateInput.value) {
-                    this.showNotification('Please select a date', 'error');
-                    return;
-                }
-                
-                if (!selectedRating) {
-                    this.showNotification('Please rate your overall feeling', 'error');
-                    return;
-                }
-                
-                if (!reflectionText.value.trim()) {
-                    this.showNotification('Please write a reflection', 'error');
-                    return;
-                }
-                
-                // Create entry
-                const entry = {
-                    dateISO: dateInput.value,
-                    rating: parseInt(selectedRating.dataset.value),
-                    primaryThoughtPattern: thoughtPattern.value,
-                    practiceUsed: practiceUsed.value,
-                    reflection: reflectionText.value.trim(),
-                    timestamp: new Date().toISOString()
-                };
-                
-                // Add to entries
-                this.entries.unshift(entry);
-                
-                // Keep only last 30 entries
-                if (this.entries.length > 30) {
-                    this.entries = this.entries.slice(0, 30);
-                }
-                
-                // Save to localStorage
-                this.saveEntries();
-                
-                // Show success
-                this.showNotification('Journal entry saved successfully!', 'success');
-                
-                // Clear form
-                this.clearForm();
-                
-                // Refresh display
-                this.renderRecentEntries();
-            }
-            
-            clearForm() {
-                document.querySelectorAll('.journal-rating').forEach(btn => {
-                    btn.classList.remove('selected');
-                });
-                
-                document.getElementById('thought-pattern').value = '';
-                document.getElementById('practice-used').value = '';
-                document.getElementById('reflection-text').value = '';
-                
-                this.setDefaultDate();
-            }
-            
-            loadEntries() {
-                const stored = localStorage.getItem(this.storageKey);
-                return stored ? JSON.parse(stored) : [];
-            }
-            
-            saveEntries() {
-                localStorage.setItem(this.storageKey, JSON.stringify(this.entries));
-            }
-            
-            renderRecentEntries() {
-                const container = document.getElementById('journal-entries-list');
-                if (!container) return;
-                
-                if (this.entries.length === 0) {
-                    container.innerHTML = '<p class="placeholder-text">Your recent journal entries will appear here.</p>';
-                    return;
-                }
-                
-                const recentEntries = this.entries.slice(0, 5);
-                
-                container.innerHTML = recentEntries.map(entry => {
-                    const date = new Date(entry.dateISO).toLocaleDateString();
-                    const thoughtPattern = entry.primaryThoughtPattern || 'Not specified';
-                    const practice = entry.practiceUsed || 'None specified';
-                    
-                    return `
-                        <div class="journal-entry">
-                            <div class="entry-header">
-                                <span class="entry-date">${date}</span>
-                                <span class="entry-rating">${entry.rating}/5</span>
-                            </div>
-                            <div class="entry-meta">
-                                <strong>Pattern:</strong> ${thoughtPattern} | <strong>Practice:</strong> ${practice}
-                            </div>
-                            <div class="entry-reflection">${entry.reflection}</div>
-                        </div>
-                    `;
-                }).join('');
-            }
-            
-            showNotification(message, type = 'info') {
-                const notification = document.createElement('div');
-                notification.className = `notification ${type}`;
-                notification.textContent = message;
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-                    color: white;
-                    padding: 1rem 1.5rem;
-                    border-radius: 6px;
-                    z-index: 1001;
-                    animation: slideIn 0.3s ease;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                `;
-                
-                document.body.appendChild(notification);
-                
-                setTimeout(() => {
-                    notification.style.animation = 'slideOut 0.3s ease';
-                    setTimeout(() => notification.remove(), 300);
-                }, 3000);
-            }
-        }
+        // Updated Journal Manager with Database Integration
+// Replace the existing JournalManager class in private-journal.html
 
-        // Legacy functions for compatibility
-        function saveJournalEntry() {
-            if (window.journalManager) {
-                window.journalManager.saveEntry();
-            }
+class JournalManager {
+    constructor() {
+        this.storageKey = 'cm_journal_v1';
+        this.entries = [];
+        this.dbManager = null;
+        this.init();
+    }
+    
+    async init() {
+        // Try to load database manager
+        try {
+            const { hybridDataManager } = await import('./js/supabase-config.js');
+            this.dbManager = hybridDataManager;
+            console.log('Journal database integration active');
+        } catch (error) {
+            console.log('Database not available, using localStorage only');
         }
-
-        function clearForm() {
-            if (window.journalManager) {
-                window.journalManager.clearForm();
-            }
+        
+        this.setupEventListeners();
+        this.setDefaultDate();
+        await this.loadEntries();
+        this.renderRecentEntries();
+    }
+    
+    setupEventListeners() {
+        const saveBtn = document.querySelector('.save-journal-btn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => this.saveEntry());
         }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            window.journalManager = new JournalManager();
+        
+        const clearBtn = document.querySelector('.clear-journal-btn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => this.clearForm());
+        }
+        
+        const ratingBtns = document.querySelectorAll('.journal-rating');
+        ratingBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                ratingBtns.forEach(b => b.classList.remove('selected'));
+                e.target.classList.add('selected');
+            });
         });
-
-        // Add animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
+    }
+    
+    setDefaultDate() {
+        const dateInput = document.getElementById('journal-date');
+        if (dateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+        }
+    }
+    
+    async saveEntry() {
+        const dateInput = document.getElementById('journal-date');
+        const selectedRating = document.querySelector('.journal-rating.selected');
+        const thoughtPattern = document.getElementById('thought-pattern');
+        const practiceUsed = document.getElementById('practice-used');
+        const reflectionText = document.getElementById('reflection-text');
+        
+        // Validation
+        if (!dateInput.value) {
+            this.showNotification('Please select a date', 'error');
+            return;
+        }
+        
+        if (!selectedRating) {
+            this.showNotification('Please rate your overall feeling', 'error');
+            return;
+        }
+        
+        if (!reflectionText.value.trim()) {
+            this.showNotification('Please write a reflection', 'error');
+            return;
+        }
+        
+        // Create entry in database format
+        const entry = {
+            dateISO: dateInput.value,
+            rating: parseInt(selectedRating.dataset.value),
+            primaryThoughtPattern: thoughtPattern.value,
+            practiceUsed: practiceUsed.value,
+            reflection: reflectionText.value.trim(),
+            timestamp: new Date().toISOString()
+        };
+        
+        // Try database save first
+        let savedToDatabase = false;
+        let savedToLocalStorage = false;
+        
+        if (this.dbManager) {
+            try {
+                console.log('Attempting to save journal entry to database...');
+                const result = await this.dbManager.saveJournalEntry(entry);
+                if (!result.error) {
+                    savedToDatabase = true;
+                    console.log('✅ Journal entry saved to database');
+                }
+            } catch (error) {
+                console.warn('Database save failed, using localStorage fallback:', error);
             }
+        }
+        
+        // Always save to localStorage as backup
+        try {
+            const localEntries = JSON.parse(localStorage.getItem(this.storageKey) || '[]');
+            localEntries.unshift(entry);
+            // Keep only last 30 entries
+            if (localEntries.length > 30) {
+                localEntries.splice(30);
+            }
+            localStorage.setItem(this.storageKey, JSON.stringify(localEntries));
+            savedToLocalStorage = true;
+            console.log('✅ Journal entry saved to localStorage backup');
+        } catch (error) {
+            console.error('localStorage save failed:', error);
+        }
+        
+        // Show appropriate success message
+        if (savedToDatabase && savedToLocalStorage) {
+            this.showNotification('Journal entry saved successfully! ✨ (Database + Backup)', 'success');
+        } else if (savedToDatabase) {
+            this.showNotification('Journal entry saved to database! ✨', 'success');
+        } else if (savedToLocalStorage) {
+            this.showNotification('Journal entry saved locally! 📱 (Offline mode)', 'success');
+        } else {
+            this.showNotification('Error saving journal entry. Please try again.', 'error');
+            return;
+        }
+        
+        // Clear form and refresh display
+        this.clearForm();
+        await this.loadEntries();
+        this.renderRecentEntries();
+    }
+    
+    clearForm() {
+        document.querySelectorAll('.journal-rating').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        
+        document.getElementById('thought-pattern').value = '';
+        document.getElementById('practice-used').value = '';
+        document.getElementById('reflection-text').value = '';
+        
+        this.setDefaultDate();
+    }
+    
+    async loadEntries() {
+        // Try database first
+        if (this.dbManager) {
+            try {
+                const result = await this.dbManager.getJournalEntries();
+                if (!result.error && result.data.length > 0) {
+                    this.entries = result.data;
+                    console.log(`Loaded ${this.entries.length} journal entries from database`);
+                    return;
+                }
+            } catch (error) {
+                console.warn('Failed to load from database, using localStorage:', error);
+            }
+        }
+        
+        // Fallback to localStorage
+        const stored = localStorage.getItem(this.storageKey);
+        this.entries = stored ? JSON.parse(stored) : [];
+        console.log(`Loaded ${this.entries.length} journal entries from localStorage`);
+    }
+    
+    renderRecentEntries() {
+        const container = document.getElementById('journal-entries-list');
+        if (!container) return;
+        
+        if (this.entries.length === 0) {
+            container.innerHTML = '<p class="focus-message">Your recent journal entries will appear here.</p>';
+            return;
+        }
+        
+        const recentEntries = this.entries.slice(0, 5);
+        
+        container.innerHTML = recentEntries.map(entry => {
+            const date = new Date(entry.dateISO).toLocaleDateString();
+            const thoughtPattern = entry.primaryThoughtPattern || 'Not specified';
+            const practice = entry.practiceUsed || 'None specified';
             
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
+            return `
+                <div class="journal-entry">
+                    <div class="entry-header">
+                        <span class="entry-date">${date}</span>
+                        <span class="entry-rating">${entry.rating}/5</span>
+                    </div>
+                    <div class="entry-meta">
+                        <strong>Pattern:</strong> ${thoughtPattern} | <strong>Practice:</strong> ${practice}
+                    </div>
+                    <div class="entry-reflection">${entry.reflection}</div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         `;
-        document.head.appendChild(style);
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+}
+
+// Also need to update the initialization in private-journal.html
+// Replace the existing initialization with this:
+
+// Initialize journal when section becomes active
+document.addEventListener('click', function(e) {
+    if (e.target.closest('[onclick*="reflect"]')) {
+        setTimeout(() => {
+            if (!window.journalManager) {
+                window.journalManager = new JournalManager();
+            }
+        }, 100);
+    }
+});
+
+// Initialize immediately if on reflect page
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if we're on the private journal page or reflect section
+    if (window.location.href.includes('private-journal.html') || 
+        document.getElementById('journal-entries-list')) {
+        window.journalManager = new JournalManager();
+    }
+});
     </script>
 </body>
 </html>
