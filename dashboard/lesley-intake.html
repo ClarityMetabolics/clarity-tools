@@ -1325,7 +1325,7 @@ async function submitForm() {
     const data = Object.fromEntries(formData);
     
     // Validate all anchor ratings are provided
-    const requiredAnchors = ['physical', 'mental', emotional', 'spiritual', 'relational'];
+    const requiredAnchors = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
     for (const anchor of requiredAnchors) {
         if (!data[anchor]) {
             alert(`Please provide a rating for ${anchor} anchor before submitting.`);
