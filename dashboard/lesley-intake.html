@@ -1321,7 +1321,12 @@ async function submitForm() {
     console.log('Starting intake automation process...');
     
     // Get form data
-    const formData = new FormData(document.getElementById('intakeForm'));
+   const formElement = document.getElementById('intakeForm');
+   if (!formElement) {
+       console.error('Form element not found');
+       return;
+   }
+   const formData = new FormData(formElement); 
     const data = Object.fromEntries(formData);
     
     // Validate all anchor ratings are provided
