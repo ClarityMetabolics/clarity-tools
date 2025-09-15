@@ -1349,6 +1349,7 @@ async function submitForm() {
             email: data.email,
             password: password,
             options: {
+                emailRedirectTo: 'https://claritymetabolics.github.io/clarity-tools/dashboard/',
                 data: {
                     full_name: `${data.firstName} ${data.lastName}`
                 }
