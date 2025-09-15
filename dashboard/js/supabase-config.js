@@ -321,6 +321,94 @@ export class DatabaseManager {
 
         return { data, error }
     }
+    // Anchor Statements Database Methods
+    async saveAnchorStatements(statementsData) {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+
+            const saveData = {
+                user_id: user.id,
+                statements: statementsData.statements,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+
+            const { data: existing } = await supabase
+                .from('anchor_statements')
+                .select('id')
+                .eq('user_id', user.id)
+                .single();
+
+            let result;
+            if (existing) {
+                result = await supabase
+                    .from('anchor_statements')
+                    .update({
+                        statements: saveData.statements,
+                        updated_at: saveData.updated_at
+                    })
+                    .eq('user_id', user.id);
+            } else {
+                result = await supabase
+                    .from('anchor_statements')
+                    .insert(saveData);
+            }
+
+            if (result.error) throw result.error;
+            return { data: result.data, error: null };
+        } catch (error) {
+            console.error('Error saving anchor statements to database:', error); console.error('Error saving anchor statements to database:', error);
+        return { data: null, error };
+    }
+},
+
+async getAnchorStatements() {
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error('User not authenticated');
+
+        const { data, error } = await supabase
+            .from('anchor_statements')
+            .select('statements, updated_at')
+            .eq('user_id', user.id)
+            .single();
+
+        if (error && error.code !== 'PGRST116') {
+            throw error;
+        }
+
+        return { data: data ? data.statements : {}, error: null };
+    } catch (error) {
+        console.error('Error loading anchor statements from database:', error);
+        return { data: {}, error };
+    }
+},
+            return { data: null, error };
+        }
+    },
+
+    async getAnchorStatements() {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+
+            const { data, error } = await supabase
+                .from('anchor_statements')
+                .select('statements, updated_at')
+                .eq('user_id', user.id)
+                .single();
+
+            if (error && error.code !== 'PGRST116') {
+                throw error;
+            }
+
+            return { data: data ? data.statements : {}, error: null };
+        } catch (error) {
+            console.error('Error loading anchor statements from database:', error);
+            return { data: {}, error };
+        }
+    },
 }
 
 // Real-time messaging system
@@ -501,6 +589,7 @@ export class HybridDataManager {
             error: null
         }
     }
+
 }
 
 // Global managers
