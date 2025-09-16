@@ -482,12 +482,12 @@
                 try {
                     // Wait for database manager to be available
                     let attempts = 0;
-                    while (!window.hybridDataManager && attempts < 20) {
+                    while (!window.databaseManager && attempts < 20) {
                         await new Promise(resolve => setTimeout(resolve, 200));
                         attempts++;
                     }
 
-                    if (window.hybridDataManager && typeof window.hybridDataManager.saveAnchorStatements === 'function') {
+                    if (window.databaseManager && typeof window.databaseManager.saveAnchorStatements === 'function') {
                         this.databaseAvailable = true;
                         console.log('Anchor statements database integration active');
                     } else {
@@ -502,7 +502,7 @@
                 try {
                     // Try loading from database first
                     if (this.databaseAvailable) {
-                        const result = await window.hybridDataManager.getAnchorStatements();
+                        const result = await window.databaseManager.getAnchorStatements();
                         if (result.data && Object.keys(result.data).length > 0) {
                             this.statements = { ...this.statements, ...result.data };
                             console.log('Loaded anchor statements from database');
@@ -641,7 +641,7 @@
                     // Try database save first
                     if (this.databaseAvailable) {
                         try {
-                            const result = await window.hybridDataManager.saveAnchorStatements(saveData);
+                            const result = await window.databaseManager.saveAnchorStatements(saveData);
                             if (!result.error) {
                                 console.log('Anchor statements saved to database');
                                 databaseSuccess = true;
