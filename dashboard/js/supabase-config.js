@@ -358,34 +358,32 @@ export class DatabaseManager {
             if (result.error) throw result.error;
             return { data: result.data, error: null };
         } catch (error) {
-            console.error('Error saving anchor statements to database:', error); console.error('Error saving anchor statements to database:', error);
-        return { data: null, error };
-    }
-},
-
-async getAnchorStatements() {
-    try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error('User not authenticated');
-
-        const { data, error } = await supabase
-            .from('anchor_statements')
-            .select('statements, updated_at')
-            .eq('user_id', user.id)
-            .single();
-
-        if (error && error.code !== 'PGRST116') {
-            throw error;
-        }
-
-        return { data: data ? data.statements : {}, error: null };
-    } catch (error) {
-        console.error('Error loading anchor statements from database:', error);
-        return { data: {}, error };
-    }
+            console.error('Error saving anchor statements to database:', error);
             return { data: null, error };
         }
     },
+
+    async getAnchorStatements() {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+
+            const { data, error } = await supabase
+                .from('anchor_statements')
+                .select('statements, updated_at')
+                .eq('user_id', user.id)
+                .single();
+
+            if (error && error.code !== 'PGRST116') {
+                throw error;
+            }
+
+            return { data: data ? data.statements : {}, error: null };
+        } catch (error) {
+            console.error('Error loading anchor statements from database:', error);
+            return { data: {}, error };
+        }
+    }
 
     async getAnchorStatements() {
         try {
