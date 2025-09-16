@@ -3,34 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Anchor Statements - Five Anchors Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <title>Anchor Statements - Reflect & Reset</title>
     <style>
         :root {
-            /* Color System */
             --physical-color: #7C8B60;
             --mental-color: #B7AFA3;
             --emotional-color: #C97D7D;
             --spiritual-color: #B6B0C3;
             --relational-color: #E8934A;
-            
-            /* Theme Variables - Light Mode */
             --bg-color: #FEFEFE;
             --text-color: #2C2C2C;
-            --header-bg: #F8F8F8;
-            --nav-bg: #FFFFFF;
-            --nav-border: #E5E5E5;
-            --nav-hover: #F0F0F0;
             --card-bg: #FFFFFF;
             --card-border: #E5E5E5;
             --shadow: rgba(0, 0, 0, 0.1);
             --accent-color: #5A6C57;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --nav-hover: #F0F0F0;
         }
 
         body {
@@ -38,99 +25,13 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0;
+            padding: 20px;
         }
 
-        /* Header - Ethereal Design */
-        .header {
-            background: linear-gradient(135deg, 
-                rgba(124, 139, 96, 0.7) 0%, 
-                rgba(183, 175, 163, 0.7) 25%, 
-                rgba(201, 125, 125, 0.7) 50%, 
-                rgba(182, 176, 195, 0.7) 75%, 
-                rgba(232, 147, 74, 0.7) 100%),
-                linear-gradient(45deg, 
-                rgba(255, 255, 255, 0.1) 0%, 
-                rgba(255, 255, 255, 0.05) 100%);
-            border-bottom: 2px solid var(--nav-border);
-            padding: 1.5rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-
-        .header-content {
-            max-width: 1200px;
+        .container {
+            max-width: 800px;
             margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 1rem;
-        }
-
-        .logo {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: white;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-            margin-bottom: 0.75rem;
-            text-align: center;
-        }
-
-        .subtitle-container {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: white;
-            font-size: 1rem;
-            font-weight: 400;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-            text-align: center;
-        }
-
-        .subtitle-icon {
-            font-size: 1.3rem;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-        }
-
-        /* Main Content */
-        .main-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-            min-height: calc(100vh - 200px);
-        }
-
-        .section-header {
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .section-title {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            color: var(--accent-color);
-        }
-
-        .section-subtitle {
-            font-size: 1.1rem;
-            opacity: 0.8;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 1rem;
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 600;
-            transition: opacity 0.3s ease;
-        }
-
-        .back-link:hover {
-            opacity: 0.7;
         }
 
         .card {
@@ -142,6 +43,12 @@
             box-shadow: 0 2px 8px var(--shadow);
         }
 
+        .card h3 {
+            font-family: 'Libre Baskerville', serif;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
         .section-intro {
             background: var(--nav-hover);
             border-radius: 8px;
@@ -151,12 +58,8 @@
         }
 
         .section-intro p {
-            margin: 0 0 0.75rem 0;
+            margin: 0;
             line-height: 1.7;
-        }
-
-        .section-intro p:last-child {
-            margin-bottom: 0;
         }
 
         .anchor-statements-grid {
@@ -172,38 +75,22 @@
             transition: all 0.3s ease;
         }
 
-        .anchor-statement.physical { 
-            border-left: 4px solid var(--physical-color);
-            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 139, 96, 0.05) 100%);
-        }
-        .anchor-statement.mental { 
-            border-left: 4px solid var(--mental-color);
-            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(183, 175, 163, 0.05) 100%);
-        }
-        .anchor-statement.emotional { 
-            border-left: 4px solid var(--emotional-color);
-            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(201, 125, 125, 0.05) 100%);
-        }
-        .anchor-statement.spiritual { 
-            border-left: 4px solid var(--spiritual-color);
-            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(182, 176, 195, 0.05) 100%);
-        }
-        .anchor-statement.relational { 
-            border-left: 4px solid var(--relational-color);
-            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(232, 147, 74, 0.05) 100%);
+        .anchor-statement.physical { border-left: 4px solid var(--physical-color); }
+        .anchor-statement.mental { border-left: 4px solid var(--mental-color); }
+        .anchor-statement.emotional { border-left: 4px solid var(--emotional-color); }
+        .anchor-statement.spiritual { border-left: 4px solid var(--spiritual-color); }
+        .anchor-statement.relational { border-left: 4px solid var(--relational-color); }
+
+        .anchor-statement.locked {
+            opacity: 0.6;
+            background: var(--nav-hover);
         }
 
         .statement-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
             gap: 0.75rem;
+            margin-bottom: 1rem;
         }
 
         .anchor-icon {
@@ -213,84 +100,51 @@
         .anchor-title {
             font-weight: 600;
             color: var(--accent-color);
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
-        .privacy-toggle {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-        }
-
-        .privacy-status {
-            font-weight: 600;
-            min-width: 120px;
-            text-align: center;
-        }
-
-        .privacy-status.private {
-            color: var(--accent-color);
-        }
-
-        .privacy-status.shared {
-            color: var(--relational-color);
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 44px;
-            height: 24px;
-            background: #ddd;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .toggle-switch.active {
-            background: var(--accent-color);
-        }
-
-        .toggle-slider {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        }
-
-        .toggle-switch.active .toggle-slider {
-            transform: translateX(20px);
+        .anchor-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            font-style: italic;
         }
 
         .statement-content {
-            background: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+        }
+
+        .current-statement {
+            background: var(--nav-hover);
             border-radius: 6px;
             padding: 1rem;
+            font-style: italic;
+            line-height: 1.6;
             margin-bottom: 1rem;
             border-left: 3px solid var(--accent-color);
         }
 
-        .statement-textarea {
-            width: 100%;
-            min-height: 120px;
-            border: none;
-            background: transparent;
-            resize: vertical;
-            font-family: inherit;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text-color);
-            outline: none;
+        .no-statement {
+            color: #666;
+            font-style: italic;
+            opacity: 0.8;
         }
 
-        .statement-textarea::placeholder {
-            color: #999;
-            font-style: italic;
+        .statement-meta {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+
+        .locked-message {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #666;
+        }
+
+        .locked-message .lock-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.5;
         }
 
         .reflect-prompt {
@@ -319,7 +173,6 @@
             display: flex;
             gap: 0.75rem;
             flex-wrap: wrap;
-            margin-top: 1rem;
         }
 
         .action-btn {
@@ -353,9 +206,9 @@
         }
 
         .privacy-note {
-            background: linear-gradient(135deg, rgba(232, 147, 74, 0.1) 0%, rgba(232, 147, 74, 0.05) 100%);
+            background: rgba(232, 147, 74, 0.1);
             border: 1px solid rgba(232, 147, 74, 0.3);
-            border-radius: 8px;
+            border-radius: 6px;
             padding: 1rem;
             margin-top: 1.5rem;
             font-size: 0.9rem;
@@ -365,31 +218,53 @@
             color: var(--relational-color);
         }
 
-        .loading-state {
-            text-align: center;
-            padding: 2rem;
-            opacity: 0.7;
+    <script>
+        // Anchor statements privacy toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.privacy-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const anchor = this.dataset.anchor;
+                    const isShared = this.checked;
+                    
+                    // Update visual status
+                    const container = this.closest('.anchor-statement');
+                    const privateStatus = container.querySelector('.status-text.private');
+                    const sharedStatus = container.querySelector('.status-text.shared');
+                    
+                    if (isShared) {
+                        privateStatus.style.display = 'none';
+                        sharedStatus.style.display = 'block';
+                    } else {
+                        privateStatus.style.display = 'block';
+                        sharedStatus.style.display = 'none';
+                    }
+                    
+                    // Here you would save the sharing preference to database
+                    saveStatementPrivacy(anchor, isShared);
+                });
+            });
+        });
+        
+        function saveStatementPrivacy(anchor, isShared) {
+            // This would integrate with your Supabase database
+            console.log(`Anchor statement for ${anchor} is now ${isShared ? 'shared' : 'private'}`);
+            
+            // Example database call:
+            // await supabase
+            //   .from('anchor_statements')
+            //   .update({ shared_with_coach: isShared })
+            //   .eq('client_id', currentUserId)
+            //   .eq('anchor_type', anchor);
         }
+    </script>
 
         @media (max-width: 768px) {
-            .header-content {
-                padding: 1rem;
+            .container {
+                padding: 0 1rem;
             }
             
-            .logo {
-                font-size: 1.4rem;
-            }
-            
-            .subtitle-container {
-                font-size: 0.9rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .main-content {
-                padding: 1rem;
-            }
-
             .statement-actions {
                 flex-direction: column;
             }
@@ -398,360 +273,120 @@
                 justify-content: center;
                 text-align: center;
             }
-
-            .statement-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.75rem;
-            }
-
-            .privacy-toggle {
-                align-self: flex-end;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">The Five Anchors Dashboard</div>
-            <div class="subtitle-container">
-                <span class="subtitle-icon">⚓</span>
-                <span class="subtitle-text">Your Stability Center — navigate life from a grounded, conscious place</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <a href="reflect-reset.html" class="back-link">← Back to Reflect & Reset</a>
-        
-        <div class="section-header">
-            <h1 class="section-title">Your Anchor Statements</h1>
-            <p class="section-subtitle">Personal insights from your anchor journey</p>
-        </div>
-
+    <div class="container">
         <div class="card">
+            <h3>Your Anchor Statements</h3>
+            
             <div class="section-intro">
-                <p>These are personal insights you discover while working through each anchor—moments of clarity about what stability means in your life. You choose what to share with your coach to help guide your sessions together.</p>
+                <p>These are the personal statements you create during your anchor work—insights about how God is building stability in your life through each foundation. Your coach sees these statements to better understand your journey and guide your sessions.</p>
             </div>
 
-            <div class="anchor-statements-grid" id="anchor-statements-container">
-                <div class="loading-state">Loading your anchor statements...</div>
+            <div class="anchor-statements-grid">
+                
+                <!-- Physical Anchor Statement -->
+                <div class="anchor-statement physical">
+                    <div class="statement-header">
+                        <span class="anchor-icon">🧭</span>
+                        <div>
+                            <div class="anchor-title">Physical Anchor</div>
+                            <div class="anchor-subtitle">Grounding Foundation</div>
+                        </div>
+                    </div>
+                    
+                    <div class="statement-content">
+                        <div class="current-statement">
+                            "I am learning to trust that my body is a gift from God, designed to be my stable foundation in this chaotic world. When I pause to breathe and feel my feet on the ground, I remember that I am held by something greater than my circumstances."
+                        </div>
+                        <div class="statement-meta">
+                            Created during Physical Anchor work • 3 days ago
+                        </div>
+                    </div>
+                    
+                    <div class="reflect-prompt">
+                        <h5>For Reflection</h5>
+                        <p>How has this understanding of your physical foundation shifted since you wrote it? What is God teaching you about being grounded in Him?</p>
+                    </div>
+                    
+                    <div class="statement-actions">
+                        <a href="../five-anchors/physical-anchor.html" class="action-btn">Return to Physical Anchor</a>
+                        <button class="action-btn">Reflect in Journal</button>
+                    </div>
+                </div>
+
+                <!-- Mental Anchor Statement -->
+                <div class="anchor-statement mental locked">
+                    <div class="statement-header">
+                        <span class="anchor-icon">👓</span>
+                        <div>
+                            <div class="anchor-title">Mental Anchor</div>
+                            <div class="anchor-subtitle">Clarity Lens</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locked-message">
+                        <div class="lock-icon">🔒</div>
+                        <p>Your coach will unlock the Mental Anchor when you're ready to build this foundation.</p>
+                    </div>
+                </div>
+
+                <!-- Emotional Anchor Statement -->
+                <div class="anchor-statement emotional locked">
+                    <div class="statement-header">
+                        <span class="anchor-icon">🪣</span>
+                        <div>
+                            <div class="anchor-title">Emotional Anchor</div>
+                            <div class="anchor-subtitle">Stability Well</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locked-message">
+                        <div class="lock-icon">🔒</div>
+                        <p>Your coach will unlock the Emotional Anchor when you're ready to build this foundation.</p>
+                    </div>
+                </div>
+
+                <!-- Spiritual Anchor Statement -->
+                <div class="anchor-statement spiritual locked">
+                    <div class="statement-header">
+                        <span class="anchor-icon">🕊️</span>
+                        <div>
+                            <div class="anchor-title">Spiritual Anchor</div>
+                            <div class="anchor-subtitle">Communion Bridge</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locked-message">
+                        <div class="lock-icon">🔒</div>
+                        <p>Your coach will unlock the Spiritual Anchor when you're ready to build this foundation.</p>
+                    </div>
+                </div>
+
+                <!-- Relational Anchor Statement -->
+                <div class="anchor-statement relational locked">
+                    <div class="statement-header">
+                        <span class="anchor-icon">🌐</span>
+                        <div>
+                            <div class="anchor-title">Relational Anchor</div>
+                            <div class="anchor-subtitle">Harmony Web</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locked-message">
+                        <div class="lock-icon">🔒</div>
+                        <p>Your coach will unlock the Relational Anchor when you're ready to build this foundation.</p>
+                    </div>
+                </div>
+
             </div>
 
             <div class="privacy-note">
-                <p><strong>Your Choice:</strong> All anchor statements are private by default. You can choose to share any statement with your coach using the toggle switches above. This helps your coach understand your journey and provide better guidance while keeping your personal reflections private until you're ready to share.</p>
+                <p><strong>Coaching Partnership:</strong> Your anchor statements are shared with your coach to help them understand your spiritual journey and guide your sessions more effectively. These insights inform your coaching conversations while your private journal remains yours alone.</p>
             </div>
         </div>
-    </main>
-
-    <!-- Import Supabase Configuration -->
-    <script type="module" src="/clarity-tools/dashboard/js/supabase-config.js"></script>
-    <script type="module">
-        // Enhanced Anchor Statements Manager with Database Integration
-        class AnchorStatementsManager {
-            constructor() {
-                this.statements = {
-                    physical: { text: '', sharedWithCoach: false },
-                    mental: { text: '', sharedWithCoach: false },
-                    emotional: { text: '', sharedWithCoach: false },
-                    spiritual: { text: '', sharedWithCoach: false },
-                    relational: { text: '', sharedWithCoach: false }
-                };
-                this.databaseAvailable = false;
-                this.anchors = [
-                    { key: 'physical', title: 'Physical', icon: '🧭', guide: '../five-anchors/physical-anchor.html' },
-                    { key: 'mental', title: 'Mental', icon: '👓', guide: '../five-anchors/mental-anchor.html' },
-                    { key: 'emotional', title: 'Emotional', icon: '🪣', guide: '../five-anchors/emotional-anchor.html' },
-                    { key: 'spiritual', title: 'Spiritual', icon: '🕊️', guide: '../five-anchors/spiritual-anchor.html' },
-                    { key: 'relational', title: 'Relational', icon: '🌐', guide: '../five-anchors/relational-anchor.html' }
-                ];
-                this.init();
-            }
-
-            async init() {
-                await this.initializeDatabase();
-                await this.loadStatements();
-                this.renderStatements();
-            }
-
-            async initializeDatabase() {
-                try {
-                    // Wait for database manager to be available
-                    let attempts = 0;
-                    while (!window.databaseManager && attempts < 20) {
-                        await new Promise(resolve => setTimeout(resolve, 200));
-                        attempts++;
-                    }
-
-                    if (window.databaseManager && typeof window.databaseManager.saveAnchorStatements === 'function') {
-                        this.databaseAvailable = true;
-                        console.log('Anchor statements database integration active');
-                    } else {
-                        console.log('Database manager not available, using localStorage only');
-                    }
-                } catch (error) {
-                    console.log('Database connection unavailable, using localStorage backup:', error);
-                }
-            }
-
-            async loadStatements() {
-                try {
-                    // Try loading from database first
-                    if (this.databaseAvailable) {
-                        const result = await window.databaseManager.getAnchorStatements();
-                        if (result.data && Object.keys(result.data).length > 0) {
-                            this.statements = { ...this.statements, ...result.data };
-                            console.log('Loaded anchor statements from database');
-                            return;
-                        }
-                    }
-
-                    // Fallback to localStorage
-                    const localStatements = localStorage.getItem('anchorStatements');
-                    if (localStatements) {
-                        this.statements = { ...this.statements, ...JSON.parse(localStatements) };
-                        console.log('Loaded anchor statements from localStorage');
-                    }
-                } catch (error) {
-                    console.error('Error loading anchor statements:', error);
-                }
-            }
-
-            renderStatements() {
-                const container = document.getElementById('anchor-statements-container');
-                if (!container) return;
-
-                const statementsHTML = this.anchors.map(anchor => {
-                    const statement = this.statements[anchor.key];
-                    const hasText = statement.text && statement.text.trim();
-
-                    return `
-                        <div class="anchor-statement ${anchor.key}">
-                            <div class="statement-header">
-                                <div class="header-left">
-                                    <span class="anchor-icon">${anchor.icon}</span>
-                                    <div class="anchor-title">${anchor.title}</div>
-                                </div>
-                                <div class="privacy-toggle">
-                                    <span class="privacy-status ${statement.sharedWithCoach ? 'shared' : 'private'}" id="privacy-status-${anchor.key}">
-                                        ${statement.sharedWithCoach ? 'Shared with Coach' : 'Private'}
-                                    </span>
-                                    <div class="toggle-switch ${statement.sharedWithCoach ? 'active' : ''}" id="privacy-${anchor.key}" data-anchor="${anchor.key}">
-                                        <div class="toggle-slider"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="statement-content">
-                                <textarea 
-                                    class="statement-textarea" 
-                                    id="${anchor.key}-statement" 
-                                    placeholder="What insights have you discovered about your ${anchor.title.toLowerCase()} anchor? What does stability mean to you in this area?"
-                                    data-anchor="${anchor.key}"
-                                >${statement.text || ''}</textarea>
-                            </div>
-
-                            ${!hasText ? `
-                                <div class="reflect-prompt">
-                                    <h5>Reflection Starter</h5>
-                                    <p>How has your understanding of ${anchor.title.toLowerCase()} stability shifted since starting this journey? What patterns are you noticing?</p>
-                                </div>
-                            ` : ''}
-                            
-                            <div class="statement-actions">
-                                <a href="${anchor.guide}" class="action-btn${hasText ? '' : ' primary'}">
-                                    ${hasText ? 'Return to' : 'Explore'} ${anchor.title} Anchor
-                                </a>
-                                <a href="private-journal.html" class="action-btn">Write in Journal</a>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                container.innerHTML = statementsHTML;
-                this.setupEventListeners();
-            }
-
-            setupEventListeners() {
-                // Privacy toggle listeners
-                document.querySelectorAll('.toggle-switch').forEach(toggle => {
-                    toggle.addEventListener('click', (e) => {
-                        const anchor = e.currentTarget.dataset.anchor;
-                        this.togglePrivacy(anchor);
-                    });
-                });
-
-                // Textarea listeners for auto-save
-                document.querySelectorAll('.statement-textarea').forEach(textarea => {
-                    textarea.addEventListener('input', (e) => {
-                        const anchor = e.target.dataset.anchor;
-                        this.updateStatement(anchor, e.target.value);
-                    });
-                });
-            }
-
-            updateStatement(anchor, text) {
-                this.statements[anchor].text = text;
-                // Auto-save after a brief delay
-                clearTimeout(this.saveTimeout);
-                this.saveTimeout = setTimeout(() => {
-                    this.saveStatements();
-                }, 1500);
-            }
-
-            togglePrivacy(anchor) {
-                this.statements[anchor].sharedWithCoach = !this.statements[anchor].sharedWithCoach;
-                this.updatePrivacyDisplay(anchor);
-                this.saveStatements(); // Save immediately when privacy changes
-            }
-
-            updatePrivacyDisplay(anchor) {
-                const toggle = document.getElementById(`privacy-${anchor}`);
-                const status = document.getElementById(`privacy-status-${anchor}`);
-                
-                if (toggle && status) {
-                    const isShared = this.statements[anchor].sharedWithCoach;
-                    
-                    if (isShared) {
-                        toggle.classList.add('active');
-                        status.textContent = 'Shared with Coach';
-                        status.className = 'privacy-status shared';
-                    } else {
-                        toggle.classList.remove('active');
-                        status.textContent = 'Private';
-                        status.className = 'privacy-status private';
-                    }
-                }
-            }
-
-            async saveStatements() {
-                try {
-                    const saveData = {
-                        statements: this.statements,
-                        timestamp: new Date().toISOString()
-                    };
-
-                    let databaseSuccess = false;
-                    let localStorageSuccess = false;
-
-                    // Try database save first
-                    if (this.databaseAvailable) {
-                        try {
-                            const result = await window.databaseManager.saveAnchorStatements(saveData);
-                            if (!result.error) {
-                                console.log('Anchor statements saved to database');
-                                databaseSuccess = true;
-                            }
-                        } catch (dbError) {
-                            console.error('Database save failed:', dbError);
-                        }
-                    }
-
-                    // Always save to localStorage as backup
-                    try {
-                        localStorage.setItem('anchorStatements', JSON.stringify(this.statements));
-                        console.log('Anchor statements saved to localStorage backup');
-                        localStorageSuccess = true;
-                    } catch (localError) {
-                        console.error('localStorage save failed:', localError);
-                    }
-
-                    // Show appropriate success message
-                    this.showSaveNotification(databaseSuccess, localStorageSuccess);
-                    
-                    return databaseSuccess || localStorageSuccess;
-                } catch (error) {
-                    console.error('Error saving anchor statements:', error);
-                    this.showErrorNotification('Failed to save anchor statements. Please try again.');
-                    return false;
-                }
-            }
-
-            showSaveNotification(databaseSuccess, localStorageSuccess) {
-                let message = 'Anchor statements saved successfully!';
-                
-                if (databaseSuccess && localStorageSuccess) {
-                    message += ' (Database + Backup)';
-                } else if (databaseSuccess) {
-                    message += ' (Database)';
-                } else if (localStorageSuccess) {
-                    message += ' (Offline mode)';
-                }
-
-                this.showNotification(message, 'success');
-            }
-
-            showErrorNotification(message) {
-                this.showNotification(message, 'error');
-            }
-
-            showNotification(message, type = 'success') {
-                // Create or update notification element
-                let notification = document.getElementById('save-notification');
-                if (!notification) {
-                    notification = document.createElement('div');
-                    notification.id = 'save-notification';
-                    notification.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        padding: 12px 20px;
-                        border-radius: 6px;
-                        color: white;
-                        font-weight: 500;
-                        z-index: 1000;
-                        transform: translateX(100%);
-                        transition: transform 0.3s ease;
-                        max-width: 300px;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                    `;
-                    document.body.appendChild(notification);
-                }
-
-                // Set notification style based on type
-                notification.style.backgroundColor = type === 'success' ? '#10b981' : '#ef4444';
-                notification.textContent = message;
-                notification.style.transform = 'translateX(0)';
-
-                // Auto-hide after 3 seconds
-                setTimeout(() => {
-                    notification.style.transform = 'translateX(100%)';
-                }, 3000);
-            }
-
-            // Method to get shared statements for coach visibility
-            getSharedStatements() {
-                const shared = {};
-                Object.keys(this.statements).forEach(anchor => {
-                    if (this.statements[anchor].sharedWithCoach && this.statements[anchor].text.trim()) {
-                        shared[anchor] = this.statements[anchor].text;
-                    }
-                });
-                return shared;
-            }
-        }
-
-        // Global functions for external access
-        window.saveAnchorStatements = function() {
-            if (window.anchorStatementsManager) {
-                return window.anchorStatementsManager.saveStatements();
-            }
-        };
-
-        window.getSharedAnchorStatements = function() {
-            if (window.anchorStatementsManager) {
-                return window.anchorStatementsManager.getSharedStatements();
-            }
-            return {};
-        };
-
-        // Initialize when DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            window.anchorStatementsManager = new AnchorStatementsManager();
-        });
-    </script>
+    </div>
 </body>
 </html>
