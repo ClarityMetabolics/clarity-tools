@@ -383,7 +383,6 @@ async getAnchorStatements() {
         console.error('Error loading anchor statements from database:', error);
         return { data: {}, error };
     }
-},
             return { data: null, error };
         }
     },
