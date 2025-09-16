@@ -1755,6 +1755,7 @@
             updateCurrentDate();
             loadDailyRatings();
             setupRatingButtons();
+            setupAnchorCircleClicks();
             generateRecommendations();
         }
 
@@ -1790,6 +1791,22 @@
                     
                     // Generate new recommendations
                     generateRecommendations();
+                });
+            });
+        }
+
+        function setupAnchorCircleClicks() {
+            const anchorCircles = document.querySelectorAll('.anchor-circle');
+            
+            anchorCircles.forEach(circle => {
+                circle.addEventListener('click', function() {
+                    const anchorType = this.dataset.anchor;
+                    const module = anchorModules.find(m => m.key === anchorType);
+                    
+                    if (module) {
+                        // Use the toolUrl to open the interactive tool
+                        window.open(module.toolUrl, '_blank');
+                    }
                 });
             });
         }
