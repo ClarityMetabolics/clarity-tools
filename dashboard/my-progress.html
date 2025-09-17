@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Progress - Five Anchors Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Color System */
+            --physical-color: #7C8B60;
+            --mental-color: #B7AFA3;
+            --emotional-color: #C97D7D;
+            --spiritual-color: #B6B0C3;
+            --relational-color: #E8934A;
+            --discernment-color: #7A94A8;
+            
+            /* Theme Variables - Light Mode */
+            --bg-color: #FEFEFE;
+            --text-color: #2C2C2C;
+            --header-bg: #F8F8F8;
+            --nav-bg: #FFFFFF;
+            --nav-border: #E5E5E5;
+            --nav-hover: #F0F0F0;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E5E5;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --accent-color: #5A6C57;
+            --locked-color: #999;
+            --warning-color: #FF9800;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1A1A1A;
+            --text-color: #E5E5E5;
+            --header-bg: #2A2A2A;
+            --nav-bg: #2A2A2A;
+            --nav-border: #404040;
+            --nav-hover: #3A3A3A;
+            --card-bg: #2A2A2A;
+            --card-border: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --accent-color: #8A9C87;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Header - Ethereal Design */
+        .header {
+            background: linear-gradient(135deg, 
+                rgba(124, 139, 96, 0.7) 0%, 
+                rgba(183, 175, 163, 0.7) 25%, 
+                rgba(201, 125, 125, 0.7) 50%, 
+                rgba(182, 176, 195, 0.7) 75%, 
+                rgba(232, 147, 74, 0.7) 100%),
+                linear-gradient(45deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.05) 100%);
+            border-bottom: 2px solid var(--nav-border);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                position: static;
+            }
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .logo {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        .subtitle-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 400;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .subtitle-icon {
+            font-size: 1.3rem;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: white;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Navigation Breadcrumb */
+        .nav-breadcrumb {
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--nav-border);
+            padding: 1rem 0;
+        }
+
+        .breadcrumb-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .breadcrumb-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb-link:hover {
+            color: var(--physical-color);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-color);
+            opacity: 0.5;
+        }
+
+        .breadcrumb-current {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            min-height: calc(100vh - 250px);
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .card h3 {
+            font-family: 'Libre Baskerville', serif;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        /* Progress Calendar */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-weight: 600;
+            padding: 1rem 0.5rem;
+            background: var(--nav-hover);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--accent-color);
+            background: var(--nav-hover);
+        }
+
+        .calendar-day.has-data {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .calendar-day.has-data:hover {
+            background: var(--physical-color);
+        }
+
+        .calendar-day.today {
+            border: 2px solid var(--accent-color);
+            font-weight: 700;
+        }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .calendar-nav-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--physical-color);
+        }
+
+        .calendar-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.25rem;
+            color: var(--accent-color);
+        }
+
+        /* Progress Chart */
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            background: var(--nav-hover);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .chart-placeholder {
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--nav-hover);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.4rem;
+            }
+            
+            .subtitle-container {
+                font-size: 0.9rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .theme-toggle {
+                top: 0.5rem;
+                right: 0.5rem;
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .calendar-grid {
+                gap: 0.25rem;
+            }
+
+            .calendar-day {
+                font-size: 0.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-content {
+            animation: fadeIn 0.3s ease-in;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">The Five Anchors Platform</div>
+            <div class="subtitle-container">
+                <span class="subtitle-icon">📊</span>
+                <span class="subtitle-text">Track your journey and celebrate progress</span>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation Breadcrumb -->
+    <nav class="nav-breadcrumb">
+        <div class="breadcrumb-content">
+            <a href="./index.html" class="breadcrumb-link">Dashboard</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-current">My Progress</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="section-header">
+            <h1 class="section-title">My Progress</h1>
+            <p class="section-subtitle">Track your journey and identify patterns in your anchor development</p>
+        </div>
+
+        <!-- Progress Statistics -->
+        <div class="card">
+            <h3>Your Progress Summary</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-checkins">0</div>
+                    <div class="stat-label">Total Check-ins</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="current-streak">0</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avg-rating">-</div>
+                    <div class="stat-label">Average Rating</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="strongest-anchor">-</div>
+                    <div class="stat-label">Strongest Anchor</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Calendar -->
+        <div class="card">
+            <h3>Progress Calendar</h3>
+            <div class="calendar-controls">
+                <button class="calendar-nav-btn" onclick="changeMonth(-1)">← Previous</button>
+                <div class="calendar-title" id="calendar-title">Loading...</div>
+                <button class="calendar-nav-btn" onclick="changeMonth(1)">Next →</button>
+            </div>
+            
+            <div class="calendar-grid">
+                <div class="calendar-header">Sun</div>
+                <div class="calendar-header">Mon</div>
+                <div class="calendar-header">Tue</div>
+                <div class="calendar-header">Wed</div>
+                <div class="calendar-header">Thu</div>
+                <div class="calendar-header">Fri</div>
+                <div class="calendar-header">Sat</div>
+                <!-- Calendar days will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Progress Chart -->
+        <div class="card">
+            <h3>Anchor Trends</h3>
+            <div class="chart-container">
+                <div class="chart-placeholder">
+                    <h4>Progress Chart</h4>
+                    <p>Visual chart showing anchor ratings over time</p>
+                    <small style="opacity: 0.6;">(Chart functionality will be added in next development phase)</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights -->
+        <div class="card">
+            <h3>Weekly Insights</h3>
+            <div id="insights-container">
+                <p style="text-align: center; opacity: 0.7; font-style: italic;">
+                    Complete more daily check-ins to see personalized insights about your patterns and growth areas.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        // Theme Management
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+            } else {
+                themeIcon.textContent = '🌙';
+            }
+        }
+
+        // Progress Data Management
+        function loadProgressData() {
+            const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+            updateProgressStats(allCheckIns);
+            generateCalendar();
+            generateInsights(allCheckIns);
+        }
+
+        function updateProgressStats(checkIns) {
+            const dates = Object.keys(checkIns).sort();
+            const totalCheckins = dates.length;
+            
+            // Calculate current streak
+            const today = new Date().toISOString().split('T')[0];
+            let currentStreak = 0;
+            let checkDate = new Date();
+            
+            while (checkDate >= new Date(dates[0] || today)) {
+                const dateStr = checkDate.toISOString().split('T')[0];
+                if (checkIns[dateStr]) {
+                    currentStreak++;
+                } else {
+                    break;
+                }
+                checkDate.setDate(checkDate.getDate() - 1);
+            }
+
+            // Calculate average rating
+            let totalRatings = 0;
+            let ratingCount = 0;
+            const anchorTotals = {
+                physical: 0, mental: 0, emotional: 0, 
+                spiritual: 0, relational: 0
+            };
+            const anchorCounts = {
+                physical: 0, mental: 0, emotional: 0, 
+                spiritual: 0, relational: 0
+            };
+
+            dates.forEach(date => {
+                const checkIn = checkIns[date];
+                if (checkIn.ratings) {
+                    Object.entries(checkIn.ratings).forEach(([anchor, rating]) => {
+                        totalRatings += rating;
+                        ratingCount++;
+                        anchorTotals[anchor] += rating;
+                        anchorCounts[anchor]++;
+                    });
+                }
+            });
+
+            const avgRating = ratingCount > 0 ? (totalRatings / ratingCount).toFixed(1) : 0;
+
+            // Find strongest anchor
+            let strongestAnchor = '-';
+            let highestAvg = 0;
+            Object.entries(anchorTotals).forEach(([anchor, total]) => {
+                const count = anchorCounts[anchor];
+                if (count > 0) {
+                    const avg = total / count;
+                    if (avg > highestAvg) {
+                        highestAvg = avg;
+                        strongestAnchor = anchor.charAt(0).toUpperCase() + anchor.slice(1);
+                    }
+                }
+            });
+
+            // Update UI
+            document.getElementById('total-checkins').textContent = totalCheckins;
+            document.getElementById('current-streak').textContent = currentStreak;
+            document.getElementById('avg-rating').textContent = avgRating > 0 ? avgRating : '-';
+            document.getElementById('strongest-anchor').textContent = strongestAnchor;
+        }
+
+        function generateCalendar() {
+            const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+            const today = new Date();
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+            // Update calendar title
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('calendar-title').textContent = 
+                `${monthNames[currentMonth]} ${currentYear}`;
+
+            // Clear existing calendar days
+            const calendarGrid = document.querySelector('.calendar-grid');
+            const headers = calendarGrid.querySelectorAll('.calendar-header');
+            calendarGrid.innerHTML = '';
+            headers.forEach(header => calendarGrid.appendChild(header));
+
+            // Generate calendar days
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = date.getDate();
+
+                // Add classes for styling
+                if (date.getMonth() !== currentMonth) {
+                    dayElement.style.opacity = '0.3';
+                }
+
+                const dateStr = date.toISOString().split('T')[0];
+                if (allCheckIns[dateStr]) {
+                    dayElement.classList.add('has-data');
+                    dayElement.title = `Check-in completed: ${Object.keys(allCheckIns[dateStr].ratings || {}).length} anchors rated`;
+                }
+
+                if (dateStr === today.toISOString().split('T')[0]) {
+                    dayElement.classList.add('today');
+                }
+
+                dayElement.addEventListener('click', () => {
+                    if (allCheckIns[dateStr]) {
+                        showDayDetails(dateStr, allCheckIns[dateStr]);
+                    }
+                });
+
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        function changeMonth(direction) {
+            currentMonth += direction;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            generateCalendar();
+        }
+
+        function showDayDetails(date, checkInData) {
+            const formattedDate = new Date(date).toLocaleDateString();
+            let details = `Check-in for ${formattedDate}:\n\n`;
+            
+            if (checkInData.ratings) {
+                details += 'Ratings:\n';
+                Object.entries(checkInData.ratings).forEach(([anchor, rating]) => {
+                    details += `${anchor.charAt(0).toUpperCase() + anchor.slice(1)}: ${rating}/5\n`;
+                });
+            }
+
+            if (checkInData.notes) {
+                details += '\nNotes:\n';
+                Object.entries(checkInData.notes).forEach(([anchor, note]) => {
+                    details += `${anchor.charAt(0).toUpperCase() + anchor.slice(1)}: ${note}\n`;
+                });
+            }
+
+            alert(details);
+        }
+
+        function generateInsights(checkIns) {
+            const container = document.getElementById('insights-container');
+            const dates = Object.keys(checkIns).sort();
+            
+            if (dates.length < 7) {
+                container.innerHTML = `
+                    <p style="text-align: center; opacity: 0.7; font-style: italic;">
+                        Complete at least 7 daily check-ins to see personalized insights about your patterns and growth areas.
+                    </p>
+                `;
+                return;
+            }
+
+            // Generate basic insights
+            const recentWeek = dates.slice(-7);
+            const anchorAverages = {
+                physical: 0, mental: 0, emotional: 0, 
+                spiritual: 0, relational: 0
+            };
+            const anchorCounts = {
+                physical: 0, mental: 0, emotional: 0, 
+                spiritual: 0, relational: 0
+            };
+
+            recentWeek.forEach(date => {
+                const checkIn = checkIns[date];
+                if (checkIn.ratings) {
+                    Object.entries(checkIn.ratings).forEach(([anchor, rating]) => {
+                        anchorAverages[anchor] += rating;
+                        anchorCounts[anchor]++;
+                    });
+                }
+            });
+
+            // Calculate averages
+            Object.keys(anchorAverages).forEach(anchor => {
+                if (anchorCounts[anchor] > 0) {
+                    anchorAverages[anchor] = anchorAverages[anchor] / anchorCounts[anchor];
+                }
+            });
+
+            const insights = [];
+            
+            // Find patterns
+            const sortedAnchors = Object.entries(anchorAverages)
+                .filter(([_, avg]) => avg > 0)
+                .sort(([_, a], [__, b]) => b - a);
+
+            if (sortedAnchors.length > 0) {
+                const [strongest] = sortedAnchors[0];
+                const [weakest] = sortedAnchors[sortedAnchors.length - 1];
+                
+                insights.push(`Your strongest anchor this week has been <strong>${strongest}</strong> (${sortedAnchors[0][1].toFixed(1)}/5 average).`);
+                
+                if (sortedAnchors.length > 1) {
+                    insights.push(`Consider giving extra attention to your <strong>${weakest}</strong> anchor (${sortedAnchors[sortedAnchors.length - 1][1].toFixed(1)}/5 average).`);
+                }
+            }
+
+            // Consistency insight
+            const consistency = recentWeek.length;
+            if (consistency >= 6) {
+                insights.push(`Excellent consistency! You've completed ${consistency} out of 7 daily check-ins this week.`);
+            } else if (consistency >= 4) {
+                insights.push(`Good progress with ${consistency} check-ins this week. Try to maintain daily consistency for better insights.`);
+            }
+
+            if (insights.length > 0) {
+                container.innerHTML = insights.map(insight => 
+                    `<div style="margin-bottom: 1rem; padding: 1rem; background: var(--nav-hover); border-radius: 8px; border-left: 4px solid var(--accent-color);">${insight}</div>`
+                ).join('');
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            loadProgressData();
+        });
+    </script>
+</body>
+</html>
