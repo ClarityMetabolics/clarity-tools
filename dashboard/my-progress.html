@@ -521,12 +521,35 @@
             }
         }
 
-        // Progress Data Management
-        function loadProgressData() {
-            const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
-            updateProgressStats(allCheckIns);
+        // Progress Data Management with Database Integration
+        async function loadProgressData() {
+            console.log('Loading progress data...');
+            
+            let checkInsData = {};
+            
+            // Try to load from database first
+            if (window.hybridDataManager) {
+                try {
+                    const result = await window.hybridDataManager.getCheckIns();
+                    if (result && !result.error && Object.keys(result.data).length > 0) {
+                        checkInsData = result.data;
+                        console.log('Progress data loaded from database');
+                    } else {
+                        console.log('No database data, using localStorage fallback');
+                        checkInsData = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+                    }
+                } catch (error) {
+                    console.log('Database error, using localStorage:', error);
+                    checkInsData = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+                }
+            } else {
+                console.log('Database manager not available, using localStorage');
+                checkInsData = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+            }
+            
+            updateProgressStats(checkInsData);
             generateCalendar();
-            generateInsights(allCheckIns);
+            generateInsights(checkInsData);
         }
 
         function updateProgressStats(checkIns) {
@@ -596,7 +619,15 @@
         }
 
         function generateCalendar() {
-            const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+            let allCheckIns = {};
+            
+            // Get check-ins data - try from window if available, fallback to localStorage
+            if (window.lastLoadedCheckIns) {
+                allCheckIns = window.lastLoadedCheckIns;
+            } else {
+                allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+            }
+            
             const today = new Date();
             const firstDay = new Date(currentYear, currentMonth, 1);
             const lastDay = new Date(currentYear, currentMonth + 1, 0);
@@ -756,10 +787,30 @@
             }
         }
 
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', function() {
+        // Initialize with Database Integration
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Initializing My Progress module...');
+            
             loadTheme();
-            loadProgressData();
+            
+            // Initialize database manager if available
+            try {
+                const { hybridDataManager } = await import('./js/supabase-config.js');
+                window.hybridDataManager = hybridDataManager;
+                console.log('Database manager loaded successfully');
+            } catch (error) {
+                console.log('Database manager not available, using localStorage only:', error);
+            }
+            
+            // Load progress data (will use database if available, localStorage as fallback)
+            await loadProgressData();
+            
+            // Store loaded data globally for calendar refreshes
+            const checkInsData = window.hybridDataManager ? 
+                (await window.hybridDataManager.getCheckIns()).data || {} :
+                JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+            
+            window.lastLoadedCheckIns = checkInsData;
         });
     </script>
 </body>
