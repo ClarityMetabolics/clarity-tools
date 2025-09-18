@@ -2227,6 +2227,25 @@
         }
 
         // Initialize
+        
+        loadTheme();
+        loadSection();
+        initializeDashboard();
+        
+        // Initialize journal when reflect section is active
+        setTimeout(() => {
+            const reflectSection = document.getElementById('reflect');
+            if (reflectSection && reflectSection.classList.contains('active')) {
+                if (!window.journalManager) {
+                    window.journalManager = new JournalManager();
+                }
+            }
+        }, 500);
+    });
+}).catch(error => {
+    console.error('Error loading authentication:', error);
+    window.location.href = './auth.html';
+});
         document.addEventListener('DOMContentLoaded', function() {
             loadTheme();
             loadSection();
@@ -2297,7 +2316,6 @@ import('./js/supabase-config.js').then(({ authManager }) => {
     });
 }).catch(error => {
     console.error('Error loading authentication:', error);
-    // Fallback to auth page if there's an error
     window.location.href = './auth.html';
 });
     function openWelcomeModal() {
