@@ -1392,7 +1392,7 @@
                 
                 // User is authenticated - initialize dashboard
                 console.log('Authentication successful - showing dashboard');
-                document.body.style.visibility = 'visible';
+                document.body.style.setProperty('visibility', 'visible', 'important');
                 initializeAuthenticatedDashboard();
             }).catch(error => {
                 console.error('Error checking authentication:', error);
