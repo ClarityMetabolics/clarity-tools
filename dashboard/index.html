@@ -1378,971 +1378,969 @@
     👋 Welcome Guide
 </button>
 
-    <script>
-        // Simulated client access data - in production, this would come from server/coach assignments
-        const clientModuleAccess = {
-            fiveAnchors: {
-                physical: { guide: true, webTool: false },
-                mental: { guide: false, webTool: false },
-                emotional: { guide: false, webTool: false },
-                spiritual: { guide: false, webTool: false },
-                relational: { guide: false, webTool: false }
-            },
-            discernmentTools: {
-                thoughtRefiner: { unlocked: true },
-                beliefThreader: { unlocked: false },
-                echoEraser: { unlocked: false },
-                forgivenessFilter: { unlocked: false },
-                connectionCalibrator: { unlocked: false }
-            },
-            coachingPackage: {
-                type: '12-week', // Changed from '6-week' to show discernment tools
-                hasDiscernmentAccess: true // Changed from false to true
-            }
-        };
-
-        // Module definitions matching coach dashboard
-        const anchorModules = [
-            {
-                key: 'physical',
-                title: 'Physical Anchor',
-                subtitle: 'A Grounding Compass',
-                icon: '🧭',
-                description: '9-step body awareness and nervous system regulation process. Creates your physical "home base" for returning when overwhelmed.',
-                features: ['Body Awareness', 'Regulation Techniques', 'Pattern Recognition'],
-                guideUrl: '../anchor-guides/physical-anchor-guide.html',
-                toolUrl: '../five-anchors/physical-anchor.html',
-                color: 'var(--physical-color)'
-            },
-            {
-                key: 'mental',
-                title: 'Mental Anchor',
-                subtitle: 'The Clarity Lens',
-                icon: '👓',
-                description: '7-step process to filter mental noise and see truth clearly. Separates grounded thoughts from fear-driven narratives.',
-                features: ['Mental Filtering', 'Perspective Shifting', 'Control Assessment'],
-                guideUrl: '../anchor-guides/mental-anchor-guide.html',
-                toolUrl: '../five-anchors/mental-anchor.html',
-                color: 'var(--mental-color)'
-            },
-            {
-                key: 'emotional',
-                title: 'Emotional Anchor',
-                subtitle: 'The Stability Well',
-                icon: '🪣',
-                description: '8-step journey from emotional reactivity to conscious response. Transforms overwhelming feelings into wise action through your body\'s early warning system.',
-                features: ['Emotional Processing', 'Early Warning System', 'Response Choice'],
-                guideUrl: '../anchor-guides/emotional-anchor-guide.html',
-                toolUrl: '../five-anchors/emotional-anchor.html',
-                color: 'var(--emotional-color)'
-            },
-            {
-                key: 'spiritual',
-                title: 'Spiritual Anchor',
-                subtitle: 'The Communion Bridge',
-                icon: '🕊️',
-                description: '7-step spiritual grounding through divine connection, personal calling, and eternal foundation. Non-denominational approach.',
-                features: ['Spiritual Grounding', 'Calling Identification', 'Practice Building'],
-                guideUrl: '../anchor-guides/spiritual-anchor-guide.html',
-                toolUrl: '../five-anchors/spiritual-anchor.html',
-                color: 'var(--spiritual-color)'
-            },
-            {
-                key: 'relational',
-                title: 'Relational Anchor',
-                subtitle: 'The Harmony Web',
-                icon: '🌐',
-                description: '8-step journey to build authentic connections from grounded center. Boundary wisdom and community building strategies.',
-                features: ['Relationship Assessment', 'Boundary Setting', 'Community Building'],
-                guideUrl: '../anchor-guides/relational-anchor-guide.html',
-                toolUrl: '../five-anchors/relational-anchor.html',
-                color: 'var(--relational-color)'
-            }
-        ];
-
-        const discernmentModules = [
-            {
-                key: 'thoughtRefiner',
-                title: 'Thought Refiner',
-                subtitle: 'Purifying Thoughts at the Source',
-                icon: '🔍',
-                description: '7-step sophisticated mental filtering system that examines thoughts for truth, clarity, and spiritual alignment.',
-                features: ['Mental Purification', 'Truth Detection', 'Clarity Enhancement'],
-                toolUrl: '../discernment-tools/thought-refiner.html'
-            },
-            {
-                key: 'beliefThreader',
-                title: 'Belief Threader',
-                subtitle: 'Examining Crystallized Thoughts',
-                icon: '🧵',
-                description: '6-step journey through crystallized thought patterns. Explores how thoughts became hardened beliefs.',
-                features: ['Belief Archaeology', 'Trinity Integration', 'Truth Threading'],
-                toolUrl: '../discernment-tools/belief-threader.html'
-            },
-            {
-                key: 'echoEraser',
-                title: 'Echo Eraser',
-                subtitle: 'Clearing Energetic Aftermath',
-                icon: '🌊',
-                description: '8-step advanced integration process for clearing lingering emotional and spiritual residue.',
-                features: ['Echo Integration', 'Sitting Practice', 'Truth Planting'],
-                toolUrl: '../discernment-tools/echo-eraser.html'
-            },
-            {
-                key: 'forgivenessFilter',
-                title: 'Forgiveness Filter',
-                subtitle: 'Releasing Burdens with Grace',
-                icon: '🪶',
-                description: '7-step journey to process hurt and find authentic forgiveness. Separates honoring pain from carrying burdens.',
-                features: ['Pain Processing', 'Burden Release', 'Freedom Creation'],
-                toolUrl: '../discernment-tools/forgiveness-filter.html'
-            },
-            {
-                key: 'connectionCalibrator',
-                title: 'Connection Calibrator',
-                subtitle: 'Balancing Relationship Dynamics',
-                icon: '🌍',
-                description: '8-step relationship calibration tool. Navigate from dependence to independence to healthy interdependence.',
-                features: ['Relationship Assessment', 'Boundary Calibration', 'Connection Balance'],
-                toolUrl: '../discernment-tools/connection-calibrator-part1.html'
-            }
-        ];
-
-        // Theme Management
-        function toggleTheme() {
-            const body = document.body;
-            const themeIcon = document.getElementById('theme-icon');
-            
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.removeAttribute('data-theme');
-                themeIcon.textContent = '🌙';
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                themeIcon.textContent = '☀️';
-                localStorage.setItem('theme', 'dark');
-            }
-        }
-
-        function loadTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            const themeIcon = document.getElementById('theme-icon');
-            
-            if (savedTheme === 'dark') {
-                document.body.setAttribute('data-theme', 'dark');
-                themeIcon.textContent = '☀️';
-            } else {
-                themeIcon.textContent = '🌙';
-            }
-        }
-
-        // Navigation Management
-        function showSection(sectionName) {
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => section.classList.remove('active'));
-            
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => item.classList.remove('active'));
-            
-            const targetSection = document.getElementById(sectionName);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
-            
-            const activeNavItem = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
-            if (activeNavItem) {
-                activeNavItem.classList.add('active');
-            }
-            
-            localStorage.setItem('currentSection', sectionName);
-
-            // Load specific section content
-            if (sectionName === 'anchors') {
-                loadAnchorTools();
-            } else if (sectionName === 'discernment') {
-                loadDiscernmentTools();
-            }
-        }
-
-        function loadSection() {
-            const savedSection = localStorage.getItem('currentSection');
-            if (savedSection && document.getElementById(savedSection)) {
-                showSection(savedSection);
-            } else {
-                showSection('dashboard');
-            }
-        }
-
-        // Module Access Control
-        function loadAnchorTools() {
-            const container = document.getElementById('anchor-tools-grid');
-            if (!container) return;
-
-            container.innerHTML = anchorModules.map(module => {
-                const access = clientModuleAccess.fiveAnchors[module.key];
-                const hasGuideAccess = access.guide;
-                const hasToolAccess = access.webTool;
-                const hasAnyAccess = hasGuideAccess || hasToolAccess;
-
-                let accessIndicator = '';
-                let cardClass = '';
-                let content = '';
-                
-                if (hasAnyAccess) {
-                    // Unlocked content - show full details
-                    if (hasGuideAccess && hasToolAccess) {
-                        accessIndicator = '<div class="access-indicator access-unlocked">✅ Full Access - Guide & Tool Unlocked</div>';
-                    } else {
-                        const unlockedItems = [];
-                        if (hasGuideAccess) unlockedItems.push('Guide');
-                        if (hasToolAccess) unlockedItems.push('Tool');
-                        accessIndicator = `<div class="access-indicator access-partial">🔓 Partial Access - ${unlockedItems.join(' & ')} Unlocked</div>`;
-                    }
-                    
-                    content = `
-                        <div class="tool-header">
-                            <span class="tool-icon">${module.icon}</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">${module.title}</h4>
-                                <p class="tool-subtitle">${module.subtitle}</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">${module.description}</p>
-                        <div class="tool-features">
-                            ${module.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
-                        </div>
-                        ${accessIndicator}
-                        ${hasGuideAccess ? `<a href="${module.guideUrl}" target="_blank" class="tool-button" style="background: ${module.color}; margin-bottom: 0.5rem;">
-                            <span>📖 Open Guide (PDF)</span>
-                            <span class="button-arrow">→</span>
-                        </a>` : ''}
-                        ${hasToolAccess ? `<a href="${module.toolUrl}" target="_blank" class="tool-button" style="background: ${module.color};">
-                            <span>🔧 Use Web Tool</span>
-                            <span class="button-arrow">→</span>
-                        </a>` : ''}
-                    `;
-                } else {
-                    // Locked content - show minimal info with lock message
-                    cardClass = 'locked';
-                    accessIndicator = '<div class="access-indicator access-locked">🔒 Locked - Contact your coach to unlock</div>';
-                    
-                    content = `
-                        <div class="tool-header">
-                            <span class="tool-icon">${module.icon}</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">${module.title}</h4>
-                                <p class="tool-subtitle">${module.subtitle}</p>
-                            </div>
-                        </div>
-                        <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
-                            <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">Module Locked</h4>
-                            <p style="color: var(--locked-color);">Your coach will unlock this when you're ready</p>
-                        </div>
-                        ${accessIndicator}
-                        <button class="tool-button locked">
-                            <span>🔒 Locked by Coach</span>
-                            <span class="button-arrow">⏸</span>
-                        </button>
-                    `;
+    <script type="module">
+        // Authentication check FIRST - before anything else
+        import('./js/supabase-config.js').then(({ authManager }) => {
+            authManager.getSession().then(({ session }) => {
+                if (!session) {
+                    // Not logged in - redirect immediately
+                    window.location.href = './auth.html';
+                    return;
                 }
-
-                return `
-                    <div class="tool-card ${cardClass}">
-                        ${content}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function loadDiscernmentTools() {
-            const container = document.getElementById('discernment-tools-grid');
-            if (!container) return;
-
-            // Check if client has access to discernment tools (12-week package only)
-            if (!clientModuleAccess.coachingPackage.hasDiscernmentAccess) {
-                container.innerHTML = `
-                    <div class="tool-card locked" style="grid-column: 1 / -1;">
-                        <div class="tool-header">
-                            <span class="tool-icon">🔍</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">Advanced Discernment Tools</h4>
-                                <p class="tool-subtitle">12-Week Program Content</p>
-                            </div>
-                        </div>
-                        <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🎓</div>
-                            <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">12-Week Package Required</h4>
-                            <p style="color: var(--locked-color);">Discernment Tools are available as part of the 12-week coaching program. Contact your coach to learn more about upgrading your package.</p>
-                        </div>
-                        <div class="access-indicator access-locked">🎓 Requires 12-Week Coaching Package</div>
-                        <button class="tool-button locked">
-                            <span>Contact Coach to Upgrade</span>
-                            <span class="button-arrow">📞</span>
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-
-            // Client has 12-week access, show individual tools based on coach permissions
-            container.innerHTML = discernmentModules.map(module => {
-                const access = clientModuleAccess.discernmentTools[module.key];
-                const hasAccess = access.unlocked;
-
-                let accessIndicator = '';
-                let cardClass = '';
-                let content = '';
                 
-                if (hasAccess) {
-                    // Unlocked content - show full details
-                    accessIndicator = '<div class="access-indicator access-unlocked">✅ Unlocked by Coach</div>';
-                    
-                    content = `
-                        <div class="tool-header">
-                            <span class="tool-icon">${module.icon}</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">${module.title}</h4>
-                                <p class="tool-subtitle">${module.subtitle}</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">${module.description}</p>
-                        <div class="tool-features">
-                            ${module.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
-                        </div>
-                        ${accessIndicator}
-                        <a href="${module.toolUrl}" target="_blank" class="tool-button" style="background: var(--discernment-color);">
-                            <span>Begin ${module.title}</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    `;
-                } else {
-                    // Locked content - show minimal info with lock message
-                    cardClass = 'locked';
-                    accessIndicator = '<div class="access-indicator access-locked">🔒 Locked - Your coach will unlock when ready</div>';
-                    
-                    content = `
-                        <div class="tool-header">
-                            <span class="tool-icon">${module.icon}</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">${module.title}</h4>
-                                <p class="tool-subtitle">${module.subtitle}</p>
-                            </div>
-                        </div>
-                        <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
-                            <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">Tool Locked</h4>
-                            <p style="color: var(--locked-color);">Your coach will unlock this based on your session progress</p>
-                        </div>
-                        ${accessIndicator}
-                        <button class="tool-button locked">
-                            <span>🔒 Locked by Coach</span>
-                            <span class="button-arrow">⏸</span>
-                        </button>
-                    `;
-                }
-
-                return `
-                    <div class="tool-card ${cardClass}">
-                        ${content}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Dashboard Initialization
-        function initializeDashboard() {
-            updateCurrentDate();
-            loadDailyRatings();
-            setupRatingButtons();
-            generateRecommendations();
-        }
-
-        function updateCurrentDate() {
-            const now = new Date();
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            };
-            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
-        }
-
-        function setupRatingButtons() {
-            const ratingButtons = document.querySelectorAll('.rating-btn');
-            
-            ratingButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const anchorInput = this.closest('.anchor-input');
-                    const anchor = anchorInput.dataset.anchor;
-                    const value = parseInt(this.dataset.value);
-                    
-                    // Remove selected class from siblings
-                    const siblings = anchorInput.querySelectorAll('.rating-btn');
-                    siblings.forEach(btn => btn.classList.remove('selected'));
-                    
-                    // Add selected class to clicked button
-                    this.classList.add('selected');
-                    
-                    // Update progress circle
-                    updateAnchorProgress(anchor, value);
-                    
-                    // Generate new recommendations
-                    generateRecommendations();
-                });
+                // User is authenticated - initialize dashboard
+                initializeAuthenticatedDashboard();
+            }).catch(error => {
+                console.error('Error checking authentication:', error);
+                window.location.href = './auth.html';
             });
-        }
+        }).catch(error => {
+            console.error('Error loading authentication:', error);
+            window.location.href = './auth.html';
+        });
 
-        function updateAnchorProgress(anchor, rating) {
-            const circle = document.querySelector(`.anchor-circle[data-anchor="${anchor}"] .circle-progress`);
-            const ratingDisplay = circle.querySelector('.anchor-rating');
-            
-            circle.dataset.rating = rating;
-            ratingDisplay.textContent = rating;
-            
-            // Calculate opacity based on rating (0.2 to 1.0)
-            const opacity = rating > 0 ? (rating / 5) * 0.8 + 0.2 : 0.1;
-            circle.style.opacity = opacity;
-            
-            updateOverallWellness();
-        }
-
-        function updateOverallWellness() {
-            const circles = document.querySelectorAll('.circle-progress');
-            let totalRating = 0;
-            let ratedCount = 0;
-            
-            circles.forEach(circle => {
-                const rating = parseInt(circle.dataset.rating);
-                if (rating > 0) {
-                    totalRating += rating;
-                    ratedCount++;
-                }
-            });
-            
-            const overallRatingElement = document.getElementById('overall-rating');
-            const wellnessFill = document.querySelector('.wellness-fill');
-            
-            if (ratedCount === 0) {
-                overallRatingElement.textContent = 'Not Rated';
-                wellnessFill.style.width = '0%';
-            } else {
-                const average = totalRating / ratedCount;
-                const percentage = (average / 5) * 100;
-                
-                overallRatingElement.textContent = `${average.toFixed(1)}/5`;
-                wellnessFill.style.width = `${percentage}%`;
-            }
-        }
-
-        async function saveCheckIn() {
-    const today = new Date().toISOString().split('T')[0];
-    const checkInData = {
-        date: today,
-        ratings: {},
-        notes: {}
-    };
-
-    // Collect ratings
-    const anchorInputs = document.querySelectorAll('.anchor-input');
-    anchorInputs.forEach(input => {
-        const anchor = input.dataset.anchor;
-        const selectedRating = input.querySelector('.rating-btn.selected');
-        const notes = input.querySelector('.anchor-notes').value;
-
-        if (selectedRating) {
-            checkInData.ratings[anchor] = parseInt(selectedRating.dataset.value);
-        }
-
-        if (notes.trim()) {
-            checkInData.notes[anchor] = notes.trim();
-        }
-    });
-
-    // Try database save first, then localStorage as fallback
-    let savedToDatabase = false;
-    let savedToLocalStorage = false;
-
-    try {
-        // Attempt database save
-        if (window.databaseManager && typeof window.databaseManager.saveCheckIn === 'function') {
-            console.log('Attempting database save...', checkInData);
-            await window.databaseManager.saveCheckIn(checkInData);
-            savedToDatabase = true;
-            console.log('✅ Database save successful');
-        }
-    } catch (error) {
-        console.warn('Database save failed, using localStorage fallback:', error);
-    }
-
-    try {
-        // Always save to localStorage as backup/fallback
-        const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
-        allCheckIns[today] = checkInData;
-        localStorage.setItem('dailyCheckIns', JSON.stringify(allCheckIns));
-        savedToLocalStorage = true;
-        console.log('✅ localStorage save successful');
-    } catch (error) {
-        console.error('localStorage save failed:', error);
-    }
-
-    // Show appropriate success message
-    if (savedToDatabase && savedToLocalStorage) {
-        showNotification('Daily check-in saved successfully! ✨ (Database + Backup)', 'success');
-    } else if (savedToDatabase) {
-        showNotification('Daily check-in saved to database! ✨', 'success');
-    } else if (savedToLocalStorage) {
-        showNotification('Daily check-in saved locally! 📱 (Offline mode)', 'success');
-    } else {
-        showNotification('Error saving check-in. Please try again.', 'error');
-        return; // Don't update recommendations if save failed completely
-    }
-
-    // Update recommendations
-    generateRecommendations();
-}
-
-        function clearCheckIn() {
-            if (confirm('Are you sure you want to clear all ratings and notes?')) {
-                // Clear all selected ratings
-                document.querySelectorAll('.rating-btn.selected').forEach(btn => {
-                    btn.classList.remove('selected');
-                });
-                
-                // Clear all notes
-                document.querySelectorAll('.anchor-notes').forEach(textarea => {
-                    textarea.value = '';
-                });
-                
-                // Reset progress circles
-                document.querySelectorAll('.circle-progress').forEach(circle => {
-                    circle.dataset.rating = '0';
-                    circle.querySelector('.anchor-rating').textContent = '-';
-                    circle.style.opacity = '0.1';
-                });
-                
-                updateOverallWellness();
-                generateRecommendations();
-                
-                showNotification('Check-in cleared', 'info');
-            }
-        }
-
-        function loadDailyRatings() {
-            const today = new Date().toISOString().split('T')[0];
-            const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
-            const todayData = allCheckIns[today];
-            
-            if (todayData) {
-                // Load ratings
-                Object.entries(todayData.ratings).forEach(([anchor, rating]) => {
-                    const anchorInput = document.querySelector(`.anchor-input[data-anchor="${anchor}"]`);
-                    if (anchorInput) {
-                        const ratingBtn = anchorInput.querySelector(`[data-value="${rating}"]`);
-                        
-                        if (ratingBtn) {
-                            ratingBtn.classList.add('selected');
-                            updateAnchorProgress(anchor, rating);
-                        }
-                    }
-                });
-                
-                // Load notes
-                Object.entries(todayData.notes).forEach(([anchor, note]) => {
-                    const anchorInput = document.querySelector(`.anchor-input[data-anchor="${anchor}"]`);
-                    if (anchorInput) {
-                        const notesField = anchorInput.querySelector('.anchor-notes');
-                        notesField.value = note;
-                    }
-                });
-            }
-        }
-
-        function generateRecommendations() {
-            const recommendationsContainer = document.getElementById('focus-recommendations');
-            const circles = document.querySelectorAll('.circle-progress');
-            
-            let ratings = {};
-            let hasRatings = false;
-            
-            circles.forEach(circle => {
-                const anchor = circle.closest('.anchor-circle').dataset.anchor;
-                const rating = parseInt(circle.dataset.rating);
-                if (rating > 0) {
-                    ratings[anchor] = rating;
-                    hasRatings = true;
-                }
-            });
-            
-            if (!hasRatings) {
-                recommendationsContainer.innerHTML = '<p class="focus-message">Complete your daily check-in to receive personalized recommendations.</p>';
-                return;
-            }
-            
-            // Find lowest rated anchor(s)
-            const lowestRating = Math.min(...Object.values(ratings));
-            const needsAttention = Object.entries(ratings)
-                .filter(([anchor, rating]) => rating === lowestRating)
-                .map(([anchor]) => anchor);
-            
-            let recommendations = [];
-            
-            // Generate specific recommendations
-            needsAttention.forEach(anchor => {
-                const recommendation = getAnchorRecommendation(anchor, lowestRating);
-                if (recommendation) {
-                    recommendations.push(recommendation);
-                }
-            });
-            
-            // Display recommendations
-            if (recommendations.length > 0) {
-                recommendationsContainer.innerHTML = recommendations.map(rec => `
-                    <div class="focus-recommendation">
-                        <h4>${rec.title}</h4>
-                        <p>${rec.description}</p>
-                        ${rec.action ? `<p><strong>Try this:</strong> ${rec.action}</p>` : ''}
-                    </div>
-                `).join('');
-            } else {
-                recommendationsContainer.innerHTML = '<p class="focus-message">Great work! All your anchors are showing strength today.</p>';
-            }
-        }
-
-        function getAnchorRecommendation(anchor, rating) {
-            const recommendations = {
-                physical: {
-                    title: '🧭 Physical Anchor Needs Attention',
-                    description: 'Your body is asking for care and attention today.',
-                    action: rating <= 2 ? 
-                        'Take 5 deep breaths, drink a glass of water, and do 3 gentle stretches.' :
-                        'Try a short walk or some light movement to reconnect with your body.'
+        // Dashboard initialization - only runs if authenticated
+        function initializeAuthenticatedDashboard() {
+            // Simulated client access data - in production, this would come from server/coach assignments
+            const clientModuleAccess = {
+                fiveAnchors: {
+                    physical: { guide: true, webTool: false },
+                    mental: { guide: false, webTool: false },
+                    emotional: { guide: false, webTool: false },
+                    spiritual: { guide: false, webTool: false },
+                    relational: { guide: false, webTool: false }
                 },
-                mental: {
-                    title: '👓 Mental Anchor Needs Clarity',
-                    description: 'Your mind could use some clearing and focus.',
-                    action: rating <= 2 ? 
-                        'Write down 3 things that feel overwhelming, then identify one small action for each.' :
-                        'Take 10 minutes to organize your thoughts or practice mindfulness.'
+                discernmentTools: {
+                    thoughtRefiner: { unlocked: true },
+                    beliefThreader: { unlocked: false },
+                    echoEraser: { unlocked: false },
+                    forgivenessFilter: { unlocked: false },
+                    connectionCalibrator: { unlocked: false }
                 },
-                emotional: {
-                    title: '🪣 Emotional Anchor Needs Support',
-                    description: 'Your emotional well-being deserves attention today.',
-                    action: rating <= 2 ? 
-                        'Acknowledge how you\'re feeling without judgment and consider reaching out to someone who cares.' :
-                        'Practice self-compassion and do something nurturing for yourself.'
-                },
-                spiritual: {
-                    title: '🕊️ Spiritual Anchor Needs Connection',
-                    description: 'Your spiritual foundation could use strengthening.',
-                    action: rating <= 2 ? 
-                        'Spend 5 minutes in prayer, meditation, or reading something meaningful.' :
-                        'Take a moment to reflect on what gives your life purpose and meaning.'
-                },
-                relational: {
-                    title: '🌐 Relational Anchor Needs Care',
-                    description: 'Your connections with others need attention.',
-                    action: rating <= 2 ? 
-                        'Reach out to one person you care about, even just to say hello.' :
-                        'Consider how you can show appreciation to someone important in your life.'
+                coachingPackage: {
+                    type: '12-week',
+                    hasDiscernmentAccess: true
                 }
             };
-            
-            return recommendations[anchor];
-        }
 
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: 6px;
-                z-index: 1001;
-                animation: slideIn 0.3s ease;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
+            // Module definitions matching coach dashboard
+            const anchorModules = [
+                {
+                    key: 'physical',
+                    title: 'Physical Anchor',
+                    subtitle: 'A Grounding Compass',
+                    icon: '🧭',
+                    description: '9-step body awareness and nervous system regulation process. Creates your physical "home base" for returning when overwhelmed.',
+                    features: ['Body Awareness', 'Regulation Techniques', 'Pattern Recognition'],
+                    guideUrl: '../anchor-guides/physical-anchor-guide.html',
+                    toolUrl: '../anchor-tools/physical-anchor.html',
+                    color: 'var(--physical-color)'
+                },
+                {
+                    key: 'mental',
+                    title: 'Mental Anchor',
+                    subtitle: 'The Clarity Lens',
+                    icon: '👓',
+                    description: '7-step process to filter mental noise and see truth clearly. Separates grounded thoughts from fear-driven narratives.',
+                    features: ['Mental Filtering', 'Perspective Shifting', 'Control Assessment'],
+                    guideUrl: '../anchor-guides/mental-anchor-guide.html',
+                    toolUrl: '../anchor-tools/mental-anchor.html',
+                    color: 'var(--mental-color)'
+                },
+                {
+                    key: 'emotional',
+                    title: 'Emotional Anchor',
+                    subtitle: 'The Stability Well',
+                    icon: '🪣',
+                    description: '8-step journey from emotional reactivity to conscious response. Transforms overwhelming feelings into wise action through your body\'s early warning system.',
+                    features: ['Emotional Processing', 'Early Warning System', 'Response Choice'],
+                    guideUrl: '../anchor-guides/emotional-anchor-guide.html',
+                    toolUrl: '../anchor-tools/emotional-anchor.html',
+                    color: 'var(--emotional-color)'
+                },
+                {
+                    key: 'spiritual',
+                    title: 'Spiritual Anchor',
+                    subtitle: 'The Communion Bridge',
+                    icon: '🕊️',
+                    description: '7-step spiritual grounding through divine connection, personal calling, and eternal foundation. Non-denominational approach.',
+                    features: ['Spiritual Grounding', 'Calling Identification', 'Practice Building'],
+                    guideUrl: '../anchor-guides/spiritual-anchor-guide.html',
+                    toolUrl: '../anchor-tools/spiritual-anchor.html',
+                    color: 'var(--spiritual-color)'
+                },
+                {
+                    key: 'relational',
+                    title: 'Relational Anchor',
+                    subtitle: 'The Harmony Web',
+                    icon: '🌐',
+                    description: '8-step journey to build authentic connections from grounded center. Boundary wisdom and community building strategies.',
+                    features: ['Relationship Assessment', 'Boundary Setting', 'Community Building'],
+                    guideUrl: '../anchor-guides/relational-anchor-guide.html',
+                    toolUrl: '../anchor-tools/relational-anchor.html',
+                    color: 'var(--relational-color)'
+                }
+            ];
 
-        // Journal functionality
-        class JournalManager {
-            constructor() {
-                this.storageKey = 'cm_journal_v1';
-                this.entries = this.loadEntries();
-                this.init();
+            const discernmentModules = [
+                {
+                    key: 'thoughtRefiner',
+                    title: 'Thought Refiner',
+                    subtitle: 'Purifying Thoughts at the Source',
+                    icon: '🔍',
+                    description: '7-step sophisticated mental filtering system that examines thoughts for truth, clarity, and spiritual alignment.',
+                    features: ['Mental Purification', 'Truth Detection', 'Clarity Enhancement'],
+                    toolUrl: '../discernment-tools/thought-refiner.html'
+                },
+                {
+                    key: 'beliefThreader',
+                    title: 'Belief Threader',
+                    subtitle: 'Examining Crystallized Thoughts',
+                    icon: '🧵',
+                    description: '6-step journey through crystallized thought patterns. Explores how thoughts became hardened beliefs.',
+                    features: ['Belief Archaeology', 'Trinity Integration', 'Truth Threading'],
+                    toolUrl: '../discernment-tools/belief-threader.html'
+                },
+                {
+                    key: 'echoEraser',
+                    title: 'Echo Eraser',
+                    subtitle: 'Clearing Energetic Aftermath',
+                    icon: '🌊',
+                    description: '8-step advanced integration process for clearing lingering emotional and spiritual residue.',
+                    features: ['Echo Integration', 'Sitting Practice', 'Truth Planting'],
+                    toolUrl: '../discernment-tools/echo-eraser.html'
+                },
+                {
+                    key: 'forgivenessFilter',
+                    title: 'Forgiveness Filter',
+                    subtitle: 'Releasing Burdens with Grace',
+                    icon: '🪶',
+                    description: '7-step journey to process hurt and find authentic forgiveness. Separates honoring pain from carrying burdens.',
+                    features: ['Pain Processing', 'Burden Release', 'Freedom Creation'],
+                    toolUrl: '../discernment-tools/forgiveness-filter.html'
+                },
+                {
+                    key: 'connectionCalibrator',
+                    title: 'Connection Calibrator',
+                    subtitle: 'Balancing Relationship Dynamics',
+                    icon: '🌍',
+                    description: '8-step relationship calibration tool. Navigate from dependence to independence to healthy interdependence.',
+                    features: ['Relationship Assessment', 'Boundary Calibration', 'Connection Balance'],
+                    toolUrl: '../discernment-tools/connection-calibrator-part1.html'
+                }
+            ];
+
+            // Theme Management
+            function toggleTheme() {
+                const body = document.body;
+                const themeIcon = document.getElementById('theme-icon');
+                
+                if (body.getAttribute('data-theme') === 'dark') {
+                    body.removeAttribute('data-theme');
+                    themeIcon.textContent = '🌙';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.setAttribute('data-theme', 'dark');
+                    themeIcon.textContent = '☀️';
+                    localStorage.setItem('theme', 'dark');
+                }
             }
-            
-            init() {
-                this.setupEventListeners();
-                this.setDefaultDate();
-                this.renderRecentEntries();
+
+            function loadTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                const themeIcon = document.getElementById('theme-icon');
+                
+                if (savedTheme === 'dark') {
+                    document.body.setAttribute('data-theme', 'dark');
+                    themeIcon.textContent = '☀️';
+                } else {
+                    themeIcon.textContent = '🌙';
+                }
             }
-            
-            setupEventListeners() {
-                const saveBtn = document.querySelector('.save-journal-btn');
-                if (saveBtn) {
-                    saveBtn.addEventListener('click', () => this.saveEntry());
+
+            // Navigation Management
+            function showSection(sectionName) {
+                const sections = document.querySelectorAll('.section');
+                sections.forEach(section => section.classList.remove('active'));
+                
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => item.classList.remove('active'));
+                
+                const targetSection = document.getElementById(sectionName);
+                if (targetSection) {
+                    targetSection.classList.add('active');
                 }
                 
-                const clearBtn = document.querySelector('.clear-journal-btn');
-                if (clearBtn) {
-                    clearBtn.addEventListener('click', () => this.clearForm());
+                const activeNavItem = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+                if (activeNavItem) {
+                    activeNavItem.classList.add('active');
                 }
                 
-                const ratingBtns = document.querySelectorAll('.journal-rating');
-                ratingBtns.forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        ratingBtns.forEach(b => b.classList.remove('selected'));
-                        e.target.classList.add('selected');
-                    });
-                });
-            }
-            
-            setDefaultDate() {
-                const dateInput = document.getElementById('journal-date');
-                if (dateInput) {
-                    const today = new Date().toISOString().split('T')[0];
-                    dateInput.value = today;
+                localStorage.setItem('currentSection', sectionName);
+
+                // Load specific section content
+                if (sectionName === 'anchors') {
+                    loadAnchorTools();
+                } else if (sectionName === 'discernment') {
+                    loadDiscernmentTools();
                 }
             }
-            
-            saveEntry() {
-                const dateInput = document.getElementById('journal-date');
-                const selectedRating = document.querySelector('.journal-rating.selected');
-                const thoughtPattern = document.getElementById('thought-pattern');
-                const practiceUsed = document.getElementById('practice-used');
-                const reflectionText = document.getElementById('reflection-text');
-                
-                // Validation
-                if (!dateInput.value) {
-                    showNotification('Please select a date', 'error');
-                    return;
+
+            function loadSection() {
+                const savedSection = localStorage.getItem('currentSection');
+                if (savedSection && document.getElementById(savedSection)) {
+                    showSection(savedSection);
+                } else {
+                    showSection('dashboard');
                 }
-                
-                if (!selectedRating) {
-                    showNotification('Please rate your overall feeling', 'error');
-                    return;
-                }
-                
-                if (!reflectionText.value.trim()) {
-                    showNotification('Please write a reflection', 'error');
-                    return;
-                }
-                
-                // Create entry
-                const entry = {
-                    dateISO: dateInput.value,
-                    rating: parseInt(selectedRating.dataset.value),
-                    primaryThoughtPattern: thoughtPattern.value,
-                    practiceUsed: practiceUsed.value,
-                    reflection: reflectionText.value.trim(),
-                    timestamp: new Date().toISOString()
-                };
-                
-                // Add to entries
-                this.entries.unshift(entry);
-                
-                // Keep only last 30 entries
-                if (this.entries.length > 30) {
-                    this.entries = this.entries.slice(0, 30);
-                }
-                
-                // Save to localStorage
-                this.saveEntries();
-                
-                // Show success
-                showNotification('Journal entry saved successfully!', 'success');
-                
-                // Clear form
-                this.clearForm();
-                
-                // Refresh display
-                this.renderRecentEntries();
             }
-            
-            clearForm() {
-                document.querySelectorAll('.journal-rating').forEach(btn => {
-                    btn.classList.remove('selected');
-                });
-                
-                document.getElementById('thought-pattern').value = '';
-                document.getElementById('practice-used').value = '';
-                document.getElementById('reflection-text').value = '';
-                
-                this.setDefaultDate();
-            }
-            
-            loadEntries() {
-                const stored = localStorage.getItem(this.storageKey);
-                return stored ? JSON.parse(stored) : [];
-            }
-            
-            saveEntries() {
-                localStorage.setItem(this.storageKey, JSON.stringify(this.entries));
-            }
-            
-            renderRecentEntries() {
-                const container = document.getElementById('journal-entries-list');
+
+            // Module Access Control
+            function loadAnchorTools() {
+                const container = document.getElementById('anchor-tools-grid');
                 if (!container) return;
-                
-                if (this.entries.length === 0) {
-                    container.innerHTML = '<p class="focus-message">Your recent journal entries will appear here.</p>';
-                    return;
-                }
-                
-                const recentEntries = this.entries.slice(0, 5);
-                
-                container.innerHTML = recentEntries.map(entry => {
-                    const date = new Date(entry.dateISO).toLocaleDateString();
-                    const thoughtPattern = entry.primaryThoughtPattern || 'Not specified';
-                    const practice = entry.practiceUsed || 'None specified';
+
+                container.innerHTML = anchorModules.map(module => {
+                    const access = clientModuleAccess.fiveAnchors[module.key];
+                    const hasGuideAccess = access.guide;
+                    const hasToolAccess = access.webTool;
+                    const hasAnyAccess = hasGuideAccess || hasToolAccess;
+
+                    let accessIndicator = '';
+                    let cardClass = '';
+                    let content = '';
                     
+                    if (hasAnyAccess) {
+                        // Unlocked content - show full details
+                        if (hasGuideAccess && hasToolAccess) {
+                            accessIndicator = '<div class="access-indicator access-unlocked">✅ Full Access - Guide & Tool Unlocked</div>';
+                        } else {
+                            const unlockedItems = [];
+                            if (hasGuideAccess) unlockedItems.push('Guide');
+                            if (hasToolAccess) unlockedItems.push('Tool');
+                            accessIndicator = `<div class="access-indicator access-partial">🔓 Partial Access - ${unlockedItems.join(' & ')} Unlocked</div>`;
+                        }
+                        
+                        content = `
+                            <div class="tool-header">
+                                <span class="tool-icon">${module.icon}</span>
+                                <div class="tool-info">
+                                    <h4 class="tool-title">${module.title}</h4>
+                                    <p class="tool-subtitle">${module.subtitle}</p>
+                                </div>
+                            </div>
+                            <p class="tool-description">${module.description}</p>
+                            <div class="tool-features">
+                                ${module.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                            </div>
+                            ${accessIndicator}
+                            ${hasGuideAccess ? `<a href="${module.guideUrl}" target="_blank" class="tool-button" style="background: ${module.color}; margin-bottom: 0.5rem;">
+                                <span>📖 Open Guide (PDF)</span>
+                                <span class="button-arrow">→</span>
+                            </a>` : ''}
+                            ${hasToolAccess ? `<a href="${module.toolUrl}" target="_blank" class="tool-button" style="background: ${module.color};">
+                                <span>🔧 Use Web Tool</span>
+                                <span class="button-arrow">→</span>
+                            </a>` : ''}
+                        `;
+                    } else {
+                        // Locked content - show minimal info with lock message
+                        cardClass = 'locked';
+                        accessIndicator = '<div class="access-indicator access-locked">🔒 Locked - Contact your coach to unlock</div>';
+                        
+                        content = `
+                            <div class="tool-header">
+                                <span class="tool-icon">${module.icon}</span>
+                                <div class="tool-info">
+                                    <h4 class="tool-title">${module.title}</h4>
+                                    <p class="tool-subtitle">${module.subtitle}</p>
+                                </div>
+                            </div>
+                            <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+                                <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">Module Locked</h4>
+                                <p style="color: var(--locked-color);">Your coach will unlock this when you're ready</p>
+                            </div>
+                            ${accessIndicator}
+                            <button class="tool-button locked">
+                                <span>🔒 Locked by Coach</span>
+                                <span class="button-arrow">⏸</span>
+                            </button>
+                        `;
+                    }
+
                     return `
-                        <div class="journal-entry">
-                            <div class="entry-header">
-                                <span class="entry-date">${date}</span>
-                                <span class="entry-rating">${entry.rating}/5</span>
-                            </div>
-                            <div class="entry-meta">
-                                <strong>Pattern:</strong> ${thoughtPattern} | <strong>Practice:</strong> ${practice}
-                            </div>
-                            <div class="entry-reflection">${entry.reflection}</div>
+                        <div class="tool-card ${cardClass}">
+                            ${content}
                         </div>
                     `;
                 }).join('');
             }
-        }
 
-        // Initialize
-        
-        loadTheme();
-        loadSection();
-        initializeDashboard();
-        
-        // Initialize journal when reflect section is active
-        setTimeout(() => {
-            const reflectSection = document.getElementById('reflect');
-            if (reflectSection && reflectSection.classList.contains('active')) {
-                if (!window.journalManager) {
-                    window.journalManager = new JournalManager();
+            function loadDiscernmentTools() {
+                const container = document.getElementById('discernment-tools-grid');
+                if (!container) return;
+
+                // Check if client has access to discernment tools (12-week package only)
+                if (!clientModuleAccess.coachingPackage.hasDiscernmentAccess) {
+                    container.innerHTML = `
+                        <div class="tool-card locked" style="grid-column: 1 / -1;">
+                            <div class="tool-header">
+                                <span class="tool-icon">🔍</span>
+                                <div class="tool-info">
+                                    <h4 class="tool-title">Advanced Discernment Tools</h4>
+                                    <p class="tool-subtitle">12-Week Program Content</p>
+                                </div>
+                            </div>
+                            <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">🎓</div>
+                                <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">12-Week Package Required</h4>
+                                <p style="color: var(--locked-color);">Discernment Tools are available as part of the 12-week coaching program. Contact your coach to learn more about upgrading your package.</p>
+                            </div>
+                            <div class="access-indicator access-locked">🎓 Requires 12-Week Coaching Package</div>
+                            <button class="tool-button locked">
+                                <span>Contact Coach to Upgrade</span>
+                                <span class="button-arrow">📞</span>
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Client has 12-week access, show individual tools based on coach permissions
+                container.innerHTML = discernmentModules.map(module => {
+                    const access = clientModuleAccess.discernmentTools[module.key];
+                    const hasAccess = access.unlocked;
+
+                    let accessIndicator = '';
+                    let cardClass = '';
+                    let content = '';
+                    
+                    if (hasAccess) {
+                        // Unlocked content - show full details
+                        accessIndicator = '<div class="access-indicator access-unlocked">✅ Unlocked by Coach</div>';
+                        
+                        content = `
+                            <div class="tool-header">
+                                <span class="tool-icon">${module.icon}</span>
+                                <div class="tool-info">
+                                    <h4 class="tool-title">${module.title}</h4>
+                                    <p class="tool-subtitle">${module.subtitle}</p>
+                                </div>
+                            </div>
+                            <p class="tool-description">${module.description}</p>
+                            <div class="tool-features">
+                                ${module.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                            </div>
+                            ${accessIndicator}
+                            <a href="${module.toolUrl}" target="_blank" class="tool-button" style="background: var(--discernment-color);">
+                                <span>Begin ${module.title}</span>
+                                <span class="button-arrow">→</span>
+                            </a>
+                        `;
+                    } else {
+                        // Locked content - show minimal info with lock message
+                        cardClass = 'locked';
+                        accessIndicator = '<div class="access-indicator access-locked">🔒 Locked - Your coach will unlock when ready</div>';
+                        
+                        content = `
+                            <div class="tool-header">
+                                <span class="tool-icon">${module.icon}</span>
+                                <div class="tool-info">
+                                    <h4 class="tool-title">${module.title}</h4>
+                                    <p class="tool-subtitle">${module.subtitle}</p>
+                                </div>
+                            </div>
+                            <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+                                <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">Tool Locked</h4>
+                                <p style="color: var(--locked-color);">Your coach will unlock this based on your session progress</p>
+                            </div>
+                            ${accessIndicator}
+                            <button class="tool-button locked">
+                                <span>🔒 Locked by Coach</span>
+                                <span class="button-arrow">⏸</span>
+                            </button>
+                        `;
+                    }
+
+                    return `
+                        <div class="tool-card ${cardClass}">
+                            ${content}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Dashboard Initialization
+            function initializeDashboard() {
+                updateCurrentDate();
+                loadDailyRatings();
+                setupRatingButtons();
+                generateRecommendations();
+            }
+
+            function updateCurrentDate() {
+                const now = new Date();
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                };
+                const dateElement = document.getElementById('current-date');
+                if (dateElement) {
+                    dateElement.textContent = now.toLocaleDateString('en-US', options);
                 }
             }
-        }, 500);
-    });
-}).catch(error => {
-    console.error('Error loading authentication:', error);
-    window.location.href = './auth.html';
-});
-        document.addEventListener('DOMContentLoaded', function() {
-            loadTheme();
-            loadSection();
-            initializeDashboard();
-            
-            // Initialize journal when reflect section is active
-            setTimeout(() => {
-                const reflectSection = document.getElementById('reflect');
-                if (reflectSection && reflectSection.classList.contains('active')) {
-                    if (!window.journalManager) {
-                        window.journalManager = new JournalManager();
+
+            function setupRatingButtons() {
+                const ratingButtons = document.querySelectorAll('.rating-btn');
+                
+                ratingButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const anchorInput = this.closest('.anchor-input');
+                        if (!anchorInput) return;
+                        
+                        const anchor = anchorInput.dataset.anchor;
+                        const value = parseInt(this.dataset.value);
+                        
+                        // Remove selected class from siblings
+                        const siblings = anchorInput.querySelectorAll('.rating-btn');
+                        siblings.forEach(btn => btn.classList.remove('selected'));
+                        
+                        // Add selected class to clicked button
+                        this.classList.add('selected');
+                        
+                        // Update progress circle
+                        updateAnchorProgress(anchor, value);
+                        
+                        // Generate new recommendations
+                        generateRecommendations();
+                    });
+                });
+            }
+
+            function updateAnchorProgress(anchor, rating) {
+                const circle = document.querySelector(`.anchor-circle[data-anchor="${anchor}"] .circle-progress`);
+                if (!circle) return;
+                
+                const ratingDisplay = circle.querySelector('.anchor-rating');
+                
+                circle.dataset.rating = rating;
+                if (ratingDisplay) {
+                    ratingDisplay.textContent = rating;
+                }
+                
+                // Calculate opacity based on rating (0.2 to 1.0)
+                const opacity = rating > 0 ? (rating / 5) * 0.8 + 0.2 : 0.1;
+                circle.style.opacity = opacity;
+                
+                updateOverallWellness();
+            }
+
+            function updateOverallWellness() {
+                const circles = document.querySelectorAll('.circle-progress');
+                let totalRating = 0;
+                let ratedCount = 0;
+                
+                circles.forEach(circle => {
+                    const rating = parseInt(circle.dataset.rating);
+                    if (rating > 0) {
+                        totalRating += rating;
+                        ratedCount++;
+                    }
+                });
+                
+                const overallRatingElement = document.getElementById('overall-rating');
+                const wellnessFill = document.querySelector('.wellness-fill');
+                
+                if (overallRatingElement && wellnessFill) {
+                    if (ratedCount === 0) {
+                        overallRatingElement.textContent = 'Not Rated';
+                        wellnessFill.style.width = '0%';
+                    } else {
+                        const average = totalRating / ratedCount;
+                        const percentage = (average / 5) * 100;
+                        
+                        overallRatingElement.textContent = `${average.toFixed(1)}/5`;
+                        wellnessFill.style.width = `${percentage}%`;
                     }
                 }
-            }, 500);
-        });
+            }
 
-        // Initialize journal when section becomes active
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('[onclick*="reflect"]')) {
+            async function saveCheckIn() {
+                const today = new Date().toISOString().split('T')[0];
+                const checkInData = {
+                    date: today,
+                    ratings: {},
+                    notes: {}
+                };
+
+                // Collect ratings
+                const anchorInputs = document.querySelectorAll('.anchor-input');
+                anchorInputs.forEach(input => {
+                    const anchor = input.dataset.anchor;
+                    const selectedRating = input.querySelector('.rating-btn.selected');
+                    const notes = input.querySelector('.anchor-notes').value;
+
+                    if (selectedRating) {
+                        checkInData.ratings[anchor] = parseInt(selectedRating.dataset.value);
+                    }
+
+                    if (notes.trim()) {
+                        checkInData.notes[anchor] = notes.trim();
+                    }
+                });
+
+                // Try database save first, then localStorage as fallback
+                let savedToDatabase = false;
+                let savedToLocalStorage = false;
+
+                try {
+                    // Attempt database save
+                    if (window.databaseManager && typeof window.databaseManager.saveCheckIn === 'function') {
+                        console.log('Attempting database save...', checkInData);
+                        await window.databaseManager.saveCheckIn(checkInData);
+                        savedToDatabase = true;
+                        console.log('✅ Database save successful');
+                    }
+                } catch (error) {
+                    console.warn('Database save failed, using localStorage fallback:', error);
+                }
+
+                try {
+                    // Always save to localStorage as backup/fallback
+                    const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+                    allCheckIns[today] = checkInData;
+                    localStorage.setItem('dailyCheckIns', JSON.stringify(allCheckIns));
+                    savedToLocalStorage = true;
+                    console.log('✅ localStorage save successful');
+                } catch (error) {
+                    console.error('localStorage save failed:', error);
+                }
+
+                // Show appropriate success message
+                if (savedToDatabase && savedToLocalStorage) {
+                    showNotification('Daily check-in saved successfully! ✨ (Database + Backup)', 'success');
+                } else if (savedToDatabase) {
+                    showNotification('Daily check-in saved to database! ✨', 'success');
+                } else if (savedToLocalStorage) {
+                    showNotification('Daily check-in saved locally! 📱 (Offline mode)', 'success');
+                } else {
+                    showNotification('Error saving check-in. Please try again.', 'error');
+                    return; // Don't update recommendations if save failed completely
+                }
+
+                // Update recommendations
+                generateRecommendations();
+            }
+
+            function clearCheckIn() {
+                if (confirm('Are you sure you want to clear all ratings and notes?')) {
+                    // Clear all selected ratings
+                    document.querySelectorAll('.rating-btn.selected').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    
+                    // Clear all notes
+                    document.querySelectorAll('.anchor-notes').forEach(textarea => {
+                        textarea.value = '';
+                    });
+                    
+                    // Reset progress circles
+                    document.querySelectorAll('.circle-progress').forEach(circle => {
+                        circle.dataset.rating = '0';
+                        const ratingDisplay = circle.querySelector('.anchor-rating');
+                        if (ratingDisplay) {
+                            ratingDisplay.textContent = '-';
+                        }
+                        circle.style.opacity = '0.1';
+                    });
+                    
+                    updateOverallWellness();
+                    generateRecommendations();
+                    
+                    showNotification('Check-in cleared', 'info');
+                }
+            }
+
+            function loadDailyRatings() {
+                const today = new Date().toISOString().split('T')[0];
+                const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+                const todayData = allCheckIns[today];
+                
+                if (todayData) {
+                    // Load ratings
+                    Object.entries(todayData.ratings).forEach(([anchor, rating]) => {
+                        const anchorInput = document.querySelector(`.anchor-input[data-anchor="${anchor}"]`);
+                        if (anchorInput) {
+                            const ratingBtn = anchorInput.querySelector(`[data-value="${rating}"]`);
+                            
+                            if (ratingBtn) {
+                                ratingBtn.classList.add('selected');
+                                updateAnchorProgress(anchor, rating);
+                            }
+                        }
+                    });
+                    
+                    // Load notes
+                    Object.entries(todayData.notes).forEach(([anchor, note]) => {
+                        const anchorInput = document.querySelector(`.anchor-input[data-anchor="${anchor}"]`);
+                        if (anchorInput) {
+                            const notesField = anchorInput.querySelector('.anchor-notes');
+                            if (notesField) {
+                                notesField.value = note;
+                            }
+                        }
+                    });
+                }
+            }
+
+            function generateRecommendations() {
+                const recommendationsContainer = document.getElementById('focus-recommendations');
+                if (!recommendationsContainer) return;
+                
+                const circles = document.querySelectorAll('.circle-progress');
+                
+                let ratings = {};
+                let hasRatings = false;
+                
+                circles.forEach(circle => {
+                    const anchor = circle.closest('.anchor-circle').dataset.anchor;
+                    const rating = parseInt(circle.dataset.rating);
+                    if (rating > 0) {
+                        ratings[anchor] = rating;
+                        hasRatings = true;
+                    }
+                });
+                
+                if (!hasRatings) {
+                    recommendationsContainer.innerHTML = '<p class="focus-message">Complete your daily check-in to receive personalized recommendations.</p>';
+                    return;
+                }
+                
+                // Find lowest rated anchor(s)
+                const lowestRating = Math.min(...Object.values(ratings));
+                const needsAttention = Object.entries(ratings)
+                    .filter(([anchor, rating]) => rating === lowestRating)
+                    .map(([anchor]) => anchor);
+                
+                let recommendations = [];
+                
+                // Generate specific recommendations
+                needsAttention.forEach(anchor => {
+                    const recommendation = getAnchorRecommendation(anchor, lowestRating);
+                    if (recommendation) {
+                        recommendations.push(recommendation);
+                    }
+                });
+                
+                // Display recommendations
+                if (recommendations.length > 0) {
+                    recommendationsContainer.innerHTML = recommendations.map(rec => `
+                        <div class="focus-recommendation">
+                            <h4>${rec.title}</h4>
+                            <p>${rec.description}</p>
+                            ${rec.action ? `<p><strong>Try this:</strong> ${rec.action}</p>` : ''}
+                        </div>
+                    `).join('');
+                } else {
+                    recommendationsContainer.innerHTML = '<p class="focus-message">Great work! All your anchors are showing strength today.</p>';
+                }
+            }
+
+            function getAnchorRecommendation(anchor, rating) {
+                const recommendations = {
+                    physical: {
+                        title: '🧭 Physical Anchor Needs Attention',
+                        description: 'Your body is asking for care and attention today.',
+                        action: rating <= 2 ? 
+                            'Take 5 deep breaths, drink a glass of water, and do 3 gentle stretches.' :
+                            'Try a short walk or some light movement to reconnect with your body.'
+                    },
+                    mental: {
+                        title: '👓 Mental Anchor Needs Clarity',
+                        description: 'Your mind could use some clearing and focus.',
+                        action: rating <= 2 ? 
+                            'Write down 3 things that feel overwhelming, then identify one small action for each.' :
+                            'Take 10 minutes to organize your thoughts or practice mindfulness.'
+                    },
+                    emotional: {
+                        title: '🪣 Emotional Anchor Needs Support',
+                        description: 'Your emotional well-being deserves attention today.',
+                        action: rating <= 2 ? 
+                            'Acknowledge how you\'re feeling without judgment and consider reaching out to someone who cares.' :
+                            'Practice self-compassion and do something nurturing for yourself.'
+                    },
+                    spiritual: {
+                        title: '🕊️ Spiritual Anchor Needs Connection',
+                        description: 'Your spiritual foundation could use strengthening.',
+                        action: rating <= 2 ? 
+                            'Spend 5 minutes in prayer, meditation, or reading something meaningful.' :
+                            'Take a moment to reflect on what gives your life purpose and meaning.'
+                    },
+                    relational: {
+                        title: '🌐 Relational Anchor Needs Care',
+                        description: 'Your connections with others need attention.',
+                        action: rating <= 2 ? 
+                            'Reach out to one person you care about, even just to say hello.' :
+                            'Consider how you can show appreciation to someone important in your life.'
+                    }
+                };
+                
+                return recommendations[anchor];
+            }
+
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 6px;
+                    z-index: 1001;
+                    animation: slideIn 0.3s ease;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                `;
+                
+                document.body.appendChild(notification);
+                
                 setTimeout(() => {
-                    if (!window.journalManager) {
-                        window.journalManager = new JournalManager();
-                    }
-                }, 100);
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
             }
-        });
 
-        // Add animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-// Authentication check before loading dashboard
-import('./js/supabase-config.js').then(({ authManager }) => {
-    document.addEventListener('DOMContentLoaded', async function() {
-        // Check if user is authenticated
-        const { session } = await authManager.getSession();
-        
-        if (!session) {
-            // Not logged in - redirect to auth page
-            window.location.href = './auth.html';
-            return;
-        }
-        
-        // User is authenticated - continue with existing initialization
-        loadTheme();
-        loadSection();
-        initializeDashboard();
-        
-        // Initialize journal when reflect section is active
-        setTimeout(() => {
-            const reflectSection = document.getElementById('reflect');
-            if (reflectSection && reflectSection.classList.contains('active')) {
-                if (!window.journalManager) {
-                    window.journalManager = new JournalManager();
+            // Journal functionality
+            class JournalManager {
+                constructor() {
+                    this.storageKey = 'cm_journal_v1';
+                    this.entries = this.loadEntries();
+                    this.init();
+                }
+                
+                init() {
+                    this.setupEventListeners();
+                    this.setDefaultDate();
+                    this.renderRecentEntries();
+                }
+                
+                setupEventListeners() {
+                    const saveBtn = document.querySelector('.save-journal-btn');
+                    if (saveBtn) {
+                        saveBtn.addEventListener('click', () => this.saveEntry());
+                    }
+                    
+                    const clearBtn = document.querySelector('.clear-journal-btn');
+                    if (clearBtn) {
+                        clearBtn.addEventListener('click', () => this.clearForm());
+                    }
+                    
+                    const ratingBtns = document.querySelectorAll('.journal-rating');
+                    ratingBtns.forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            ratingBtns.forEach(b => b.classList.remove('selected'));
+                            e.target.classList.add('selected');
+                        });
+                    });
+                }
+                
+                setDefaultDate() {
+                    const dateInput = document.getElementById('journal-date');
+                    if (dateInput) {
+                        const today = new Date().toISOString().split('T')[0];
+                        dateInput.value = today;
+                    }
+                }
+                
+                saveEntry() {
+                    const dateInput = document.getElementById('journal-date');
+                    const selectedRating = document.querySelector('.journal-rating.selected');
+                    const thoughtPattern = document.getElementById('thought-pattern');
+                    const practiceUsed = document.getElementById('practice-used');
+                    const reflectionText = document.getElementById('reflection-text');
+                    
+                    // Validation
+                    if (!dateInput.value) {
+                        showNotification('Please select a date', 'error');
+                        return;
+                    }
+                    
+                    if (!selectedRating) {
+                        showNotification('Please rate your overall feeling', 'error');
+                        return;
+                    }
+                    
+                    if (!reflectionText.value.trim()) {
+                        showNotification('Please write a reflection', 'error');
+                        return;
+                    }
+                    
+                    // Create entry
+                    const entry = {
+                        dateISO: dateInput.value,
+                        rating: parseInt(selectedRating.dataset.value),
+                        primaryThoughtPattern: thoughtPattern.value,
+                        practiceUsed: practiceUsed.value,
+                        reflection: reflectionText.value.trim(),
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    // Add to entries
+                    this.entries.unshift(entry);
+                    
+                    // Keep only last 30 entries
+                    if (this.entries.length > 30) {
+                        this.entries = this.entries.slice(0, 30);
+                    }
+                    
+                    // Save to localStorage
+                    this.saveEntries();
+                    
+                    // Show success
+                    showNotification('Journal entry saved successfully!', 'success');
+                    
+                    // Clear form
+                    this.clearForm();
+                    
+                    // Refresh display
+                    this.renderRecentEntries();
+                }
+                
+                clearForm() {
+                    document.querySelectorAll('.journal-rating').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    
+                    document.getElementById('thought-pattern').value = '';
+                    document.getElementById('practice-used').value = '';
+                    document.getElementById('reflection-text').value = '';
+                    
+                    this.setDefaultDate();
+                }
+                
+                loadEntries() {
+                    const stored = localStorage.getItem(this.storageKey);
+                    return stored ? JSON.parse(stored) : [];
+                }
+                
+                saveEntries() {
+                    localStorage.setItem(this.storageKey, JSON.stringify(this.entries));
+                }
+                
+                renderRecentEntries() {
+                    const container = document.getElementById('journal-entries-list');
+                    if (!container) return;
+                    
+                    if (this.entries.length === 0) {
+                        container.innerHTML = '<p class="focus-message">Your recent journal entries will appear here.</p>';
+                        return;
+                    }
+                    
+                    const recentEntries = this.entries.slice(0, 5);
+                    
+                    container.innerHTML = recentEntries.map(entry => {
+                        const date = new Date(entry.dateISO).toLocaleDateString();
+                        const thoughtPattern = entry.primaryThoughtPattern || 'Not specified';
+                        const practice = entry.practiceUsed || 'None specified';
+                        
+                        return `
+                            <div class="journal-entry">
+                                <div class="entry-header">
+                                    <span class="entry-date">${date}</span>
+                                    <span class="entry-rating">${entry.rating}/5</span>
+                                </div>
+                                <div class="entry-meta">
+                                    <strong>Pattern:</strong> ${thoughtPattern} | <strong>Practice:</strong> ${practice}
+                                </div>
+                                <div class="entry-reflection">${entry.reflection}</div>
+                            </div>
+                        `;
+                    }).join('');
                 }
             }
-        }, 500);
-    });
-}).catch(error => {
-    console.error('Error loading authentication:', error);
-    window.location.href = './auth.html';
-});
-    function openWelcomeModal() {
-    window.open('./welcome-modal.html', 'welcomeModal', 
-        'width=900,height=700,scrollbars=yes,resizable=yes,centerscreen=yes');
-}
-    // Test database connection (safe integration)
-async function testDatabaseConnection() {
-    try {
-        // Try to import the database manager
-        const { hybridDataManager } = await import('./js/supabase-config.js');
-        console.log('Database connection available');
-        return hybridDataManager;
-    } catch (error) {
-        console.log('Database not available, using localStorage only');
-        return null;
-    }
-}
 
-// Initialize database manager when page loads
-window.databaseManager = null;
-testDatabaseConnection().then(manager => {
-    window.databaseManager = manager;
-    if (manager) {
-        console.log('Database integration active');
-    }
-});
+            // Test database connection (safe integration)
+            async function testDatabaseConnection() {
+                try {
+                    // Try to import the database manager
+                    const { hybridDataManager } = await import('./js/supabase-config.js');
+                    console.log('Database connection available');
+                    return hybridDataManager;
+                } catch (error) {
+                    console.log('Database not available, using localStorage only');
+                    return null;
+                }
+            }
+
+            // Make functions available globally for onclick handlers
+            window.showSection = showSection;
+            window.toggleTheme = toggleTheme;
+            window.saveCheckIn = saveCheckIn;
+            window.clearCheckIn = clearCheckIn;
+            window.openWelcomeModal = function() {
+                window.open('./welcome-modal.html', 'welcomeModal', 
+                    'width=900,height=700,scrollbars=yes,resizable=yes,centerscreen=yes');
+            };
+
+            // Initialize database manager
+            window.databaseManager = null;
+            testDatabaseConnection().then(manager => {
+                window.databaseManager = manager;
+                if (manager) {
+                    console.log('Database integration active');
+                }
+            });
+
+            // Initialize everything when DOM is ready
+            document.addEventListener('DOMContentLoaded', function() {
+                loadTheme();
+                loadSection();
+                initializeDashboard();
+                
+                // Initialize journal when reflect section is active
+                setTimeout(() => {
+                    const reflectSection = document.getElementById('reflect');
+                    if (reflectSection && reflectSection.classList.contains('active')) {
+                        if (!window.journalManager) {
+                            window.journalManager = new JournalManager();
+                        }
+                    }
+                }, 500);
+            });
+
+            // Initialize journal when section becomes active
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('[onclick*="reflect"]')) {
+                    setTimeout(() => {
+                        if (!window.journalManager) {
+                            window.journalManager = new JournalManager();
+                        }
+                    }, 100);
+                }
+            });
+
+            // Add animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
     </script>
 </body>
 </html>
