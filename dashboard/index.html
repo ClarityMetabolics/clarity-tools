@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Five Anchors Dashboard</title>
+    <style>body { visibility: hidden !important; }</style>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -1377,33 +1378,7 @@
 <button class="welcome-guide" onclick="openWelcomeModal()">
     👋 Welcome Guide
 </button>
-    <script>
-        // IMMEDIATE SECURITY FIX - Hide content until authenticated
-        document.body.style.visibility = 'hidden';
-        
-        // Check authentication immediately
-        (async function() {
-            try {
-                const { createClient } = await import('./js/supabase-config.js');
-                const supabase = createClient();
-                const { data: { session } } = await supabase.auth.getSession();
-                
-                if (!session) {
-                    window.location.href = './auth.html';
-                    return;
-                }
-                
-                // User is authenticated - show content
-                document.body.style.visibility = 'visible';
-                
-            } catch (error) {
-                console.error('Auth error:', error);
-                window.location.href = './auth.html';
-            }
-        })();
-    </script>
-   
-
+    
     <script type="module">
         // Authentication check FIRST - before anything else
         import('./js/supabase-config.js').then(({ authManager }) => {
@@ -1415,6 +1390,7 @@
                 }
                 
                 // User is authenticated - initialize dashboard
+                document.body.style.visibility = 'visible';
                 initializeAuthenticatedDashboard();
             }).catch(error => {
                 console.error('Error checking authentication:', error);
