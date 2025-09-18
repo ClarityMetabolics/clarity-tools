@@ -1381,6 +1381,7 @@
     
     <script type="module">
         // Authentication check FIRST - before anything else
+        console.log('Starting authentication check');
         import('./js/supabase-config.js').then(({ authManager }) => {
             authManager.getSession().then(({ session }) => {
                 if (!session) {
@@ -1390,6 +1391,7 @@
                 }
                 
                 // User is authenticated - initialize dashboard
+                console.log('Authentication successful - showing dashboard');
                 document.body.style.visibility = 'visible';
                 initializeAuthenticatedDashboard();
             }).catch(error => {
