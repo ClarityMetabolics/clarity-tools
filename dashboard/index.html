@@ -1384,6 +1384,7 @@
         console.log('Starting authentication check');
         import('./js/supabase-config.js').then(({ authManager }) => {
             authManager.getSession().then(({ session }) => {
+                console.log('Session data:', session);
                 if (!session) {
                     // Not logged in - redirect immediately
                     window.location.href = './auth.html';
