@@ -1389,7 +1389,7 @@ import { hybridDataManager } from './js/supabase-config.js';
 
 // Daily check-in state
 let currentCheckIn = {
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toLocaleDateString('en-CA'),
     ratings: {},
     notes: {}
 };
@@ -1705,7 +1705,7 @@ async function saveCheckIn() {
 function clearCheckIn() {
     // Reset current check-in state
     currentCheckIn = {
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toLocaleDateString('en-CA'),
         ratings: {},
         notes: {}
     };
