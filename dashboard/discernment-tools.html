@@ -8,11 +8,6 @@
     <style>
         :root {
             /* Color System */
-            --physical-color: #7C8B60;
-            --mental-color: #B7AFA3;
-            --emotional-color: #C97D7D;
-            --spiritual-color: #B6B0C3;
-            --relational-color: #E8934A;
             --discernment-color: #7A94A8;
             
             /* Theme Variables - Light Mode */
@@ -26,9 +21,6 @@
             --card-border: #E5E5E5;
             --shadow: rgba(0, 0, 0, 0.1);
             --accent-color: #5A6C57;
-            --locked-color: #999;
-            --warning-color: #FF9800;
-            --success-color: #4CAF50;
         }
 
         [data-theme="dark"] {
@@ -75,12 +67,6 @@
             top: 0;
             z-index: 100;
             backdrop-filter: blur(10px);
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                position: static;
-            }
         }
 
         .header-content {
@@ -141,72 +127,32 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        /* Main Navigation */
-        .main-nav {
-            background: var(--nav-bg);
-            border-bottom: 1px solid var(--nav-border);
-            position: sticky;
-            top: 73px;
-            z-index: 99;
-        }
-
-        @media (max-width: 768px) {
-            .main-nav {
-                position: static;
-            }
-        }
-
-        .nav-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        .nav-menu {
-            display: flex;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .nav-menu::-webkit-scrollbar {
-            display: none;
-        }
-
-        .nav-item {
-            flex: 0 0 auto;
-            padding: 1rem 1.5rem;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-item:hover {
-            background: var(--nav-hover);
-        }
-
-        .nav-item.active {
-            border-bottom-color: var(--accent-color);
-            background: var(--nav-hover);
-        }
-
-        .nav-icon {
-            font-size: 1.2rem;
-        }
-
         /* Main Content */
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem 1rem;
-            min-height: calc(100vh - 250px);
+            min-height: calc(100vh - 200px);
         }
 
-        /* Section Headers */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: var(--nav-hover);
+            transform: translateX(-2px);
+        }
+
         .section-header {
             margin-bottom: 2rem;
             text-align: center;
@@ -224,23 +170,6 @@
             opacity: 0.8;
         }
 
-        /* Cards */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .card h3 {
-            font-family: 'Libre Baskerville', serif;
-            margin-bottom: 1rem;
-            color: var(--accent-color);
-        }
-
-        /* Discernment Tools Grid */
         .discernment-tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -255,22 +184,11 @@
             padding: 1.5rem;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px var(--shadow);
-            position: relative;
         }
 
         .tool-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 16px var(--shadow);
-        }
-
-        .tool-card.locked {
-            opacity: 0.6;
-            background: var(--nav-hover);
-        }
-
-        .tool-card.locked:hover {
-            transform: none;
-            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .tool-header {
@@ -337,9 +255,6 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border: none;
-            cursor: pointer;
-            margin-bottom: 0.5rem;
             background: var(--discernment-color);
         }
 
@@ -347,17 +262,6 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             opacity: 0.9;
-        }
-
-        .tool-button.locked {
-            background: var(--locked-color);
-            cursor: not-allowed;
-        }
-
-        .tool-button.locked:hover {
-            transform: none;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            opacity: 0.6;
         }
 
         .button-arrow {
@@ -369,81 +273,6 @@
             transform: translateX(4px);
         }
 
-        .tool-button.locked:hover .button-arrow {
-            transform: none;
-        }
-
-        .access-indicator {
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-
-        .access-unlocked {
-            background: rgba(76, 175, 80, 0.1);
-            color: #4CAF50;
-            border: 1px solid #4CAF50;
-        }
-
-        .access-locked {
-            background: rgba(153, 153, 153, 0.1);
-            color: var(--locked-color);
-            border: 1px solid var(--locked-color);
-        }
-
-        .access-restricted {
-            background: rgba(255, 152, 0, 0.1);
-            color: var(--warning-color);
-            border: 1px solid var(--warning-color);
-        }
-
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background: var(--nav-hover);
-            transform: translateX(-2px);
-        }
-
-        .data-source-banner {
-            background: #2196F3;
-            color: white;
-            padding: 0.75rem;
-            margin-bottom: 1.5rem;
-            border-radius: 6px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .data-source-banner.live {
-            background: #4CAF50;
-        }
-
-        .package-requirement {
-            background: rgba(255, 152, 0, 0.1);
-            border: 1px solid var(--warning-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .package-requirement h4 {
-            color: var(--warning-color);
-            margin-bottom: 0.5rem;
-        }
-
         /* Responsive Design */
         @media (max-width: 768px) {
             .header-content {
@@ -452,12 +281,10 @@
             
             .logo {
                 font-size: 1.4rem;
-                text-align: center;
             }
             
             .subtitle-container {
                 font-size: 0.9rem;
-                text-align: center;
                 flex-wrap: wrap;
                 justify-content: center;
             }
@@ -466,11 +293,6 @@
                 top: 0.5rem;
                 right: 0.5rem;
                 padding: 0.4rem 0.8rem;
-                font-size: 0.9rem;
-            }
-
-            .nav-item {
-                padding: 0.75rem 1rem;
                 font-size: 0.9rem;
             }
 
@@ -491,24 +313,6 @@
             .subtitle-container {
                 font-size: 0.8rem;
             }
-            
-            .nav-item .nav-text {
-                display: none;
-            }
-
-            .nav-item {
-                padding: 0.75rem;
-            }
-        }
-
-        /* Animation styles */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .tool-card {
-            animation: fadeIn 0.3s ease-in;
         }
     </style>
 </head>
@@ -527,38 +331,6 @@
         </div>
     </header>
 
-    <!-- Main Navigation -->
-    <nav class="main-nav">
-        <div class="nav-content">
-            <div class="nav-menu">
-                <div class="nav-item" onclick="location.href='index.html'">
-                    <span class="nav-icon">🏠</span>
-                    <span class="nav-text">Dashboard</span>
-                </div>
-                <div class="nav-item" onclick="location.href='my-progress.html'">
-                    <span class="nav-icon">📊</span>
-                    <span class="nav-text">My Progress</span>
-                </div>
-                <div class="nav-item" onclick="location.href='five-anchors.html'">
-                    <span class="nav-icon">⚓</span>
-                    <span class="nav-text">Five Anchors</span>
-                </div>
-                <div class="nav-item active">
-                    <span class="nav-icon">🔍</span>
-                    <span class="nav-text">Discernment Tools</span>
-                </div>
-                <div class="nav-item" onclick="location.href='reflect-reset.html'">
-                    <span class="nav-icon">🙏</span>
-                    <span class="nav-text">Reflect & Reset</span>
-                </div>
-                <div class="nav-item" onclick="location.href='crisis-support.html'">
-                    <span class="nav-icon">🆘</span>
-                    <span class="nav-text">Crisis Support</span>
-                </div>
-            </div>
-        </div>
-    </nav>
-
     <!-- Main Content -->
     <main class="main-content">
         <!-- Back Button -->
@@ -571,99 +343,116 @@
             <p class="section-subtitle">Advanced tools for spiritual discernment and clarity (12-Week Program)</p>
         </div>
 
-        <!-- Data Source Banner -->
-        <div id="data-source-banner" class="data-source-banner" style="display: none;">
-        </div>
+        <div class="discernment-tools-grid">
+            <!-- Thought Refiner -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <span class="tool-icon">🔍</span>
+                    <div class="tool-info">
+                        <h4 class="tool-title">Thought Refiner</h4>
+                        <p class="tool-subtitle">Purifying Thoughts at the Source</p>
+                    </div>
+                </div>
+                <p class="tool-description">7-step sophisticated mental filtering system that examines thoughts for truth, clarity, and spiritual alignment.</p>
+                <div class="tool-features">
+                    <span class="feature-tag">Mental Purification</span>
+                    <span class="feature-tag">Truth Detection</span>
+                    <span class="feature-tag">Clarity Enhancement</span>
+                </div>
+                <a href="../discernment-tools/thought-refiner.html" target="_blank" class="tool-button">
+                    <span>Begin Thought Refiner</span>
+                    <span class="button-arrow">→</span>
+                </a>
+            </div>
 
-        <!-- Package Requirement Notice -->
-        <div id="package-requirement" class="package-requirement" style="display: none;">
-            <h4>12-Week Coaching Package Required</h4>
-            <p>Discernment Tools are available as part of the 12-week coaching program. Contact your coach to learn more about upgrading your package.</p>
-        </div>
+            <!-- Belief Threader -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <span class="tool-icon">🧵</span>
+                    <div class="tool-info">
+                        <h4 class="tool-title">Belief Threader</h4>
+                        <p class="tool-subtitle">Examining Crystallized Thoughts</p>
+                    </div>
+                </div>
+                <p class="tool-description">6-step journey through crystallized thought patterns. Explores how thoughts became hardened beliefs.</p>
+                <div class="tool-features">
+                    <span class="feature-tag">Belief Archaeology</span>
+                    <span class="feature-tag">Trinity Integration</span>
+                    <span class="feature-tag">Truth Threading</span>
+                </div>
+                <a href="../discernment-tools/belief-threader.html" target="_blank" class="tool-button">
+                    <span>Begin Belief Threader</span>
+                    <span class="button-arrow">→</span>
+                </a>
+            </div>
 
-        <!-- Main Content Card -->
-        <div class="card" id="main-content">
-            <h3>Your Discernment Tools</h3>
-            <p style="margin-bottom: 2rem; opacity: 0.8;">Advanced tools for spiritual discernment and clarity. These tools are available as part of the 12-week coaching program and are released by your coach based on your progress through the Five Anchors foundation.</p>
-            
-            <div class="discernment-tools-grid" id="discernment-tools-grid">
-                <!-- Generated by JavaScript -->
+            <!-- Echo Eraser -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <span class="tool-icon">🌊</span>
+                    <div class="tool-info">
+                        <h4 class="tool-title">Echo Eraser</h4>
+                        <p class="tool-subtitle">Clearing Energetic Aftermath</p>
+                    </div>
+                </div>
+                <p class="tool-description">8-step advanced integration process for clearing lingering emotional and spiritual residue.</p>
+                <div class="tool-features">
+                    <span class="feature-tag">Echo Integration</span>
+                    <span class="feature-tag">Sitting Practice</span>
+                    <span class="feature-tag">Truth Planting</span>
+                </div>
+                <a href="../discernment-tools/echo-eraser.html" target="_blank" class="tool-button">
+                    <span>Begin Echo Eraser</span>
+                    <span class="button-arrow">→</span>
+                </a>
+            </div>
+
+            <!-- Forgiveness Filter -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <span class="tool-icon">🪶</span>
+                    <div class="tool-info">
+                        <h4 class="tool-title">Forgiveness Filter</h4>
+                        <p class="tool-subtitle">Releasing Burdens with Grace</p>
+                    </div>
+                </div>
+                <p class="tool-description">7-step journey to process hurt and find authentic forgiveness. Separates honoring pain from carrying burdens.</p>
+                <div class="tool-features">
+                    <span class="feature-tag">Pain Processing</span>
+                    <span class="feature-tag">Burden Release</span>
+                    <span class="feature-tag">Freedom Creation</span>
+                </div>
+                <a href="../discernment-tools/forgiveness-filter.html" target="_blank" class="tool-button">
+                    <span>Begin Forgiveness Filter</span>
+                    <span class="button-arrow">→</span>
+                </a>
+            </div>
+
+            <!-- Connection Calibrator -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <span class="tool-icon">🌍</span>
+                    <div class="tool-info">
+                        <h4 class="tool-title">Connection Calibrator</h4>
+                        <p class="tool-subtitle">Balancing Relationship Dynamics</p>
+                    </div>
+                </div>
+                <p class="tool-description">8-step relationship calibration tool. Navigate from dependence to independence to healthy interdependence.</p>
+                <div class="tool-features">
+                    <span class="feature-tag">Relationship Assessment</span>
+                    <span class="feature-tag">Boundary Calibration</span>
+                    <span class="feature-tag">Connection Balance</span>
+                </div>
+                <a href="../discernment-tools/connection-calibrator-part1.html" target="_blank" class="tool-button">
+                    <span>Begin Connection Calibrator</span>
+                    <span class="button-arrow">→</span>
+                </a>
             </div>
         </div>
     </main>
 
-    <script type="module">
-        // Import database configuration
-        import { supabase, hybridDataManager, authManager } from './js/supabase-config.js';
-
-        // Discernment module definitions
-        const discernmentModules = [
-            {
-                key: 'thoughtRefiner',
-                title: 'Thought Refiner',
-                subtitle: 'Purifying Thoughts at the Source',
-                icon: '🔍',
-                description: '7-step sophisticated mental filtering system that examines thoughts for truth, clarity, and spiritual alignment.',
-                features: ['Mental Purification', 'Truth Detection', 'Clarity Enhancement'],
-                toolUrl: '../discernment-tools/thought-refiner.html'
-            },
-            {
-                key: 'beliefThreader',
-                title: 'Belief Threader',
-                subtitle: 'Examining Crystallized Thoughts',
-                icon: '🧵',
-                description: '6-step journey through crystallized thought patterns. Explores how thoughts became hardened beliefs.',
-                features: ['Belief Archaeology', 'Trinity Integration', 'Truth Threading'],
-                toolUrl: '../discernment-tools/belief-threader.html'
-            },
-            {
-                key: 'echoEraser',
-                title: 'Echo Eraser',
-                subtitle: 'Clearing Energetic Aftermath',
-                icon: '🌊',
-                description: '8-step advanced integration process for clearing lingering emotional and spiritual residue.',
-                features: ['Echo Integration', 'Sitting Practice', 'Truth Planting'],
-                toolUrl: '../discernment-tools/echo-eraser.html'
-            },
-            {
-                key: 'forgivenessFilter',
-                title: 'Forgiveness Filter',
-                subtitle: 'Releasing Burdens with Grace',
-                icon: '🪶',
-                description: '7-step journey to process hurt and find authentic forgiveness. Separates honoring pain from carrying burdens.',
-                features: ['Pain Processing', 'Burden Release', 'Freedom Creation'],
-                toolUrl: '../discernment-tools/forgiveness-filter.html'
-            },
-            {
-                key: 'connectionCalibrator',
-                title: 'Connection Calibrator',
-                subtitle: 'Balancing Relationship Dynamics',
-                icon: '🌍',
-                description: '8-step relationship calibration tool. Navigate from dependence to independence to healthy interdependence.',
-                features: ['Relationship Assessment', 'Boundary Calibration', 'Connection Balance'],
-                toolUrl: '../discernment-tools/connection-calibrator-part1.html'
-            }
-        ];
-
-        // Default module access (fallback)
-        const defaultModuleAccess = {
-            discernmentTools: {
-                thoughtRefiner: { unlocked: true },
-                beliefThreader: { unlocked: false },
-                echoEraser: { unlocked: false },
-                forgivenessFilter: { unlocked: false },
-                connectionCalibrator: { unlocked: false }
-            },
-            coachingPackage: {
-                type: '6-week',
-                hasDiscernmentAccess: false
-            }
-        };
-
-        let moduleAccess = defaultModuleAccess;
-        let isUsingLiveData = false;
-
-        // Theme Management
+    <script>
+        // Simple theme management only
         function toggleTheme() {
             const body = document.body;
             const themeIcon = document.getElementById('theme-icon');
@@ -691,201 +480,8 @@
             }
         }
 
-        // Load module access from database with localStorage fallback
-        async function loadModuleAccess() {
-            try {
-                // Check authentication first
-                const { session } = await authManager.getSession();
-                if (!session) {
-                    console.log('Not authenticated - redirecting to auth');
-                    window.location.href = './auth.html';
-                    return;
-                }
-
-                // Try to get module access from hybrid data manager
-                const { data, error } = await hybridDataManager.getModuleAccess();
-                
-                if (!error && data) {
-                    // Transform data to include package info
-                    moduleAccess = {
-                        discernmentTools: data.discernmentTools || defaultModuleAccess.discernmentTools,
-                        coachingPackage: {
-                            type: '12-week', // Assume 12-week if they have database access
-                            hasDiscernmentAccess: true
-                        }
-                    };
-                    isUsingLiveData = true;
-                    console.log('✅ Loaded live module access:', moduleAccess);
-                    updateDataSourceBanner(true);
-                } else {
-                    console.warn('Database access failed, using default access:', error);
-                    moduleAccess = defaultModuleAccess;
-                    isUsingLiveData = false;
-                    updateDataSourceBanner(false);
-                }
-                
-            } catch (error) {
-                console.error('Error loading module access:', error);
-                moduleAccess = defaultModuleAccess;
-                isUsingLiveData = false;
-                updateDataSourceBanner(false);
-            }
-            
-            // Load the discernment tools
-            loadDiscernmentTools();
-        }
-
-        function updateDataSourceBanner(isLive) {
-            const banner = document.getElementById('data-source-banner');
-            banner.style.display = 'block';
-            
-            if (isLive) {
-                banner.className = 'data-source-banner live';
-                banner.innerHTML = '✅ Showing Live Module Access from Coach Dashboard';
-            } else {
-                banner.className = 'data-source-banner';
-                banner.innerHTML = '📱 Offline Mode - Contact your coach to unlock additional tools';
-            }
-        }
-
-        function loadDiscernmentTools() {
-            const container = document.getElementById('discernment-tools-grid');
-            const packageRequirement = document.getElementById('package-requirement');
-            
-            if (!container) return;
-
-            console.log('Loading discernment tools with access:', moduleAccess);
-
-            // Check if client has access to discernment tools (12-week package only)
-            if (!moduleAccess.coachingPackage.hasDiscernmentAccess) {
-                container.style.display = 'none';
-                packageRequirement.style.display = 'block';
-                return;
-            }
-
-            // Client has 12-week access, show individual tools based on coach permissions
-            container.innerHTML = discernmentModules.map(module => {
-                const access = moduleAccess.discernmentTools[module.key];
-                const hasAccess = access ? access.unlocked : false;
-
-                let accessIndicator = '';
-                let cardClass = '';
-                let content = '';
-                
-                if (hasAccess) {
-                    // Unlocked content - show full details
-                    accessIndicator = '<div class="access-indicator access-unlocked">✅ Unlocked by Coach</div>';
-                    
-                    content = `
-                        <div class="tool-header">
-                            <span class="tool-icon">${module.icon}</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">${module.title}</h4>
-                                <p class="tool-subtitle">${module.subtitle}</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">${module.description}</p>
-                        <div class="tool-features">
-                            ${module.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
-                        </div>
-                        ${accessIndicator}
-                        <a href="${module.toolUrl}" target="_blank" class="tool-button">
-                            <span>Begin ${module.title}</span>
-                            <span class="button-arrow">→</span>
-                        </a>
-                    `;
-                } else {
-                    // Locked content - show minimal info with lock message
-                    cardClass = 'locked';
-                    accessIndicator = '<div class="access-indicator access-locked">🔒 Locked - Your coach will unlock when ready</div>';
-                    
-                    content = `
-                        <div class="tool-header">
-                            <span class="tool-icon">${module.icon}</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">${module.title}</h4>
-                                <p class="tool-subtitle">${module.subtitle}</p>
-                            </div>
-                        </div>
-                        <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
-                            <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">Tool Locked</h4>
-                            <p style="color: var(--locked-color);">Your coach will unlock this based on your session progress</p>
-                        </div>
-                        ${accessIndicator}
-                        <button class="tool-button locked">
-                            <span>🔒 Locked by Coach</span>
-                            <span class="button-arrow">⏸</span>
-                        </button>
-                    `;
-                }
-
-                return `
-                    <div class="tool-card ${cardClass}">
-                        ${content}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: 6px;
-                z-index: 1001;
-                animation: slideIn 0.3s ease;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        // Initialize the module
-        async function initializeDiscernmentToolsModule() {
-            console.log('Initializing Discernment Tools module...');
-            
-            // Load theme
-            loadTheme();
-            
-            // Load module access and content
-            await loadModuleAccess();
-            
-            console.log('Discernment Tools module initialized successfully');
-        }
-
-        // Make functions global for onclick handlers
-        window.toggleTheme = toggleTheme;
-
-        // Initialize when DOM is ready
-        document.addEventListener('DOMContentLoaded', initializeDiscernmentToolsModule);
-
-        // Add slideIn and slideOut animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', loadTheme);
     </script>
 </body>
 </html>
