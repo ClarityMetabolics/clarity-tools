@@ -25,9 +25,6 @@
             --card-border: #E5E5E5;
             --shadow: rgba(0, 0, 0, 0.1);
             --accent-color: #5A6C57;
-            --locked-color: #999;
-            --warning-color: #FF9800;
-            --success-color: #4CAF50;
         }
 
         [data-theme="dark"] {
@@ -74,12 +71,6 @@
             top: 0;
             z-index: 100;
             backdrop-filter: blur(10px);
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                position: static;
-            }
         }
 
         .header-content {
@@ -140,72 +131,32 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        /* Main Navigation */
-        .main-nav {
-            background: var(--nav-bg);
-            border-bottom: 1px solid var(--nav-border);
-            position: sticky;
-            top: 73px;
-            z-index: 99;
-        }
-
-        @media (max-width: 768px) {
-            .main-nav {
-                position: static;
-            }
-        }
-
-        .nav-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        .nav-menu {
-            display: flex;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .nav-menu::-webkit-scrollbar {
-            display: none;
-        }
-
-        .nav-item {
-            flex: 0 0 auto;
-            padding: 1rem 1.5rem;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-item:hover {
-            background: var(--nav-hover);
-        }
-
-        .nav-item.active {
-            border-bottom-color: var(--accent-color);
-            background: var(--nav-hover);
-        }
-
-        .nav-icon {
-            font-size: 1.2rem;
-        }
-
         /* Main Content */
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem 1rem;
-            min-height: calc(100vh - 250px);
+            min-height: calc(100vh - 200px);
         }
 
-        /* Section Headers */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: var(--nav-hover);
+            transform: translateX(-2px);
+        }
+
         .section-header {
             margin-bottom: 2rem;
             text-align: center;
@@ -223,23 +174,6 @@
             opacity: 0.8;
         }
 
-        /* Cards */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .card h3 {
-            font-family: 'Libre Baskerville', serif;
-            margin-bottom: 1rem;
-            color: var(--accent-color);
-        }
-
-        /* Anchor Tools Grid */
         .anchor-tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -254,47 +188,11 @@
             padding: 1.5rem;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px var(--shadow);
-            position: relative;
         }
 
         .tool-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 16px var(--shadow);
-        }
-
-        .tool-card.locked {
-            opacity: 0.6;
-            background: var(--nav-hover);
-        }
-
-        .tool-card.locked:hover {
-            transform: none;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .lock-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(153, 153, 153, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(2px);
-        }
-
-        .lock-message {
-            background: var(--card-bg);
-            border: 1px solid var(--locked-color);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-            color: var(--locked-color);
-            font-weight: 600;
-            max-width: 250px;
         }
 
         .tool-header {
@@ -333,22 +231,6 @@
             opacity: 0.8;
         }
 
-        .tool-features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .feature-tag {
-            background: var(--nav-hover);
-            color: var(--text-color);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
         .tool-button {
             display: flex;
             align-items: center;
@@ -361,8 +243,6 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border: none;
-            cursor: pointer;
             margin-bottom: 0.5rem;
         }
 
@@ -370,17 +250,6 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             opacity: 0.9;
-        }
-
-        .tool-button.locked {
-            background: var(--locked-color);
-            cursor: not-allowed;
-        }
-
-        .tool-button.locked:hover {
-            transform: none;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            opacity: 0.6;
         }
 
         .button-arrow {
@@ -392,52 +261,6 @@
             transform: translateX(4px);
         }
 
-        .tool-button.locked:hover .button-arrow {
-            transform: none;
-        }
-
-        .access-indicator {
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-
-        .access-unlocked {
-            background: rgba(76, 175, 80, 0.1);
-            color: #4CAF50;
-            border: 1px solid #4CAF50;
-        }
-
-        .access-partial {
-            background: rgba(255, 152, 0, 0.1);
-            color: var(--warning-color);
-            border: 1px solid var(--warning-color);
-        }
-
-        .access-locked {
-            background: rgba(153, 153, 153, 0.1);
-            color: var(--locked-color);
-            border: 1px solid var(--locked-color);
-        }
-
-        .loading-indicator {
-            text-align: center;
-            padding: 2rem;
-            opacity: 0.7;
-            display: none;
-        }
-
-        .success-message {
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid #4CAF50;
-            border-radius: 6px;
-            padding: 1rem;
-            margin: 1rem 0;
-            color: #4CAF50;
-            text-align: center;
-        }
-
         /* Responsive Design */
         @media (max-width: 768px) {
             .header-content {
@@ -446,12 +269,10 @@
             
             .logo {
                 font-size: 1.4rem;
-                text-align: center;
             }
             
             .subtitle-container {
                 font-size: 0.9rem;
-                text-align: center;
                 flex-wrap: wrap;
                 justify-content: center;
             }
@@ -460,11 +281,6 @@
                 top: 0.5rem;
                 right: 0.5rem;
                 padding: 0.4rem 0.8rem;
-                font-size: 0.9rem;
-            }
-
-            .nav-item {
-                padding: 0.75rem 1rem;
                 font-size: 0.9rem;
             }
 
@@ -485,57 +301,6 @@
             .subtitle-container {
                 font-size: 0.8rem;
             }
-            
-            .nav-item .nav-text {
-                display: none;
-            }
-
-            .nav-item {
-                padding: 0.75rem;
-            }
-        }
-
-        /* Animation styles */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .tool-card {
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        /* Back button */
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background: var(--nav-hover);
-            transform: translateX(-2px);
-        }
-
-        .data-source-banner {
-            background: #2196F3;
-            color: white;
-            padding: 0.75rem;
-            margin-bottom: 1.5rem;
-            border-radius: 6px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .data-source-banner.live {
-            background: #4CAF50;
         }
     </style>
 </head>
@@ -554,38 +319,6 @@
         </div>
     </header>
 
-    <!-- Main Navigation -->
-    <nav class="main-nav">
-        <div class="nav-content">
-            <div class="nav-menu">
-                <div class="nav-item" onclick="location.href='index.html'">
-                    <span class="nav-icon">🏠</span>
-                    <span class="nav-text">Dashboard</span>
-                </div>
-                <div class="nav-item" onclick="location.href='my-progress.html'">
-                    <span class="nav-icon">📊</span>
-                    <span class="nav-text">My Progress</span>
-                </div>
-                <div class="nav-item active">
-                    <span class="nav-icon">⚓</span>
-                    <span class="nav-text">Five Anchors</span>
-                </div>
-                <div class="nav-item" onclick="location.href='discernment-tools.html'">
-                    <span class="nav-icon">🔍</span>
-                    <span class="nav-text">Discernment Tools</span>
-                </div>
-                <div class="nav-item" onclick="location.href='reflect-reset.html'">
-                    <span class="nav-icon">🙏</span>
-                    <span class="nav-text">Reflect & Reset</span>
-                </div>
-                <div class="nav-item" onclick="location.href='crisis-support.html'">
-                    <span class="nav-icon">🆘</span>
-                    <span class="nav-text">Crisis Support</span>
-                </div>
-            </div>
-        </div>
-    </nav>
-
     <!-- Main Content -->
     <main class="main-content">
         <!-- Back Button -->
@@ -598,99 +331,116 @@
             <p class="section-subtitle">Access your grounding tools for spiritual and emotional stability</p>
         </div>
 
-        <!-- Data Source Banner -->
-        <div id="data-source-banner" class="data-source-banner" style="display: none;">
-        </div>
+        <div class="anchor-tools-grid">
+            <!-- Physical Anchor -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <span class="tool-icon">🧭</span>
+                    <div class="tool-info">
+                        <h4 class="tool-title">Physical Anchor</h4>
+                        <p class="tool-subtitle">A Grounding Compass</p>
+                    </div>
+                </div>
+                <p class="tool-description">9-step body awareness and nervous system regulation process. Creates your physical "home base" for returning when overwhelmed.</p>
+                
+                <a href="../anchor-guides/physical-anchor-guide.html" target="_blank" class="tool-button" style="background: var(--physical-color); margin-bottom: 0.5rem;">
+                    <span>📖 Open Guide (PDF)</span>
+                    <span class="button-arrow">→</span>
+                </a>
+                <a href="../anchor-tools/physical-anchor.html" target="_blank" class="tool-button" style="background: var(--physical-color);">
+                    <span>🔧 Use Web Tool</span>
+                    <span class="button-arrow">→</span>
+                </a>
+            </div>
 
-        <!-- Main Content Card -->
-        <div class="card" id="main-content">
-            <h3>Your Anchor Tools</h3>
-            <p style="margin-bottom: 2rem; opacity: 0.8;">Each anchor tool guides you through a complete process to strengthen that area of your life. Your coach controls access to these tools based on your session progress and coaching package.</p>
-            
-            <div class="anchor-tools-grid" id="anchor-tools-grid">
-                <!-- Generated by JavaScript -->
+            <!-- Mental Anchor -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <span class="tool-icon">👓</span>
+                    <div class="tool-info">
+                        <h4 class="tool-title">Mental Anchor</h4>
+                        <p class="tool-subtitle">The Clarity Lens</p>
+                    </div>
+                </div>
+                <p class="tool-description">7-step process to filter mental noise and see truth clearly. Separates grounded thoughts from fear-driven narratives.</p>
+                
+                <a href="../anchor-guides/mental-anchor-guide.html" target="_blank" class="tool-button" style="background: var(--mental-color); margin-bottom: 0.5rem;">
+                    <span>📖 Open Guide (PDF)</span>
+                    <span class="button-arrow">→</span>
+                </a>
+                <a href="../anchor-tools/mental-anchor.html" target="_blank" class="tool-button" style="background: var(--mental-color);">
+                    <span>🔧 Use Web Tool</span>
+                    <span class="button-arrow">→</span>
+                </a>
+            </div>
+
+            <!-- Emotional Anchor -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <span class="tool-icon">🪣</span>
+                    <div class="tool-info">
+                        <h4 class="tool-title">Emotional Anchor</h4>
+                        <p class="tool-subtitle">The Stability Well</p>
+                    </div>
+                </div>
+                <p class="tool-description">8-step journey from emotional reactivity to conscious response. Transforms overwhelming feelings into wise action through your body's early warning system.</p>
+                
+                <a href="../anchor-guides/emotional-anchor-guide.html" target="_blank" class="tool-button" style="background: var(--emotional-color); margin-bottom: 0.5rem;">
+                    <span>📖 Open Guide (PDF)</span>
+                    <span class="button-arrow">→</span>
+                </a>
+                <a href="../anchor-tools/emotional-anchor.html" target="_blank" class="tool-button" style="background: var(--emotional-color);">
+                    <span>🔧 Use Web Tool</span>
+                    <span class="button-arrow">→</span>
+                </a>
+            </div>
+
+            <!-- Spiritual Anchor -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <span class="tool-icon">🕊️</span>
+                    <div class="tool-info">
+                        <h4 class="tool-title">Spiritual Anchor</h4>
+                        <p class="tool-subtitle">The Communion Bridge</p>
+                    </div>
+                </div>
+                <p class="tool-description">7-step spiritual grounding through divine connection, personal calling, and eternal foundation. Non-denominational approach.</p>
+                
+                <a href="../anchor-guides/spiritual-anchor-guide.html" target="_blank" class="tool-button" style="background: var(--spiritual-color); margin-bottom: 0.5rem;">
+                    <span>📖 Open Guide (PDF)</span>
+                    <span class="button-arrow">→</span>
+                </a>
+                <a href="../anchor-tools/spiritual-anchor.html" target="_blank" class="tool-button" style="background: var(--spiritual-color);">
+                    <span>🔧 Use Web Tool</span>
+                    <span class="button-arrow">→</span>
+                </a>
+            </div>
+
+            <!-- Relational Anchor -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <span class="tool-icon">🌐</span>
+                    <div class="tool-info">
+                        <h4 class="tool-title">Relational Anchor</h4>
+                        <p class="tool-subtitle">The Harmony Web</p>
+                    </div>
+                </div>
+                <p class="tool-description">8-step journey to build authentic connections from grounded center. Boundary wisdom and community building strategies.</p>
+                
+                <a href="../anchor-guides/relational-anchor-guide.html" target="_blank" class="tool-button" style="background: var(--relational-color); margin-bottom: 0.5rem;">
+                    <span>📖 Open Guide (PDF)</span>
+                    <span class="button-arrow">→</span>
+                </a>
+                <a href="../anchor-tools/relational-anchor.html" target="_blank" class="tool-button" style="background: var(--relational-color);">
+                    <span>🔧 Use Web Tool</span>
+                    <span class="button-arrow">→</span>
+                </a>
             </div>
         </div>
     </main>
 
-    <script type="module">
-        // Import database configuration
-        import { supabase, hybridDataManager, authManager } from './js/supabase-config.js';
-
-        // Module definitions matching the exact structure from existing dashboard
-        const anchorModules = [
-            {
-                key: 'physical',
-                title: 'Physical Anchor',
-                subtitle: 'A Grounding Compass',
-                icon: '🧭',
-                description: '9-step body awareness and nervous system regulation process. Creates your physical "home base" for returning when overwhelmed.',
-                features: ['Body Awareness', 'Regulation Techniques', 'Pattern Recognition'],
-                guideUrl: '../anchor-guides/physical-anchor-guide.html',
-                toolUrl: '../anchor-tools/physical-anchor.html',
-                color: 'var(--physical-color)'
-            },
-            {
-                key: 'mental',
-                title: 'Mental Anchor',
-                subtitle: 'The Clarity Lens',
-                icon: '👓',
-                description: '7-step process to filter mental noise and see truth clearly. Separates grounded thoughts from fear-driven narratives.',
-                features: ['Mental Filtering', 'Perspective Shifting', 'Control Assessment'],
-                guideUrl: '../anchor-guides/mental-anchor-guide.html',
-                toolUrl: '../anchor-tools/mental-anchor.html',
-                color: 'var(--mental-color)'
-            },
-            {
-                key: 'emotional',
-                title: 'Emotional Anchor',
-                subtitle: 'The Stability Well',
-                icon: '🪣',
-                description: '8-step journey from emotional reactivity to conscious response. Transforms overwhelming feelings into wise action through your body\'s early warning system.',
-                features: ['Emotional Processing', 'Early Warning System', 'Response Choice'],
-                guideUrl: '../anchor-guides/emotional-anchor-guide.html',
-                toolUrl: '../anchor-tools/emotional-anchor.html',
-                color: 'var(--emotional-color)'
-            },
-            {
-                key: 'spiritual',
-                title: 'Spiritual Anchor',
-                subtitle: 'The Communion Bridge',
-                icon: '🕊️',
-                description: '7-step spiritual grounding through divine connection, personal calling, and eternal foundation. Non-denominational approach.',
-                features: ['Spiritual Grounding', 'Calling Identification', 'Practice Building'],
-                guideUrl: '../anchor-guides/spiritual-anchor-guide.html',
-                toolUrl: '../anchor-tools/spiritual-anchor.html',
-                color: 'var(--spiritual-color)'
-            },
-            {
-                key: 'relational',
-                title: 'Relational Anchor',
-                subtitle: 'The Harmony Web',
-                icon: '🌐',
-                description: '8-step journey to build authentic connections from grounded center. Boundary wisdom and community building strategies.',
-                features: ['Relationship Assessment', 'Boundary Setting', 'Community Building'],
-                guideUrl: '../anchor-guides/relational-anchor-guide.html',
-                toolUrl: '../anchor-tools/relational-anchor.html',
-                color: 'var(--relational-color)'
-            }
-        ];
-
-        // Default module access (fallback)
-        const defaultModuleAccess = {
-            fiveAnchors: {
-                physical: { guide: true, webTool: false },
-                mental: { guide: false, webTool: false },
-                emotional: { guide: false, webTool: false },
-                spiritual: { guide: false, webTool: false },
-                relational: { guide: false, webTool: false }
-            }
-        };
-
-        let moduleAccess = defaultModuleAccess;
-        let isUsingLiveData = false;
-
-        // Theme Management
+    <script>
+        // Simple theme management only
         function toggleTheme() {
             const body = document.body;
             const themeIcon = document.getElementById('theme-icon');
@@ -718,233 +468,8 @@
             }
         }
 
-        // Load module access from database with localStorage fallback
-        async function loadModuleAccess() {
-            try {
-                // Check authentication first
-                const { session } = await authManager.getSession();
-                if (!session) {
-                    console.log('Not authenticated - redirecting to auth');
-                    window.location.href = './auth.html';
-                    return;
-                }
-
-                // Try to get module access from hybrid data manager
-                const { data, error } = await hybridDataManager.getModuleAccess();
-                
-                if (!error && data) {
-                    moduleAccess = data;
-                    isUsingLiveData = true;
-                    console.log('✅ Loaded live module access:', moduleAccess);
-                    updateDataSourceBanner(true);
-                } else {
-                    console.warn('Database access failed, using default access:', error);
-                    moduleAccess = defaultModuleAccess;
-                    isUsingLiveData = false;
-                    updateDataSourceBanner(false);
-                }
-                
-            } catch (error) {
-                console.error('Error loading module access:', error);
-                moduleAccess = defaultModuleAccess;
-                isUsingLiveData = false;
-                updateDataSourceBanner(false);
-            }
-            
-            // Load the anchor tools
-            loadAnchorTools();
-        }
-
-        function updateDataSourceBanner(isLive) {
-            const banner = document.getElementById('data-source-banner');
-            banner.style.display = 'block';
-            
-            if (isLive) {
-                banner.className = 'data-source-banner live';
-                banner.innerHTML = '✅ Showing Live Module Access from Coach Dashboard';
-            } else {
-                banner.className = 'data-source-banner';
-                banner.innerHTML = '📱 Offline Mode - Contact your coach to unlock additional tools';
-            }
-        }
-
-        function loadAnchorTools() {
-            const container = document.getElementById('anchor-tools-grid');
-            if (!container) return;
-
-            console.log('Loading anchor tools with access:', moduleAccess);
-
-            container.innerHTML = anchorModules.map(module => {
-                const access = moduleAccess.fiveAnchors[module.key];
-                const hasGuideAccess = access ? access.guide : false;
-                const hasToolAccess = access ? access.webTool : false;
-                const hasAnyAccess = hasGuideAccess || hasToolAccess;
-
-                let accessIndicator = '';
-                let cardClass = '';
-                let content = '';
-                
-                if (hasAnyAccess) {
-                    // Unlocked content - show full details
-                    if (hasGuideAccess && hasToolAccess) {
-                        accessIndicator = '<div class="access-indicator access-unlocked">✅ Full Access - Guide & Tool Unlocked</div>';
-                    } else {
-                        const unlockedItems = [];
-                        if (hasGuideAccess) unlockedItems.push('Guide');
-                        if (hasToolAccess) unlockedItems.push('Tool');
-                        accessIndicator = `<div class="access-indicator access-partial">🔓 Partial Access - ${unlockedItems.join(' & ')} Unlocked</div>`;
-                    }
-                    
-                    content = `
-                        <div class="tool-header">
-                            <span class="tool-icon">${module.icon}</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">${module.title}</h4>
-                                <p class="tool-subtitle">${module.subtitle}</p>
-                            </div>
-                        </div>
-                        <p class="tool-description">${module.description}</p>
-                        <div class="tool-features">
-                            ${module.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
-                        </div>
-                        ${accessIndicator}
-                        ${hasGuideAccess ? `<a href="${module.guideUrl}" target="_blank" class="tool-button" style="background: ${module.color}; margin-bottom: 0.5rem;">
-                            <span>📖 Open Guide (PDF)</span>
-                            <span class="button-arrow">→</span>
-                        </a>` : ''}
-                        ${hasToolAccess ? `<a href="${module.toolUrl}" target="_blank" class="tool-button" style="background: ${module.color};">
-                            <span>🔧 Use Web Tool</span>
-                            <span class="button-arrow">→</span>
-                        </a>` : ''}
-                    `;
-                } else {
-                    // Locked content - show minimal info with lock message
-                    cardClass = 'locked';
-                    accessIndicator = '<div class="access-indicator access-locked">🔒 Locked - Contact your coach to unlock</div>';
-                    
-                    content = `
-                        <div class="tool-header">
-                            <span class="tool-icon">${module.icon}</span>
-                            <div class="tool-info">
-                                <h4 class="tool-title">${module.title}</h4>
-                                <p class="tool-subtitle">${module.subtitle}</p>
-                            </div>
-                        </div>
-                        <div style="text-align: center; padding: 2rem 1rem; opacity: 0.7;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
-                            <h4 style="margin-bottom: 0.5rem; color: var(--locked-color);">Module Locked</h4>
-                            <p style="color: var(--locked-color);">Your coach will unlock this when you're ready</p>
-                        </div>
-                        ${accessIndicator}
-                        <button class="tool-button locked">
-                            <span>🔒 Locked by Coach</span>
-                            <span class="button-arrow">⏸</span>
-                        </button>
-                    `;
-                }
-
-                return `
-                    <div class="tool-card ${cardClass}">
-                        ${content}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Track module usage for coach visibility
-        async function trackModuleUsage(moduleKey, accessType) {
-            try {
-                if (isUsingLiveData && hybridDataManager) {
-                    console.log(`Tracking usage: ${moduleKey} - ${accessType}`);
-                    // In a full implementation, this would log usage to the database
-                    // for coach dashboard visibility
-                }
-            } catch (error) {
-                console.log('Usage tracking failed (offline mode):', error);
-            }
-        }
-
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: 6px;
-                z-index: 1001;
-                animation: slideIn 0.3s ease;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        // Add refresh functionality
-        function addRefreshButton() {
-            const banner = document.getElementById('data-source-banner');
-            if (banner && !isUsingLiveData) {
-                banner.style.cursor = 'pointer';
-                banner.title = 'Click to retry database connection';
-                banner.onclick = async function() {
-                    banner.innerHTML = '⏳ Checking for live data...';
-                    banner.onclick = null;
-                    
-                    // Show loading state
-                    document.getElementById('main-content').style.display = 'none';
-                    document.getElementById('loading-container').style.display = 'block';
-                    
-                    // Retry loading
-                    await loadModuleAccess();
-                };
-            }
-        }
-
-        // Initialize the module
-        async function initializeFiveAnchorsModule() {
-            console.log('Initializing Five Anchors module...');
-            
-            // Load theme
-            loadTheme();
-            
-            // Load module access and content
-            await loadModuleAccess();
-            
-            // Add refresh functionality if needed
-            setTimeout(addRefreshButton, 500);
-            
-            console.log('Five Anchors module initialized successfully');
-        }
-
-        // Make functions global for onclick handlers
-        window.toggleTheme = toggleTheme;
-
-        // Initialize when DOM is ready
-        document.addEventListener('DOMContentLoaded', initializeFiveAnchorsModule);
-
-        // Add slideIn and slideOut animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', loadTheme);
     </script>
 </body>
 </html>
