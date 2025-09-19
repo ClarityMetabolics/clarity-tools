@@ -1380,5 +1380,442 @@
 </button>
     
     <script src="./auth-guard.js" type="module"></script>
+<script type="module">
+// Daily Check-in Functionality for Five Anchors Dashboard
+// Add this JavaScript to your /dashboard/index.html file
+
+// Import the database manager
+import { hybridDataManager } from './js/supabase-config.js';
+
+// Daily check-in state
+let currentCheckIn = {
+    date: new Date().toISOString().split('T')[0],
+    ratings: {},
+    notes: {}
+};
+
+// Initialize daily check-in functionality
+function initializeDailyCheckIn() {
+    console.log('Initializing daily check-in functionality...');
+    
+    // Set current date
+    document.getElementById('current-date').textContent = new Date().toLocaleDateString();
+    
+    // Load existing check-in for today
+    loadTodaysCheckIn();
+    
+    // Add event listeners to all rating buttons
+    document.querySelectorAll('.rating-btn').forEach(btn => {
+        btn.addEventListener('click', handleRatingClick);
+    });
+    
+    // Add event listeners to note textareas
+    document.querySelectorAll('.anchor-notes').forEach(textarea => {
+        textarea.addEventListener('input', handleNoteInput);
+    });
+    
+    // Add event listeners to save/clear buttons
+    const saveBtn = document.querySelector('.save-checkin-btn');
+    const clearBtn = document.querySelector('.clear-checkin-btn');
+    
+    if (saveBtn) saveBtn.addEventListener('click', saveCheckIn);
+    if (clearBtn) clearBtn.addEventListener('click', clearCheckIn);
+    
+    console.log('Daily check-in functionality initialized');
+}
+
+// Handle rating button clicks
+function handleRatingClick(event) {
+    const button = event.target;
+    const value = parseInt(button.getAttribute('data-value'));
+    const anchorInput = button.closest('.anchor-input');
+    const anchorType = anchorInput.getAttribute('data-anchor');
+    
+    // Clear previous selection in this anchor group
+    const allButtons = anchorInput.querySelectorAll('.rating-btn');
+    allButtons.forEach(btn => btn.classList.remove('selected'));
+    
+    // Mark clicked button as selected
+    button.classList.add('selected');
+    
+    // Store rating in current check-in
+    currentCheckIn.ratings[anchorType] = value;
+    
+    console.log(`Rating updated: ${anchorType} = ${value}`);
+    
+    // Update anchor circles display
+    updateAnchorCircles();
+    
+    // Update focus recommendations
+    updateFocusRecommendations();
+    
+    // Auto-save to localStorage
+    localStorage.setItem('currentCheckIn', JSON.stringify(currentCheckIn));
+}
+
+// Handle note input
+function handleNoteInput(event) {
+    const textarea = event.target;
+    const anchorInput = textarea.closest('.anchor-input');
+    const anchorType = anchorInput.getAttribute('data-anchor');
+    
+    // Store note in current check-in
+    currentCheckIn.notes[anchorType] = textarea.value;
+    
+    // Auto-save to localStorage
+    localStorage.setItem('currentCheckIn', JSON.stringify(currentCheckIn));
+}
+
+// Load today's existing check-in
+async function loadTodaysCheckIn() {
+    try {
+        // Try to load from database first
+        if (hybridDataManager) {
+            const { data: checkIns } = await hybridDataManager.getCheckIns();
+            if (checkIns && checkIns[currentCheckIn.date]) {
+                currentCheckIn = checkIns[currentCheckIn.date];
+                console.log('Loaded today\'s check-in from database');
+            }
+        }
+        
+        // Fallback to localStorage
+        if (!currentCheckIn.ratings || Object.keys(currentCheckIn.ratings).length === 0) {
+            const saved = localStorage.getItem('currentCheckIn');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (parsed.date === currentCheckIn.date) {
+                    currentCheckIn = parsed;
+                    console.log('Loaded today\'s check-in from localStorage');
+                }
+            }
+        }
+        
+        // Populate the UI with existing data
+        populateCheckInUI();
+        
+    } catch (error) {
+        console.error('Error loading today\'s check-in:', error);
+    }
+}
+
+// Populate UI with existing check-in data
+function populateCheckInUI() {
+    // Populate ratings
+    Object.entries(currentCheckIn.ratings).forEach(([anchor, rating]) => {
+        const anchorInput = document.querySelector(`[data-anchor="${anchor}"]`);
+        if (anchorInput) {
+            // Clear existing selections
+            anchorInput.querySelectorAll('.rating-btn').forEach(btn => 
+                btn.classList.remove('selected')
+            );
+            
+            // Select the saved rating
+            const ratingBtn = anchorInput.querySelector(`[data-value="${rating}"]`);
+            if (ratingBtn) {
+                ratingBtn.classList.add('selected');
+            }
+        }
+    });
+    
+    // Populate notes
+    Object.entries(currentCheckIn.notes).forEach(([anchor, note]) => {
+        const anchorInput = document.querySelector(`[data-anchor="${anchor}"]`);
+        if (anchorInput) {
+            const textarea = anchorInput.querySelector('.anchor-notes');
+            if (textarea) {
+                textarea.value = note;
+            }
+        }
+    });
+    
+    // Update displays
+    updateAnchorCircles();
+    updateFocusRecommendations();
+}
+
+// Update the anchor circles display
+function updateAnchorCircles() {
+    const anchors = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
+    let totalRating = 0;
+    let ratedCount = 0;
+    
+    anchors.forEach(anchor => {
+        const circle = document.querySelector(`[data-anchor="${anchor}"] .circle-progress`);
+        const ratingDisplay = circle?.querySelector('.anchor-rating');
+        
+        if (circle && ratingDisplay) {
+            const rating = currentCheckIn.ratings[anchor];
+            if (rating) {
+                ratingDisplay.textContent = rating;
+                circle.setAttribute('data-rating', rating);
+                totalRating += rating;
+                ratedCount++;
+                
+                // Add visual feedback for low ratings
+                if (rating <= 2) {
+                    circle.classList.add('low-rating');
+                } else {
+                    circle.classList.remove('low-rating');
+                }
+            } else {
+                ratingDisplay.textContent = '-';
+                circle.setAttribute('data-rating', '0');
+                circle.classList.remove('low-rating');
+            }
+        }
+    });
+    
+    // Update overall wellness
+    const overallRating = document.getElementById('overall-rating');
+    const wellnessFill = document.querySelector('.wellness-fill');
+    
+    if (ratedCount > 0) {
+        const average = (totalRating / ratedCount).toFixed(1);
+        const percentage = (average / 5) * 100;
+        
+        if (overallRating) overallRating.textContent = `${average}/5`;
+        if (wellnessFill) wellnessFill.style.width = `${percentage}%`;
+    } else {
+        if (overallRating) overallRating.textContent = 'Not Rated';
+        if (wellnessFill) wellnessFill.style.width = '0%';
+    }
+}
+
+// Update focus recommendations
+function updateFocusRecommendations() {
+    const container = document.getElementById('focus-recommendations');
+    if (!container) return;
+    
+    const ratings = currentCheckIn.ratings;
+    const ratedAnchors = Object.keys(ratings);
+    
+    if (ratedAnchors.length === 0) {
+        container.innerHTML = '<p class="focus-message">Complete your daily check-in to receive personalized recommendations.</p>';
+        return;
+    }
+    
+    const recommendations = [];
+    
+    // Find lowest rated anchors
+    const lowRatings = ratedAnchors.filter(anchor => ratings[anchor] <= 2);
+    if (lowRatings.length > 0) {
+        lowRatings.forEach(anchor => {
+            const anchorName = anchor.charAt(0).toUpperCase() + anchor.slice(1);
+            recommendations.push({
+                type: 'concern',
+                title: `${anchorName} Needs Attention`,
+                message: `Your ${anchor} anchor is rated ${ratings[anchor]}/5. Consider using the ${anchorName} tool or reaching out to your coach.`,
+                action: `Use ${anchorName} Tool`
+            });
+        });
+    }
+    
+    // Find highest rated anchor for positive reinforcement
+    const highestRated = ratedAnchors.reduce((prev, current) => 
+        ratings[current] > ratings[prev] ? current : prev
+    );
+    
+    if (ratings[highestRated] >= 4) {
+        const anchorName = highestRated.charAt(0).toUpperCase() + highestRated.slice(1);
+        recommendations.push({
+            type: 'strength',
+            title: `${anchorName} is Your Strength Today`,
+            message: `Your ${highestRated} anchor is strong at ${ratings[highestRated]}/5. Use this stability to support other areas.`,
+            action: 'Build on This Strength'
+        });
+    }
+    
+    // General recommendations based on patterns
+    const averageRating = ratedAnchors.reduce((sum, anchor) => sum + ratings[anchor], 0) / ratedAnchors.length;
+    
+    if (averageRating >= 4) {
+        recommendations.push({
+            type: 'celebration',
+            title: 'Strong Day Overall',
+            message: 'Your anchors are well-balanced today. This is a good time for growth and helping others.',
+            action: 'Practice Gratitude'
+        });
+    } else if (averageRating <= 2.5) {
+        recommendations.push({
+            type: 'support',
+            title: 'Consider Extra Support',
+            message: 'Multiple anchors need attention today. Focus on basic self-care and consider reaching out for support.',
+            action: 'Contact Your Coach'
+        });
+    }
+    
+    // Render recommendations
+    if (recommendations.length > 0) {
+        container.innerHTML = recommendations.map(rec => `
+            <div class="focus-recommendation">
+                <h4>${rec.title}</h4>
+                <p>${rec.message}</p>
+            </div>
+        `).join('');
+    } else {
+        container.innerHTML = '<p class="focus-message">Your check-in looks balanced. Keep up the good work!</p>';
+    }
+}
+
+// Save check-in to database and localStorage
+async function saveCheckIn() {
+    try {
+        // Validate that at least one rating is provided
+        if (Object.keys(currentCheckIn.ratings).length === 0) {
+            showNotification('Please rate at least one anchor before saving.', 'warning');
+            return;
+        }
+        
+        console.log('Saving check-in:', currentCheckIn);
+        
+        // Save to database using hybrid manager
+        if (hybridDataManager) {
+            const result = await hybridDataManager.saveCheckIn(currentCheckIn);
+            if (result.error) {
+                console.error('Database save failed:', result.error);
+                showNotification('Saved locally. Database sync will retry later.', 'warning');
+            } else {
+                console.log('Check-in saved to database successfully');
+                showNotification('Daily check-in saved successfully!', 'success');
+            }
+        } else {
+            console.log('Database not available, saving to localStorage only');
+            showNotification('Check-in saved locally.', 'info');
+        }
+        
+        // Always save to localStorage as backup
+        const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}');
+        allCheckIns[currentCheckIn.date] = currentCheckIn;
+        localStorage.setItem('dailyCheckIns', JSON.stringify(allCheckIns));
+        
+        // Clear the current check-in form state
+        localStorage.removeItem('currentCheckIn');
+        
+        // Update displays one final time
+        updateAnchorCircles();
+        updateFocusRecommendations();
+        
+    } catch (error) {
+        console.error('Error saving check-in:', error);
+        showNotification('Error saving check-in. Please try again.', 'error');
+    }
+}
+
+// Clear current check-in
+function clearCheckIn() {
+    // Reset current check-in state
+    currentCheckIn = {
+        date: new Date().toISOString().split('T')[0],
+        ratings: {},
+        notes: {}
+    };
+    
+    // Clear UI
+    document.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('selected'));
+    document.querySelectorAll('.anchor-notes').forEach(textarea => textarea.value = '');
+    
+    // Update displays
+    updateAnchorCircles();
+    updateFocusRecommendations();
+    
+    // Clear localStorage
+    localStorage.removeItem('currentCheckIn');
+    
+    showNotification('Check-in cleared.', 'info');
+}
+
+// Notification system
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : type === 'warning' ? '#FF9800' : '#2196F3'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 6px;
+        z-index: 1001;
+        animation: slideIn 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// CSS for low rating visual feedback
+const additionalCSS = `
+.circle-progress.low-rating {
+    box-shadow: 0 0 12px rgba(244, 67, 54, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.rating-btn.selected {
+    background: var(--accent-color) !important;
+    color: white !important;
+    border-color: var(--accent-color) !important;
+    transform: scale(1.1);
+}
+
+.focus-recommendation {
+    padding: 1rem;
+    background: var(--nav-hover);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--accent-color);
+}
+
+.focus-recommendation h4 {
+    margin-bottom: 0.5rem;
+    color: var(--accent-color);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+`;
+
+// Add CSS to page
+function addCheckInCSS() {
+    const style = document.createElement('style');
+    style.textContent = additionalCSS;
+    document.head.appendChild(style);
+}
+
+// Export functions for global access
+window.initializeDailyCheckIn = initializeDailyCheckIn;
+window.saveCheckIn = saveCheckIn;
+window.clearCheckIn = clearCheckIn;
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    addCheckInCSS();
+    
+    // Add small delay to ensure auth-guard has run
+    setTimeout(() => {
+        initializeDailyCheckIn();
+    }, 500);
+});
+
+console.log('Daily check-in module loaded successfully');
+</script>
 </body>
 </html>
