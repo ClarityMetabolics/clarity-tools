@@ -215,14 +215,21 @@
 
         /* Locked Card Styles */
         .tool-card.locked {
-            opacity: 0.4;
+            opacity: 0.6;
             pointer-events: none;
             cursor: not-allowed;
+            border: 2px solid var(--card-border);
+            background: var(--card-bg);
         }
 
         .tool-card.locked:hover {
             transform: none;
             box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .tool-card.locked .tool-title,
+        .tool-card.locked .tool-description {
+            opacity: 0.5;
         }
 
         .lock-overlay {
