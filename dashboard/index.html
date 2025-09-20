@@ -78,12 +78,12 @@
         }
 
         @media (max-width: 768px) {
-            .header {
+            . {
                 position: static;
             }
         }
 
-        .header-content {
+        .-content {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
@@ -220,8 +220,8 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Section Headers */
-        .section-header {
+        /* Section s */
+        .section- {
             margin-bottom: 2rem;
             text-align: center;
         }
@@ -618,7 +618,7 @@
             max-width: 250px;
         }
 
-        .tool-header {
+        .tool- {
             display: flex;
             align-items: flex-start;
             gap: 1rem;
@@ -743,7 +743,7 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .header-content {
+            .-content {
                 padding: 1rem;
             }
             
@@ -914,7 +914,7 @@
             border-left: 4px solid var(--accent-color);
         }
 
-        .entry-header {
+        .entry- {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -960,6 +960,9 @@
     <!-- Header -->
     <header class="header">
         <div class="header-content">
+            <div id="user-info" style="color: white; position: absolute; top: 0; left: 0; padding: 0.5rem; background: rgba(255,255,255,0.15); border-radius: 15px; display: none;">
+                <span id="user-name">Loading...</span>
+            </div>
             <div class="logo">The Five Anchors Dashboard</div>
             <div class="subtitle-container">
                 <span class="subtitle-icon">⚓</span>
@@ -1786,6 +1789,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 console.log('Daily check-in module loaded successfully');
+    // Add user display functionality
+async function displayUserInfo() {
+    if (window.authManager && window.authManager.userProfile) {
+        const userName = document.getElementById('user-name');
+        if (userName) {
+            const displayName = window.authManager.userProfile.full_name || 
+                              window.authManager.currentUser.email.split('@')[0] || 
+                              'User';
+            userName.textContent = `Welcome, ${displayName}`;
+            document.getElementById('user-info').style.display = 'block';
+        }
+    }
+}
+
+// Call this after initialization
+setTimeout(displayUserInfo, 3000);
 </script>
 </body>
 </html>
