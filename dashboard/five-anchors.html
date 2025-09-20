@@ -139,22 +139,39 @@
             min-height: calc(100vh - 200px);
         }
 
-        .back-button {
-            display: inline-flex;
+        /* Navigation Breadcrumb */
+        .nav-breadcrumb {
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb-content {
+            display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-link {
             color: var(--accent-color);
             text-decoration: none;
             font-weight: 600;
-            margin-bottom: 2rem;
-            padding: 0.5rem;
-            border-radius: 6px;
-            transition: all 0.3s ease;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
         }
 
-        .back-button:hover {
-            background: var(--nav-hover);
-            transform: translateX(-2px);
+        .breadcrumb-link:hover {
+            background-color: var(--nav-hover);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-color);
+            opacity: 0.5;
+        }
+
+        .breadcrumb-current {
+            color: var(--text-color);
+            opacity: 0.7;
         }
 
         .section-header {
@@ -188,11 +205,50 @@
             padding: 1.5rem;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px var(--shadow);
+            position: relative;
         }
 
         .tool-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 16px var(--shadow);
+        }
+
+        /* Locked Card Styles */
+        .tool-card.locked {
+            opacity: 0.4;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        .tool-card.locked:hover {
+            transform: none;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .lock-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            display: none;
+        }
+
+        .tool-card.locked .lock-overlay {
+            display: block;
+        }
+
+        .lock-icon {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
         }
 
         .tool-header {
@@ -321,15 +377,14 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Back Button -->
         <!-- Navigation Breadcrumb -->
-<nav class="nav-breadcrumb">
-    <div class="breadcrumb-content">
-        <a href="index.html" class="breadcrumb-link">Dashboard</a>
-        <span class="breadcrumb-separator">›</span>
-        <span class="breadcrumb-current">Five Anchors</span>
-    </div>
-</nav>
+        <nav class="nav-breadcrumb">
+            <div class="breadcrumb-content">
+                <a href="index.html" class="breadcrumb-link">Dashboard</a>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-current">Five Anchors</span>
+            </div>
+        </nav>
 
         <div class="section-header">
             <h1 class="section-title">Five Anchors Foundation Program</h1>
@@ -337,8 +392,8 @@
         </div>
 
         <div class="anchor-tools-grid">
-            <!-- Physical Anchor -->
-            <div class="tool-card">
+            <!-- Physical Anchor - UNLOCKED -->
+            <div class="tool-card" data-anchor="physical">
                 <div class="tool-header">
                     <span class="tool-icon">🧭</span>
                     <div class="tool-info">
@@ -358,8 +413,12 @@
                 </a>
             </div>
 
-            <!-- Mental Anchor -->
-            <div class="tool-card">
+            <!-- Mental Anchor - LOCKED -->
+            <div class="tool-card locked" data-anchor="mental">
+                <div class="lock-overlay">
+                    <span class="lock-icon">🔒</span>
+                    <div>Unlocked by Coach<br><small>after Physical Anchor module</small></div>
+                </div>
                 <div class="tool-header">
                     <span class="tool-icon">👓</span>
                     <div class="tool-info">
@@ -379,8 +438,12 @@
                 </a>
             </div>
 
-            <!-- Emotional Anchor -->
-            <div class="tool-card">
+            <!-- Emotional Anchor - LOCKED -->
+            <div class="tool-card locked" data-anchor="emotional">
+                <div class="lock-overlay">
+                    <span class="lock-icon">🔒</span>
+                    <div>Unlocked by Coach<br><small>after Mental Anchor module</small></div>
+                </div>
                 <div class="tool-header">
                     <span class="tool-icon">🪣</span>
                     <div class="tool-info">
@@ -400,8 +463,12 @@
                 </a>
             </div>
 
-            <!-- Spiritual Anchor -->
-            <div class="tool-card">
+            <!-- Spiritual Anchor - LOCKED -->
+            <div class="tool-card locked" data-anchor="spiritual">
+                <div class="lock-overlay">
+                    <span class="lock-icon">🔒</span>
+                    <div>Unlocked by Coach<br><small>after Emotional Anchor module</small></div>
+                </div>
                 <div class="tool-header">
                     <span class="tool-icon">🕊️</span>
                     <div class="tool-info">
@@ -421,8 +488,12 @@
                 </a>
             </div>
 
-            <!-- Relational Anchor -->
-            <div class="tool-card">
+            <!-- Relational Anchor - LOCKED -->
+            <div class="tool-card locked" data-anchor="relational">
+                <div class="lock-overlay">
+                    <span class="lock-icon">🔒</span>
+                    <div>Unlocked by Coach<br><small>after Spiritual Anchor module</small></div>
+                </div>
                 <div class="tool-header">
                     <span class="tool-icon">🌐</span>
                     <div class="tool-info">
@@ -445,7 +516,7 @@
     </main>
 
     <script>
-        // Simple theme management only
+        // Theme management
         function toggleTheme() {
             const body = document.body;
             const themeIcon = document.getElementById('theme-icon');
@@ -473,8 +544,22 @@
             }
         }
 
+        // Module unlocking system (placeholder for coach integration)
+        function checkModuleUnlocks() {
+            // This will integrate with your database/coach dashboard
+            // For now, Physical is always unlocked, others are locked
+            
+            // Future integration point:
+            // - Check database for client's unlocked modules
+            // - Remove 'locked' class from unlocked modules
+            // - Update lock overlay text based on current progress
+        }
+
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', loadTheme);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            checkModuleUnlocks();
+        });
     </script>
 </body>
 </html>
