@@ -614,14 +614,14 @@
         <div class="step-counter">Step 9 of 9</div>
         <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
       </div>
-      <h2>Your Next Anchor: Mental</h2>
-      <p class="lead">Now that your body feels more settled and you're tuned into its signals, let's sharpen your mental clarity so your thoughts support rather than overwhelm you.</p>
+      <h2>Physical Anchor Complete</h2>
+<p class="lead">You've completed your Physical Anchor work. Your body awareness and grounding practices are now part of your foundation for stability.</p>
 
-      <div class="next-phase" aria-label="Move to Mental Anchor">
-        <div class="lead"><strong>Carry your body awareness into clear thinking.</strong></div>
-        <button class="btn-next" onclick="goToMentalAnchor()">→ Begin the Mental Anchor</button>
-        <div class="sub">Learn to filter mental noise and see truth clearly.</div>
-      </div>
+<div style="background:var(--accent-color);padding:20px;border-radius:12px;margin:20px 0;text-align:center;border:2px solid var(--main-color)">
+    <h3 style="font-family:'Libre Baskerville',serif;color:var(--contrast-color);margin-bottom:12px">Your Journey Continues</h3>
+    <p style="margin-bottom:15px">Return to your Five Anchors dashboard to see your progress. Your coach will unlock the next anchor when you're ready to build on this foundation.</p>
+    <button class="btn btn-primary" onclick="returnToDashboard()" style="margin-top:10px">Return to Five Anchors Dashboard</button>
+</div>
 
       <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin:22px 0; width:100%;">
         <button class="btn btn-secondary" style="display:block; width:100%; max-width:280px; min-height:50px; text-align:center;" onclick="prevStep()">← Back</button>
@@ -850,10 +850,10 @@
   function openSacredReflection(){ document.getElementById('sacredModal').style.display='flex'; }
   function closeSacredReflection(){ document.getElementById('sacredModal').style.display='none'; }
 
-  // Mental Anchor link (update route when ready)
-  function goToMentalAnchor(){
-    alert('Mental Anchor tool coming soon! This would link to the next tool in your Five Anchors framework.');
-  }
+ // Return to dashboard function
+  function returnToDashboard(){
+    window.location.href = '../dashboard/five-anchors.html';
+}
 
   // Enable/disable Save on STEP 1 (Body Awareness)
   function checkBodyInputs() {
