@@ -1360,15 +1360,20 @@
 // Import the database manager
 // Import the database manager - alternative approach
 let authManager, hybridDataManager;
+    let authManager, hybridDataManager;
+let modulesLoaded = false;
 
 // Load modules dynamically
 (async function loadModules() {
+    if (modulesLoaded) return; // Prevent duplicate loading
+    
     try {
         const module = await import('./js/supabase-config.js');
         authManager = module.authManager;
         hybridDataManager = module.hybridDataManager;
         window.authManager = authManager;
         window.hybridDataManager = hybridDataManager;
+        modulesLoaded = true; // Mark as loaded
         console.log('✅ Modules loaded successfully:', { authManager: !!authManager, hybridDataManager: !!hybridDataManager });
     } catch (error) {
         console.error('❌ Failed to load modules:', error);
