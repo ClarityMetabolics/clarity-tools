@@ -1791,6 +1791,11 @@ document.addEventListener('DOMContentLoaded', function() {
 console.log('Daily check-in module loaded successfully');
     // Add user display functionality
 async function displayUserInfo() {
+    console.log('=== displayUserInfo called ===');
+    console.log('authManager exists:', !!window.authManager);
+    console.log('authManager.currentUser:', window.authManager?.currentUser);
+    console.log('authManager.userProfile:', window.authManager?.userProfile);
+    
     if (window.authManager && window.authManager.userProfile) {
         const userName = document.getElementById('user-name');
         if (userName) {
@@ -1799,12 +1804,19 @@ async function displayUserInfo() {
                               'User';
             userName.textContent = `Welcome, ${displayName}`;
             document.getElementById('user-info').style.display = 'block';
+            console.log('✅ User info displayed:', displayName);
+        } else {
+            console.log('❌ userName element not found');
         }
+    } else {
+        console.log('⏳ Auth manager or user profile not ready, retrying...');
+        // Retry in 2 seconds if not ready
+        setTimeout(displayUserInfo, 2000);
     }
 }
 
 // Call this after initialization
-setTimeout(displayUserInfo, 3000);
+setTimeout(displayUserInfo, 2000);
 </script>
 </body>
 </html>
