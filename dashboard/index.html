@@ -1358,7 +1358,22 @@
 // Add this JavaScript to your /dashboard/index.html file
 
 // Import the database manager
-import { authManager, hybridDataManager } from './js/supabase-config.js';
+// Import the database manager - alternative approach
+let authManager, hybridDataManager;
+
+// Load modules dynamically
+(async function loadModules() {
+    try {
+        const module = await import('./js/supabase-config.js');
+        authManager = module.authManager;
+        hybridDataManager = module.hybridDataManager;
+        window.authManager = authManager;
+        window.hybridDataManager = hybridDataManager;
+        console.log('✅ Modules loaded successfully:', { authManager: !!authManager, hybridDataManager: !!hybridDataManager });
+    } catch (error) {
+        console.error('❌ Failed to load modules:', error);
+    }
+})();
 
 // Daily check-in state
 let currentCheckIn = {
