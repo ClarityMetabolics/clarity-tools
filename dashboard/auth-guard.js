@@ -1,12 +1,11 @@
 // File: /dashboard/auth-guard.js
 // Updated auth guard for modular pages
 
-import { authManager, hybridDataManager } from './js/supabase-config.js';
+import { globalAuthManager, dbManager } from './js/supabase-config.js';
 
 // Global auth state for modular pages
-window.authManager = authManager;
-window.hybridDataManager = hybridDataManager;
-
+const authManager = globalAuthManager;
+const hybridDataManager = dbManager;
 // Wait for auth to be ready
 let authReady = false;
 
