@@ -1552,25 +1552,39 @@ async function signOut() {
 // Add this JavaScript to your /dashboard/index.html file
 
 // Import the database manager - alternative approach
-let authManager, hybridDataManager;
+console.log('Initializing client dashboard...');
+
+// Import database functionality with updated auth pattern
+import { authManager, hybridDataManager } from './js/supabase-config.js';
+
+// Wait for auth to be ready (matching coach dashboard pattern)
+let authInitialized = false;
 let modulesLoaded = false;
 
-// Load modules dynamically
-(async function loadModules() {
-    if (modulesLoaded) return; // Prevent duplicate loading
+async function waitForAuth() {
+    if (authInitialized) return true;
     
-    try {
-        const module = await import('./js/supabase-config.js');
-        authManager = module.authManager;
-        hybridDataManager = module.hybridDataManager;
-        window.authManager = authManager;
-        window.hybridDataManager = hybridDataManager;
-        modulesLoaded = true; // Mark as loaded
-        console.log('✅ Modules loaded successfully:', { authManager: !!authManager, hybridDataManager: !!hybridDataManager });
-    } catch (error) {
-        console.error('❌ Failed to load modules:', error);
+    console.log('Client dashboard waiting for authentication...');
+    
+    // Wait up to 5 seconds for auth to be ready
+    for (let i = 0; i < 50; i++) {
+        if (window.authManager && window.getCurrentUserId && window.getCurrentUserId()) {
+            authInitialized = true;
+            modulesLoaded = true; // Set compatibility flag
+            
+            // Set global references for compatibility
+            window.authManager = authManager;
+            window.hybridDataManager = hybridDataManager;
+            
+            console.log('Auth ready for client dashboard');
+            return true;
+        }
+        await new Promise(resolve => setTimeout(resolve, 100));
     }
-})();
+    
+    console.error('Auth initialization timeout');
+    return false;
+}
 
 // Daily check-in state
 let currentCheckIn = {
