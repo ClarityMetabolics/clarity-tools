@@ -958,128 +958,142 @@
     </style>
 </head>
 <body>
-    <!-- Replace the logout script we just added with this complete header menu -->
+   <!-- Replace the existing header menu with this refined version -->
 <!-- Add this right after the opening <body> tag in your dashboard index.html -->
 
-<div id="dashboard-header-controls" style="position: fixed; top: 15px; right: 15px; z-index: 1000; display: flex; gap: 8px; align-items: center;">
+<div id="dashboard-header-controls" style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; gap: 6px; align-items: center;">
   <!-- Theme Toggle -->
   <button id="theme-toggle" title="Toggle dark/light theme" style="
-    background: rgba(255,255,255,0.9);
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 8px;
-    width: 40px;
-    height: 40px;
+    background: linear-gradient(135deg, #f8f6f0, #ede8dc);
+    border: 1px solid rgba(138, 126, 109, 0.2);
+    border-radius: 12px;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    color: #8a7e6d;
   ">🌙</button>
 
   <!-- Notifications -->
   <button id="notifications-btn" title="Notifications" style="
-    background: rgba(255,255,255,0.9);
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 8px;
-    width: 40px;
-    height: 40px;
+    background: linear-gradient(135deg, #f8f6f0, #ede8dc);
+    border: 1px solid rgba(138, 126, 109, 0.2);
+    border-radius: 12px;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    color: #8a7e6d;
     position: relative;
   ">🔔</button>
 
   <!-- User Menu -->
   <div id="user-menu" style="position: relative;">
     <button id="user-menu-btn" title="User menu" style="
-      background: rgba(255,255,255,0.9);
-      border: 1px solid rgba(0,0,0,0.1);
-      border-radius: 8px;
-      width: 40px;
-      height: 40px;
+      background: linear-gradient(135deg, #f8f6f0, #ede8dc);
+      border: 1px solid rgba(138, 126, 109, 0.2);
+      border-radius: 12px;
+      width: 44px;
+      height: 44px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 18px;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      color: #8a7e6d;
     ">👤</button>
     
     <!-- Dropdown Menu -->
     <div id="user-dropdown" style="
       position: absolute;
-      top: 45px;
+      top: 50px;
       right: 0;
-      background: white;
-      border: 1px solid rgba(0,0,0,0.1);
-      border-radius: 8px;
-      min-width: 200px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      background: linear-gradient(135deg, #faf8f4, #f0ede5);
+      border: 1px solid rgba(138, 126, 109, 0.25);
+      border-radius: 12px;
+      min-width: 220px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
       display: none;
       overflow: hidden;
+      backdrop-filter: blur(10px);
     ">
-      <div style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); background: #f8f9fa;">
-        <div style="font-weight: 600; font-size: 14px;" id="user-display-name">lallybyoga</div>
-        <div style="font-size: 12px; color: #666; margin-top: 2px;" id="user-display-email">lallybyoga@gmail.com</div>
+      <div style="padding: 16px; border-bottom: 1px solid rgba(138, 126, 109, 0.15); background: linear-gradient(135deg, #f5f2ea, #ebe6d8);">
+        <div style="font-weight: 600; font-size: 15px; color: #5d5347;" id="user-display-name">lallybyoga</div>
+        <div style="font-size: 13px; color: #8a7e6d; margin-top: 2px;" id="user-display-email">lallybyoga@gmail.com</div>
       </div>
       
       <div style="padding: 8px 0;">
         <button id="menu-profile" style="
           width: 100%;
-          padding: 10px 16px;
+          padding: 12px 18px;
           border: none;
           background: none;
           text-align: left;
           cursor: pointer;
           font-size: 14px;
-          transition: background 0.2s ease;
-        " onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='none'">
+          color: #5d5347;
+          transition: all 0.2s ease;
+          font-weight: 500;
+        " onmouseover="this.style.background='rgba(138, 126, 109, 0.08)'" onmouseout="this.style.background='none'">
           Profile & Settings
         </button>
         
         <button id="menu-about" style="
           width: 100%;
-          padding: 10px 16px;
+          padding: 12px 18px;
           border: none;
           background: none;
           text-align: left;
           cursor: pointer;
           font-size: 14px;
-          transition: background 0.2s ease;
-        " onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='none'">
+          color: #5d5347;
+          transition: all 0.2s ease;
+          font-weight: 500;
+        " onmouseover="this.style.background='rgba(138, 126, 109, 0.08)'" onmouseout="this.style.background='none'">
           About Five Anchors
         </button>
         
         <button id="menu-help" style="
           width: 100%;
-          padding: 10px 16px;
+          padding: 12px 18px;
           border: none;
           background: none;
           text-align: left;
           cursor: pointer;
           font-size: 14px;
-          transition: background 0.2s ease;
-        " onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='none'">
+          color: #5d5347;
+          transition: all 0.2s ease;
+          font-weight: 500;
+        " onmouseover="this.style.background='rgba(138, 126, 109, 0.08)'" onmouseout="this.style.background='none'">
           Help & Support
         </button>
         
-        <hr style="margin: 8px 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+        <hr style="margin: 8px 12px; border: none; border-top: 1px solid rgba(138, 126, 109, 0.15);">
         
         <button id="menu-logout" style="
           width: 100%;
-          padding: 10px 16px;
+          padding: 12px 18px;
           border: none;
           background: none;
           text-align: left;
           cursor: pointer;
           font-size: 14px;
-          color: #dc3545;
-          transition: background 0.2s ease;
-        " onmouseover="this.style.background='#fff5f5'" onmouseout="this.style.background='none'">
+          color: #c85a54;
+          transition: all 0.2s ease;
+          font-weight: 500;
+        " onmouseover="this.style.background='rgba(200, 90, 84, 0.08)'" onmouseout="this.style.background='none'">
           Sign Out
         </button>
       </div>
@@ -1090,31 +1104,49 @@
 <!-- Notifications Panel -->
 <div id="notifications-panel" style="
   position: fixed;
-  top: 70px;
-  right: 15px;
-  width: 320px;
-  background: white;
-  border: 1px solid rgba(0,0,0,0.1);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  top: 75px;
+  right: 20px;
+  width: 340px;
+  background: linear-gradient(135deg, #faf8f4, #f0ede5);
+  border: 1px solid rgba(138, 126, 109, 0.25);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
   display: none;
   z-index: 999;
-  max-height: 400px;
+  max-height: 420px;
   overflow-y: auto;
+  backdrop-filter: blur(10px);
 ">
-  <div style="padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.1); background: #f8f9fa;">
-    <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Notifications</h3>
+  <div style="padding: 18px; border-bottom: 1px solid rgba(138, 126, 109, 0.15); background: linear-gradient(135deg, #f5f2ea, #ebe6d8);">
+    <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #5d5347;">Notifications</h3>
   </div>
-  <div id="notifications-content" style="padding: 16px;">
-    <div style="text-align: center; color: #666; font-size: 14px;">
+  <div id="notifications-content" style="padding: 18px;">
+    <div style="text-align: center; color: #8a7e6d; font-size: 14px; font-style: italic;">
       No new notifications
     </div>
   </div>
 </div>
 
 <script>
-// Dashboard Header Menu Functionality
+// Refined Dashboard Header Menu Functionality
 document.addEventListener('DOMContentLoaded', function() {
+  // Enhanced button hover effects
+  function addHoverEffect(button) {
+    button.addEventListener('mouseenter', () => {
+      button.style.transform = 'translateY(-1px)';
+      button.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+    });
+    button.addEventListener('mouseleave', () => {
+      button.style.transform = 'translateY(0)';
+      button.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+    });
+  }
+
+  // Apply hover effects to all header buttons
+  addHoverEffect(document.getElementById('theme-toggle'));
+  addHoverEffect(document.getElementById('notifications-btn'));
+  addHoverEffect(document.getElementById('user-menu-btn'));
+
   // Theme Toggle
   const themeToggle = document.getElementById('theme-toggle');
   const currentTheme = localStorage.getItem('theme') || 'light';
@@ -1138,9 +1170,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
   userMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    userDropdown.style.display = userDropdown.style.display === 'none' ? 'block' : 'none';
+    const isVisible = userDropdown.style.display === 'block';
+    userDropdown.style.display = isVisible ? 'none' : 'block';
     // Close notifications if open
     document.getElementById('notifications-panel').style.display = 'none';
+    
+    // Add slight rotation to user icon when open
+    userMenuBtn.style.transform = isVisible ? 'translateY(0) rotate(0deg)' : 'translateY(-1px) rotate(15deg)';
   });
 
   // Notifications Toggle
@@ -1149,31 +1185,37 @@ document.addEventListener('DOMContentLoaded', function() {
   
   notificationsBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    notificationsPanel.style.display = notificationsPanel.style.display === 'none' ? 'block' : 'none';
+    const isVisible = notificationsPanel.style.display === 'block';
+    notificationsPanel.style.display = isVisible ? 'none' : 'block';
     // Close user menu if open
     userDropdown.style.display = 'none';
+    userMenuBtn.style.transform = 'translateY(0) rotate(0deg)';
   });
 
   // Close menus when clicking outside
   document.addEventListener('click', () => {
     userDropdown.style.display = 'none';
     notificationsPanel.style.display = 'none';
+    userMenuBtn.style.transform = 'translateY(0) rotate(0deg)';
   });
 
   // Menu Actions
   document.getElementById('menu-profile').addEventListener('click', () => {
     alert('Profile & Settings coming soon!');
     userDropdown.style.display = 'none';
+    userMenuBtn.style.transform = 'translateY(0) rotate(0deg)';
   });
 
   document.getElementById('menu-about').addEventListener('click', () => {
     alert('About Five Anchors:\n\nYour grounding tools for spiritual and emotional stability.\n\n© 2025 Clarity Metabolics');
     userDropdown.style.display = 'none';
+    userMenuBtn.style.transform = 'translateY(0) rotate(0deg)';
   });
 
   document.getElementById('menu-help').addEventListener('click', () => {
     alert('Help & Support:\n\nFor assistance, please contact:\nsupport@claritymetabolics.com');
     userDropdown.style.display = 'none';
+    userMenuBtn.style.transform = 'translateY(0) rotate(0deg)';
   });
 
   // Logout functionality
@@ -1197,6 +1239,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     userDropdown.style.display = 'none';
+    userMenuBtn.style.transform = 'translateY(0) rotate(0deg)';
   });
 
   // Update user info if available
@@ -1211,32 +1254,39 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Dark theme CSS
+// Enhanced Dark theme CSS
 const darkThemeStyles = `
 .dark-theme {
   background-color: #1a1a1a !important;
   color: #e0e0e0 !important;
 }
 .dark-theme #dashboard-header-controls button {
-  background: rgba(40,40,40,0.9) !important;
-  border-color: rgba(255,255,255,0.2) !important;
-  color: #e0e0e0 !important;
+  background: linear-gradient(135deg, #3a3632, #2d2a26) !important;
+  border-color: rgba(255,255,255,0.15) !important;
+  color: #d0c4b0 !important;
 }
 .dark-theme #user-dropdown, .dark-theme #notifications-panel {
-  background: #2d2d2d !important;
-  border-color: rgba(255,255,255,0.2) !important;
+  background: linear-gradient(135deg, #3a3632, #2d2a26) !important;
+  border-color: rgba(255,255,255,0.15) !important;
   color: #e0e0e0 !important;
 }
 .dark-theme #user-dropdown > div:first-child {
-  background: #383838 !important;
+  background: linear-gradient(135deg, #433e38, #38332e) !important;
+}
+.dark-theme #user-dropdown button {
+  color: #d0c4b0 !important;
+}
+.dark-theme #menu-logout {
+  color: #e67e7e !important;
 }
 `;
 
-// Add dark theme styles to page
+// Add enhanced dark theme styles to page
 const styleSheet = document.createElement('style');
 styleSheet.textContent = darkThemeStyles;
 document.head.appendChild(styleSheet);
-</script>
+</script> 
+
     <!-- Header -->
     <header class="header">
         <div class="header-content">
