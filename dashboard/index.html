@@ -1594,8 +1594,17 @@ let currentCheckIn = {
 };
 
 // Initialize daily check-in functionality
-function initializeDailyCheckIn() {
+async function initializeDailyCheckIn() {
     console.log('Initializing daily check-in functionality...');
+    // Wait for auth to be ready
+    if (!await waitForAuth()) {
+        console.error('Auth not ready for daily check-in');
+        return;
+    }
+    
+    // Ensure page is visible
+    document.body.style.visibility = 'visible';
+    console.log('✅ Client dashboard ready - showing content');
     
     // Set current date
     document.getElementById('current-date').textContent = new Date().toLocaleDateString();
