@@ -958,73 +958,131 @@
     </style>
 </head>
 <body>
- <!-- Simple, clean header menu - replace existing header menu code -->
+ <!-- Balanced emoji header menu with subtle styling -->
 
-<div id="dashboard-header-controls" style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; gap: 12px;">
+<div id="dashboard-header-controls" style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px;">
   
   <!-- Theme Toggle -->
   <button id="theme-toggle" title="Toggle theme" style="
-    background: #8a7e6d;
+    background: rgba(138, 126, 109, 0.85);
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 13px;
-    font-weight: 600;
+    border-radius: 10px;
+    width: 50px;
+    height: 40px;
+    font-size: 16px;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  ">THEME</button>
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+  ">🌙</button>
 
   <!-- Notifications -->
   <button id="notifications-btn" title="Notifications" style="
-    background: #8a7e6d;
+    background: rgba(138, 126, 109, 0.85);
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 13px;
-    font-weight: 600;
+    border-radius: 10px;
+    width: 50px;
+    height: 40px;
+    font-size: 16px;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  ">ALERTS</button>
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+  ">🔔</button>
 
   <!-- User Menu -->
   <div style="position: relative;">
     <button id="user-menu-btn" title="User menu" style="
-      background: #8a7e6d;
+      background: rgba(138, 126, 109, 0.85);
       color: white;
       border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-size: 13px;
-      font-weight: 600;
+      border-radius: 10px;
+      width: 50px;
+      height: 40px;
+      font-size: 16px;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    ">MENU</button>
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: all 0.2s ease;
+    ">👤</button>
     
     <!-- User Dropdown -->
     <div id="user-dropdown" style="
       position: absolute;
       top: 45px;
       right: 0;
-      background: white;
-      border: 2px solid #8a7e6d;
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(138, 126, 109, 0.3);
+      border-radius: 10px;
       min-width: 200px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
       display: none;
+      overflow: hidden;
     ">
-      <div style="padding: 12px; border-bottom: 1px solid #ddd; background: #f5f5f5;">
-        <div style="font-weight: 600; color: #333;">lallybyoga</div>
-        <div style="font-size: 12px; color: #666;">lallybyoga@gmail.com</div>
+      <div style="padding: 12px; border-bottom: 1px solid rgba(138, 126, 109, 0.2); background: rgba(245, 240, 235, 0.8);">
+        <div style="font-weight: 600; color: #5d5347; font-size: 14px;">lallybyoga</div>
+        <div style="font-size: 12px; color: #8a7e6d;">lallybyoga@gmail.com</div>
       </div>
       
       <div style="padding: 8px 0;">
-        <button onclick="alert('Profile coming soon')" style="width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; cursor: pointer;">Profile</button>
-        <button onclick="alert('About Five Anchors')" style="width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; cursor: pointer;">About</button>
-        <button onclick="alert('Help & Support')" style="width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; cursor: pointer;">Help</button>
-        <hr style="margin: 8px 12px; border: none; border-top: 1px solid #ddd;">
-        <button id="logout-btn" style="width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; cursor: pointer; color: #d63384; font-weight: 600;">Sign Out</button>
+        <button onclick="alert('Profile coming soon')" style="
+          width: 100%; 
+          padding: 10px 16px; 
+          border: none; 
+          background: none; 
+          text-align: left; 
+          cursor: pointer; 
+          color: #5d5347;
+          font-size: 14px;
+          transition: background 0.2s ease;
+        " onmouseover="this.style.background='rgba(138, 126, 109, 0.1)'" onmouseout="this.style.background='none'">
+          Profile & Settings
+        </button>
+        
+        <button onclick="alert('About Five Anchors:\\n\\nYour grounding tools for spiritual and emotional stability.\\n\\n© 2025 Clarity Metabolics')" style="
+          width: 100%; 
+          padding: 10px 16px; 
+          border: none; 
+          background: none; 
+          text-align: left; 
+          cursor: pointer; 
+          color: #5d5347;
+          font-size: 14px;
+          transition: background 0.2s ease;
+        " onmouseover="this.style.background='rgba(138, 126, 109, 0.1)'" onmouseout="this.style.background='none'">
+          About Five Anchors
+        </button>
+        
+        <button onclick="alert('Help & Support:\\n\\nFor assistance, contact:\\nsupport@claritymetabolics.com')" style="
+          width: 100%; 
+          padding: 10px 16px; 
+          border: none; 
+          background: none; 
+          text-align: left; 
+          cursor: pointer; 
+          color: #5d5347;
+          font-size: 14px;
+          transition: background 0.2s ease;
+        " onmouseover="this.style.background='rgba(138, 126, 109, 0.1)'" onmouseout="this.style.background='none'">
+          Help & Support
+        </button>
+        
+        <hr style="margin: 8px 12px; border: none; border-top: 1px solid rgba(138, 126, 109, 0.2);">
+        
+        <button id="logout-btn" style="
+          width: 100%; 
+          padding: 10px 16px; 
+          border: none; 
+          background: none; 
+          text-align: left; 
+          cursor: pointer; 
+          color: #c85a54; 
+          font-weight: 600;
+          font-size: 14px;
+          transition: background 0.2s ease;
+        " onmouseover="this.style.background='rgba(200, 90, 84, 0.1)'" onmouseout="this.style.background='none'">
+          Sign Out
+        </button>
       </div>
     </div>
   </div>
@@ -1034,10 +1092,26 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   
+  // Add subtle hover effects
+  function addHover(button) {
+    button.addEventListener('mouseenter', () => {
+      button.style.transform = 'translateY(-1px)';
+      button.style.background = 'rgba(138, 126, 109, 1)';
+    });
+    button.addEventListener('mouseleave', () => {
+      button.style.transform = 'translateY(0)';
+      button.style.background = 'rgba(138, 126, 109, 0.85)';
+    });
+  }
+
+  addHover(document.getElementById('theme-toggle'));
+  addHover(document.getElementById('notifications-btn'));
+  addHover(document.getElementById('user-menu-btn'));
+
   // Theme toggle
   document.getElementById('theme-toggle').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
-    this.textContent = document.body.classList.contains('dark-mode') ? 'LIGHT' : 'THEME';
+    this.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
   });
 
   // User menu toggle
@@ -1054,12 +1128,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Logout functionality
   document.getElementById('logout-btn').addEventListener('click', async function() {
-    if (confirm('Sign out?')) {
+    if (confirm('Sign out of your account?')) {
       try {
         const { authManager } = await import('./js/supabase-config.js');
         await authManager.signOut();
         window.location.href = './auth.html';
       } catch (error) {
+        console.error('Logout error:', error);
         localStorage.clear();
         sessionStorage.clear();
         window.location.href = './auth.html';
