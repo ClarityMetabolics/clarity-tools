@@ -1,134 +1,440 @@
 // File: /dashboard/js/supabase-config.js
-// Updated Supabase Configuration for Five Anchors Platform
+// FIXED: Authentication and Database Integration for Five Anchors Platform
 
-// Import Supabase client
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2'
 
-// Supabase configuration - Replace with your actual values
+// Supabase configuration
 const SUPABASE_URL = 'https://fcoosyveumtkalsdwppg.supabase.co'
 const SUPABASE_ANON_KEY = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjb29zeXZldW10a2Fsc2R3cHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NjQxOTUsImV4cCI6MjA3MzA0MDE5NX0.hukhtamCJx3nlxh_8Sya12sAnwZ6dOGjxp_vXp4ZsBY`
 
 // Create Supabase client
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-// Authentication helper functions
-export class AuthManager {
+// FIXED: Global auth state management
+class GlobalAuthManager {
     constructor() {
         this.currentUser = null
-        this.isCoach = false
         this.userProfile = null
-        this.init()
+        this.isCoach = false
+        this.isReady = false
+        this.initPromise = null
+        
+        // Make globally available immediately
+        if (typeof window !== 'undefined') {
+            window.authManager = this
+            window.getCurrentUserId = () => this.getCurrentUserId()
+            window.getCurrentUserProfile = () => this.userProfile
+            window.isCoach = () => this.isCoach
+        }
     }
 
     async init() {
-        // Check if user is already logged in
-        const { data: { user } } = await supabase.auth.getUser()
-        if (user) {
-            await this.setCurrentUser(user)
-        }
+        if (this.initPromise) return this.initPromise
+        
+        this.initPromise = this._initialize()
+        return this.initPromise
+    }
 
-        // Listen for auth changes
-        supabase.auth.onAuthStateChange(async (event, session) => {
-            if (event === 'SIGNED_IN' && session?.user) {
-                await this.setCurrentUser(session.user)
-                // Redirect based on role
-                this.redirectBasedOnRole()
-            } else if (event === 'SIGNED_OUT') {
-                this.clearCurrentUser()
-                window.location.href = './auth.html'
+    async _initialize() {
+        try {
+            console.log('🔐 Initializing global auth manager...')
+            
+            // Check current session
+            const { data: { user }, error } = await supabase.auth.getUser()
+            
+            if (error) {
+                console.error('Auth check failed:', error)
+                this.redirectToAuth()
+                return false
             }
-        })
+
+            if (!user) {
+                console.log('No authenticated user found')
+                this.redirectToAuth()
+                return false
+            }
+
+            console.log('✅ User authenticated:', user.email)
+            
+            // Set user and get profile
+            await this.setCurrentUser(user)
+            
+            // Set up auth state listener
+            supabase.auth.onAuthStateChange(async (event, session) => {
+                if (event === 'SIGNED_OUT') {
+                    this.clearUser()
+                    this.redirectToAuth()
+                } else if (event === 'SIGNED_IN' && session?.user) {
+                    await this.setCurrentUser(session.user)
+                }
+            })
+
+            this.isReady = true
+            console.log('✅ Auth manager fully initialized')
+            return true
+            
+        } catch (error) {
+            console.error('Fatal auth initialization error:', error)
+            this.redirectToAuth()
+            return false
+        }
     }
 
     async setCurrentUser(user) {
         this.currentUser = user
         
-        // Get user profile from profiles table
-        const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', user.id)
-            .single()
-
-        if (profile) {
-            this.userProfile = profile
-            this.isCoach = profile.role === 'coach' || profile.role === 'admin'
-        } else if (error && error.code === 'PGRST116') {
-            // Profile doesn't exist, create it
-            const { data: newProfile, error: createError } = await supabase
+        try {
+            // Get user profile
+            const { data: profile, error } = await supabase
                 .from('profiles')
-                .insert([{
-                    id: user.id,
-                    email: user.email,
-                    full_name: user.user_metadata?.full_name || '',
-                    role: 'client'
-                }])
-                .select()
+                .select('*')
+                .eq('id', user.id)
                 .single()
-            
-            if (newProfile) {
+
+            if (error && error.code === 'PGRST116') {
+                // Create profile if it doesn't exist
+                const { data: newProfile } = await supabase
+                    .from('profiles')
+                    .insert([{
+                        id: user.id,
+                        email: user.email,
+                        full_name: user.user_metadata?.full_name || user.email.split('@')[0],
+                        role: 'client'
+                    }])
+                    .select()
+                    .single()
+                    
                 this.userProfile = newProfile
                 this.isCoach = false
+            } else if (profile) {
+                this.userProfile = profile
+                this.isCoach = profile.role === 'coach' || profile.role === 'admin'
             }
+
+            console.log('👤 User profile loaded:', {
+                id: this.userProfile?.id,
+                email: this.userProfile?.email,
+                role: this.userProfile?.role,
+                isCoach: this.isCoach
+            })
+
+        } catch (error) {
+            console.error('Error loading user profile:', error)
         }
     }
 
-    clearCurrentUser() {
+    clearUser() {
         this.currentUser = null
         this.userProfile = null
         this.isCoach = false
+        this.isReady = false
     }
 
-    redirectBasedOnRole() {
-        if (this.isCoach) {
-            window.location.href = './coach-dashboard.html'
-        } else {
-            window.location.href = './index.html'
+    redirectToAuth() {
+        const currentPath = window.location.pathname
+        if (!currentPath.includes('auth.html')) {
+            window.location.href = './auth.html'
         }
     }
 
-    // Magic link sign in
-    async signInWithEmail(email) {
-        const { data, error } = await supabase.auth.signInWithOtp({
-            email: email,
-            options: {
-                emailRedirectTo: 'https://claritymetabolics.github.io/clarity-tools/dashboard/auth.html'
-            }
-        })
-        return { data, error }
+    getCurrentUserId() {
+        if (!this.currentUser) {
+            console.warn('⚠️ getCurrentUserId called but no user authenticated')
+            return null
+        }
+        return this.currentUser.id
     }
 
-    // Sign out
     async signOut() {
         const { error } = await supabase.auth.signOut()
         if (!error) {
-            this.clearCurrentUser()
+            this.clearUser()
+            this.redirectToAuth()
         }
         return { error }
     }
-
-    // Get current session
-    async getSession() {
-        const { data: { session }, error } = await supabase.auth.getSession()
-        return { session, error }
-    }
-
-    getCurrentUserId() {
-        return this.currentUser?.id
-    }
 }
 
-// Database manager that bridges localStorage format with Supabase
+// FIXED: Database manager with proper auth integration
 export class DatabaseManager {
     constructor() {
-        this.authManager = new AuthManager()
+        this.authManager = window.authManager || globalAuthManager
     }
 
     getCurrentUserId() {
-        return this.authManager.getCurrentUserId()
+        const userId = this.authManager.getCurrentUserId()
+        if (!userId) {
+            console.error('❌ Database operation attempted without auth')
+        }
+        return userId
     }
 
-    // Save daily check-in in localStorage format to database
+    // Save anchor statement with JSONB structure matching schema
+    async saveAnchorStatement(anchorType, statementText, sharedWithCoach = false) {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
+
+        try {
+            // Get existing statements
+            const { data: existing } = await supabase
+                .from('anchor_statements')
+                .select('statements')
+                .eq('user_id', userId)
+                .single()
+
+            // Build updated statements object
+            const currentStatements = existing?.statements || {}
+            currentStatements[anchorType] = {
+                statement_text: statementText,
+                shared_with_coach: sharedWithCoach,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            }
+
+            // Upsert with JSONB structure
+            const { data, error } = await supabase
+                .from('anchor_statements')
+                .upsert({
+                    user_id: userId,
+                    statements: currentStatements,
+                    updated_at: new Date().toISOString()
+                }, {
+                    onConflict: 'user_id'
+                })
+                .select()
+
+            if (error) {
+                console.error('Database error saving anchor statement:', error)
+                return { data: null, error }
+            }
+
+            console.log(`✅ Anchor statement saved: ${anchorType}`)
+            return { data, error: null }
+
+        } catch (error) {
+            console.error('Error saving anchor statement:', error)
+            return { data: null, error }
+        }
+    }
+
+    // Get anchor statements from JSONB structure
+    async getAnchorStatements() {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: [], error: { message: 'Not authenticated' } }
+
+        try {
+            const { data, error } = await supabase
+                .from('anchor_statements')
+                .select('statements')
+                .eq('user_id', userId)
+                .single()
+
+            if (error && error.code === 'PGRST116') {
+                // No statements yet
+                return { data: {}, error: null }
+            }
+
+            if (error) {
+                console.error('Error loading anchor statements:', error)
+                return { data: {}, error }
+            }
+
+            return { data: data?.statements || {}, error: null }
+
+        } catch (error) {
+            console.error('Error in getAnchorStatements:', error)
+            return { data: {}, error }
+        }
+    }
+
+    // Update sharing status for anchor statement
+    async updateAnchorStatementSharing(anchorType, sharedWithCoach) {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
+
+        try {
+            const { data: existing } = await supabase
+                .from('anchor_statements')
+                .select('statements')
+                .eq('user_id', userId)
+                .single()
+
+            if (!existing || !existing.statements?.[anchorType]) {
+                return { data: null, error: { message: 'Statement not found' } }
+            }
+
+            const updatedStatements = { ...existing.statements }
+            updatedStatements[anchorType] = {
+                ...updatedStatements[anchorType],
+                shared_with_coach: sharedWithCoach,
+                updated_at: new Date().toISOString()
+            }
+
+            const { data, error } = await supabase
+                .from('anchor_statements')
+                .update({
+                    statements: updatedStatements,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('user_id', userId)
+                .select()
+
+            return { data, error }
+
+        } catch (error) {
+            console.error('Error updating sharing status:', error)
+            return { data: null, error }
+        }
+    }
+
+    // FIXED: Module access functions for coach unlock functionality
+    async unlockModuleForClient(clientId, moduleType, moduleKey, accessType = 'webTool') {
+        const coachId = this.getCurrentUserId()
+        if (!coachId) {
+            console.error('❌ Coach not authenticated for unlock operation')
+            return { data: null, error: { message: 'Coach not authenticated' } }
+        }
+
+        try {
+            console.log(`🔓 Coach ${coachId} unlocking ${moduleKey} for client ${clientId}`)
+
+            const { data, error } = await supabase
+                .from('module_access')
+                .upsert({
+                    user_id: clientId,
+                    module_type: moduleType,
+                    module_key: moduleKey,
+                    access_type: accessType,
+                    unlocked: true,
+                    unlocked_at: new Date().toISOString(),
+                    unlocked_by: coachId
+                }, {
+                    onConflict: 'user_id,module_type,module_key,access_type'
+                })
+                .select()
+
+            if (error) {
+                console.error('Database error unlocking module:', error)
+                return { data: null, error }
+            }
+
+            console.log(`✅ Module unlocked successfully: ${moduleKey} for ${clientId}`)
+            return { data, error: null }
+
+        } catch (error) {
+            console.error('Error in unlockModuleForClient:', error)
+            return { data: null, error }
+        }
+    }
+
+    // Get module access for client
+    async getModuleAccess(userId = null) {
+        const targetUserId = userId || this.getCurrentUserId()
+        if (!targetUserId) return { data: null, error: { message: 'No user ID provided' } }
+
+        try {
+            const { data, error } = await supabase
+                .from('module_access')
+                .select('*')
+                .eq('user_id', targetUserId)
+
+            if (error) {
+                console.error('Error loading module access:', error)
+                return { data: null, error }
+            }
+
+            // Transform to expected format
+            const access = {
+                fiveAnchors: {
+                    physical: { guide: false, webTool: false },
+                    mental: { guide: false, webTool: false },
+                    emotional: { guide: false, webTool: false },
+                    spiritual: { guide: false, webTool: false },
+                    relational: { guide: false, webTool: false }
+                },
+                discernmentTools: {
+                    thoughtRefiner: { unlocked: false },
+                    beliefThreader: { unlocked: false },
+                    echoEraser: { unlocked: false },
+                    forgivenessFilter: { unlocked: false },
+                    connectionCalibrator: { unlocked: false }
+                }
+            }
+
+            if (data) {
+                data.forEach(item => {
+                    if (item.module_type === 'fiveAnchors' && access.fiveAnchors[item.module_key]) {
+                        access.fiveAnchors[item.module_key][item.access_type] = item.unlocked
+                    } else if (item.module_type === 'discernmentTools' && access.discernmentTools[item.module_key]) {
+                        access.discernmentTools[item.module_key].unlocked = item.unlocked
+                    }
+                })
+            }
+
+            return { data: access, error: null }
+
+        } catch (error) {
+            console.error('Error in getModuleAccess:', error)
+            return { data: null, error }
+        }
+    }
+
+    // Coach functions
+    async getCoachClients() {
+        const coachId = this.getCurrentUserId()
+        if (!coachId) return { data: [], error: { message: 'Coach not authenticated' } }
+
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select(`
+                    id, email, full_name, coaching_package, sessions_completed, 
+                    sessions_total, start_date, status, assigned_coach_id, created_at
+                `)
+                .eq('assigned_coach_id', coachId)
+                .eq('role', 'client')
+
+            return { data: data || [], error }
+
+        } catch (error) {
+            console.error('Error loading coach clients:', error)
+            return { data: [], error }
+        }
+    }
+
+    async getClientAnchorStatements(clientId) {
+        try {
+            const { data, error } = await supabase
+                .from('anchor_statements')
+                .select('statements')
+                .eq('user_id', clientId)
+                .single()
+
+            if (error && error.code === 'PGRST116') {
+                return { data: {}, error: null }
+            }
+
+            if (error) return { data: {}, error }
+
+            // Filter for shared statements only
+            const sharedStatements = {}
+            if (data?.statements) {
+                Object.entries(data.statements).forEach(([anchorType, statement]) => {
+                    if (statement.shared_with_coach) {
+                        sharedStatements[anchorType] = statement
+                    }
+                })
+            }
+
+            return { data: sharedStatements, error: null }
+
+        } catch (error) {
+            console.error('Error loading client anchor statements:', error)
+            return { data: {}, error }
+        }
+    }
+
+    // Daily check-ins and other existing functions remain the same...
     async saveCheckIn(checkInData) {
         const userId = this.getCurrentUserId()
         if (!userId) return { data: null, error: { message: 'Not authenticated' } }
@@ -148,7 +454,6 @@ export class DatabaseManager {
         return { data, error }
     }
 
-    // Get check-ins in localStorage format
     async getCheckIns(limit = 30) {
         const userId = this.getCurrentUserId()
         if (!userId) return { data: {}, error: { message: 'Not authenticated' } }
@@ -160,7 +465,6 @@ export class DatabaseManager {
             .order('checkin_date', { ascending: false })
             .limit(limit)
 
-        // Transform to localStorage format: { [date]: { date, ratings, notes } }
         const transformed = {}
         if (data) {
             data.forEach(item => {
@@ -174,450 +478,32 @@ export class DatabaseManager {
 
         return { data: transformed, error }
     }
-
-    // Save journal entry in dashboard's 5-field format
-    async saveJournalEntry(entryData) {
-        const userId = this.getCurrentUserId()
-        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
-
-        const { data, error } = await supabase
-            .from('journal_entries')
-            .insert([{
-                client_id: userId,
-                date_iso: entryData.dateISO,
-                feeling_rating: entryData.rating,
-                primary_thought_pattern: entryData.primaryThoughtPattern,
-                practice_used: entryData.practiceUsed,
-                reflection_text: entryData.reflection
-            }])
-            .select()
-
-        return { data, error }
-    }
-
-    // Get journal entries in localStorage format
-    async getJournalEntries(limit = 10) {
-        const userId = this.getCurrentUserId()
-        if (!userId) return { data: [], error: { message: 'Not authenticated' } }
-
-        const { data, error } = await supabase
-            .from('journal_entries')
-            .select('*')
-            .eq('client_id', userId)
-            .order('date_iso', { ascending: false })
-            .limit(limit)
-
-        // Transform to localStorage format
-        const transformed = []
-        if (data) {
-            data.forEach(item => {
-                transformed.push({
-                    dateISO: item.date_iso,
-                    rating: item.feeling_rating,
-                    primaryThoughtPattern: item.primary_thought_pattern || '',
-                    practiceUsed: item.practice_used || '',
-                    reflection: item.reflection_text,
-                    timestamp: item.created_at
-                })
-            })
-        }
-
-        return { data: transformed, error }
-    }
-
-    // NEW: Save anchor statement to database
-    async saveAnchorStatement(statementData) {
-        const userId = this.getCurrentUserId()
-        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
-
-        const { data, error } = await supabase
-            .from('anchor_statements')
-            .upsert([{
-                user_id: userId,
-                anchor_type: statementData.anchor_type,
-                statement_text: statementData.statement_text,
-                shared_with_coach: statementData.shared_with_coach || false
-            }], {
-                onConflict: 'user_id,anchor_type'
-            })
-            .select()
-
-        return { data, error }
-    }
-
-    // NEW: Get anchor statements for user
-    async getAnchorStatements() {
-        const userId = this.getCurrentUserId()
-        if (!userId) return { data: [], error: { message: 'Not authenticated' } }
-
-        const { data, error } = await supabase
-            .from('anchor_statements')
-            .select('*')
-            .eq('user_id', userId)
-            .order('anchor_type', { ascending: true })
-
-        return { data, error }
-    }
-
-    // NEW: Update anchor statement sharing status
-    async updateAnchorStatementSharing(anchorType, sharedWithCoach) {
-        const userId = this.getCurrentUserId()
-        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
-
-        const { data, error } = await supabase
-            .from('anchor_statements')
-            .update({ shared_with_coach: sharedWithCoach })
-            .eq('user_id', userId)
-            .eq('anchor_type', anchorType)
-            .select()
-
-        return { data, error }
-    }
-
-    // Get module access in localStorage format
-    async getModuleAccess() {
-        const userId = this.getCurrentUserId()
-        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
-
-        const { data, error } = await supabase
-            .from('module_access')
-            .select('*')
-            .eq('user_id', userId)
-
-        // Transform to localStorage structure
-        const access = {
-            fiveAnchors: {
-                physical: { guide: false, webTool: false },
-                mental: { guide: false, webTool: false },
-                emotional: { guide: false, webTool: false },
-                spiritual: { guide: false, webTool: false },
-                relational: { guide: false, webTool: false }
-            },
-            discernmentTools: {
-                thoughtRefiner: { unlocked: false },
-                beliefThreader: { unlocked: false },
-                echoEraser: { unlocked: false },
-                forgivenessFilter: { unlocked: false },
-                connectionCalibrator: { unlocked: false }
-            }
-        }
-
-        if (data) {
-            data.forEach(item => {
-                if (item.module_type === 'fiveAnchors') {
-                    if (access.fiveAnchors[item.module_key]) {
-                        access.fiveAnchors[item.module_key][item.access_type] = item.unlocked
-                    }
-                } else if (item.module_type === 'discernmentTools') {
-                    if (access.discernmentTools[item.module_key]) {
-                        access.discernmentTools[item.module_key].unlocked = item.unlocked
-                    }
-                }
-            })
-        }
-
-        return { data: access, error }
-    }
-
-    // Update module access (coach only)
-    async updateModuleAccess(clientId, moduleType, moduleKey, accessType, unlocked) {
-        const coachId = this.getCurrentUserId()
-        if (!coachId) return { data: null, error: { message: 'Not authenticated' } }
-
-        const { data, error } = await supabase
-            .from('module_access')
-            .upsert([{
-                user_id: clientId,
-                module_type: moduleType,
-                module_key: moduleKey,
-                access_type: accessType,
-                unlocked: unlocked,
-                unlocked_at: unlocked ? new Date().toISOString() : null,
-                unlocked_by: unlocked ? coachId : null
-            }], {
-                onConflict: 'user_id,module_type,module_key,access_type'
-            })
-            .select()
-
-        return { data, error }
-    }
-
-    // Get coaching clients (for coaches)
-    async getCoachingClients() {
-        const coachId = this.getCurrentUserId()
-        if (!coachId) return { data: [], error: { message: 'Not authenticated' } }
-
-        const { data, error } = await supabase
-            .from('profiles')
-            .select(`
-                id, email, full_name, coaching_package, sessions_completed, sessions_total, 
-                start_date, status, assigned_coach_id, created_at
-            `)
-            .eq('assigned_coach_id', coachId)
-            .eq('role', 'client')
-
-        return { data, error }
-    }
-
-    // Get client's latest check-ins (for coaches)
-    async getClientCheckIns(clientId, limit = 7) {
-        const { data, error } = await supabase
-            .from('daily_checkins')
-            .select('*')
-            .eq('client_id', clientId)
-            .order('checkin_date', { ascending: false })
-            .limit(limit)
-
-        return { data, error }
-    }
-
-    // NEW: Get client's shared anchor statements (for coaches)
-    async getClientAnchorStatements(clientId) {
-        const { data, error } = await supabase
-            .from('anchor_statements')
-            .select('*')
-            .eq('user_id', clientId)
-            .eq('shared_with_coach', true)
-            .order('anchor_type', { ascending: true })
-
-        return { data, error }
-    }
 }
 
-// Real-time messaging system
-export class MessagingManager {
-    constructor() {
-        this.authManager = new AuthManager()
-        this.activeSubscriptions = new Map()
-    }
-
-    getCurrentUserId() {
-        return this.authManager.getCurrentUserId()
-    }
-
-    // Send message between coach and client
-    async sendMessage(recipientId, messageText, messageType = 'text') {
-        const senderId = this.getCurrentUserId()
-        if (!senderId) return { data: null, error: { message: 'Not authenticated' } }
-
-        const { data, error } = await supabase
-            .from('messages')
-            .insert([{
-                sender_id: senderId,
-                recipient_id: recipientId,
-                message_text: messageText,
-                message_type: messageType
-            }])
-            .select(`
-                *,
-                sender:profiles!messages_sender_id_fkey(id, full_name, email),
-                recipient:profiles!messages_recipient_id_fkey(id, full_name, email)
-            `)
-
-        return { data, error }
-    }
-
-    // Get conversation between current user and another user
-    async getConversation(otherUserId, limit = 50) {
-        const currentUserId = this.getCurrentUserId()
-        if (!currentUserId) return { data: [], error: { message: 'Not authenticated' } }
-        
-        const { data, error } = await supabase
-            .from('messages')
-            .select(`
-                *,
-                sender:profiles!messages_sender_id_fkey(id, full_name, email),
-                recipient:profiles!messages_recipient_id_fkey(id, full_name, email)
-            `)
-            .or(`and(sender_id.eq.${currentUserId},recipient_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},recipient_id.eq.${currentUserId})`)
-            .order('created_at', { ascending: true })
-            .limit(limit)
-
-        return { data, error }
-    }
-
-    // Subscribe to real-time messages
-    subscribeToMessages(otherUserId, onMessage) {
-        const currentUserId = this.getCurrentUserId()
-        if (!currentUserId) return null
-        
-        const subscription = supabase
-            .channel(`messages-${currentUserId}-${otherUserId}`)
-            .on('postgres_changes', {
-                event: 'INSERT',
-                schema: 'public',
-                table: 'messages',
-                filter: `or(and(sender_id.eq.${currentUserId},recipient_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},recipient_id.eq.${currentUserId}))`
-            }, (payload) => {
-                onMessage(payload.new)
-            })
-            .subscribe()
-
-        this.activeSubscriptions.set(`${currentUserId}-${otherUserId}`, subscription)
-        return subscription
-    }
-
-    // Mark messages as read
-    async markMessagesAsRead(fromUserId) {
-        const currentUserId = this.getCurrentUserId()
-        if (!currentUserId) return { data: null, error: { message: 'Not authenticated' } }
-
-        const { data, error } = await supabase
-            .from('messages')
-            .update({ read_at: new Date().toISOString() })
-            .eq('sender_id', fromUserId)
-            .eq('recipient_id', currentUserId)
-            .is('read_at', null)
-
-        return { data, error }
-    }
-}
-
-// Hybrid data manager - uses database first, localStorage as fallback
-export class HybridDataManager {
-    constructor() {
-        this.dbManager = new DatabaseManager()
-        this.storagePrefix = 'cm_'
-        this.isOnline = true
-    }
-
-    // Save check-in to both database and localStorage
-    async saveCheckIn(checkInData) {
-        // Try database first
-        const dbResult = await this.dbManager.saveCheckIn(checkInData)
-        
-        // Always save to localStorage as backup
-        const allCheckIns = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}')
-        allCheckIns[checkInData.date] = checkInData
-        localStorage.setItem('dailyCheckIns', JSON.stringify(allCheckIns))
-        
-        return dbResult.error ? { data: checkInData, error: null } : dbResult
-    }
-
-    // Load check-ins from database, fallback to localStorage
-    async getCheckIns() {
-        const dbResult = await this.dbManager.getCheckIns()
-        
-        if (!dbResult.error && Object.keys(dbResult.data).length > 0) {
-            return dbResult
-        }
-        
-        // Fallback to localStorage
-        const localData = JSON.parse(localStorage.getItem('dailyCheckIns') || '{}')
-        return { data: localData, error: null }
-    }
-
-    // Save journal entry to both
-    async saveJournalEntry(entryData) {
-        const dbResult = await this.dbManager.saveJournalEntry(entryData)
-        
-        // Save to localStorage
-        const entries = JSON.parse(localStorage.getItem(this.storagePrefix + 'journal_v1') || '[]')
-        entries.unshift(entryData)
-        if (entries.length > 30) entries.splice(30)
-        localStorage.setItem(this.storagePrefix + 'journal_v1', JSON.stringify(entries))
-        
-        return dbResult.error ? { data: entryData, error: null } : dbResult
-    }
-
-    // Load journal entries
-    async getJournalEntries() {
-        const dbResult = await this.dbManager.getJournalEntries()
-        
-        if (!dbResult.error && dbResult.data.length > 0) {
-            return dbResult
-        }
-        
-        // Fallback to localStorage
-        const localData = JSON.parse(localStorage.getItem(this.storagePrefix + 'journal_v1') || '[]')
-        return { data: localData, error: null }
-    }
-
-    // NEW: Save anchor statement to both database and localStorage
-    async saveAnchorStatement(statementData) {
-        const dbResult = await this.dbManager.saveAnchorStatement(statementData)
-        
-        // Save to localStorage as backup
-        const statements = JSON.parse(localStorage.getItem('anchorStatements') || '{}')
-        statements[statementData.anchor_type] = {
-            ...statementData,
-            created_at: new Date().toISOString()
-        }
-        localStorage.setItem('anchorStatements', JSON.stringify(statements))
-        
-        return dbResult.error ? { data: statementData, error: null } : dbResult
-    }
-
-    // NEW: Get anchor statements from database, fallback to localStorage
-    async getAnchorStatements() {
-        const dbResult = await this.dbManager.getAnchorStatements()
-        
-        if (!dbResult.error && dbResult.data.length > 0) {
-            return dbResult
-        }
-        
-        // Fallback to localStorage
-        const localData = JSON.parse(localStorage.getItem('anchorStatements') || '{}')
-        const transformed = Object.keys(localData).map(key => ({
-            anchor_type: key,
-            statement_text: localData[key].statement_text || localData[key],
-            shared_with_coach: localData[key].shared_with_coach || false,
-            created_at: localData[key].created_at || new Date().toISOString()
-        }))
-        
-        return { data: transformed, error: null }
-    }
-
-    // NEW: Update anchor statement sharing
-    async updateAnchorStatementSharing(anchorType, sharedWithCoach) {
-        const dbResult = await this.dbManager.updateAnchorStatementSharing(anchorType, sharedWithCoach)
-        
-        // Update localStorage backup
-        const statements = JSON.parse(localStorage.getItem('anchorStatements') || '{}')
-        if (statements[anchorType]) {
-            statements[anchorType].shared_with_coach = sharedWithCoach
-            localStorage.setItem('anchorStatements', JSON.stringify(statements))
-        }
-        
-        return dbResult.error ? { data: { anchor_type: anchorType, shared_with_coach: sharedWithCoach }, error: null } : dbResult
-    }
-
-    // Module access
-    async getModuleAccess() {
-        const dbResult = await this.dbManager.getModuleAccess()
-        
-        if (!dbResult.error) {
-            return dbResult
-        }
-        
-        // Fallback to localStorage simulation
-        return {
-            data: {
-                fiveAnchors: {
-                    physical: { guide: true, webTool: false },
-                    mental: { guide: false, webTool: false },
-                    emotional: { guide: false, webTool: false },
-                    spiritual: { guide: false, webTool: false },
-                    relational: { guide: false, webTool: false }
-                },
-                discernmentTools: {
-                    thoughtRefiner: { unlocked: false },
-                    beliefThreader: { unlocked: false },
-                    echoEraser: { unlocked: false },
-                    forgivenessFilter: { unlocked: false },
-                    connectionCalibrator: { unlocked: false }
-                }
-            },
-            error: null
-        }
-    }
-}
-
-// Global managers
-export const authManager = new AuthManager()
+// Create and initialize global instances
+export const globalAuthManager = new GlobalAuthManager()
 export const dbManager = new DatabaseManager()
-export const messagingManager = new MessagingManager()
-export const hybridDataManager = new HybridDataManager()
+
+// Global initialization function
+export async function initializeAuth() {
+    console.log('🚀 Starting auth initialization...')
+    
+    const success = await globalAuthManager.init()
+    
+    if (success) {
+        console.log('✅ Auth initialization complete')
+        
+        // Make database manager globally available
+        if (typeof window !== 'undefined') {
+            window.dbManager = dbManager
+        }
+        
+        return true
+    } else {
+        console.error('❌ Auth initialization failed')
+        return false
+    }
+}
 
 // Utility function for notifications
 export function showNotification(message, type = 'info') {
@@ -643,4 +529,17 @@ export function showNotification(message, type = 'info') {
         notification.style.animation = 'slideOut 0.3s ease'
         setTimeout(() => notification.remove(), 300)
     }, 3000)
+}
+
+// Auto-initialize if in browser
+if (typeof window !== 'undefined') {
+    // Initialize immediately and make available
+    window.addEventListener('DOMContentLoaded', () => {
+        initializeAuth().then(success => {
+            if (success) {
+                console.log('🎉 Global auth ready for all dashboard pages')
+                document.body.style.visibility = 'visible'
+            }
+        })
+    })
 }
