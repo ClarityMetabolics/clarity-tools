@@ -1277,14 +1277,122 @@
     <script type="module">
         // Replace the sample data section in coach-dashboard.html with this code
 
-// Import database configuration
-import { supabase, dbManager } from './js/supabase-config.js';
+console.log('Initializing coach dashboard with hybrid data system...');
+
+// Import database functionality and ensure auth is ready
+import { supabase, authManager, hybridDataManager } from './js/supabase-config.js';
+
+// Wait for auth to be initialized
+let authInitialized = false;
+
+async function waitForAuth() {
+    if (authInitialized) return true;
+    
+    console.log('Waiting for authentication...');
+    
+    // Wait up to 5 seconds for auth to be ready
+    for (let i = 0; i < 50; i++) {
+        if (window.authManager && window.getCurrentUserId && window.getCurrentUserId()) {
+            authInitialized = true;
+            console.log('✅ Auth ready for coach dashboard');
+            return true;
+        }
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    console.error('❌ Auth initialization timeout');
+    return false;
+}
 
 // Remove the sampleClients array and replace with real data loading
 
 // Keep sample clients for demonstration + real client integration
 let realClients = [];
+// FIXED: Unlock function with proper auth context
+async function unlockFullAnchorSet(clientId, anchorName) {
+    try {
+        // Ensure auth is ready
+        if (!await waitForAuth()) {
+            alert('Authentication not ready. Please refresh the page.');
+            return;
+        }
+        
+        const currentCoachId = window.getCurrentUserId();
+        if (!currentCoachId) {
+            alert('Unable to identify current coach. Please sign in again.');
+            return;
+        }
+        
+        console.log(`Coach ${currentCoachId} unlocking ${anchorName} for client ${clientId}`);
+        
+        const { data, error } = await supabase
+            .from('module_access')
+            .upsert({
+                user_id: clientId,
+                module_type: 'fiveAnchors',
+                module_key: anchorName.toLowerCase(),
+                access_type: 'webTool',
+                unlocked: true,
+                unlocked_at: new Date().toISOString(),
+                unlocked_by: currentCoachId
+            }, {
+                onConflict: 'user_id,module_type,module_key,access_type'
+            });
 
+        if (error) {
+            console.error('Database error unlocking module:', error);
+            alert('Failed to unlock module. Please try again.');
+            return;
+        }
+
+        console.log(`✅ Successfully unlocked ${anchorName} for client ${clientId}`);
+        alert(`${anchorName} anchor unlocked successfully!`);
+        
+        // Refresh the client list to show updated status
+        await loadClients();
+        
+    } catch (error) {
+        console.error('Error in unlockFullAnchorSet:', error);
+        alert('An error occurred. Please try again.');
+    }
+}
+
+// FIXED: Helper functions with proper auth context
+async function unlockNextRecommended() {
+    if (!selectedModuleClient) {
+        alert('Please select a client first');
+        return;
+    }
+    
+    // Simple logic: unlock mental anchor as next recommended
+    await unlockFullAnchorSet(selectedModuleClient.id, 'mental');
+}
+
+async function unlockDiscernmentTools() {
+    if (!selectedModuleClient) {
+        alert('Please select a client first');
+        return;
+    }
+    
+    if (selectedModuleClient.coachingPackage.type !== '12-week') {
+        alert('Discernment tools require 12-week coaching package');
+        return;
+    }
+    
+    alert('Discernment tools unlock feature coming soon');
+}
+
+async function resetAllModules() {
+    if (!selectedModuleClient) {
+        alert('Please select a client first');
+        return;
+    }
+    
+    const confirmed = confirm(`Reset ALL modules for ${selectedModuleClient.name}? This cannot be undone.`);
+    if (confirmed) {
+        alert('Module reset feature coming soon');
+    }
+}
 // Complete sample clients data for demonstration
 let sampleClients = [
     {
@@ -2286,6 +2394,11 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+// Make functions globally available for onclick handlers
+window.unlockFullAnchorSet = unlockFullAnchorSet;
+window.unlockNextRecommended = unlockNextRecommended;
+window.unlockDiscernmentTools = unlockDiscernmentTools;
+window.resetAllModules = resetAllModules;
     </script>
 </body>
 </html>
