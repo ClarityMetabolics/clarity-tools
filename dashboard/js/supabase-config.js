@@ -225,6 +225,55 @@ export class DatabaseManager {
         return { data: transformed, error }
     }
 
+    // NEW: Save anchor statement to database
+    async saveAnchorStatement(statementData) {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
+
+        const { data, error } = await supabase
+            .from('anchor_statements')
+            .upsert([{
+                user_id: userId,
+                anchor_type: statementData.anchor_type,
+                statement_text: statementData.statement_text,
+                shared_with_coach: statementData.shared_with_coach || false
+            }], {
+                onConflict: 'user_id,anchor_type'
+            })
+            .select()
+
+        return { data, error }
+    }
+
+    // NEW: Get anchor statements for user
+    async getAnchorStatements() {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: [], error: { message: 'Not authenticated' } }
+
+        const { data, error } = await supabase
+            .from('anchor_statements')
+            .select('*')
+            .eq('user_id', userId)
+            .order('anchor_type', { ascending: true })
+
+        return { data, error }
+    }
+
+    // NEW: Update anchor statement sharing status
+    async updateAnchorStatementSharing(anchorType, sharedWithCoach) {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
+
+        const { data, error } = await supabase
+            .from('anchor_statements')
+            .update({ shared_with_coach: sharedWithCoach })
+            .eq('user_id', userId)
+            .eq('anchor_type', anchorType)
+            .select()
+
+        return { data, error }
+    }
+
     // Get module access in localStorage format
     async getModuleAccess() {
         const userId = this.getCurrentUserId()
@@ -318,6 +367,18 @@ export class DatabaseManager {
             .eq('client_id', clientId)
             .order('checkin_date', { ascending: false })
             .limit(limit)
+
+        return { data, error }
+    }
+
+    // NEW: Get client's shared anchor statements (for coaches)
+    async getClientAnchorStatements(clientId) {
+        const { data, error } = await supabase
+            .from('anchor_statements')
+            .select('*')
+            .eq('user_id', clientId)
+            .eq('shared_with_coach', true)
+            .order('anchor_type', { ascending: true })
 
         return { data, error }
     }
@@ -470,6 +531,55 @@ export class HybridDataManager {
         // Fallback to localStorage
         const localData = JSON.parse(localStorage.getItem(this.storagePrefix + 'journal_v1') || '[]')
         return { data: localData, error: null }
+    }
+
+    // NEW: Save anchor statement to both database and localStorage
+    async saveAnchorStatement(statementData) {
+        const dbResult = await this.dbManager.saveAnchorStatement(statementData)
+        
+        // Save to localStorage as backup
+        const statements = JSON.parse(localStorage.getItem('anchorStatements') || '{}')
+        statements[statementData.anchor_type] = {
+            ...statementData,
+            created_at: new Date().toISOString()
+        }
+        localStorage.setItem('anchorStatements', JSON.stringify(statements))
+        
+        return dbResult.error ? { data: statementData, error: null } : dbResult
+    }
+
+    // NEW: Get anchor statements from database, fallback to localStorage
+    async getAnchorStatements() {
+        const dbResult = await this.dbManager.getAnchorStatements()
+        
+        if (!dbResult.error && dbResult.data.length > 0) {
+            return dbResult
+        }
+        
+        // Fallback to localStorage
+        const localData = JSON.parse(localStorage.getItem('anchorStatements') || '{}')
+        const transformed = Object.keys(localData).map(key => ({
+            anchor_type: key,
+            statement_text: localData[key].statement_text || localData[key],
+            shared_with_coach: localData[key].shared_with_coach || false,
+            created_at: localData[key].created_at || new Date().toISOString()
+        }))
+        
+        return { data: transformed, error: null }
+    }
+
+    // NEW: Update anchor statement sharing
+    async updateAnchorStatementSharing(anchorType, sharedWithCoach) {
+        const dbResult = await this.dbManager.updateAnchorStatementSharing(anchorType, sharedWithCoach)
+        
+        // Update localStorage backup
+        const statements = JSON.parse(localStorage.getItem('anchorStatements') || '{}')
+        if (statements[anchorType]) {
+            statements[anchorType].shared_with_coach = sharedWithCoach
+            localStorage.setItem('anchorStatements', JSON.stringify(statements))
+        }
+        
+        return dbResult.error ? { data: { anchor_type: anchorType, shared_with_coach: sharedWithCoach }, error: null } : dbResult
     }
 
     // Module access
