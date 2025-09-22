@@ -1837,5 +1837,60 @@ async function displayUserInfo() {
 // Call this after initialization
 setTimeout(displayUserInfo, 2000);
 </script>
+
+// Add logout button to header
+function addLogoutButton() {
+    // Find the header or create a logout area
+    const header = document.querySelector('.dashboard-header') || document.querySelector('header') || document.body;
+    
+    // Create logout button
+    const logoutBtn = document.createElement('button');
+    logoutBtn.innerHTML = '🚪 Sign Out';
+    logoutBtn.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        z-index: 1000;
+        font-size: 14px;
+    `;
+    
+    // Add logout functionality
+    logoutBtn.addEventListener('click', async () => {
+        if (confirm('Sign out of your account?')) {
+            try {
+                // Import the auth manager
+                const { authManager } = await import('./js/supabase-config.js');
+                
+                // Sign out
+                await authManager.signOut();
+                
+                // Redirect to auth page
+                window.location.href = './auth.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                // Fallback: clear storage and redirect
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = './auth.html';
+            }
+        }
+    });
+    
+    // Add to page
+    document.body.appendChild(logoutBtn);
+}
+
+// Add logout button when page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addLogoutButton);
+} else {
+    addLogoutButton();
+}
 </body>
 </html>
