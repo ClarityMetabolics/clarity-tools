@@ -970,9 +970,7 @@
                 <span class="subtitle-icon">⚓</span>
                 <span class="subtitle-text">Your Stability Center — navigate life from a grounded, conscious place</span>
             </div>
-            <button class="theme-toggle" onclick="toggleTheme()">
-                <span id="theme-icon">🌙</span>
-            </button>
+            
             <!-- Add these notification and user menu buttons to work with your existing theme toggle -->
 <!-- Place this right after your existing theme toggle button -->
 
@@ -1033,6 +1031,12 @@
       " onmouseover="this.style.background='rgba(138, 126, 109, 0.1)'" onmouseout="this.style.background='none'">
         Profile & Settings
       </button>
+        <button onclick="toggleTheme(); toggleUserMenu();" style="
+  width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; 
+  cursor: pointer; color: #5d5347; font-size: 14px; transition: background 0.2s ease;
+" onmouseover="this.style.background='rgba(138, 126, 109, 0.1)'" onmouseout="this.style.background='none'">
+  <span id="theme-menu-text">Switch to Dark Mode</span>
+</button>
       
       <button onclick="alert('About Five Anchors:\\n\\nYour grounding tools for spiritual and emotional stability.\\n\\n© 2025 Clarity Metabolics'); toggleUserMenu();" style="
         width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; 
@@ -1109,6 +1113,31 @@ function toggleUserMenu() {
   // Toggle user menu
   dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
 }
+    // Updated theme toggle function
+function toggleTheme() {
+    const body = document.body;
+    const themeText = document.getElementById('theme-menu-text');
+    
+    if (body.getAttribute('data-theme') === 'dark') {
+        body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        if (themeText) themeText.textContent = 'Switch to Dark Mode';
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        if (themeText) themeText.textContent = 'Switch to Light Mode';
+    }
+}
+    // Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeText = document.getElementById('theme-menu-text');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        if (themeText) themeText.textContent = 'Switch to Light Mode';
+    }
+});
 
 // Close menus when clicking outside
 document.addEventListener('click', function(e) {
