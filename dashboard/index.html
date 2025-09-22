@@ -958,6 +958,285 @@
     </style>
 </head>
 <body>
+    <!-- Replace the logout script we just added with this complete header menu -->
+<!-- Add this right after the opening <body> tag in your dashboard index.html -->
+
+<div id="dashboard-header-controls" style="position: fixed; top: 15px; right: 15px; z-index: 1000; display: flex; gap: 8px; align-items: center;">
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" title="Toggle dark/light theme" style="
+    background: rgba(255,255,255,0.9);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.2s ease;
+  ">🌙</button>
+
+  <!-- Notifications -->
+  <button id="notifications-btn" title="Notifications" style="
+    background: rgba(255,255,255,0.9);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.2s ease;
+    position: relative;
+  ">🔔</button>
+
+  <!-- User Menu -->
+  <div id="user-menu" style="position: relative;">
+    <button id="user-menu-btn" title="User menu" style="
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 8px;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    ">👤</button>
+    
+    <!-- Dropdown Menu -->
+    <div id="user-dropdown" style="
+      position: absolute;
+      top: 45px;
+      right: 0;
+      background: white;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 8px;
+      min-width: 200px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none;
+      overflow: hidden;
+    ">
+      <div style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); background: #f8f9fa;">
+        <div style="font-weight: 600; font-size: 14px;" id="user-display-name">lallybyoga</div>
+        <div style="font-size: 12px; color: #666; margin-top: 2px;" id="user-display-email">lallybyoga@gmail.com</div>
+      </div>
+      
+      <div style="padding: 8px 0;">
+        <button id="menu-profile" style="
+          width: 100%;
+          padding: 10px 16px;
+          border: none;
+          background: none;
+          text-align: left;
+          cursor: pointer;
+          font-size: 14px;
+          transition: background 0.2s ease;
+        " onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='none'">
+          Profile & Settings
+        </button>
+        
+        <button id="menu-about" style="
+          width: 100%;
+          padding: 10px 16px;
+          border: none;
+          background: none;
+          text-align: left;
+          cursor: pointer;
+          font-size: 14px;
+          transition: background 0.2s ease;
+        " onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='none'">
+          About Five Anchors
+        </button>
+        
+        <button id="menu-help" style="
+          width: 100%;
+          padding: 10px 16px;
+          border: none;
+          background: none;
+          text-align: left;
+          cursor: pointer;
+          font-size: 14px;
+          transition: background 0.2s ease;
+        " onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='none'">
+          Help & Support
+        </button>
+        
+        <hr style="margin: 8px 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+        
+        <button id="menu-logout" style="
+          width: 100%;
+          padding: 10px 16px;
+          border: none;
+          background: none;
+          text-align: left;
+          cursor: pointer;
+          font-size: 14px;
+          color: #dc3545;
+          transition: background 0.2s ease;
+        " onmouseover="this.style.background='#fff5f5'" onmouseout="this.style.background='none'">
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Notifications Panel -->
+<div id="notifications-panel" style="
+  position: fixed;
+  top: 70px;
+  right: 15px;
+  width: 320px;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: none;
+  z-index: 999;
+  max-height: 400px;
+  overflow-y: auto;
+">
+  <div style="padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.1); background: #f8f9fa;">
+    <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Notifications</h3>
+  </div>
+  <div id="notifications-content" style="padding: 16px;">
+    <div style="text-align: center; color: #666; font-size: 14px;">
+      No new notifications
+    </div>
+  </div>
+</div>
+
+<script>
+// Dashboard Header Menu Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Theme Toggle
+  const themeToggle = document.getElementById('theme-toggle');
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  
+  // Apply saved theme
+  if (currentTheme === 'dark') {
+    document.body.classList.add('dark-theme');
+    themeToggle.textContent = '☀️';
+  }
+  
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+    const isDark = document.body.classList.contains('dark-theme');
+    themeToggle.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+
+  // User Menu Toggle
+  const userMenuBtn = document.getElementById('user-menu-btn');
+  const userDropdown = document.getElementById('user-dropdown');
+  
+  userMenuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    userDropdown.style.display = userDropdown.style.display === 'none' ? 'block' : 'none';
+    // Close notifications if open
+    document.getElementById('notifications-panel').style.display = 'none';
+  });
+
+  // Notifications Toggle
+  const notificationsBtn = document.getElementById('notifications-btn');
+  const notificationsPanel = document.getElementById('notifications-panel');
+  
+  notificationsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    notificationsPanel.style.display = notificationsPanel.style.display === 'none' ? 'block' : 'none';
+    // Close user menu if open
+    userDropdown.style.display = 'none';
+  });
+
+  // Close menus when clicking outside
+  document.addEventListener('click', () => {
+    userDropdown.style.display = 'none';
+    notificationsPanel.style.display = 'none';
+  });
+
+  // Menu Actions
+  document.getElementById('menu-profile').addEventListener('click', () => {
+    alert('Profile & Settings coming soon!');
+    userDropdown.style.display = 'none';
+  });
+
+  document.getElementById('menu-about').addEventListener('click', () => {
+    alert('About Five Anchors:\n\nYour grounding tools for spiritual and emotional stability.\n\n© 2025 Clarity Metabolics');
+    userDropdown.style.display = 'none';
+  });
+
+  document.getElementById('menu-help').addEventListener('click', () => {
+    alert('Help & Support:\n\nFor assistance, please contact:\nsupport@claritymetabolics.com');
+    userDropdown.style.display = 'none';
+  });
+
+  // Logout functionality
+  document.getElementById('menu-logout').addEventListener('click', async () => {
+    if (confirm('Sign out of your account?')) {
+      try {
+        // Import the auth manager
+        const { authManager } = await import('./js/supabase-config.js');
+        
+        // Sign out
+        await authManager.signOut();
+        
+        // Redirect to auth page
+        window.location.href = './auth.html';
+      } catch (error) {
+        console.error('Logout error:', error);
+        // Fallback: clear storage and redirect
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = './auth.html';
+      }
+    }
+    userDropdown.style.display = 'none';
+  });
+
+  // Update user info if available
+  try {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+    if (userInfo.email) {
+      document.getElementById('user-display-email').textContent = userInfo.email;
+      document.getElementById('user-display-name').textContent = userInfo.full_name || userInfo.email.split('@')[0];
+    }
+  } catch (e) {
+    console.log('Could not load user info from storage');
+  }
+});
+
+// Dark theme CSS
+const darkThemeStyles = `
+.dark-theme {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+}
+.dark-theme #dashboard-header-controls button {
+  background: rgba(40,40,40,0.9) !important;
+  border-color: rgba(255,255,255,0.2) !important;
+  color: #e0e0e0 !important;
+}
+.dark-theme #user-dropdown, .dark-theme #notifications-panel {
+  background: #2d2d2d !important;
+  border-color: rgba(255,255,255,0.2) !important;
+  color: #e0e0e0 !important;
+}
+.dark-theme #user-dropdown > div:first-child {
+  background: #383838 !important;
+}
+`;
+
+// Add dark theme styles to page
+const styleSheet = document.createElement('style');
+styleSheet.textContent = darkThemeStyles;
+document.head.appendChild(styleSheet);
+</script>
     <!-- Header -->
     <header class="header">
         <div class="header-content">
@@ -1837,60 +2116,5 @@ async function displayUserInfo() {
 // Call this after initialization
 setTimeout(displayUserInfo, 2000);
 </script>
-
-// Add logout button to header
-function addLogoutButton() {
-    // Find the header or create a logout area
-    const header = document.querySelector('.dashboard-header') || document.querySelector('header') || document.body;
-    
-    // Create logout button
-    const logoutBtn = document.createElement('button');
-    logoutBtn.innerHTML = '🚪 Sign Out';
-    logoutBtn.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: rgba(0,0,0,0.7);
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 6px;
-        cursor: pointer;
-        z-index: 1000;
-        font-size: 14px;
-    `;
-    
-    // Add logout functionality
-    logoutBtn.addEventListener('click', async () => {
-        if (confirm('Sign out of your account?')) {
-            try {
-                // Import the auth manager
-                const { authManager } = await import('./js/supabase-config.js');
-                
-                // Sign out
-                await authManager.signOut();
-                
-                // Redirect to auth page
-                window.location.href = './auth.html';
-            } catch (error) {
-                console.error('Logout error:', error);
-                // Fallback: clear storage and redirect
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.href = './auth.html';
-            }
-        }
-    });
-    
-    // Add to page
-    document.body.appendChild(logoutBtn);
-}
-
-// Add logout button when page loads
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', addLogoutButton);
-} else {
-    addLogoutButton();
-}
 </body>
 </html>
