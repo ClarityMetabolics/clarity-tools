@@ -1,8 +1,7 @@
 // File: /dashboard/auth-guard.js
 // Updated auth guard for modular pages
 
-import { globalAuthManager, dbManager } from './js/supabase-config.js';
-
+import { globalAuthManager, dbManager, supabase } from './js/supabase-config.js';
 // Global auth state for modular pages
 const authManager = globalAuthManager;
 const hybridDataManager = dbManager;
@@ -18,7 +17,7 @@ async function initializeAuth() {
             console.log('⏳ Waiting for user session...');
             
             // Check for existing session
-            const { session, error } = await authManager.getSession();
+            const { data: { session }, error } = await supabase.auth.getSession();
             
             if (error || !session?.user) {
                 console.log('❌ No valid session, redirecting to auth');
