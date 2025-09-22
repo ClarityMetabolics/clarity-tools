@@ -4,7 +4,7 @@
   Interactive Web Tool for Post-Awakening Emotional Stability
   ============================================================
   
-  Version: 3.0.0 (Final)
+  Version: 3.1.0 (With Database Integration)
   Created: August 2025
   Author: Clarity Metabolics
   
@@ -14,12 +14,14 @@
   Features unique Red→Yellow→Green emotional progression and pattern recognition.
   Part of the Five Anchors framework for post-awakening support.
   
+  NEW: Integrated with Supabase database for anchor statement saving
+  
   Features:
   - Progressive 8-step flow with universal grounding intro
   - Red→Yellow→Green emotional deconstruction (Reactive→Recognition→Truth)
   - Body's early warning system identification
   - Pattern recognition for emotional triggers
-  - Emotional Anchor Statement creation
+  - Emotional Anchor Statement creation with database saving
   - Light/dark theme toggle
   - Download summary functionality
   - Meaningful reflection modal with Trinity prayer
@@ -27,19 +29,20 @@
   - Progress tracking with validation
   - localStorage session persistence
   - Auto-focus and smooth scrolling
+  - Database integration for anchor statements
   
   Flow:
   1. Universal grounding and settling
   2. From Reaction to Truth (Red→Yellow→Green panels)
   3. Your Body's Early Warning System
   4. What Your Core Feeling Is Protecting
-  5. Spot Your Emotional Pattern (triggers and anchor statement)
+  5. Spot Your Emotional Pattern (triggers and anchor statement with auto-save)
   6. Choose Your Response (honor feeling + wise action)
   7. Summary with highlighted Emotional Anchor Statement
   8. Next Steps: Spiritual Anchor introduction
   
   Usage:
-  Standalone HTML file - no dependencies required
+  Standalone HTML file - requires supabase-config.js for database functionality
   Open in any modern web browser
   
   License: © 2025 Clarity Metabolics
@@ -233,6 +236,13 @@
 
   .scripture{font-style:italic;background:var(--accent-color);padding:16px;border-left:4px solid var(--main-color);border-radius:8px;margin:16px 0}
 
+  /* NEW: Database save indicator */
+  .save-indicator{
+    display:inline-flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--success-color);
+    opacity:0;transition:opacity .3s ease;margin-top:6px;
+  }
+  .save-indicator.show{opacity:1}
+
   @media (max-width:640px){
     .nav-row{flex-direction:column}
     .btn{width:100%}
@@ -377,7 +387,7 @@
       <div class="branding">© 2025 Clarity Metabolics | claritymetabolics.com</div>
     </section>
 
-    <!-- STEP 4: NEW - Spot the Pattern (like Mental/Physical Anchors) -->
+    <!-- STEP 4: NEW - Spot the Pattern with Database Integration -->
     <section class="step" data-step="4">
       <div class="step-indicator">
         <div class="step-counter">Step 5 of 8</div>
@@ -402,6 +412,9 @@
         <label for="emotionalAnchorStatement">Your Emotional Anchor Statement — What truth about your emotions will you remember?</label>
         <p style="font-size:0.9rem;font-style:italic;color:var(--contrast-color);opacity:0.8;margin:0 0 12px 0">A simple truth about honoring your emotions that you can return to when overwhelmed</p>
         <textarea id="emotionalAnchorStatement" placeholder="Even when emotions feel overwhelming, I can..."></textarea>
+        <div class="save-indicator" id="anchorSaveIndicator">
+          <span>✓</span> Anchor statement saved automatically
+        </div>
       </div>
 
       <div class="tip"><strong>Micro-practice:</strong> Read your emotional anchor statement once aloud, slowly. Let this truth settle into your heart.</div>
@@ -548,7 +561,10 @@
   </div>
 </div>
 
-<script>
+<script type="module">
+  // Import database functionality
+  import { hybridDataManager, showNotification } from '../dashboard/js/supabase-config.js';
+
   // --- State
   let currentStep = 0;
   const totalSteps = 8;
@@ -560,6 +576,9 @@
     honorFeeling:'', wiseAction:''
   };
 
+  // Database connection flag
+  let dbConnected = false;
+
   // Light / Dark toggle
   document.getElementById('themeBtn').addEventListener('click', () => {
     const body = document.body;
@@ -570,6 +589,51 @@
       body.setAttribute('data-theme','dark'); btn.textContent = '☀️';
     }
   });
+
+  // Database connection test
+  async function testDatabaseConnection() {
+    try {
+      // Test if we can access the database
+      const result = await hybridDataManager.getAnchorStatements();
+      dbConnected = !result.error;
+      console.log('Database connection:', dbConnected ? 'Connected' : 'Using localStorage backup');
+    } catch (error) {
+      console.log('Database connection: Using localStorage backup');
+      dbConnected = false;
+    }
+  }
+
+  // Save anchor statement to database
+  async function saveAnchorStatementToDB(statementText) {
+    if (!statementText || statementText.trim().length === 0) return;
+
+    const statementData = {
+      anchor_type: 'emotional',
+      statement_text: statementText.trim(),
+      shared_with_coach: false
+    };
+
+    try {
+      const result = await hybridDataManager.saveAnchorStatement(statementData);
+      
+      if (!result.error) {
+        // Show success indicator
+        const indicator = document.getElementById('anchorSaveIndicator');
+        if (indicator) {
+          indicator.classList.add('show');
+          setTimeout(() => indicator.classList.remove('show'), 3000);
+        }
+        
+        showNotification('Emotional anchor statement saved', 'success');
+        console.log('Anchor statement saved successfully');
+      } else {
+        console.log('Anchor statement saved to localStorage backup');
+      }
+    } catch (error) {
+      console.error('Error saving anchor statement:', error);
+      showNotification('Saved locally (database unavailable)', 'info');
+    }
+  }
 
   // Step navigation helpers
   function showStep(i){
@@ -603,8 +667,8 @@
   function nextStep(){ saveCurrent(); if (currentStep < totalSteps-1){ currentStep++; showStep(currentStep); } }
   function prevStep(){ if (currentStep>0){ currentStep--; showStep(currentStep);} }
 
-  // Save per-step
-  function saveCurrent(){
+  // Save per-step with anchor statement database integration
+  async function saveCurrent(){
     switch(currentStep){
       case 1:
         responses.emotionInput = document.getElementById('emotionInput').value.trim();
@@ -624,6 +688,11 @@
         responses.emotionalPattern = document.getElementById('emotionalPattern').value.trim();
         responses.emotionalTriggers = document.getElementById('emotionalTriggers').value.trim();
         responses.emotionalAnchorStatement = document.getElementById('emotionalAnchorStatement').value.trim();
+        
+        // Save anchor statement to database when Step 5 is completed
+        if (responses.emotionalAnchorStatement) {
+          await saveAnchorStatementToDB(responses.emotionalAnchorStatement);
+        }
         break;
       case 5:
         responses.honorFeeling = document.getElementById('honorFeeling').value.trim();
@@ -635,6 +704,23 @@
       localStorage.setItem('emotionalAnchorResponses', JSON.stringify(responses));
     } catch (e) {
       console.warn('Could not save to localStorage:', e);
+    }
+  }
+
+  // Auto-save anchor statement when user types
+  function setupAnchorStatementAutoSave() {
+    const anchorInput = document.getElementById('emotionalAnchorStatement');
+    if (anchorInput) {
+      let saveTimeout;
+      anchorInput.addEventListener('input', () => {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(async () => {
+          const statement = anchorInput.value.trim();
+          if (statement.length > 10) { // Only save if substantial content
+            await saveAnchorStatementToDB(statement);
+          }
+        }, 2000); // Wait 2 seconds after user stops typing
+      });
     }
   }
 
@@ -672,6 +758,14 @@
     
     // Update highlighted emotional anchor statement
     document.getElementById('emotionalAnchorHighlight').textContent = responses.emotionalAnchorStatement || 'Your emotional anchor statement will appear here';
+  }
+
+  // Return to dashboard
+  function returnToDashboard() {
+    // Check if we're already on the dashboard to avoid reload
+    if (!window.location.pathname.includes('index.html')) {
+      window.location.href = '../dashboard/index.html';
+    }
   }
 
   // Start Over confirm
@@ -748,11 +842,6 @@
   function openMeaningfulReflection(){ document.getElementById('meaningfulModal').style.display='flex'; }
   function closeMeaningfulReflection(){ document.getElementById('meaningfulModal').style.display='none'; }
 
-  // Spiritual Anchor link (update route when ready)
-  function goToSpiritualAnchor(){
-    window.location.href = 'https://claritymetabolics.github.io/clarity-tools/spiritual-anchor.html';
-  }
-
   // Enable/disable Save on STEP 1
   function checkEmotionInputs() {
     const reactive = document.getElementById('reactiveStory')?.value.trim() || '';
@@ -766,8 +855,20 @@
     }
   }
 
+  // Make functions globally available
+  window.nextStep = nextStep;
+  window.prevStep = prevStep;
+  window.confirmStartOver = confirmStartOver;
+  window.downloadSummary = downloadSummary;
+  window.openMeaningfulReflection = openMeaningfulReflection;
+  window.closeMeaningfulReflection = closeMeaningfulReflection;
+  window.returnToDashboard = returnToDashboard;
+
   // Init
-  function init(){ 
+  async function init(){ 
+    // Test database connection
+    await testDatabaseConnection();
+    
     // Load saved responses
     try {
       const saved = localStorage.getItem('emotionalAnchorResponses');
@@ -785,16 +886,26 @@
     }
     
     showStep(0);
+    
     setTimeout(() => {
       ['reactiveStory','somethingOff','coreFeeling'].forEach(id=>{
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', checkEmotionInputs);
       });
+      
+      // Setup anchor statement auto-save
+      setupAnchorStatementAutoSave();
+      
       // Check button state on load to handle restored content
       checkEmotionInputs();
     }, 100);
   }
-  if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
+  
+  if (document.readyState === 'loading'){ 
+    document.addEventListener('DOMContentLoaded', init); 
+  } else { 
+    init(); 
+  }
 </script>
 </body>
 </html>
