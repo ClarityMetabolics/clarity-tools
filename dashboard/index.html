@@ -958,193 +958,7 @@
     </style>
 </head>
 <body>
- <!-- Balanced emoji header menu with subtle styling -->
-
-<div id="dashboard-header-controls" style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px;">
-  
-  <!-- Theme Toggle -->
-  <button id="theme-toggle" title="Toggle theme" style="
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(10px);
-  ">🌙</button>
-
-  <!-- Notifications -->
-  <button id="notifications-btn" title="Notifications" style="
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(10px);
-  ">🔔</button>
-
-  <!-- User Menu -->
-  <div style="position: relative;">
-    <button id="user-menu-btn" title="User menu" style="
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 45px;
-      height: 45px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(10px);
-    ">👤</button>
-    
-    <!-- User Dropdown -->
-    <div id="user-dropdown" style="
-      position: absolute;
-      top: 45px;
-      right: 0;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(138, 126, 109, 0.3);
-      border-radius: 10px;
-      min-width: 200px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      display: none;
-      overflow: hidden;
-    ">
-      <div style="padding: 12px; border-bottom: 1px solid rgba(138, 126, 109, 0.2); background: rgba(245, 240, 235, 0.8);">
-        <div style="font-weight: 600; color: #5d5347; font-size: 14px;">lallybyoga</div>
-        <div style="font-size: 12px; color: #8a7e6d;">lallybyoga@gmail.com</div>
-      </div>
-      
-      <div style="padding: 8px 0;">
-        <button onclick="alert('Profile coming soon')" style="
-          width: 100%; 
-          padding: 10px 16px; 
-          border: none; 
-          background: none; 
-          text-align: left; 
-          cursor: pointer; 
-          color: #5d5347;
-          font-size: 14px;
-          transition: background 0.2s ease;
-        " onmouseover="this.style.background='rgba(138, 126, 109, 0.1)'" onmouseout="this.style.background='none'">
-          Profile & Settings
-        </button>
-        
-        <button onclick="alert('About Five Anchors:\\n\\nYour grounding tools for spiritual and emotional stability.\\n\\n© 2025 Clarity Metabolics')" style="
-          width: 100%; 
-          padding: 10px 16px; 
-          border: none; 
-          background: none; 
-          text-align: left; 
-          cursor: pointer; 
-          color: #5d5347;
-          font-size: 14px;
-          transition: background 0.2s ease;
-        " onmouseover="this.style.background='rgba(138, 126, 109, 0.1)'" onmouseout="this.style.background='none'">
-          About Five Anchors
-        </button>
-        
-        <button onclick="alert('Help & Support:\\n\\nFor assistance, contact:\\nsupport@claritymetabolics.com')" style="
-          width: 100%; 
-          padding: 10px 16px; 
-          border: none; 
-          background: none; 
-          text-align: left; 
-          cursor: pointer; 
-          color: #5d5347;
-          font-size: 14px;
-          transition: background 0.2s ease;
-        " onmouseover="this.style.background='rgba(138, 126, 109, 0.1)'" onmouseout="this.style.background='none'">
-          Help & Support
-        </button>
-        
-        <hr style="margin: 8px 12px; border: none; border-top: 1px solid rgba(138, 126, 109, 0.2);">
-        
-        <button id="logout-btn" style="
-          width: 100%; 
-          padding: 10px 16px; 
-          border: none; 
-          background: none; 
-          text-align: left; 
-          cursor: pointer; 
-          color: #c85a54; 
-          font-weight: 600;
-          font-size: 14px;
-          transition: background 0.2s ease;
-        " onmouseover="this.style.background='rgba(200, 90, 84, 0.1)'" onmouseout="this.style.background='none'">
-          Sign Out
-        </button>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  
-  // Add subtle hover effects
-  function addHover(button) {
-    button.addEventListener('mouseenter', () => {
-      button.style.transform = 'translateY(-1px)';
-      button.style.background = 'rgba(138, 126, 109, 1)';
-    });
-    button.addEventListener('mouseleave', () => {
-      button.style.transform = 'translateY(0)';
-      button.style.background = 'rgba(138, 126, 109, 0.85)';
-    });
-  }
-
-  addHover(document.getElementById('theme-toggle'));
-  addHover(document.getElementById('notifications-btn'));
-  addHover(document.getElementById('user-menu-btn'));
-
-  // Theme toggle
-  document.getElementById('theme-toggle').addEventListener('click', function() {
-    document.body.classList.toggle('dark-mode');
-    this.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-  });
-
-  // User menu toggle
-  document.getElementById('user-menu-btn').addEventListener('click', function(e) {
-    e.stopPropagation();
-    const dropdown = document.getElementById('user-dropdown');
-    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-  });
-
-  // Close dropdown when clicking outside
-  document.addEventListener('click', function() {
-    document.getElementById('user-dropdown').style.display = 'none';
-  });
-
-  // Logout functionality
-  document.getElementById('logout-btn').addEventListener('click', async function() {
-    if (confirm('Sign out of your account?')) {
-      try {
-        const { authManager } = await import('./js/supabase-config.js');
-        await authManager.signOut();
-        window.location.href = './auth.html';
-      } catch (error) {
-        console.error('Logout error:', error);
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.href = './auth.html';
-      }
-    }
-  });
-
-});
-</script>
-
+ 
     <!-- Header -->
     <header class="header">
         <div class="header-content">
@@ -1159,6 +973,169 @@ document.addEventListener('DOMContentLoaded', function() {
             <button class="theme-toggle" onclick="toggleTheme()">
                 <span id="theme-icon">🌙</span>
             </button>
+            <!-- Add these notification and user menu buttons to work with your existing theme toggle -->
+<!-- Place this right after your existing theme toggle button -->
+
+<!-- Notifications Button -->
+<button id="notifications-btn" title="Notifications" onclick="toggleNotifications()" style="
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 20px;
+  right: 80px;
+  z-index: 1000;
+">🔔</button>
+
+<!-- User Menu Button -->
+<div style="position: fixed; top: 20px; right: 140px; z-index: 1000;">
+  <button id="user-menu-btn" title="User menu" onclick="toggleUserMenu()" style="
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+  ">👤</button>
+  
+  <!-- User Dropdown -->
+  <div id="user-dropdown" style="
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(138, 126, 109, 0.3);
+    border-radius: 10px;
+    min-width: 200px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    display: none;
+    overflow: hidden;
+  ">
+    <div style="padding: 12px; border-bottom: 1px solid rgba(138, 126, 109, 0.2); background: rgba(245, 240, 235, 0.8);">
+      <div style="font-weight: 600; color: #5d5347; font-size: 14px;">lallybyoga</div>
+      <div style="font-size: 12px; color: #8a7e6d;">lallybyoga@gmail.com</div>
+    </div>
+    
+    <div style="padding: 8px 0;">
+      <button onclick="alert('Profile coming soon'); toggleUserMenu();" style="
+        width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; 
+        cursor: pointer; color: #5d5347; font-size: 14px; transition: background 0.2s ease;
+      " onmouseover="this.style.background='rgba(138, 126, 109, 0.1)'" onmouseout="this.style.background='none'">
+        Profile & Settings
+      </button>
+      
+      <button onclick="alert('About Five Anchors:\\n\\nYour grounding tools for spiritual and emotional stability.\\n\\n© 2025 Clarity Metabolics'); toggleUserMenu();" style="
+        width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; 
+        cursor: pointer; color: #5d5347; font-size: 14px; transition: background 0.2s ease;
+      " onmouseover="this.style.background='rgba(138, 126, 109, 0.1)'" onmouseout="this.style.background='none'">
+        About Five Anchors
+      </button>
+      
+      <button onclick="alert('Help & Support:\\n\\nFor assistance, contact:\\nsupport@claritymetabolics.com'); toggleUserMenu();" style="
+        width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; 
+        cursor: pointer; color: #5d5347; font-size: 14px; transition: background 0.2s ease;
+      " onmouseover="this.style.background='rgba(138, 126, 109, 0.1)'" onmouseout="this.style.background='none'">
+        Help & Support
+      </button>
+      
+      <hr style="margin: 8px 12px; border: none; border-top: 1px solid rgba(138, 126, 109, 0.2);">
+      
+      <button onclick="signOut(); toggleUserMenu();" style="
+        width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; 
+        cursor: pointer; color: #c85a54; font-weight: 600; font-size: 14px; transition: background 0.2s ease;
+      " onmouseover="this.style.background='rgba(200, 90, 84, 0.1)'" onmouseout="this.style.background='none'">
+        Sign Out
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Notifications Panel -->
+<div id="notifications-panel" style="
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  width: 300px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(138, 126, 109, 0.3);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  display: none;
+  z-index: 999;
+  max-height: 400px;
+  overflow-y: auto;
+">
+  <div style="padding: 16px; border-bottom: 1px solid rgba(138, 126, 109, 0.2); background: rgba(245, 240, 235, 0.8);">
+    <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #5d5347;">Notifications</h3>
+  </div>
+  <div style="padding: 16px;">
+    <div style="text-align: center; color: #8a7e6d; font-size: 14px; font-style: italic;">
+      No new notifications
+    </div>
+  </div>
+</div>
+
+<script>
+// Simple toggle functions for the new buttons
+function toggleNotifications() {
+  const panel = document.getElementById('notifications-panel');
+  const userMenu = document.getElementById('user-dropdown');
+  
+  // Close user menu if open
+  userMenu.style.display = 'none';
+  
+  // Toggle notifications
+  panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+}
+
+function toggleUserMenu() {
+  const dropdown = document.getElementById('user-dropdown');
+  const notifications = document.getElementById('notifications-panel');
+  
+  // Close notifications if open
+  notifications.style.display = 'none';
+  
+  // Toggle user menu
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+// Close menus when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#user-menu-btn') && !e.target.closest('#user-dropdown')) {
+    document.getElementById('user-dropdown').style.display = 'none';
+  }
+  if (!e.target.closest('#notifications-btn') && !e.target.closest('#notifications-panel')) {
+    document.getElementById('notifications-panel').style.display = 'none';
+  }
+});
+
+// Sign out function
+async function signOut() {
+  if (confirm('Sign out of your account?')) {
+    try {
+      const { authManager } = await import('./js/supabase-config.js');
+      await authManager.signOut();
+      window.location.href = './auth.html';
+    } catch (error) {
+      console.error('Logout error:', error);
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = './auth.html';
+    }
+  }
+}
+</script>
         </div>
     </header>
 
