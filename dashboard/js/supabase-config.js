@@ -1,43 +1,29 @@
 // File: /dashboard/js/supabase-config.js
-// FIXED: Authentication and Database Integration for Five Anchors Platform
+// Clean Authentication & Database System for Five Anchors Platform
+// No compatibility layers - single standard interface
 
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2'
 
 // Supabase configuration
 const SUPABASE_URL = 'https://fcoosyveumtkalsdwppg.supabase.co'
-const SUPABASE_ANON_KEY = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjb29zeXZldW10a2Fsc2R3cHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NjQxOTUsImV4cCI6MjA3MzA0MDE5NX0.hukhtamCJx3nlxh_8Sya12sAnwZ6dOGjxp_vXp4ZsBY`
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjb29zeXZldW10a2Fsc2R3cHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NjQxOTUsImV4cCI6MjA3MzA0MDE5NX0.hukhtamCJx3nlxh_8Sya12sAnwZ6dOGjxp_vXp4ZsBY'
 
 // Create Supabase client
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-// FIXED: Global auth state management
-class GlobalAuthManager {
+// Authentication Manager - Single source of truth
+class AuthManager {
     constructor() {
         this.currentUser = null
         this.userProfile = null
+        this.isAuthenticated = false
         this.isCoach = false
         this.isReady = false
-        this.initPromise = null
-        
-        // Make globally available immediately
-        if (typeof window !== 'undefined') {
-            window.authManager = this
-            window.getCurrentUserId = () => this.getCurrentUserId()
-            window.getCurrentUserProfile = () => this.userProfile
-            window.isCoach = () => this.isCoach
-        }
     }
 
     async init() {
-        if (this.initPromise) return this.initPromise
-        
-        this.initPromise = this._initialize()
-        return this.initPromise
-    }
-
-    async _initialize() {
         try {
-            console.log('🔐 Initializing global auth manager...')
+            console.log('🔐 Initializing authentication...')
             
             // Check current session
             const { data: { user }, error } = await supabase.auth.getUser()
@@ -49,42 +35,41 @@ class GlobalAuthManager {
             }
 
             if (!user) {
-                console.log('No authenticated user found')
+                console.log('No user session found')
                 this.redirectToAuth()
                 return false
             }
 
-            console.log('✅ User authenticated:', user.email)
-            
-            // Set user and get profile
-            await this.setCurrentUser(user)
+            // Load user profile
+            await this.loadUserProfile(user)
             
             // Set up auth state listener
             supabase.auth.onAuthStateChange(async (event, session) => {
                 if (event === 'SIGNED_OUT') {
-                    this.clearUser()
+                    this.clearAuth()
                     this.redirectToAuth()
                 } else if (event === 'SIGNED_IN' && session?.user) {
-                    await this.setCurrentUser(session.user)
+                    await this.loadUserProfile(session.user)
                 }
             })
 
             this.isReady = true
-            console.log('✅ Auth manager fully initialized')
+            console.log('✅ Authentication ready')
             return true
             
         } catch (error) {
-            console.error('Fatal auth initialization error:', error)
+            console.error('Auth initialization failed:', error)
             this.redirectToAuth()
             return false
         }
     }
 
-    async setCurrentUser(user) {
+    async loadUserProfile(user) {
         this.currentUser = user
+        this.isAuthenticated = true
         
         try {
-            // Get user profile
+            // Get user profile from database
             const { data: profile, error } = await supabase
                 .from('profiles')
                 .select('*')
@@ -111,8 +96,7 @@ class GlobalAuthManager {
                 this.isCoach = profile.role === 'coach' || profile.role === 'admin'
             }
 
-            console.log('👤 User profile loaded:', {
-                id: this.userProfile?.id,
+            console.log('👤 Profile loaded:', {
                 email: this.userProfile?.email,
                 role: this.userProfile?.role,
                 isCoach: this.isCoach
@@ -123,23 +107,9 @@ class GlobalAuthManager {
         }
     }
 
-    clearUser() {
-        this.currentUser = null
-        this.userProfile = null
-        this.isCoach = false
-        this.isReady = false
-    }
-
-    redirectToAuth() {
-        const currentPath = window.location.pathname
-        if (!currentPath.includes('auth.html')) {
-            window.location.href = './auth.html'
-        }
-    }
-
     getCurrentUserId() {
-        if (!this.currentUser) {
-            console.warn('⚠️ getCurrentUserId called but no user authenticated')
+        if (!this.isAuthenticated || !this.currentUser) {
+            console.warn('⚠️ getCurrentUserId called but user not authenticated')
             return null
         }
         return this.currentUser.id
@@ -148,28 +118,110 @@ class GlobalAuthManager {
     async signOut() {
         const { error } = await supabase.auth.signOut()
         if (!error) {
-            this.clearUser()
-            this.redirectToAuth()
+            this.clearAuth()
         }
         return { error }
     }
+
+    clearAuth() {
+        this.currentUser = null
+        this.userProfile = null
+        this.isAuthenticated = false
+        this.isCoach = false
+        this.isReady = false
+    }
+
+    redirectToAuth() {
+        if (!window.location.pathname.includes('auth.html')) {
+            window.location.href = './auth.html'
+        }
+    }
 }
 
-// FIXED: Database manager with proper auth integration
-export class DatabaseManager {
-    constructor() {
-        this.authManager = window.authManager || globalAuthManager
+// Database Manager - Clean data operations
+class DatabaseManager {
+    constructor(authManager) {
+        this.authManager = authManager
     }
 
     getCurrentUserId() {
         const userId = this.authManager.getCurrentUserId()
         if (!userId) {
-            console.error('❌ Database operation attempted without auth')
+            console.error('❌ Database operation attempted without authentication')
         }
         return userId
     }
 
-    // Save anchor statement with JSONB structure matching schema
+    // Daily Check-ins
+    async saveCheckIn(checkInData) {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
+
+        try {
+            const { data, error } = await supabase
+                .from('daily_checkins')
+                .upsert([{
+                    client_id: userId,
+                    checkin_date: checkInData.date,
+                    ratings: checkInData.ratings,
+                    notes: checkInData.notes || {}
+                }], {
+                    onConflict: 'client_id,checkin_date'
+                })
+                .select()
+
+            if (error) {
+                console.error('Error saving check-in:', error)
+                return { data: null, error }
+            }
+
+            console.log('✅ Check-in saved')
+            return { data, error: null }
+
+        } catch (error) {
+            console.error('Database error saving check-in:', error)
+            return { data: null, error }
+        }
+    }
+
+    async getCheckIns(limit = 30) {
+        const userId = this.getCurrentUserId()
+        if (!userId) return { data: {}, error: { message: 'Not authenticated' } }
+
+        try {
+            const { data, error } = await supabase
+                .from('daily_checkins')
+                .select('*')
+                .eq('client_id', userId)
+                .order('checkin_date', { ascending: false })
+                .limit(limit)
+
+            if (error) {
+                console.error('Error loading check-ins:', error)
+                return { data: {}, error }
+            }
+
+            // Transform to expected format
+            const transformed = {}
+            if (data) {
+                data.forEach(item => {
+                    transformed[item.checkin_date] = {
+                        date: item.checkin_date,
+                        ratings: item.ratings,
+                        notes: item.notes || {}
+                    }
+                })
+            }
+
+            return { data: transformed, error: null }
+
+        } catch (error) {
+            console.error('Error in getCheckIns:', error)
+            return { data: {}, error }
+        }
+    }
+
+    // Anchor Statements
     async saveAnchorStatement(anchorType, statementText, sharedWithCoach = false) {
         const userId = this.getCurrentUserId()
         if (!userId) return { data: null, error: { message: 'Not authenticated' } }
@@ -191,7 +243,7 @@ export class DatabaseManager {
                 updated_at: new Date().toISOString()
             }
 
-            // Upsert with JSONB structure
+            // Save to database
             const { data, error } = await supabase
                 .from('anchor_statements')
                 .upsert({
@@ -204,7 +256,7 @@ export class DatabaseManager {
                 .select()
 
             if (error) {
-                console.error('Database error saving anchor statement:', error)
+                console.error('Error saving anchor statement:', error)
                 return { data: null, error }
             }
 
@@ -212,15 +264,14 @@ export class DatabaseManager {
             return { data, error: null }
 
         } catch (error) {
-            console.error('Error saving anchor statement:', error)
+            console.error('Database error saving anchor statement:', error)
             return { data: null, error }
         }
     }
 
-    // Get anchor statements from JSONB structure
     async getAnchorStatements() {
         const userId = this.getCurrentUserId()
-        if (!userId) return { data: [], error: { message: 'Not authenticated' } }
+        if (!userId) return { data: {}, error: { message: 'Not authenticated' } }
 
         try {
             const { data, error } = await supabase
@@ -230,7 +281,6 @@ export class DatabaseManager {
                 .single()
 
             if (error && error.code === 'PGRST116') {
-                // No statements yet
                 return { data: {}, error: null }
             }
 
@@ -247,7 +297,6 @@ export class DatabaseManager {
         }
     }
 
-    // Update sharing status for anchor statement
     async updateAnchorStatementSharing(anchorType, sharedWithCoach) {
         const userId = this.getCurrentUserId()
         if (!userId) return { data: null, error: { message: 'Not authenticated' } }
@@ -279,55 +328,21 @@ export class DatabaseManager {
                 .eq('user_id', userId)
                 .select()
 
-            return { data, error }
-
-        } catch (error) {
-            console.error('Error updating sharing status:', error)
-            return { data: null, error }
-        }
-    }
-
-    // FIXED: Module access functions for coach unlock functionality
-    async unlockModuleForClient(clientId, moduleType, moduleKey, accessType = 'webTool') {
-        const coachId = this.getCurrentUserId()
-        if (!coachId) {
-            console.error('❌ Coach not authenticated for unlock operation')
-            return { data: null, error: { message: 'Coach not authenticated' } }
-        }
-
-        try {
-            console.log(`🔓 Coach ${coachId} unlocking ${moduleKey} for client ${clientId}`)
-
-            const { data, error } = await supabase
-                .from('module_access')
-                .upsert({
-                    user_id: clientId,
-                    module_type: moduleType,
-                    module_key: moduleKey,
-                    access_type: accessType,
-                    unlocked: true,
-                    unlocked_at: new Date().toISOString(),
-                    unlocked_by: coachId
-                }, {
-                    onConflict: 'user_id,module_type,module_key,access_type'
-                })
-                .select()
-
             if (error) {
-                console.error('Database error unlocking module:', error)
+                console.error('Error updating sharing status:', error)
                 return { data: null, error }
             }
 
-            console.log(`✅ Module unlocked successfully: ${moduleKey} for ${clientId}`)
+            console.log(`✅ Sharing updated for ${anchorType}`)
             return { data, error: null }
 
         } catch (error) {
-            console.error('Error in unlockModuleForClient:', error)
+            console.error('Error updating anchor statement sharing:', error)
             return { data: null, error }
         }
     }
 
-    // Get module access for client
+    // Module Access
     async getModuleAccess(userId = null) {
         const targetUserId = userId || this.getCurrentUserId()
         if (!targetUserId) return { data: null, error: { message: 'No user ID provided' } }
@@ -379,7 +394,46 @@ export class DatabaseManager {
         }
     }
 
-    // Coach functions
+    async unlockModuleForClient(clientId, moduleType, moduleKey, accessType = 'webTool') {
+        const coachId = this.getCurrentUserId()
+        if (!coachId) {
+            console.error('❌ Coach not authenticated for unlock operation')
+            return { data: null, error: { message: 'Coach not authenticated' } }
+        }
+
+        try {
+            console.log(`🔓 Coach ${coachId} unlocking ${moduleKey} for client ${clientId}`)
+
+            const { data, error } = await supabase
+                .from('module_access')
+                .upsert({
+                    user_id: clientId,
+                    module_type: moduleType,
+                    module_key: moduleKey,
+                    access_type: accessType,
+                    unlocked: true,
+                    unlocked_at: new Date().toISOString(),
+                    unlocked_by: coachId
+                }, {
+                    onConflict: 'user_id,module_type,module_key,access_type'
+                })
+                .select()
+
+            if (error) {
+                console.error('Database error unlocking module:', error)
+                return { data: null, error }
+            }
+
+            console.log(`✅ Module unlocked: ${moduleKey} for ${clientId}`)
+            return { data, error: null }
+
+        } catch (error) {
+            console.error('Error in unlockModuleForClient:', error)
+            return { data: null, error }
+        }
+    }
+
+    // Coach Functions
     async getCoachClients() {
         const coachId = this.getCurrentUserId()
         if (!coachId) return { data: [], error: { message: 'Coach not authenticated' } }
@@ -394,10 +448,15 @@ export class DatabaseManager {
                 .eq('assigned_coach_id', coachId)
                 .eq('role', 'client')
 
-            return { data: data || [], error }
+            if (error) {
+                console.error('Error loading coach clients:', error)
+                return { data: [], error }
+            }
+
+            return { data: data || [], error: null }
 
         } catch (error) {
-            console.error('Error loading coach clients:', error)
+            console.error('Error in getCoachClients:', error)
             return { data: [], error }
         }
     }
@@ -414,7 +473,10 @@ export class DatabaseManager {
                 return { data: {}, error: null }
             }
 
-            if (error) return { data: {}, error }
+            if (error) {
+                console.error('Error loading client anchor statements:', error)
+                return { data: {}, error }
+            }
 
             // Filter for shared statements only
             const sharedStatements = {}
@@ -429,83 +491,39 @@ export class DatabaseManager {
             return { data: sharedStatements, error: null }
 
         } catch (error) {
-            console.error('Error loading client anchor statements:', error)
+            console.error('Error in getClientAnchorStatements:', error)
             return { data: {}, error }
         }
     }
 
-    // Daily check-ins and other existing functions remain the same...
-    async saveCheckIn(checkInData) {
-        const userId = this.getCurrentUserId()
-        if (!userId) return { data: null, error: { message: 'Not authenticated' } }
+    async getClientCheckIns(clientId, limit = 7) {
+        try {
+            const { data, error } = await supabase
+                .from('daily_checkins')
+                .select('*')
+                .eq('client_id', clientId)
+                .order('checkin_date', { ascending: false })
+                .limit(limit)
 
-        const { data, error } = await supabase
-            .from('daily_checkins')
-            .upsert([{
-                client_id: userId,
-                checkin_date: checkInData.date,
-                ratings: checkInData.ratings,
-                notes: checkInData.notes || {}
-            }], {
-                onConflict: 'client_id,checkin_date'
-            })
-            .select()
+            if (error) {
+                console.error('Error loading client check-ins:', error)
+                return { data: [], error }
+            }
 
-        return { data, error }
-    }
+            return { data: data || [], error: null }
 
-    async getCheckIns(limit = 30) {
-        const userId = this.getCurrentUserId()
-        if (!userId) return { data: {}, error: { message: 'Not authenticated' } }
-
-        const { data, error } = await supabase
-            .from('daily_checkins')
-            .select('*')
-            .eq('client_id', userId)
-            .order('checkin_date', { ascending: false })
-            .limit(limit)
-
-        const transformed = {}
-        if (data) {
-            data.forEach(item => {
-                transformed[item.checkin_date] = {
-                    date: item.checkin_date,
-                    ratings: item.ratings,
-                    notes: item.notes || {}
-                }
-            })
+        } catch (error) {
+            console.error('Error in getClientCheckIns:', error)
+            return { data: [], error }
         }
-
-        return { data: transformed, error }
     }
 }
 
-// Create and initialize global instances
-export const globalAuthManager = new GlobalAuthManager()
-export const dbManager = new DatabaseManager()
+// Create instances
+export const authManager = new AuthManager()
+export const dbManager = new DatabaseManager(authManager)
 
-// Global initialization function
-export async function initializeAuth() {
-    console.log('🚀 Starting auth initialization...')
-    
-    const success = await globalAuthManager.init()
-    
-    if (success) {
-        console.log('✅ Auth initialization complete')
-        
-        // Make database manager globally available
-        if (typeof window !== 'undefined') {
-            window.dbManager = dbManager
-        }
-        
-        return true
-    } else {
-        console.error('❌ Auth initialization failed')
-        return false
-    }
-}
-
-// Utility function for notifications
+// Notification utility
 export function showNotification(message, type = 'info') {
     const notification = document.createElement('div')
     notification.className = `notification ${type}`
@@ -531,15 +549,19 @@ export function showNotification(message, type = 'info') {
     }, 3000)
 }
 
-// Auto-initialize if in browser
-if (typeof window !== 'undefined') {
-    // Initialize immediately and make available
-    window.addEventListener('DOMContentLoaded', () => {
-        initializeAuth().then(success => {
-            if (success) {
-                console.log('🎉 Global auth ready for all dashboard pages')
-                document.body.style.visibility = 'visible'
-            }
-        })
-    })
-}
+// Add animation styles
+const style = document.createElement('style')
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`
+document.head.appendChild(style)
+
+console.log('📦 Clean auth system loaded')
