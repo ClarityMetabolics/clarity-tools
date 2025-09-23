@@ -1280,13 +1280,9 @@
 console.log('Initializing coach dashboard with hybrid data system...');
 
 // Import database functionality and ensure auth is ready
-import { globalAuthManager, dbManager } from './js/supabase-config.js';
+import { authManager, dbManager, supabase } from './js/supabase-config.js';
 // Wait for auth to be initialized
 let authInitialized = false;
-        
-// Create aliases for compatibility
-const authManager = globalAuthManager;
-const hybridDataManager = dbManager;
 
 async function waitForAuth() {
     if (authInitialized) return true;
