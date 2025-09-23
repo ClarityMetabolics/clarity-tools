@@ -2398,6 +2398,240 @@ window.unlockFullAnchorSet = unlockFullAnchorSet;
 window.unlockNextRecommended = unlockNextRecommended;
 window.unlockDiscernmentTools = unlockDiscernmentTools;
 window.resetAllModules = resetAllModules;
+
+// Coach Unlock Functions - Add these before the closing </script> tag in coach-dashboard.html
+
+// Global variables for module management
+let selectedModuleClient = null;
+let currentDetailClientId = null;
+let realClients = [];
+
+// Main unlock function using clean interface
+async function unlockFullAnchorSet(clientId, anchorName) {
+    try {
+        if (!authManager.isAuthenticated || !authManager.isCoach) {
+            showNotification('Coach authentication required for unlock operations', 'error');
+            return;
+        }
+        
+        const currentCoachId = authManager.getCurrentUserId();
+        if (!currentCoachId) {
+            showNotification('Unable to identify current coach. Please refresh and try again.', 'error');
+            return;
+        }
+        
+        console.log(`Coach ${currentCoachId} unlocking ${anchorName} for client ${clientId}`);
+        
+        // Unlock both guide and webTool access
+        const guideResult = await dbManager.unlockModuleForClient(
+            clientId, 
+            'fiveAnchors', 
+            anchorName.toLowerCase(), 
+            'guide'
+        );
+        
+        const toolResult = await dbManager.unlockModuleForClient(
+            clientId, 
+            'fiveAnchors', 
+            anchorName.toLowerCase(), 
+            'webTool'
+        );
+
+        if (guideResult.error || toolResult.error) {
+            console.error('Database error unlocking module:', guideResult.error || toolResult.error);
+            showNotification('Failed to unlock module. Please try again.', 'error');
+            return;
+        }
+
+        console.log(`Module unlocked successfully: ${anchorName} for client ${clientId}`);
+        showNotification(`${anchorName} anchor unlocked successfully!`, 'success');
+        
+        // Refresh the client list to show updated status
+        await loadClients();
+        
+    } catch (error) {
+        console.error('Error in unlockFullAnchorSet:', error);
+        showNotification('An error occurred while unlocking the module.', 'error');
+    }
+}
+
+// Module management functions
+function openModuleManagement(clientId) {
+    // Find the client in the loaded data
+    const client = realClients.find(c => c.id === clientId);
+    if (!client) {
+        showNotification('Client not found. Please refresh the page.', 'error');
+        return;
+    }
+    
+    selectedModuleClient = client;
+    
+    // Switch to module management tab and show client selection
+    showSection('modules');
+    
+    // Auto-select the client in the module management interface
+    setTimeout(() => {
+        const moduleClientSelect = document.getElementById('module-client-select');
+        if (moduleClientSelect) {
+            moduleClientSelect.value = clientId;
+            loadClientModules(clientId);
+        }
+    }, 100);
+}
+
+function loadClientModules(clientId) {
+    const client = realClients.find(c => c.id === clientId);
+    if (!client) return;
+
+    selectedModuleClient = client;
+    
+    const moduleClientInfo = document.getElementById('module-client-info');
+    if (moduleClientInfo) {
+        moduleClientInfo.classList.add('show');
+    }
+    
+    // Show client info in module management interface
+    const clientBasicInfo = document.getElementById('client-basic-info');
+    if (clientBasicInfo) {
+        clientBasicInfo.innerHTML = `
+            <div><strong>Name:</strong> ${client.name}</div>
+            <div><strong>Email:</strong> ${client.email}</div>
+            <div><strong>Package:</strong> ${client.coachingPackage?.type || '6-week'}</div>
+        `;
+    }
+}
+
+// Quick unlock functions for module management
+async function unlockNextRecommended() {
+    if (!selectedModuleClient) {
+        showNotification('Please select a client first', 'error');
+        return;
+    }
+    
+    // Get current module access to determine next recommended
+    const { data: moduleAccess } = await dbManager.getModuleAccess(selectedModuleClient.id);
+    
+    if (!moduleAccess) {
+        showNotification('Error loading client module access', 'error');
+        return;
+    }
+    
+    // Determine next anchor to unlock based on current progress
+    const anchors = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
+    let nextAnchor = null;
+    
+    for (const anchor of anchors) {
+        if (!moduleAccess.fiveAnchors[anchor]?.webTool) {
+            nextAnchor = anchor;
+            break;
+        }
+    }
+    
+    if (nextAnchor) {
+        await unlockFullAnchorSet(selectedModuleClient.id, nextAnchor);
+    } else {
+        showNotification('All Five Anchors already unlocked for this client', 'info');
+    }
+}
+
+async function unlockAllFiveAnchors() {
+    if (!selectedModuleClient) {
+        showNotification('Please select a client first', 'error');
+        return;
+    }
+    
+    const anchors = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
+    let successCount = 0;
+    
+    for (const anchor of anchors) {
+        try {
+            const result = await dbManager.unlockModuleForClient(
+                selectedModuleClient.id,
+                'fiveAnchors',
+                anchor,
+                'webTool'
+            );
+            
+            if (!result.error) {
+                successCount++;
+            }
+        } catch (error) {
+            console.error(`Error unlocking ${anchor}:`, error);
+        }
+    }
+    
+    if (successCount > 0) {
+        showNotification(`Unlocked ${successCount} anchor tools successfully!`, 'success');
+        await loadClients();
+    } else {
+        showNotification('No new anchors were unlocked', 'info');
+    }
+}
+
+async function unlockDiscernmentTools() {
+    if (!selectedModuleClient) {
+        showNotification('Please select a client first', 'error');
+        return;
+    }
+    
+    if (selectedModuleClient.coachingPackage?.type !== '12-week') {
+        showNotification('Discernment tools require 12-week coaching package', 'error');
+        return;
+    }
+    
+    // Unlock first discernment tool (Thought Refiner)
+    const result = await dbManager.unlockModuleForClient(
+        selectedModuleClient.id,
+        'discernmentTools',
+        'thoughtRefiner',
+        'unlocked'
+    );
+    
+    if (result.error) {
+        showNotification('Error unlocking discernment tools', 'error');
+    } else {
+        showNotification('Thought Refiner tool unlocked!', 'success');
+        await loadClients();
+    }
+}
+
+async function resetAllModules() {
+    if (!selectedModuleClient) {
+        showNotification('Please select a client first', 'error');
+        return;
+    }
+    
+    const confirmed = confirm(`Reset ALL modules for ${selectedModuleClient.name}? This cannot be undone.`);
+    if (!confirmed) return;
+    
+    showNotification('Module reset functionality will be implemented in a future update', 'info');
+}
+
+// Navigation helper
+function showSection(sectionName) {
+    // Hide all sections
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    
+    // Show selected section
+    const section = document.getElementById(sectionName);
+    const navItem = document.querySelector(`[data-section="${sectionName}"]`);
+    
+    if (section) section.classList.add('active');
+    if (navItem) navItem.classList.add('active');
+}
+
+// Make functions globally available for onclick handlers
+window.unlockFullAnchorSet = unlockFullAnchorSet;
+window.unlockNextRecommended = unlockNextRecommended;
+window.unlockAllFiveAnchors = unlockAllFiveAnchors;
+window.unlockDiscernmentTools = unlockDiscernmentTools;
+window.resetAllModules = resetAllModules;
+window.openModuleManagement = openModuleManagement;
+window.loadClientModules = loadClientModules;
+window.showSection = showSection;
+
+console.log('Coach unlock functions loaded successfully');
     </script>
 </body>
 </html>
