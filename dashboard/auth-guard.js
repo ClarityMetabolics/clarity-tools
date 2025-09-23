@@ -1,60 +1,44 @@
 // File: /dashboard/auth-guard.js
-// Updated auth guard for modular pages
+// Clean auth guard using standard interface - no compatibility layers
 
-import { globalAuthManager, dbManager, supabase } from './js/supabase-config.js';
-// Global auth state for modular pages
-const authManager = globalAuthManager;
-const hybridDataManager = dbManager;
-// Wait for auth to be ready
-let authReady = false;
+import { authManager, dbManager, supabase } from './js/supabase-config.js'
 
+// Standard initialization pattern
 async function initializeAuth() {
-    console.log('🔐 Initializing authentication for modular page...');
+    console.log('🔐 Initializing authentication for dashboard page...')
     
     try {
         // Wait for auth manager to initialize
-        if (!authManager.currentUser) {
-            console.log('⏳ Waiting for user session...');
-            
-            // Check for existing session
-            const { data: { session }, error } = await supabase.auth.getSession();
-            
-            if (error || !session?.user) {
-                console.log('❌ No valid session, redirecting to auth');
-                window.location.href = './auth.html';
-                return false;
-            }
-            
-            if (!authManager.userProfile) {
-                console.log('⏳ Loading user profile...');
-                await authManager.setCurrentUser(session.user);
-            }
+        const authSuccess = await authManager.init()
+        
+        if (!authSuccess) {
+            console.log('❌ Authentication failed')
+            return false
         }
 
-        // Verify user profile is loaded
-        if (!authManager.userProfile) {
-            console.log('❌ User profile not loaded, redirecting to auth');
-            window.location.href = './auth.html';
-            return false;
-        }
-
-        authReady = true;
+        // Make auth functions globally available for onclick handlers
+        window.getCurrentUserId = () => authManager.getCurrentUserId()
+        window.getCurrentUserProfile = () => authManager.userProfile
+        window.isCoach = () => authManager.isCoach
+        window.authManager = authManager
+        window.dbManager = dbManager
         
         // Show page content
-        document.body.style.visibility = 'visible';
+        document.body.style.visibility = 'visible'
         
-        console.log('✅ Auth initialized successfully');
-        console.log('👤 Current user:', authManager.userProfile.full_name || authManager.currentUser.email);
-        console.log('🎯 User role:', authManager.userProfile.role);
+        console.log('✅ Auth guard initialized successfully')
+        console.log('👤 Current user:', authManager.userProfile?.full_name || authManager.currentUser?.email)
+        console.log('🎯 User role:', authManager.userProfile?.role)
         
-        return true;
+        return true
         
     } catch (error) {
-        console.error('❌ Auth initialization failed:', error);
-        document.body.style.visibility = 'visible';
+        console.error('❌ Auth guard initialization failed:', error)
         
-        // Show user-friendly error
-        const errorDiv = document.createElement('div');
+        // Show error message to user
+        document.body.style.visibility = 'visible'
+        
+        const errorDiv = document.createElement('div')
         errorDiv.style.cssText = `
             position: fixed;
             top: 50%;
@@ -66,7 +50,8 @@ async function initializeAuth() {
             border-radius: 8px;
             text-align: center;
             z-index: 9999;
-        `;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        `
         errorDiv.innerHTML = `
             <h3>Authentication Error</h3>
             <p>Unable to verify your identity. Please sign in again.</p>
@@ -74,49 +59,29 @@ async function initializeAuth() {
                     style="background: white; color: #f44336; border: none; padding: 0.5rem 1rem; border-radius: 4px; margin-top: 1rem; cursor: pointer;">
                 Sign In Again
             </button>
-        `;
-        document.body.appendChild(errorDiv);
+        `
+        document.body.appendChild(errorDiv)
         
-        return false;
+        return false
     }
 }
 
-// Helper functions for modular pages
-window.getCurrentUserId = function() {
-    if (!authReady || !authManager.currentUser) {
-        console.warn('⚠️  Auth not ready, cannot get user ID');
-        return null;
-    }
-    return authManager.currentUser.id;
-};
-
-window.getCurrentUserProfile = function() {
-    if (!authReady || !authManager.userProfile) {
-        console.warn('⚠️  Auth not ready, cannot get user profile');
-        return null;
-    }
-    return authManager.userProfile;
-};
-
-window.isCoach = function() {
-    const profile = window.getCurrentUserProfile();
-    return profile?.role === 'coach' || profile?.role === 'admin';
-};
-
+// Helper function for coach access requirement
 window.requireCoachAccess = function() {
-    if (!window.isCoach()) {
-        alert('This page requires coach access');
-        window.location.href = './index.html';
-        return false;
+    if (!authManager.isCoach) {
+        alert('This page requires coach access')
+        window.location.href = './index.html'
+        return false
     }
-    return true;
-};
-
-// Initialize auth when page loads
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeAuth);
-} else {
-    initializeAuth();
+    return true
 }
 
-export { authManager, hybridDataManager };
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeAuth)
+} else {
+    initializeAuth()
+}
+
+// Export for other modules that might need it
+export { authManager, dbManager, supabase }
