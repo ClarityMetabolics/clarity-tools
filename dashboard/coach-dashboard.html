@@ -2536,7 +2536,29 @@ function showSection(sectionName) {
     if (section) section.classList.add('active');
     if (navItem) navItem.classList.add('active');
 }
+function openModuleManagement(clientId) {
+    showSection('modules');
+    setTimeout(() => {
+        const moduleClientSelect = document.getElementById('module-client-select');
+        if (moduleClientSelect) {
+            moduleClientSelect.value = clientId;
+            loadClientModules(clientId);
+        }
+    }, 100);
+}
 
+function loadClientModules(clientId) {
+    const activeClients = realClients.length > 0 ? realClients : sampleClients;
+    const client = activeClients.find(c => c.id === clientId);
+    if (!client) return;
+
+    selectedModuleClient = client;
+    
+    const moduleClientInfo = document.getElementById('module-client-info');
+    if (moduleClientInfo) {
+        moduleClientInfo.classList.add('show');
+    }
+}
 // Make functions globally available for onclick handlers
 window.unlockFullAnchorSet = unlockFullAnchorSet;
 window.unlockNextRecommended = unlockNextRecommended;
