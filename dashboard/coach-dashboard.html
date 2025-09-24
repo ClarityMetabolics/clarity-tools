@@ -2559,6 +2559,113 @@ function loadClientModules(clientId) {
         moduleClientInfo.classList.add('show');
     }
 }
+async function unlockFullAnchorSet(clientId, anchorName) {
+    try {
+        if (!authManager.isAuthenticated || !authManager.isCoach) {
+            showNotification('Coach authentication required for unlock operations', 'error');
+            return;
+        }
+        
+        const currentCoachId = authManager.getCurrentUserId();
+        if (!currentCoachId) {
+            showNotification('Unable to identify current coach. Please refresh and try again.', 'error');
+            return;
+        }
+        
+        console.log(`Coach ${currentCoachId} unlocking ${anchorName} for client ${clientId}`);
+        
+        const result = await dbManager.unlockModuleForClient(
+            clientId, 
+            'fiveAnchors', 
+            anchorName.toLowerCase(), 
+            'webTool'
+        );
+
+        if (result.error) {
+            console.error('Database error unlocking module:', result.error);
+            showNotification('Failed to unlock module. Please try again.', 'error');
+            return;
+        }
+
+        console.log(`Module unlocked successfully: ${anchorName} for client ${clientId}`);
+        showNotification(`${anchorName} anchor unlocked successfully!`, 'success');
+        
+        await loadClients();
+        
+    } catch (error) {
+        console.error('Error in unlockFullAnchorSet:', error);
+        showNotification('An error occurred while unlocking the module.', 'error');
+    }
+}
+
+async function unlockNextRecommended() {
+    if (!selectedModuleClient) {
+        showNotification('Please select a client first', 'error');
+        return;
+    }
+    
+    await unlockFullAnchorSet(selectedModuleClient.id, 'mental');
+}
+
+async function unlockAllFiveAnchors() {
+    if (!selectedModuleClient) {
+        showNotification('Please select a client first', 'error');
+        return;
+    }
+    
+    const anchors = ['physical', 'mental', 'emotional', 'spiritual', 'relational'];
+    let successCount = 0;
+    
+    for (const anchor of anchors) {
+        try {
+            const result = await dbManager.unlockModuleForClient(
+                selectedModuleClient.id,
+                'fiveAnchors',
+                anchor,
+                'webTool'
+            );
+            
+            if (!result.error) {
+                successCount++;
+            }
+        } catch (error) {
+            console.error(`Error unlocking ${anchor}:`, error);
+        }
+    }
+    
+    if (successCount > 0) {
+        showNotification(`Unlocked ${successCount} anchor tools successfully!`, 'success');
+        await loadClients();
+    } else {
+        showNotification('No new anchors were unlocked', 'info');
+    }
+}
+
+async function unlockDiscernmentTools() {
+    if (!selectedModuleClient) {
+        showNotification('Please select a client first', 'error');
+        return;
+    }
+    
+    if (selectedModuleClient.coachingPackage?.type !== '12-week') {
+        showNotification('Discernment tools require 12-week coaching package', 'error');
+        return;
+    }
+    
+    showNotification('Discernment tools unlock feature coming soon', 'info');
+}
+
+async function resetAllModules() {
+    if (!selectedModuleClient) {
+        showNotification('Please select a client first', 'error');
+        return;
+    }
+    
+    const confirmed = confirm(`Reset ALL modules for ${selectedModuleClient.name}? This cannot be undone.`);
+    if (!confirmed) return;
+    
+    showNotification('Module reset functionality will be implemented in a future update', 'info');
+}
 // Make functions globally available for onclick handlers
 window.unlockFullAnchorSet = unlockFullAnchorSet;
 window.unlockNextRecommended = unlockNextRecommended;
